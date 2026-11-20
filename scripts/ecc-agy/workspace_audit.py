@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import json
 import logging
 import math
 import os
@@ -41,10 +42,19 @@ logger: logging.Logger = logging.getLogger("workspace-audit")
 
 MAX_SKILL_DESC: int = 140
 MAX_AGENT_DESC: int = 120
+MAX_RULE_FILE_BYTES: int = 24_000
+MAX_RULES_TOTAL_TOKENS: int = 16_000
+MAX_EAGER_CUSTOMIZATION_TOKENS: int = 3_000
+ACTIVE_MCP_BASE_TOKENS: int = 1_500
+HEAVY_MCP_SERVERS: frozenset[str] = frozenset({"gemini-mcp"})
+HEAVY_MCP_TOKENS: int = 4_500
+
 ALLOWED_MODELS: frozenset[str] = frozenset({"flash", "inherit"})
 CHARS_PER_TOKEN: float = 3.8
 
 SKILL_FILE_NAME: str = "SKILL.md"
+README_FILE: str = "README.md"
+PLUGIN_NAME_ECC_AGY: str = "ecc-agy"
 DESC_KEY: str = "description"
 MODEL_KEY: str = "model"
 
@@ -69,6 +79,7 @@ class AgentTarget:
     label: str
     directory: Path
     include_rules: bool = False
+    is_plugin: bool = False
 
 
 @dataclass(frozen=True)
@@ -88,12 +99,21 @@ class BudgetReport:
     skills_desc_chars: int = 0
     agents_desc_chars: int = 0
     rules_chars: int = 0
+    rules_tokens: int = 0
+    mcp_count: int = 0
+    mcp_active_count: int = 0
+    mcp_tokens: int = 0
     violations: Tuple[str, ...] = field(default_factory=tuple)
 
     @property
     def estimated_tokens(self) -> int:
-        total = self.rules_chars + self.skills_desc_chars + self.agents_desc_chars
-        return math.ceil(total / CHARS_PER_TOKEN)
+        skills_agents = math.ceil((self.skills_desc_chars + self.agents_desc_chars) / CHARS_PER_TOKEN)
+        return self.rules_tokens + skills_agents + self.mcp_tokens
+
+    @property
+    def eager_customization_tokens(self) -> int:
+        skills_agents = math.ceil((self.skills_desc_chars + self.agents_desc_chars) / CHARS_PER_TOKEN)
+        return skills_agents + self.mcp_tokens
 
 
 @dataclass(frozen=True)
@@ -223,7 +243,7 @@ def audit_agents(agents_dir: Path) -> Tuple[int, int, List[str]]:
     if not agents_dir.is_dir():
         return count, chars, violations
     for agent_md in sorted(agents_dir.glob("*.md")):
-        if agent_md.name == "README.md":
+        if agent_md.name == README_FILE:
             continue
         count += 1
         frontmatter = read_frontmatter(agent_md.read_text(encoding="utf-8", errors="replace"))
@@ -233,21 +253,130 @@ def audit_agents(agents_dir: Path) -> Tuple[int, int, List[str]]:
     return count, chars, violations
 
 
+def _collect_rule_files(target_dir: Path) -> List[Path]:
+    rules_dir = target_dir / "rules"
+    if rules_dir.is_dir():
+        files = [p for p in sorted(rules_dir.glob("*.md")) if p.name != README_FILE]
+        if files:
+            return files
+
+    agents_root = target_dir / "AGENTS.md"
+    return [agents_root] if agents_root.is_file() else []
+
+
+def audit_rules(target_dir: Path, include_rules: bool = True) -> Tuple[int, int, List[str]]:
+    """
+    Audita archivos de reglas Markdown (.md):
+    - Cada archivo individual <= MAX_RULE_FILE_BYTES (24.000 bytes / 24 KB).
+    - Total de tokens de reglas <= MAX_RULES_TOTAL_TOKENS (16.000 tokens).
+    Retorna: (total_chars, total_tokens, violations)
+    """
+    if not include_rules:
+        return 0, 0, []
+
+    total_chars = 0
+    violations: List[str] = []
+    rule_files = _collect_rule_files(target_dir)
+
+    for r_file in rule_files:
+        try:
+            size = r_file.stat().st_size
+        except OSError:
+            continue
+        if size > MAX_RULE_FILE_BYTES:
+            violations.append(
+                f"Rule file '{r_file.name}' is {size} bytes (>{MAX_RULE_FILE_BYTES} max limit of 24 KB)"
+            )
+        content = r_file.read_text(encoding="utf-8", errors="replace")
+        total_chars += len(content)
+
+    total_tokens = math.ceil(total_chars / CHARS_PER_TOKEN)
+    if total_tokens > MAX_RULES_TOTAL_TOKENS:
+        violations.append(
+            f"Aggregated rules exceed safe budget: {total_tokens} tokens (>{MAX_RULES_TOTAL_TOKENS} ceiling, 20k absolute limit)"
+        )
+
+    return total_chars, total_tokens, violations
+
+
+def _find_mcp_config_file(target_dir: Path) -> Optional[Path]:
+    for candidate in (
+        target_dir / "mcp_config.json",
+        target_dir / ".gemini" / "mcp_config.json",
+        target_dir / "gemini.json",
+    ):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def audit_mcps(target_dir: Path) -> Tuple[int, int, int, List[str]]:
+    """
+    Audita servidores MCP declarados en mcp_config.json:
+    - Exige 'disabled: true' en servidores pesados (HEAVY_MCP_SERVERS).
+    - Calcula la huella estimada de servidores activos en reposo.
+    Retorna: (total_mcps, active_mcps, estimated_tokens, violations)
+    """
+    mcp_file = _find_mcp_config_file(target_dir)
+    if not mcp_file:
+        return 0, 0, 0, []
+
+    try:
+        data = json.loads(mcp_file.read_text(encoding="utf-8", errors="replace"))
+    except (json.JSONDecodeError, OSError) as exc:
+        return 0, 0, 0, [f"Invalid JSON in MCP configuration file '{mcp_file.name}': {exc}"]
+
+    servers = data.get("mcpServers", {})
+    if not isinstance(servers, dict):
+        return 0, 0, 0, []
+
+    total_mcps = len(servers)
+    active_mcps = 0
+    mcp_tokens = 0
+    violations: List[str] = []
+
+    for name, config in servers.items():
+        is_disabled = bool(config.get("disabled", False)) if isinstance(config, dict) else False
+
+        if name in HEAVY_MCP_SERVERS and not is_disabled:
+            violations.append(
+                f"Heavy MCP server '{name}' is enabled by default. Must set '\"disabled\": true' to prevent context overflow."
+            )
+
+        if not is_disabled:
+            active_mcps += 1
+            server_tokens = HEAVY_MCP_TOKENS if name in HEAVY_MCP_SERVERS else ACTIVE_MCP_BASE_TOKENS
+            mcp_tokens += server_tokens
+
+    return total_mcps, active_mcps, mcp_tokens, violations
+
+
 def audit_target_budget(target: AgentTarget) -> BudgetReport:
-    rules_file = target.directory / "rules" / "AGENTS.md"
-    if not rules_file.is_file():
-        rules_file = target.directory / "AGENTS.md"
-    rules_chars = len(rules_file.read_text(encoding="utf-8", errors="replace")) if target.include_rules and rules_file.is_file() else 0
-    
+    rules_chars, rules_tokens, rules_violations = audit_rules(target.directory, target.include_rules)
     skill_count, skill_chars, skill_violations = audit_skills(target.directory / "skills")
     agent_count, agent_chars, agent_violations = audit_agents(target.directory / "agents")
+    mcp_count, mcp_active, mcp_tokens, mcp_violations = audit_mcps(target.directory)
+
+    violations = list(rules_violations + skill_violations + agent_violations + mcp_violations)
+
+    if target.is_plugin:
+        eager_tokens = math.ceil((skill_chars + agent_chars) / CHARS_PER_TOKEN) + mcp_tokens
+        if eager_tokens > MAX_EAGER_CUSTOMIZATION_TOKENS:
+            violations.append(
+                f"Eager customizations in plugin '{target.label}' exceed budget: ~{eager_tokens} tokens (>{MAX_EAGER_CUSTOMIZATION_TOKENS} max)"
+            )
+
     return BudgetReport(
         skill_count=skill_count,
         agent_count=agent_count,
         skills_desc_chars=skill_chars,
         agents_desc_chars=agent_chars,
         rules_chars=rules_chars,
-        violations=tuple(skill_violations + agent_violations),
+        rules_tokens=rules_tokens,
+        mcp_count=mcp_count,
+        mcp_active_count=mcp_active,
+        mcp_tokens=mcp_tokens,
+        violations=tuple(violations),
     )
 
 
@@ -269,7 +398,7 @@ def _scan_target_invalid_agents(target: AgentTarget) -> List[Tuple[Path, str]]:
     agents_dir = target.directory / "agents"
     if agents_dir.is_dir():
         for a_file in agents_dir.glob("*.md"):
-            if a_file.name == "README.md":
+            if a_file.name == README_FILE:
                 continue
             txt = a_file.read_text(encoding="utf-8", errors="replace")
             fm = read_frontmatter(txt)
@@ -326,15 +455,17 @@ def _audit_targets_budget(targets: Sequence[AgentTarget]) -> int:
     total_violations = 0
     for target in targets:
         report = audit_target_budget(target)
-        rules_info = f", Rules={report.rules_chars}c" if target.include_rules else ""
+        rules_info = f", Rules={report.rules_chars}c (~{report.rules_tokens}t)" if target.include_rules else ""
+        mcp_info = f", MCPs={report.mcp_active_count}/{report.mcp_count} (~{report.mcp_tokens}t)" if report.mcp_count > 0 else ""
         logger.info(
-            "• %s: Skills=%d (%dc), Agents=%d (%dc)%s => ~%d tokens",
+            "• %s: Skills=%d (%dc), Agents=%d (%dc)%s%s => ~%d tokens",
             target.label,
             report.skill_count,
             report.skills_desc_chars,
             report.agent_count,
             report.agents_desc_chars,
             rules_info,
+            mcp_info,
             report.estimated_tokens,
         )
         for v in report.violations:
@@ -386,8 +517,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     # 2. Objetivos de tokens
     targets = [AgentTarget("ECC Root", root, include_rules=True)]
-    if (root / "ecc-agy").is_dir():
-        targets.append(AgentTarget("ecc-agy distribution", root / "ecc-agy", include_rules=True))
+    global_plugin = Path.home() / ".gemini" / "config" / "plugins" / PLUGIN_NAME_ECC_AGY
+    if global_plugin.is_dir():
+        targets.append(AgentTarget(f"Global Plugin ({PLUGIN_NAME_ECC_AGY})", global_plugin, include_rules=True, is_plugin=True))
+    elif (root / PLUGIN_NAME_ECC_AGY).is_dir():
+        targets.append(AgentTarget(f"{PLUGIN_NAME_ECC_AGY} distribution", root / PLUGIN_NAME_ECC_AGY, include_rules=True, is_plugin=True))
 
     total_violations = _audit_targets_budget(targets)
 

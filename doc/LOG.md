@@ -5,6 +5,24 @@
 
 ---
 
+## 2026-11-20: Hard Gate de Presupuesto de Contexto en Harness (Rules, Customizations y MCPs)
+
+### Hitos y Decisiones Materiales
+
+1. **Guardrail Bloqueante de Presupuesto (`feat/ecc/workspace-audit-budget-hard-gate`)**:
+   - Extendido [`workspace_audit.py`](../scripts/ecc-agy/workspace_audit.py) con funciones `audit_rules()` y `audit_mcps()`.
+   - Límite por archivo de reglas: $\le 24.000$ bytes (24 KB) por archivo Markdown.
+   - Techo seguro de reglas agregadas: $\le 16.000$ tokens (frente al defaultRulesBudget de 20.000 tokens de Antigravity).
+   - Auditoría de configuración MCP: detección de servidores pesados (`gemini-mcp`) exigiendo `"disabled": true` para garantizar 0 tokens en reposo.
+   - Presupuesto eager en plugins activos: $\le 3.000$ tokens en reposo para Tier 1.
+   - Integración automática del plugin global `~/.gemini/config/plugins/ecc-agy` en la auditoría.
+2. **Validación y Tests Unitarios (TDD)**:
+   - Añadidos tests unitarios exhaustivos en [`test_workspace_audit.py`](../scripts/ecc-agy/tests/test_workspace_audit.py) cubriendo archivos sobredimensionados, exceso de tokens de reglas, detección de MCPs pesados activos vs desactivados y desbordamiento eager.
+   - Cobertura completa con 69/69 tests pasando al 100%.
+   - SonarQube Quality Gate Rating A alcanzado (0 violaciones, Complejidad Cognitiva $\le 10$).
+
+---
+
 ## 2026-11-20: Formalización del Workflow de Ingeniería de 4 Fases y Acoplamiento Home-Lab
 
 ### Hitos y Decisiones Materiales
