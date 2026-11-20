@@ -5,6 +5,25 @@
 
 ---
 
+## 2026-11-20: Linter de Paridad Estática de Contratos entre Microservicios y SDK
+
+### Hitos y Decisiones Materiales
+
+1. **Analizador Estático de Paridad (`audit_sdk_parity.py`)**:
+   - Extracción léxica de endpoints REST en controladores backend: Go (Gin, Chi, gorilla/mux), Python (FastAPI/Flask) y Java (Spring Boot `@GetMapping`, `@PostMapping`, etc.).
+   - Extracción de rutas y métodos en clientes polyglot de `home-lab-sdk/` (TypeScript, Go, Python, Java).
+   - Exclusión automática de endpoints internos de infraestructura (`/metrics`, `/health`, `/livez`, `/readyz`, `/debug/*`, `/ping`, `/favicon.ico`).
+   - Omisión elegante (`SKIPPED`, exit code 0) en repositorios sin carpetas `services/` ni `home-lab-sdk/`.
+2. **Ergonomía CLI e Integración en Lifecycle**:
+   - Wrappers multiplataforma [`scripts/bin/ecc-agy/audit-sdk-parity.ps1`](../scripts/bin/ecc-agy/audit-sdk-parity.ps1) y `audit-sdk-parity.sh` con flags `--json` y `--no-strict`.
+   - Integración como compuerta de validación previa en el paso 7.3 de [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1).
+3. **Calidad y Documentación**:
+   - Manual operativo [`doc/manual/MANUAL_sdk_parity_audit.md`](manual/MANUAL_sdk_parity_audit.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_audit_sdk_parity.py`](../scripts/ecc-agy/tests/test_audit_sdk_parity.py) con 6/6 tests pasando (total 94/94 pasando al 100%).
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Reubicación y Estandarización de Plantillas Documentales (ADR y Post-Mortem)
 
 ### Hitos y Decisiones Materiales

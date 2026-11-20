@@ -18,6 +18,11 @@
 ## 2. Manuales Técnicos y Guías de Arquitectura (`doc/manual/`)
 
 - 📘 **[`GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md`](manual/GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md)**: Manual maestro exhaustivo sobre el funcionamiento de los arneses de IA, runtime de Google Antigravity & Gemini, flujos de ingeniería, espacios de acción/observación y principios de diseño para agentes autónomos.
+- 🔄 **[`MANUAL_sdk_parity_audit.md`](manual/MANUAL_sdk_parity_audit.md)**: Manual operativo del linter de paridad estática entre microservicios y `home-lab-sdk`.
+- ⚡ **[`MANUAL_gemini_prompt_caching.md`](manual/MANUAL_gemini_prompt_caching.md)**: Guía de optimización y estructuración de KV-cache prompt caching para Gemini 3.8.
+- 🎣 **[`MANUAL_git_hooks.md`](manual/MANUAL_git_hooks.md)**: Guía de instalación y operación de hooks Git locales (`pre-commit` y `commit-msg`).
+- 📊 **[`MANUAL_session_token_telemetry.md`](manual/MANUAL_session_token_telemetry.md)**: Manual de telemetría de tokens en sesión y auto-compactación.
+- 🚀 **[`MANUAL_skill_promotion.md`](manual/MANUAL_skill_promotion.md)**: Manual de promoción on-demand de skills Tier-2 a Tier-1.
 - 🛡️ **[`the-security-guide.md`](the-security-guide.md)**: Guía exhaustiva de seguridad, bastionado de límites y prevención de ataques en entornos asistidos por agentes.
 - 🏛️ **[`STACK_MODERNO_GOOGLE.md`](STACK_MODERNO_GOOGLE.md)**: Especificación de alineación con los 5 Pilares de Ingeniería de Google.
 - 💡 **[`IDEAS.md`](IDEAS.md)**: Registro estructurado de ideas candidatas para ingesta automatizada a TODO.
