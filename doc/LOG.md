@@ -5,6 +5,24 @@
 
 ---
 
+## 2026-11-20: Integración Zero-Overhead de Gemini MCP y Skill Gemini Deep Ops
+
+### Hitos y Decisiones Materiales
+
+1. **Plantilla Aislada con Guardrail en Reposo (`templates/plugins/gemini-mcp/`)**:
+   - Manifiestos `plugin.json` y `mcp_config.json` con `"disabled": true` por defecto para garantizar 0 tokens en reposo.
+   - Parametrización segura de credenciales vía `${GEMINI_API_KEY}` sin claves en texto plano.
+   - Utilidad de alternancia idempotente [`toggle_gemini_mcp.py`](../scripts/ecc-agy/toggle_gemini_mcp.py) y wrappers `.ps1` / `.sh`.
+2. **Skill Tier 2 `gemini-deep-ops` y CLI Multimodal**:
+   - Creada [`skills/gemini-deep-ops/SKILL.md`](../skills/gemini-deep-ops/SKILL.md) con descripción $\le 140$ caracteres y carga bajo demanda.
+   - Implementado motor de diagnóstico [`gemini_deep_ops.py`](../scripts/ecc-agy/gemini_deep_ops.py) y wrappers `.ps1` / `.sh` con análisis heurístico de caídas OOMKilled, bloqueos PostgreSQL y latencia.
+   - Guía operacional en [`doc/manual/MANUAL_gemini_deep_ops_multimodal.md`](manual/MANUAL_gemini_deep_ops_multimodal.md).
+3. **Calidad y Tests Unitarios**:
+   - Pruebas unitarias en [`test_gemini_deep_ops.py`](../scripts/ecc-agy/tests/test_gemini_deep_ops.py) con 74/74 tests superados (100%).
+   - SonarQube Quality Gate Rating A (0 violaciones).
+
+---
+
 ## 2026-11-20: Hard Gate de Presupuesto de Contexto en Harness (Rules, Customizations y MCPs)
 
 ### Hitos y Decisiones Materiales
