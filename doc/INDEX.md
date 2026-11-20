@@ -21,6 +21,7 @@
 - 🔄 **[`MANUAL_sdk_parity_audit.md`](manual/MANUAL_sdk_parity_audit.md)**: Manual operativo del linter de paridad estática entre microservicios y `home-lab-sdk`.
 - 🔒 **[`MANUAL_audit_pg_locks.md`](manual/MANUAL_audit_pg_locks.md)**: Manual operativo del analizador estático de bloqueos DDL y concurrencia en PostgreSQL LTS.
 - 🌐 **[`MANUAL_ingress_routes_validator.md`](manual/MANUAL_ingress_routes_validator.md)**: Manual operativo del validador de congruencia entre Ingress Traefik, Split-DNS (CoreDNS) y `/portal`.
+- 🚢 **[`MANUAL_multitier_deployment.md`](manual/MANUAL_multitier_deployment.md)**: Manual de despliegue automatizado por etiquetas de promoción en FRACTAL y NEO vía `git-flow-helper.ps1`.
 - ⚡ **[`MANUAL_gemini_prompt_caching.md`](manual/MANUAL_gemini_prompt_caching.md)**: Guía de optimización y estructuración de KV-cache prompt caching para Gemini 3.8.
 - 🎣 **[`MANUAL_git_hooks.md`](manual/MANUAL_git_hooks.md)**: Guía de instalación y operación de hooks Git locales (`pre-commit` y `commit-msg`).
 - 📊 **[`MANUAL_session_token_telemetry.md`](manual/MANUAL_session_token_telemetry.md)**: Manual de telemetría de tokens en sesión y auto-compactación.

@@ -16,7 +16,7 @@
 | **Parámetros de Función** | $\le 7$ parámetros (`S107`) | Cumple en todos los módulos | ✅ PASS |
 | **Seguridad Estática** | 0 secretos / 0 inyecciones de comandos | 0 vulnerabilidades detectadas | ✅ PASS |
 | **Estándar Markdown** | DavidAnson `.markdownlint.json` | 100% compliant (`--check-only`) | ✅ PASS |
-| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 108/108 tests superados (2.66s) | ✅ PASS |
+| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 111/111 tests superados (2.85s) | ✅ PASS |
 | **Hard Gate Presupuesto** | Reglas $\le 24$ KB, tokens $\le 16$k, eager $\le 3$k | 100% compliant en ECC Root y Plugin | ✅ PASS |
 | **AgentShield Security** | Escaneo de hooks, MCPs y skills | 100% compliant sin bypass/inyecciones | ✅ PASS |
 
@@ -48,6 +48,7 @@
 - **Alineación de Prompt Caching Gemini 3.8**: Reestructuración binaria de `AGENTS.md` (prefijo estático invariante continuo + sufijo contextual) y marcador canónico `<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->` validado en test de arnés para maximizar hit-ratio de KV-cache y reducir TTFT hasta un 60%.
 - **Gobernanza de Ramas**: Enforzada mediante [`validate_branch.py`](../scripts/ecc-agy/validate_branch.py) (patrones `fix/<id>`, `feat/*`, `refactor/*`, `infra/*`, `chore/*`, `docs/*`, `test/*`; bloqueo directo en `main`).
 - **Autopsias SRE 5W**: Generación automática obligatoria mediante [`generate_postmortem.py`](../scripts/ecc-agy/generate_postmortem.py) ante cualquier cierre de rama `fix/*`.
+- **Pipeline de Despliegue Tagged Multi-Tier**: Extendido en [`git-flow-helper.ps1`](../scripts/bin/ecc-agy/git-flow-helper.ps1) y `git-flow-helper.sh` con acción `promote -Deploy` hacia FRACTAL (sandbox) y NEO (live), sondas de salud y rollback en $< 2\text{ min}$.
 - **Validador de Congruencia Ingress, Split-DNS y /portal**: Desarrollado en [`validate_ingress_routes.py`](../scripts/ecc-agy/validate_ingress_routes.py) y [`validate-ingress-routes.ps1`](../scripts/bin/ecc-agy/validate-ingress-routes.ps1) para certificar alineación de etiquetas Traefik, registros CoreDNS y catálogo de servicios con sugerencias `--fix`.
 - **Analizador Estático de Bloqueos DDL PostgreSQL LTS**: Desarrollado en [`audit_pg_locks.py`](../scripts/ecc-agy/audit_pg_locks.py) y [`audit-pg-locks.ps1`](../scripts/bin/ecc-agy/audit-pg-locks.ps1) con clasificación de riesgos HIGH/MEDIUM/LOW, prevención de `ACCESS EXCLUSIVE` y remediaciones de concurrencia, integrado en compuertas de PR.
 - **Linter de Paridad Estática de Contratos SDK**: Implementado en [`audit_sdk_parity.py`](../scripts/ecc-agy/audit_sdk_parity.py) y [`audit-sdk-parity.ps1`](../scripts/bin/ecc-agy/audit-sdk-parity.ps1) para auditar endpoints de microservicios (Go, Python, Java) frente a `home-lab-sdk/` con exclusión de rutas diagnósticas, integrado en compuertas de PR.

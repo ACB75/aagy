@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-11-20: Automatización de Despliegue Tagged y Sondas de Salud en git-flow-helper
+
+### Hitos y Decisiones Materiales
+
+1. **Pipeline de Despliegue Multi-Tier (`git-flow-helper.ps1` y `git-flow-helper.sh`)**:
+   - Integración de los parámetros `-Deploy`, `-Environment [sandbox|live]` y `-DryRun` en la acción `promote`.
+   - Soporte para despliegue físico desatendido en los hosts de Home-Lab: FRACTAL (`192.168.1.100`) para SANDBOX y NEO (`192.168.1.200`) para LIVE.
+   - Verificación de sondas de salud (liveness probes con 3 reintentos x 5s) sobre contenedores recién recreados.
+   - Protocolo de rollback automático desatendido en $< 2\text{ minutos}$ hacia el commit/tag anterior ante fallos en sondas.
+2. **Ergonomía y Calidad**:
+   - Modo de simulación `-DryRun` para comprobar el plan de ejecución sin mutaciones físicas.
+   - Manual operativo [`doc/manual/MANUAL_multitier_deployment.md`](manual/MANUAL_multitier_deployment.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_git_flow_deploy.py`](../scripts/ecc-agy/tests/test_git_flow_deploy.py) con 3/3 tests pasando (total 111/111 superados al 100%).
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Validador de Congruencia Ingress Traefik, Split-DNS y Catálogo Portal
 
 ### Hitos y Decisiones Materiales
