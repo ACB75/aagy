@@ -44,16 +44,16 @@ jobs:
 
       - name: Run Unit Tests (Pytest)
         run: |
-          python -m pytest scripts/aagy/tests/ -v
+          python -m pytest scripts/py/tests/ scripts/ps1/tests/ scripts/sh/tests/ -v
 
       - name: Audit Workspace & Token Budget (<=140c / <=120c)
         run: |
-          python scripts/aagy/workspace_audit.py --skip-sonar --skip-security
+          python scripts/py/workspace_audit.py --skip-sonar --skip-security
 
       - name: Audit SonarQube Quality Gate A (S3776, S107, S1192, S108)
         run: |
-          python scripts/aagy/sonar_audit.py
+          python scripts/py/sonar_audit.py
 
       - name: Audit Security & Secrets Exposure
         run: |
-          python scripts/aagy/security_audit.py
+          python scripts/py/security_audit.py
