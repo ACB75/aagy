@@ -1,7 +1,7 @@
 {
-  "name": "ecc",
-  "version": "3.0.0",
-  "description": "ECC Master Ecosystem: Multi-distribution architecture hosting ecc-claude and ecc-agy",
+  "name": "aagy",
+  "version": "4.0.0",
+  "description": "Anything Antigravity (aagy) Master Ecosystem: Multi-distribution architecture hosting aagy and ecc",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
     "doctor": "node scripts/doctor.js"
   },
   "workspaces": [
-    "ecc-claude"
+    "ecc"
   ],
   "engines": {
     "node": ">=18"

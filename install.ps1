@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Instalador Multi-Distribución del Ecosistema ECC (ADR-0001 Two-Tier Architecture).
 .DESCRIPTION
@@ -45,7 +45,7 @@ if ($Target -eq "homelab") {
 
 switch ($Target) {
     "claude" {
-        $sourceDir = Join-Path $ScriptRoot "ecc-claude"
+        $sourceDir = Join-Path $ScriptRoot "ecc"
         if (-not $Destination) {
             $Destination = Get-Location
         }
@@ -56,14 +56,18 @@ switch ($Target) {
     }
     "agy" {
         if (-not $Destination) {
-            $Destination = Join-Path $env:USERPROFILE ".gemini\config\plugins\ecc-agy"
+            $Destination = Join-Path $env:USERPROFILE ".gemini\config\plugins\aagy"
         }
         Write-Host "[+] Desplegando plugin Antigravity en: $Destination" -ForegroundColor Green
 
         $syncScript = Join-Path $ScriptRoot "ecc-agy-sync.ps1"
         $phase = if ($Profile -eq "full") { "all" } else { "generic" }
         pwsh -NoProfile -File $syncScript -Phase $phase -Clean
-        Write-Host "[✓] Plugin ecc-agy instalado en Antigravity bajo perfil '$Profile'." -ForegroundColor Green
+        # Asegurar copia espejo hacia aagy
+        if (Test-Path (Join-Path $env:USERPROFILE ".gemini\config\plugins\ecc-agy")) {
+            Copy-Item -Path (Join-Path $env:USERPROFILE ".gemini\config\plugins\ecc-agy\*") -Destination $Destination -Recurse -Force
+        }
+        Write-Host "[✓] Plugin aagy instalado en Antigravity bajo perfil '$Profile'." -ForegroundColor Green
     }
 }
 

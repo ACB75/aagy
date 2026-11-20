@@ -233,6 +233,16 @@ Estrategia Fast-Rollback:
         }
     }
 
+    # 7.6. Auditoría de Paridad Multi-Harness (aagy <-> ecc)
+    $pluginParityScript = Join-Path $PSScriptRoot "audit-plugin-parity.ps1"
+    if (Test-Path $pluginParityScript) {
+        Write-Host "[+] Ejecutando auditoría de paridad multi-harness (aagy <-> ecc)..." -ForegroundColor Cyan
+        pwsh -NoProfile -File $pluginParityScript
+        if ($LASTEXITCODE -ne 0) {
+            throw "La auditoría de paridad multi-harness detectó divergencias entre aagy y ecc. Corrija los manifiestos antes de continuar."
+        }
+    }
+
     # 7. Commit si hay cambios staged o unstaged
     $dirty = (git status --porcelain)
     if ($dirty) {

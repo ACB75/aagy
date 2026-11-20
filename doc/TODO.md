@@ -8,6 +8,72 @@
 
 ---
 
+## 0. Máxima Prioridad: Optimización de Tokens, Purga General, Unificación y Estructura `/doc` v2
+
+### Tarea 0.1: Optimización Máxima de Tokens, Purga de Artefactos Muertos, Unificación y Reestructuración `scripts/`
+
+- [ ] **Ejecutar optimización máxima de tokens, purgar archivos no usados, unificar skills/agents/rules duplicados y reestructurar `scripts/{py,sh,pwsh}/tests/`**
+  - **01 - ROLE:** Principal Agentic Runtime & Token Budget Optimizer (experto en compresión de system prompts, poda de contexto y arquitectura modular de plugins Antigravity / Claude Code).
+  - **02 - CONTEXT:** `[Sector: Token Optimization & Plugin Architecture]` `[Data Type: rules/ (39 archivos), skills/ (263), agents/ (49), commands/ (97), scripts/ (192)]` `[Objective: (1) Eliminar duplicación entre rules/AGENTS.md y <repo>/AGENTS.md; (2) Dejar en rules/ únicamente AGENTS.md + pr-automerge-lifecycle.md, moviendo las 37 reglas de lenguaje/stack a skills lazy-loaded (unificando duplicados/similares); (3) Purgar skills/agents/commands muertos o redundantes unificando similares y separando Core Tier-1 vs Tier-2; (4) Reestructurar scripts/ en scripts/py/ (+ /tests), scripts/sh/ (+ /tests) y scripts/pwsh/ (+ /tests)]` `[Restrictions: Cero pérdida de cobertura (pytest >= 80% en verde); cero incremento en reglas siempre activas; mantener presupuesto rules <= 24 KB/archivo y <= 20k tokens agregados]`.
+  - **03 - PHASE 1 (ANALYSIS):**
+    - El plugin actual carga `39` archivos en `rules/` en cada turno y duplica `AGENTS.md`, mientras el repo arrastra `263` skills, `49` agentes, `97` comandos legacy y `192` scripts mezclados en `scripts/ecc-agy/` y `scripts/bin/ecc-agy/`.
+  - **04 - PHASE 2 (STRATEGY):**
+    - Auditar uso real, unificar duplicados/similares en `skills/`, `agents/` y `rules/`, migrar guías de stack a skills lazy-loaded, purgar artefactos muertos y reorganizar `scripts/` por runtime (`py/`, `sh/`, `pwsh/`) con su propia subcarpeta `tests/`.
+  - **05 - PHASE 3 (EXECUTION):**
+    1. Deduplicar `AGENTS.md` y migrar las `37` reglas de stack a skills lazy-loaded unificadas.
+    2. Unificar y podar `skills/`, `agents/` y `commands/` dejando solo Core Tier-1 + catálogo Tier-2 limpio.
+    3. Reorganizar `scripts/` en `scripts/py/tests/`, `scripts/sh/tests/` y `scripts/pwsh/tests/` actualizando invocaciones en `hooks.json` y skills.
+    4. Ejecutar `pytest`, `audit-workspace.ps1` y `lint-markdown.ps1` con código de salida `0`.
+  - **06 - PHASE 4 (CRITIC):**
+    - *Auditoría*: Verificar que ningún hook o skill activo rompa rutas tras mover `scripts/bin/ecc-agy/` $\rightarrow$ `scripts/pwsh/` / `scripts/sh/` / `scripts/py/`.
+  - **07 - PHASE 5 (FORMAT):**
+    - Plugin ordenado, consumo mínimo de tokens en `rules/` y `customizations`, y tests 100% en verde.
+  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens) para poda y unificación; **Carbon ($C_6$)** para migración de rutas y tests.
+  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
+
+### Tarea 0.2: Purga y Regeneración Limpia de `/doc` v2, Parametrización `docs-map.json` y Paridad 1-a-1 Manual
+
+- [ ] **Purgar `/doc` y regenerarlo desde cero con estructura v2 (`00-governance`..`06-backlog`, `<folder>/dgrms/`), parametrizar scripts y garantizar paridad manual $\leftrightarrow$ plugin**
+  - **01 - ROLE:** Documentation Governance & Developer Experience Architect.
+  - **02 - CONTEXT:** `[Sector: Documentation Architecture & CLI Workflow Parity]` `[Data Type: /doc v2, .governance/docs-map.json, scripts/{py,sh,pwsh}, diagramas .puml/.bpmn/.mmd]` `[Objective: Purgar doc/plan/ y documentación obsoleta que no siga convención; regenerar /doc v2 (raíz solo INDEX.md, CONTEXT.md, STATUS.md, LOG.md; 00-governance a 06-backlog; dgrms/ en todas las carpetas con diagramas; the-security-guide.md conservado y STACK_MODERNO_GOOGLE.md renombrado a google-modern-stack.md); parametrizar rutas vía .governance/docs-map.json con fallback retrocompatible para home-lab; habilitar flujo flexible [IDEAS -> REQUISITOS -> PLAN -> TODO] y paridad 1-a-1 manual]` `[Restrictions: Zero-Breaking con home-lab mediante fallback; validar rutas contra path traversal; ver REQ_doc_structure_v2_and_manual_parity.md]`.
+  - **03 - PHASE 1 (ANALYSIS):**
+    - Ver requisitos aprobados en [REQ_doc_structure_v2_and_manual_parity.md](file:///c:/Workspace/projects/ecc/doc/plan/REQ_doc_structure_v2_and_manual_parity.md).
+  - **04 - PHASE 2 (STRATEGY):**
+    - Implementar resolvedor `.governance/docs-map.json` con fallback $\rightarrow$ migrar/regenerar `/doc` v2 $\rightarrow$ documentar `DOC_STANDARDS.md` y `MANUAL_WORKFLOW.md`.
+  - **05 - PHASE 3 (EXECUTION):**
+    1. Implementar resolvedor de rutas + tests unitarios.
+    2. Purgar `doc/` heredado y regenerar árbol `/doc` v2 rescatando ADRs (`02-adr/`), `the-security-guide.md`, `google-modern-stack.md` y plantillas renombradas (`TEMPLATE_ADR.md`, `TEMPLATE_POSTMORTEM.md`).
+    3. Actualizar scripts para flujo flexible y paridad CLI manual, verificando `pytest` y `lint-markdown.ps1` (exit `0`).
+  - **06 - PHASE 4 (CRITIC):**
+    - *Auditoría*: Confirmar que `home-lab` sigue operando sin errores gracias al *fallback* y que `complete-task-pr.ps1` mantiene el gate de `pytest` verde.
+  - **07 - PHASE 5 (FORMAT):**
+    - Árbol `/doc` v2 limpio, cero enlaces rotos y tests en verde.
+  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens); **Carbon ($C_6$)** para scripts y tests.
+  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
+
+### Tarea 0.3: Optimización y Unificación del Sistema de Autodescubrimiento y Automejora
+
+- [ ] **Unificar y optimizar `auto-evolve`, `instinct_manager`, `agent-self-evaluation` y skills de aprendizaje continuo en un motor único para `aagy`**
+  - **01 - ROLE:** Autonomous Agent Reliability & Self-Improvement Systems Architect.
+  - **02 - CONTEXT:** `[Sector: Agent Self-Discovery & Continuous Learning]` `[Data Type: auto-evolve, instinct_manager.py, hooks.json, skills de evaluación/aprendizaje]` `[Objective: Unificar las piezas sueltas de autodescubrimiento y automejora en un flujo determinista y acotado en presupuesto para aagy]` `[Restrictions: Toma de requisitos dedicada previa a la implementación; cero inflación de AGENTS.md/rules/; promoción segura con smoke-test y gate de presupuesto]`.
+  - **03 - PHASE 1 (ANALYSIS):**
+    - Existen piezas desconectadas (`auto-evolve.ps1` orientado a `home-lab`, `instinct_manager.py`, skills legacy `continuous-learning-v2` / `eval-harness` / `agent-self-evaluation`).
+    - Ver requisitos aprobados en [REQ_aagy_unified_self_improvement.md](file:///c:/Workspace/projects/ecc/doc/plan/REQ_aagy_unified_self_improvement.md).
+  - **04 - PHASE 2 (STRATEGY):**
+    - Definir requisitos formales primero y consolidar un único motor agnóstico conectado al ciclo de vida y presupuesto.
+  - **05 - PHASE 3 (EXECUTION):**
+    1. Completar toma de requisitos (`REQ_`).
+    2. Unificar módulos y eliminar redundancias.
+    3. Validar con `pytest` y `audit-workspace.ps1` (exit `0`).
+  - **06 - PHASE 4 (CRITIC):**
+    - *Auditoría*: Evitar auto-generación de reglas/skills que desborden el presupuesto de tokens.
+  - **07 - PHASE 5 (FORMAT):**
+    - Motor unificado, documentado y cubierto por tests.
+  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens); **Carbon ($C_6$)** para implementación.
+  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
+
+---
+
 ## 1. Prioridad 1: Harness Universal de Gobernanza (`aagy` / `ecc`) & Automatización Git
 
 *(Completadas y Archivadas en `doc/TODO_DONE/`)*:
@@ -57,32 +123,6 @@
 
 ### Tarea 5.1: Migración de `/ecc` a `/aagy` (*Anything Antigravity*) y Sincronización del Plugin `ecc`
 
-- [ ] **Ejecutar el cierre maestro del backlog: migrar `/ecc` a `/aagy` (*Anything Antigravity*) conservando el historial Git, aplicando *full rename* a `aagy` y sincronizando el plugin `ecc` para Claude Code en `aagy/ecc/`**
-  - **01 - ROLE:** Principal Release & Repository Migration Architect (experto en rebranding estructural de monorepos, migración segura de git remotes/workspaces y publicación de plugins multiagente).
-  - **02 - CONTEXT:** `[Sector: Repository Lifecycle & Brand Migration]` `[Data Type: Git repo /ecc -> /aagy (preservando historial), plugin aagy + plugin Claude Code aagy/ecc/ sincronizado]` `[Objective: Migrar el repositorio actual /ecc a /aagy ("Anything Antigravity") conservando el historial Git, renombrando el remoto en GitHub (gh repo rename aagy), aplicando full rename a aagy (incluido ~/.gemini/config/plugins/aagy) y manteniendo dentro de aagy/ecc/ el plugin para Claude Code llamado ecc siempre sincronizado con aagy para paridad multiagente]` `[Restrictions: Ejecutar EXCLUSIVAMENTE como última tarea del TODO.md tras completar y verificar todas las prioridades anteriores; conservar el historial Git completo; NO regenerar ni purgar la documentación en esta tarea (se ajustará a posteriori); prohibido ejecutar rm/delete destructivo sin verificación previa en /aagy y confirmación explícita del usuario; mantener 0 enlaces rotos y 100% cumplimiento de budget hard gate + paridad aagy<->ecc]`.
-  - **03 - PHASE 1 (ANALYSIS):**
-    - El directorio/nombre raíz `/ecc` ya no refleja la identidad nativa de *Anything Antigravity* (`/aagy`), y es necesario unificar el ecosistema manteniendo el plugin de Claude Code (`ecc`) sincronizado dentro de `aagy/ecc/`.
-    - La documentación se actualizará a posteriori, por lo que esta tarea se centra exclusivamente en la migración limpia de repositorio, remoto, plugin instalado y paridad `aagy` $\leftrightarrow$ `ecc` sin duplicar trabajo documental.
-  - **04 - PHASE 2 (STRATEGY):**
-    - *Enfoque A (In-Place Rename)*: Renombrar carpeta y editar archivos en sitio, arriesgando romper rutas activas antes de validar.
-    - *Enfoque B (History-Preserving Cutover & Dual-Plugin Parity - Recomendado)*:
-      1. Verificar que todas las tareas previas (`2.3` a `4.4`) estén archivadas en `TODO_DONE/` y en verde (`audit-workspace.ps1` + `pytest`).
-      2. Migrar `c:\Workspace\projects\ecc` hacia `c:\Workspace\projects\aagy` (*Anything Antigravity*) **conservando el historial Git completo** y renombrar el remoto (`gh repo rename aagy`), aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, rutas y `~/.gemini/config/plugins/aagy`).
-      3. Estructurar y sincronizar dentro de `aagy/ecc/` el plugin para Claude Code llamado **`ecc`** (con chequeo de paridad automatizado `aagy` $\leftrightarrow$ `ecc` para operar de forma idéntica en multiagentes).
-      4. Validar integridad completa en `/aagy` (`pytest`, `audit-workspace.ps1`, `lint-markdown.ps1`, smoke-test de ambos plugins) y, solo tras confirmación explícita del usuario, eliminar el antiguo directorio `/ecc`.
-  - **05 - PHASE 3 (EXECUTION):**
-    1. Gate previo: confirmar backlog previo (`2.3`–`4.4`) completado al 100%.
-    2. Crear `/aagy` preservando el historial Git (`git log` íntegro), renombrar remoto en GitHub (`gh repo rename aagy`) y ejecutar *full rename* de identidad a `aagy` / *Anything Antigravity*.
-    3. Consolidar dentro de `aagy/ecc/` el plugin de Claude Code **`ecc`** y su mecanismo/script de sincronización y paridad continua con `aagy`.
-    4. Validar `pytest`, `audit-workspace.ps1` y `lint-markdown.ps1` con código de salida `0`.
-    5. Actualizar el plugin instalado a `~/.gemini/config/plugins/aagy`, obtener confirmación final del usuario y retirar `/ecc`.
-  - **06 - PHASE 4 (CRITIC):**
-    - *Auditoría*: Riesgo crítico de pérdida irreversible si se borra `/ecc` antes de validar el 100% de tests, git remote y enlaces en `home-lab` o `~/.gemini/`. Mitigación: cutover en dos pasos con verificación integral en `/aagy` y confirmación explícita antes de borrar `/ecc`.
-  - **07 - PHASE 5 (FORMAT):**
-    - Repositorio `/aagy` operativo con historial íntegro, remoto renombrado, `aagy/ecc/` sincronizado, tests y `audit-workspace.ps1` en verde (exit `0`).
-  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens) para la auditoría de cutover y paridad; **Carbon ($C_6$)** para *full rename* y validación.
-  - **COMPACT TRIGGER:** Al completar el cutover final en `/aagy`.
-
 ---
 
 ## 6. Gobernanza de Modelos, Tokens y Política de Auto-Compact
@@ -91,6 +131,9 @@
 
 | Tarea | Agente Elemental | Modelo Gemini 3.8 | Presupuesto Tokens / Turno | Justificación de Eficiencia |
 | :--- | :--- | :--- | :--- | :--- |
+| **0.1 Tokens, Purga & `scripts/`** | **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (poda) + `flash` (migración) | ~6.000 tokens | Unificación de duplicados, lazy-loading de rules y reordenación `scripts/`. |
+| **0.2 `/doc` v2 & Paridad Manual**| **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (diseño) + `flash` (scripts) | ~6.000 tokens | Resolvedor `docs-map.json` con fallback, purga `/doc` y paridad CLI. |
+| **0.3 Autodescubrimiento Unificado**| **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (diseño) + `flash` (código) | ~6.000 tokens | Unificación de `auto-evolve`, instintos y autoevaluación bajo budget gate. |
 | **2.1 Hard Gate Presupuesto** | **Carbon ($C_6$)** | `flash` | ~1.200 tokens | Código Python stdlib directo sin necesidad de razonamiento extendido. |
 | **2.2 Integración gemini-mcp** | **Carbon ($C_6$)** | `flash` | ~1.000 tokens | Generación de manifiestos JSON estáticos y scripts de soporte. |
 | **2.3 Hooks & AgentShield** | **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (diseño) + `flash` (código) | ~6.000 tokens | Modelado de amenazas de seguridad requiere Pro Thinking; código en Flash. |

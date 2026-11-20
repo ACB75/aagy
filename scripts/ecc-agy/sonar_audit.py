@@ -29,7 +29,7 @@ EXCLUDED_DIRS = {
     ".git", ".gemini", ".antigravity", ".vscode", "node_modules",
     "target", "dist", ".angular", "bin", "obj", "__pycache__",
     ".pytest_cache", ".venv", "venv", "scratch", "brain", "doc",
-    "skills", "agents", "ecc-claude",
+    "skills", "agents", "ecc-claude", "ecc",
 }
 
 MAX_COGNITIVE_COMPLEXITY = 15

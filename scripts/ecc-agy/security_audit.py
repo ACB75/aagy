@@ -34,7 +34,7 @@ RULE_AGENTSHIELD_MCP_SECRET: str = "SEC-AGENTSHIELD-MCP-SECRET"
 EXCLUDED_DIRS = {
     ".git", ".gemini", ".antigravity", ".vscode", "node_modules",
     "target", "dist", ".angular", "bin", "obj", "__pycache__",
-    ".pytest_cache", ".venv", "venv", "scratch", "brain", "ecc-claude",
+    ".pytest_cache", ".venv", "venv", "scratch", "brain", "ecc-claude", "ecc",
 }
 
 SECRET_PATTERNS = [
