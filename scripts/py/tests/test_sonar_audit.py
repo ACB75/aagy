@@ -85,3 +85,20 @@ def run():
     findings = check_empty_blocks("test.py", code_with_empty_block)
     assert len(findings) == 1
     assert "S108" in findings[0].rule_id
+
+
+def test_ci_workflow_references_valid_script_paths():
+    repo_root = Path(__file__).resolve().parent.parent.parent.parent
+    workflow = repo_root / ".github" / "workflows" / "ci-quality-gate.yml"
+    assert workflow.is_file()
+    content = workflow.read_text(encoding="utf-8")
+    assert "scripts/aagy/" not in content
+    assert "scripts/ecc-agy/" not in content
+    assert "scripts/pwsh/" not in content
+    assert "scripts/py/tests/" in content
+    assert "scripts/ps1/tests/" in content
+    assert "scripts/sh/tests/" in content
+    assert "scripts/py/workspace_audit.py" in content
+    assert "scripts/py/sonar_audit.py" in content
+    assert "scripts/py/security_audit.py" in content
+

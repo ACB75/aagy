@@ -13,8 +13,8 @@ flowchart LR
     end
 
     subgraph Gate["3. Automated SonarQube Quality Gate"]
-        SA["scripts/aagy/sonar-audit.py<br/>(S3776, S107, S1192, S108, S1452, S2696, S1068)"]
-        WA["workspace-audit.js<br/>(Phase [4/4] Sonar Audit)"]
+        SA["scripts/py/sonar_audit.py<br/>(S3776, S107, S1192, S108, S1452, S2696, S1068)"]
+        WA["scripts/py/workspace_audit.py<br/>(Phase [4/4] Sonar Audit)"]
         SP["sonar-project.properties<br/>(Multi-Module SonarScanner Config)"]
     end
 

@@ -22,7 +22,7 @@ flowchart TD
         MDLint["Markdown Linter\n(.markdownlint.json)"]
         SonarCheck["SonarQube Quality Gate A\n(Cognitive Complexity <= 15)"]
         SecCheck["Security Audit\n(Secrets, Injection, Hardening)"]
-        PyTests["Unit Tests\n(pytest scripts/aagy/tests/)"]
+        PyTests["Unit Tests\n(pytest scripts/py/tests/ scripts/ps1/tests/ scripts/sh/tests/)"]
         
         GHAction --> MDLint
         GHAction --> Scan
