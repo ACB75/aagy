@@ -4,9 +4,9 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
-PWSH_DIR = REPO_ROOT / "scripts" / "pwsh"
+PS1_DIR = REPO_ROOT / "scripts" / "ps1"
 
-EXPECTED_PWSH_SCRIPTS = [
+EXPECTED_PS1_SCRIPTS = [
     "archive-todo.ps1",
     "audit-pg-locks.ps1",
     "audit-plugin-parity.ps1",
@@ -38,16 +38,16 @@ EXPECTED_PWSH_SCRIPTS = [
 ]
 
 
-def test_pwsh_scripts_exist():
-    assert PWSH_DIR.is_dir(), f"scripts/pwsh directory must exist at {PWSH_DIR}"
-    for script_name in EXPECTED_PWSH_SCRIPTS:
-        script_path = PWSH_DIR / script_name
+def test_ps1_scripts_exist():
+    assert PS1_DIR.is_dir(), f"scripts/ps1 directory must exist at {PS1_DIR}"
+    for script_name in EXPECTED_PS1_SCRIPTS:
+        script_path = PS1_DIR / script_name
         assert script_path.is_file(), f"Expected pwsh script missing: {script_name}"
 
 
-def test_pwsh_scripts_valid_structure():
-    for script_name in EXPECTED_PWSH_SCRIPTS:
-        script_path = PWSH_DIR / script_name
+def test_ps1_scripts_valid_structure():
+    for script_name in EXPECTED_PS1_SCRIPTS:
+        script_path = PS1_DIR / script_name
         content = script_path.read_text(encoding="utf-8")
         assert len(content.strip()) > 0, f"Script {script_name} must not be empty"
         assert (
@@ -59,6 +59,6 @@ def test_pwsh_scripts_valid_structure():
 
 
 def test_auto_evolve_ps1_is_agnostic():
-    content = (PWSH_DIR / "auto-evolve.ps1").read_text(encoding="utf-8")
+    content = (PS1_DIR / "auto-evolve.ps1").read_text(encoding="utf-8")
     assert "home-lab" not in content.lower()
     assert "self_improve.py" in content

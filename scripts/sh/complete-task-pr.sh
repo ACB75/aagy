@@ -141,7 +141,7 @@ if [[ -f "$SCRIPT_DIR/lint-markdown.sh" ]]; then
 fi
 
 TEST_TARGETS=()
-for rel_dir in "scripts/py/tests" "scripts/pwsh/tests" "scripts/sh/tests"; do
+for rel_dir in "scripts/py/tests" "scripts/ps1/tests" "scripts/sh/tests"; do
     if [[ -d "$REPO_ROOT/$rel_dir" ]]; then
         TEST_TARGETS+=("$REPO_ROOT/$rel_dir")
     fi

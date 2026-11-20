@@ -25,7 +25,7 @@ description: "Multimodal diagnostics, context caching, and large log analysis wi
 Ejecuta el CLI determinista de apoyo sobre el archivo de log sospechoso:
 
 ```powershell
-pwsh -File scripts/pwsh/gemini-deep-ops.ps1 analyze-log --file path/to/crash.log
+pwsh -File scripts/ps1/gemini-deep-ops.ps1 analyze-log --file path/to/crash.log
 ```
 
 En Linux/WSL:
@@ -39,7 +39,7 @@ scripts/sh/gemini-deep-ops.sh analyze-log --file path/to/crash.log
 Para integrar el análisis en una autopsia formal SRE:
 
 ```powershell
-pwsh -File scripts/pwsh/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log
+pwsh -File scripts/ps1/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log
 ```
 
 El bloque generado se incorpora directamente en el artefacto `doc/post-mortem/PM_<branch>_<timestamp>.md`.
@@ -52,8 +52,8 @@ Si requieres interacción interactiva directa con las herramientas completas de 
 
 ```powershell
 # 1. Habilitar temporalmente:
-pwsh -File scripts/pwsh/toggle-gemini-mcp.ps1 -Enable
+pwsh -File scripts/ps1/toggle-gemini-mcp.ps1 -Enable
 
 # 2. Tras finalizar la sesión, restaurar el arnés a 0 tokens en reposo:
-pwsh -File scripts/pwsh/toggle-gemini-mcp.ps1 -Disable
+pwsh -File scripts/ps1/toggle-gemini-mcp.ps1 -Disable
 ```

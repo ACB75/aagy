@@ -16,10 +16,10 @@
 .PARAMETER Root
     Directorio raíz del repositorio (por defecto detectado dinámicamente buscando .markdownlint.json).
 .EXAMPLE
-    pwsh -File scripts/pwsh/lint-markdown.ps1
-    pwsh -File scripts/pwsh/lint-markdown.ps1 -Target "*TODO*"
-    pwsh -File scripts/pwsh/lint-markdown.ps1 -Target doc/TODO.md
-    pwsh -File scripts/pwsh/lint-markdown.ps1 -CheckOnly
+    pwsh -File scripts/ps1/lint-markdown.ps1
+    pwsh -File scripts/ps1/lint-markdown.ps1 -Target "*TODO*"
+    pwsh -File scripts/ps1/lint-markdown.ps1 -Target doc/TODO.md
+    pwsh -File scripts/ps1/lint-markdown.ps1 -CheckOnly
 #>
 param(
     [switch]$Fix,

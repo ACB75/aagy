@@ -1,6 +1,6 @@
 ---
 name: sonarqube-quality-gate
-description: "Enforce SonarQube Quality Gate (S3776, S1192, S107, S112, S1452) via scripts/pwsh/sonar-audit.ps1. Not for style formatting."
+description: "Enforce SonarQube Quality Gate (S3776, S1192, S107, S112, S1452) via scripts/ps1/sonar-audit.ps1. Not for style formatting."
 metadata:
   origin: AAGY
 ---
@@ -48,7 +48,7 @@ Enforces SonarQube static analysis rules and Quality Gate `A` ratings across Jav
 ### 1. Run Multi-Language Static Audit (Windows 11 `pwsh`)
 
 ```powershell
-pwsh -NoProfile -File scripts/pwsh/sonar-audit.ps1
+pwsh -NoProfile -File scripts/ps1/sonar-audit.ps1
 ```
 
 ### 2. Run Multi-Language Static Audit (Debian 12 / WSL2 `bash`)

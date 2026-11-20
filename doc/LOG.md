@@ -10,7 +10,7 @@
 ### Hitos y Decisiones Materiales
 
 1. **Nuevo `README.md` Raíz y Sincronización `aagy-ecc/`**:
-   - Regenerado [`README.md`](../README.md) de raíz reflejando la arquitectura definitiva (`aagy` + `aagy-ecc/`, `/doc` v2 con `.governance/docs-map.json`, `scripts/{py,pwsh,sh}/tests/`, motor `self_improve.py`, instalación manual `install.ps1` / `install.sh` y paridad CLI 1-a-1).
+   - Regenerado [`README.md`](../README.md) de raíz reflejando la arquitectura definitiva (`aagy` + `aagy-ecc/`, `/doc` v2 con `.governance/docs-map.json`, `scripts/{py,ps1,sh}/tests/`, motor `self_improve.py`, instalación manual `install.ps1` / `install.sh` y paridad CLI 1-a-1).
    - Sincronizados [`aagy-ecc/README.md`](../aagy-ecc/README.md) y [`aagy-ecc/CLAUDE.md`](../aagy-ecc/CLAUDE.md) con paridad verificada al 100% mediante [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
 2. **Cutover a `c:\Workspace\projects\aagy` Conservando Historial Git y Reinstalación Limpia del Plugin**:
    - Construido y sincronizado `c:\Workspace\projects\aagy` conservando el historial Git íntegro y el remoto renombrado `https://github.com/ACB75/aagy.git`.
@@ -22,10 +22,10 @@
 
 ### Hitos y Decisiones Materiales
 
-1. **Consolidación Final de `scripts/{py,pwsh,sh}/tests/` y Purga de Raíz**:
+1. **Consolidación Final de `scripts/{py,ps1,sh}/tests/` y Purga de Raíz**:
    - Eliminados los directorios proxy heredados `scripts/bin/` y `scripts/aagy/`, junto con los scripts `scripts/*.js` y `scripts/lib/` del antiguo instalador Node.js.
    - Purgados en raíz `manifests/`, `schemas/`, `templates/` (reubicando la plantilla opcional Gemini MCP en [`skills/gemini-deep-ops/templates/gemini-mcp/`](../skills/gemini-deep-ops/templates/gemini-mcp/README.md)), `.gemini/GEMINI.md`, `plugin.json`, `VERSION`, `package-lock.json` y `.vscode/aagy.code-workspace`.
-   - Trasladados `aagy-sync.ps1` y `aagy-sync.sh` a [`scripts/pwsh/aagy-sync.ps1`](../scripts/pwsh/aagy-sync.ps1) y [`scripts/sh/aagy-sync.sh`](../scripts/sh/aagy-sync.sh), manteniendo en raíz [`install.ps1`](../install.ps1) e [`install.sh`](../install.sh).
+   - Trasladados `aagy-sync.ps1` y `aagy-sync.sh` a [`scripts/ps1/aagy-sync.ps1`](../scripts/ps1/aagy-sync.ps1) y [`scripts/sh/aagy-sync.sh`](../scripts/sh/aagy-sync.sh), manteniendo en raíz [`install.ps1`](../install.ps1) e [`install.sh`](../install.sh).
 2. **Compactación de `rules/AGENTS.md` (< 12 KB), `AGENTS.md` Raíz y Retiro de Copia Duplicada `aagy`**:
    - Fusionada `rules/pr-automerge-lifecycle.md` dentro de [`rules/AGENTS.md`](../rules/AGENTS.md) y compactado el archivo único a `< 12 KB` (~7.8 KB / ~2.050 tokens) delegando tutoriales a skills *lazy-loaded*.
    - Reducido [`AGENTS.md`](../AGENTS.md) de raíz a 14 líneas (~1 KB) preservando el marcador de Prompt Caching y retirada la copia duplicada `~/.gemini/config/plugins/aagy` dejando únicamente `~/.gemini/config/plugins/aagy`.
@@ -74,8 +74,8 @@
 
 1. **Poda y Lazy-Loading de Reglas**:
    - Deduplicado `AGENTS.md` raíz (< 1 KB) como puntero ligero con marcador de Prompt Caching, consolidando `rules/` en `AGENTS.md` + `AGENTS.md` y migrando 37 reglas de stack a skills *on-demand* (incl. `typescript-patterns`).
-2. **Reorganización Multi-Runtime `scripts/{py,pwsh,sh}/tests/`**:
-   - Separación limpia por runtime con suites dedicadas (`120/120` tests) y proxies retrocompatibles en `scripts/pwsh/` y `scripts/py/`. Ver [`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md).
+2. **Reorganización Multi-Runtime `scripts/{py,ps1,sh}/tests/`**:
+   - Separación limpia por runtime con suites dedicadas (`120/120` tests) y proxies retrocompatibles en `scripts/ps1/` y `scripts/py/`. Ver [`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md).
 
 ---
 
@@ -90,7 +90,7 @@
 2. **Linter Automático de Paridad de Plugins (`audit_plugin_parity.py`)**:
    - Analizador de simetría estructural y de capacidades entre el plugin raíz `aagy` y el subplugin `aagy/`.
    - Verificación de consistencia de manifiestos, coincidencia de nombres e integración en el paso 7.6 de `complete-task-pr.ps1` y `complete-task-pr.sh`.
-   - Wrappers `scripts/pwsh/audit-plugin-parity.ps1` y `audit-plugin-parity.sh`.
+   - Wrappers `scripts/ps1/audit-plugin-parity.ps1` y `audit-plugin-parity.sh`.
 3. **Calidad y Documentación**:
    - Manual operativo [`doc/manual/MANUAL_aagy_ecc_parity_and_migration.md`](01-architecture/MANUAL_aagy_ecc_parity_and_migration.md).
    - Suite de pruebas `test_audit_plugin_parity.py` con cobertura completa.
@@ -125,8 +125,8 @@
    - Generador de sugerencias exactas de configuración (`--fix`) para Corefile y código Go.
    - Omisión limpia (`SKIPPED`, exit code 0) en repositorios sin infraestructura compose ni CoreDNS.
 2. **Ergonomía CLI e Integración en Lifecycle**:
-   - Wrappers multiplataforma [`scripts/pwsh/validate-ingress-routes.ps1`](../scripts/pwsh/validate-ingress-routes.ps1) y `validate-ingress-routes.sh` con flags `--fix`, `--json` y `--no-strict`.
-   - Integración como compuerta de validación previa en el paso 7.5 de [`complete-task-pr.ps1`](../scripts/pwsh/complete-task-pr.ps1) y `complete-task-pr.sh`.
+   - Wrappers multiplataforma [`scripts/ps1/validate-ingress-routes.ps1`](../scripts/ps1/validate-ingress-routes.ps1) y `validate-ingress-routes.sh` con flags `--fix`, `--json` y `--no-strict`.
+   - Integración como compuerta de validación previa en el paso 7.5 de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1) y `complete-task-pr.sh`.
 3. **Calidad y Documentación**:
    - Manual operativo [`doc/manual/MANUAL_ingress_routes_validator.md`](04-operations/runbooks/MANUAL_ingress_routes_validator.md).
    - Suite de pruebas [`scripts/py/tests/test_validate_ingress_routes.py`](../scripts/py/tests/test_validate_ingress_routes.py) con 6/6 tests pasando (total 108/108 superados al 100%).
@@ -145,8 +145,8 @@
    - Sugerencias inmediatas de remediación segura para garantizar disponibilidad en PostgreSQL LTS multitenant.
    - Exclusión automática de directorios internos (`.git`, `node_modules`, `skills`, `.agents`) en escaneos de árbol.
 2. **Ergonomía CLI e Integración en Lifecycle**:
-   - Wrappers multiplataforma [`scripts/pwsh/audit-pg-locks.ps1`](../scripts/pwsh/audit-pg-locks.ps1) y `audit-pg-locks.sh` con flags `--file`, `--dir`, `--json` y `--no-strict`.
-   - Integración en la compuerta de validación previa en el paso 7.4 de [`complete-task-pr.ps1`](../scripts/pwsh/complete-task-pr.ps1) y `complete-task-pr.sh`.
+   - Wrappers multiplataforma [`scripts/ps1/audit-pg-locks.ps1`](../scripts/ps1/audit-pg-locks.ps1) y `audit-pg-locks.sh` con flags `--file`, `--dir`, `--json` y `--no-strict`.
+   - Integración en la compuerta de validación previa en el paso 7.4 de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1) y `complete-task-pr.sh`.
 3. **Calidad y Documentación**:
    - Manual operativo [`doc/manual/MANUAL_audit_pg_locks.md`](04-operations/runbooks/MANUAL_audit_pg_locks.md).
    - Suite de pruebas [`scripts/py/tests/test_audit_pg_locks.py`](../scripts/py/tests/test_audit_pg_locks.py) con 8/8 tests pasando (total 102/102 superados al 100%).
@@ -164,8 +164,8 @@
    - Exclusión automática de endpoints internos de infraestructura (`/metrics`, `/health`, `/livez`, `/readyz`, `/debug/*`, `/ping`, `/favicon.ico`).
    - Omisión elegante (`SKIPPED`, exit code 0) en repositorios sin carpetas `services/` ni `home-lab-sdk/`.
 2. **Ergonomía CLI e Integración en Lifecycle**:
-   - Wrappers multiplataforma [`scripts/pwsh/audit-sdk-parity.ps1`](../scripts/pwsh/audit-sdk-parity.ps1) y `audit-sdk-parity.sh` con flags `--json` y `--no-strict`.
-   - Integración como compuerta de validación previa en el paso 7.3 de [`complete-task-pr.ps1`](../scripts/pwsh/complete-task-pr.ps1).
+   - Wrappers multiplataforma [`scripts/ps1/audit-sdk-parity.ps1`](../scripts/ps1/audit-sdk-parity.ps1) y `audit-sdk-parity.sh` con flags `--json` y `--no-strict`.
+   - Integración como compuerta de validación previa en el paso 7.3 de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1).
 3. **Calidad y Documentación**:
    - Manual operativo [`doc/manual/MANUAL_sdk_parity_audit.md`](04-operations/runbooks/MANUAL_sdk_parity_audit.md).
    - Suite de pruebas [`scripts/py/tests/test_audit_sdk_parity.py`](../scripts/py/tests/test_audit_sdk_parity.py) con 6/6 tests pasando (total 94/94 pasando al 100%).
@@ -181,7 +181,7 @@
    - `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` trasladado canónicamente a [`doc/adr/TEMPLATE_ADR.md`](00-governance/templates/TEMPLATE_ADR.md).
    - `doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md` renombrado canónicamente a [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](00-governance/templates/TEMPLATE_POSTMORTEM.md).
 2. **Refactorización de Referencias en Código y Documentación**:
-   - Actualizadas referencias en `scripts/py/generate_postmortem.py` y `scripts/pwsh/generate-postmortem.ps1` con retrocompatibilidad ante templates existentes.
+   - Actualizadas referencias en `scripts/py/generate_postmortem.py` y `scripts/ps1/generate-postmortem.ps1` con retrocompatibilidad ante templates existentes.
    - Actualizadas referencias en `README.md`, `doc/INDEX.md`, `doc/README.md`, `.gemini/GEMINI.md`, `rules/common/development-workflow.md` y planes históricos.
 3. **Calidad y Verificación**:
    - Suite [`scripts/py/tests/test_generate_postmortem.py`](../scripts/py/tests/test_generate_postmortem.py) con test específico de path por defecto.
@@ -198,7 +198,7 @@
    - Validación estricta de frontmatter (`description` $\le 140$ caracteres).
    - Protección de skills core de Tier 1 frente a sobreescritura o eliminación accidental.
    - Registro transaccional en `.active_promotions.json`.
-2. **Utilidades de Ergonomía CLI (`scripts/pwsh/`)**:
+2. **Utilidades de Ergonomía CLI (`scripts/ps1/`)**:
    - `enable-skill.ps1` y `enable-skill.sh` (promoción y flag `-List`).
    - `disable-skill.ps1` y `disable-skill.sh` (retirada limpia de skills temporales).
 3. **Calidad y Documentación**:
@@ -233,7 +233,7 @@
    - `pre-commit`: Hook POSIX sh que filtra archivos `.md` staged e invoca `lint-markdown.ps1 -CheckOnly` o `lint-markdown.sh --check-only`, impidiendo confirms con sintaxis rota.
    - `commit-msg`: Hook POSIX sh que invoca `format_commit.py --validate-file <path> --strict`, exigiendo Conventional Commits y cuerpo explicativo $\ge 20$ caracteres.
    - Soporte para variable de bypass de emergencia `GIT_HOOKS_BYPASS=1` y estándar Git `--no-verify`.
-2. **Instalador Idempotente (`scripts/pwsh/`)**:
+2. **Instalador Idempotente (`scripts/ps1/`)**:
    - `install-git-hooks.ps1` y `install-git-hooks.sh` con instalación determinista y soporte para desinstalación limpia con `-Uninstall` / `--uninstall`.
 3. **Documentación y Calidad**:
    - Manual operativo [`doc/manual/MANUAL_git_hooks.md`](04-operations/setup-guides/MANUAL_git_hooks.md).
@@ -325,7 +325,7 @@
    - Creada skill [`skills/engineering-lifecycle/SKILL.md`](../skills/engineering-lifecycle/SKILL.md) e incorporada al catálogo Tier 1 (`generic`).
    - Creado subagente auditor [`agents/lifecycle-coordinator.md`](../agents/lifecycle-coordinator.md).
 3. **Herramienta CLI de Scaffolding de Tareas (`new-lifecycle-task`)**:
-   - Desarrollado [`scripts/py/new_lifecycle_task.py`](../scripts/py/new_lifecycle_task.py) y wrappers [`new-lifecycle-task.ps1`](../scripts/pwsh/new-lifecycle-task.ps1) / `new-lifecycle-task.sh`.
+   - Desarrollado [`scripts/py/new_lifecycle_task.py`](../scripts/py/new_lifecycle_task.py) y wrappers [`new-lifecycle-task.ps1`](../scripts/ps1/new-lifecycle-task.ps1) / `new-lifecycle-task.sh`.
    - Incorporada suite de tests unitarios (`test_new_lifecycle_task.py`) alcanzando 66/66 tests passing (100%).
 4. **Actualización de Reglas de Gobernanza (`rules/AGENTS.md`)**:
    - Incorporado el workflow de 4 fases como regla obligatoria en la sección 1 de `rules/AGENTS.md` y `AGENTS.md`.
@@ -360,7 +360,7 @@
    - Desarrollo del generador [`generate_postmortem.py`](../scripts/py/generate_postmortem.py) e integración automática en el cierre de ramas `fix/*`.
 
 6. **Consolidación de Cierre Atómico, Auto-PR y Pre-Flight Review** (PR #15, PR #16 | Commits `ef04125`, `23c40d9`):
-   - Fortalecimiento de [`complete-task-pr.ps1`](../scripts/pwsh/complete-task-pr.ps1) y [`complete-task-pr.sh`](../scripts/sh/complete-task-pr.sh).
+   - Fortalecimiento de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1) y [`complete-task-pr.sh`](../scripts/sh/complete-task-pr.sh).
    - Auto-archivo sincronizado de tareas completadas (`- [x]`) de `doc/TODO.md` a `doc/TODO_DONE/` a write-time con `lint-markdown.ps1 -Fix`.
    - Pre-merge Quality Gate estricto: markdownlint, suite `pytest` (61 tests) y SonarQube Rating A.
    - Manejo determinista de colecciones bajo `Set-StrictMode -Version Latest`.

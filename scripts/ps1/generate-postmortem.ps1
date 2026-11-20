@@ -9,8 +9,8 @@
 .PARAMETER DryRun
     Muestra la plantilla instanciada sin guardarla en disco.
 .EXAMPLE
-    pwsh -File scripts/pwsh/generate-postmortem.ps1
-    pwsh -File scripts/pwsh/generate-postmortem.ps1 -DryRun
+    pwsh -File scripts/ps1/generate-postmortem.ps1
+    pwsh -File scripts/ps1/generate-postmortem.ps1 -DryRun
 #>
 [CmdletBinding()]
 param(

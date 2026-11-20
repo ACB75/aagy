@@ -23,9 +23,9 @@
 .PARAMETER Help
     Muestra la ayuda detallada.
 .EXAMPLE
-    pwsh -File scripts/pwsh/complete-task-pr.ps1 -ReviewOnly
+    pwsh -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly
 .EXAMPLE
-    pwsh -File scripts/pwsh/complete-task-pr.ps1 -Title "feat-[cluster]: migrar servicios" -Yes
+    pwsh -File scripts/ps1/complete-task-pr.ps1 -Title "feat-[cluster]: migrar servicios" -Yes
 #>
 [CmdletBinding()]
 param(
@@ -199,9 +199,9 @@ Estrategia Fast-Rollback:
         }
     }
 
-    # 7.1. Tests unitarios (py / pwsh / sh)
+    # 7.1. Tests unitarios (py / ps1 / sh)
     $testTargets = @()
-    foreach ($relDir in @("scripts\py\tests", "scripts\pwsh\tests", "scripts\sh\tests")) {
+    foreach ($relDir in @("scripts\py\tests", "scripts\ps1\tests", "scripts\sh\tests")) {
         $candidate = Join-Path $RepoRoot $relDir
         if (Test-Path $candidate) {
             $testTargets += $candidate

@@ -66,7 +66,7 @@ Toda carpeta que almacene diagramas organiza sus fuentes dentro de una subcarpet
 
 ## 3. Parametrización `.governance/docs-map.json` y Retrocompatibilidad
 
-Todos los scripts de automatización (`scripts/py/`, `scripts/pwsh/`, `scripts/sh/`) consumen [`scripts/py/docs_map.py`](../../scripts/py/docs_map.py) en lugar de concatenar rutas fijas a `doc/`.
+Todos los scripts de automatización (`scripts/py/`, `scripts/ps1/`, `scripts/sh/`) consumen [`scripts/py/docs_map.py`](../../scripts/py/docs_map.py) en lugar de concatenar rutas fijas a `doc/`.
 
 1. **Esquema v2 (`schema_version: 2`)**: Declara tanto roles estándar en nivel superior (`constitution`, `map`, `context`, `status`, `history`, `adr_dir`, `adr_index`) como el mapa granular `"paths"` (`todo`, `todo_done`, `ideas`, `plans`, `quick`, `templates`, `postmortems`, `postmortem_template`, `adr_template`, etc.).
 2. **Fallback Clásico Automático (`home-lab`)**: Si `.governance/docs-map.json` no existe o declara esquema v1, `docs_map.py` resuelve automáticamente las rutas heredadas (`doc/TODO.md`, `doc/TODO_DONE/`, `doc/IDEAS.md`, `doc/plan/`, `doc/templates/`, `doc/post-mortem/`, `doc/adr/`), garantizando **Zero-Breaking Changes** en repositorios consumidores.
@@ -78,6 +78,6 @@ Todos los scripts de automatización (`scripts/py/`, `scripts/pwsh/`, `scripts/s
 
 Todo cambio documental debe superar antes del merge:
 
-- `pwsh -NoProfile -File scripts/pwsh/lint-markdown.ps1 -CheckOnly` (exit `0`, estándar DavidAnson `.markdownlint.json`).
-- `pwsh -NoProfile -File scripts/pwsh/map-docs.ps1` (`0` enlaces relativos rotos y `.governance/docs-map.json` íntegro).
+- `pwsh -NoProfile -File scripts/ps1/lint-markdown.ps1 -CheckOnly` (exit `0`, estándar DavidAnson `.markdownlint.json`).
+- `pwsh -NoProfile -File scripts/ps1/map-docs.ps1` (`0` enlaces relativos rotos y `.governance/docs-map.json` íntegro).
 - `python skills/docs-governance/scripts/audit-docs.py --root . --scope spine` y `--scope adr` (integridad estructural y de índices ADR).

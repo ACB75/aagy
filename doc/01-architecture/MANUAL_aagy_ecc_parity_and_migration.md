@@ -56,13 +56,13 @@ Para verificar que no exista deriva ni discrepancias entre ambos plugins:
 
 ```powershell
 # En Windows 11 con PowerShell 7
-pwsh -File scripts/pwsh/audit-plugin-parity.ps1
+pwsh -File scripts/ps1/audit-plugin-parity.ps1
 
 # Solo verificación (retorna código 0 o 1)
-pwsh -File scripts/pwsh/audit-plugin-parity.ps1 -CheckOnly
+pwsh -File scripts/ps1/audit-plugin-parity.ps1 -CheckOnly
 
 # Salida estructurada JSON para pipelines CI/CD
-pwsh -File scripts/pwsh/audit-plugin-parity.ps1 -Json
+pwsh -File scripts/ps1/audit-plugin-parity.ps1 -Json
 ```
 
 En entornos Linux / WSL (POSIX LF):

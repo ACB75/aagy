@@ -11,7 +11,7 @@ import pytest
 
 # Asegurar import de modulos aagy
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
-_PS_SCRIPT = _REPO_ROOT / "scripts" / "pwsh" / "git-flow-helper.ps1"
+_PS_SCRIPT = _REPO_ROOT / "scripts" / "ps1" / "git-flow-helper.ps1"
 _SH_SCRIPT = _REPO_ROOT / "scripts" / "sh" / "git-flow-helper.sh"
 
 

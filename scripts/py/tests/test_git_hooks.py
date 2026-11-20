@@ -9,7 +9,7 @@ import sys
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 HOOKS_DIR = REPO_ROOT / "scripts" / "py" / "hooks"
-SCRIPTS_PWSH_DIR = REPO_ROOT / "scripts" / "pwsh"
+SCRIPTS_PS1_DIR = REPO_ROOT / "scripts" / "ps1"
 SCRIPTS_SH_DIR = REPO_ROOT / "scripts" / "sh"
 
 
@@ -59,10 +59,10 @@ def test_commit_msg_hook_validation(tmp_path):
 
 
 def test_installer_scripts_exist():
-    ps1_installer = SCRIPTS_PWSH_DIR / "install-git-hooks.ps1"
+    ps1_installer = SCRIPTS_PS1_DIR / "install-git-hooks.ps1"
     sh_installer = SCRIPTS_SH_DIR / "install-git-hooks.sh"
 
-    assert ps1_installer.exists(), "install-git-hooks.ps1 debe existir en scripts/pwsh/"
+    assert ps1_installer.exists(), "install-git-hooks.ps1 debe existir en scripts/ps1/"
     assert sh_installer.exists(), "install-git-hooks.sh debe existir en scripts/sh/"
 
 

@@ -20,7 +20,7 @@
 .PARAMETER Clean
     Si se especifica, limpia previamente las carpetas skills/ y agents/ del destino antes de sincronizar.
 .EXAMPLE
-    pwsh -File scripts/pwsh/aagy-sync.ps1 -Phase generic -Clean
+    pwsh -File scripts/ps1/aagy-sync.ps1 -Phase generic -Clean
 #>
 param(
     [ValidateSet("generic", "infra", "kakebo", "cluster", "token-hill", "all", "status")]

@@ -60,7 +60,7 @@ Execute the mandatory 4-phase engineering lifecycle for any non-trivial feature,
 5. Execute atomic commit, push, PR creation, conflict auto-resolution, and squash-automerge:
 
    ```powershell
-   pwsh -File scripts/pwsh/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <title>"
+   pwsh -File scripts/ps1/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <title>"
    ```
 
 6. Promote to Sandbox / Live via `git-flow-helper.ps1 -Action promote -Tag ...`.
@@ -70,7 +70,7 @@ Execute the mandatory 4-phase engineering lifecycle for any non-trivial feature,
 Initialize templates or register quick/idea entries from any entry phase (`ALL`, `IDEAS`, `REQ`, `PLAN`, `TODO`):
 
 ```powershell
-pwsh -File scripts/pwsh/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
+pwsh -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
 ```
 
 Or in Linux / WSL:

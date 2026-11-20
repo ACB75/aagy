@@ -13,7 +13,7 @@
 flowchart TD
     subgraph Core["Repositorio Maestro Anything Antigravity (/aagy)"]
         Root["aagy (Raíz: plugin.json, hooks.json, rules/AGENTS.md, skills/, agents/)"]
-        Scripts["scripts/{py,pwsh,sh}/tests/<br/>(Automatización Multi-Runtime & Paridad Manual 1-a-1)"]
+        Scripts["scripts/{py,ps1,sh}/tests/<br/>(Automatización Multi-Runtime & Paridad Manual 1-a-1)"]
         Docs["doc/ v2 + .governance/docs-map.json<br/>(00-governance .. 06-backlog + fallback home-lab)"]
         SubPlugin["aagy-ecc/<br/>(Distribución Hermana para Claude Code)"]
     end
@@ -56,7 +56,7 @@ pwsh -NoProfile -File install.ps1 -Target agy -Profile full
 pwsh -NoProfile -File install.ps1 -Target aagy-ecc -Destination C:\Ruta\A\MiProyecto
 
 # 4. Sincronizar perfil de dominio específico (infra, kakebo, cluster, token-hill)
-pwsh -NoProfile -File scripts/pwsh/aagy-sync.ps1 -Phase kakebo -TargetProject C:\Ruta\A\MiProyecto
+pwsh -NoProfile -File scripts/ps1/aagy-sync.ps1 -Phase kakebo -TargetProject C:\Ruta\A\MiProyecto
 ```
 
 ### Linux / WSL / macOS (POSIX LF `\n`)
@@ -71,34 +71,34 @@ pwsh -NoProfile -File scripts/pwsh/aagy-sync.ps1 -Phase kakebo -TargetProject C:
 
 ---
 
-## 4. Estructura Consolidada de Scripts (`scripts/{py,pwsh,sh}/tests/`)
+## 4. Estructura Consolidada de Scripts (`scripts/{py,ps1,sh}/tests/`)
 
 Toda la automatización del ecosistema reside en tres motores multi-runtime con suites `pytest` dedicadas (`154/154` tests) y **paridad manual 1-a-1** (cualquier flujo es ejecutable desde terminal sin depender del plugin):
 
 - **[`scripts/py/`](scripts/py/)**: Motores Python 3 stdlib pura (`docs_map.py`, `new_lifecycle_task.py`, `self_improve.py`, `instinct_manager.py`, `workspace_audit.py`, `sonar_audit.py`, `security_audit.py`, `audit_plugin_parity.py`, `map_docs.py`, `archive_todo.py`, `sync_ideas_todo.py`, `format_commit.py`, `validate_branch.py`, `generate_postmortem.py`) y pruebas en `scripts/py/tests/`.
-- **[`scripts/pwsh/`](scripts/pwsh/)**: Wrappers nativos para Windows PowerShell 7 (`complete-task-pr.ps1`, `new-lifecycle-task.ps1`, `audit-workspace.ps1`, `auto-evolve.ps1`, `aagy-sync.ps1`, `lint-markdown.ps1`, `map-docs.ps1`, etc.) y pruebas en `scripts/pwsh/tests/`.
+- **[`scripts/ps1/`](scripts/ps1/)**: Wrappers nativos para Windows PowerShell 7 (`complete-task-pr.ps1`, `new-lifecycle-task.ps1`, `audit-workspace.ps1`, `auto-evolve.ps1`, `aagy-sync.ps1`, `lint-markdown.ps1`, `map-docs.ps1`, etc.) y pruebas en `scripts/ps1/tests/`.
 - **[`scripts/sh/`](scripts/sh/)**: Wrappers POSIX con finales de línea `LF (\n)` estrictos para Linux/WSL y pruebas en `scripts/sh/tests/`.
 
 ### Comandos Frecuentes de Verificación y Ciclo de Vida
 
 ```powershell
 # Ejecutar suite completa de tests multi-runtime (Python, PowerShell y Shell)
-python -m pytest scripts/py/tests scripts/pwsh/tests scripts/sh/tests -q
+python -m pytest scripts/py/tests scripts/ps1/tests scripts/sh/tests -q
 
 # Auditoría integral de higiene, presupuesto de tokens, SonarQube Rating A y AgentShield
-pwsh -NoProfile -File scripts/pwsh/audit-workspace.ps1 -Clean
+pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1 -Clean
 
 # Auditoría de paridad multi-harness (aagy <-> aagy-ecc)
-pwsh -NoProfile -File scripts/pwsh/audit-plugin-parity.ps1
+pwsh -NoProfile -File scripts/ps1/audit-plugin-parity.ps1
 
 # Validación de enlaces relativos y contrato .governance/docs-map.json
-pwsh -NoProfile -File scripts/pwsh/map-docs.ps1
+pwsh -NoProfile -File scripts/ps1/map-docs.ps1
 
 # Linter de Markdown (DavidAnson markdownlint)
-pwsh -NoProfile -File scripts/pwsh/lint-markdown.ps1 -CheckOnly
+pwsh -NoProfile -File scripts/ps1/lint-markdown.ps1 -CheckOnly
 
 # Motor unificado de autodescubrimiento, instintos a doble nivel y automejora con budget gate
-pwsh -NoProfile -File scripts/pwsh/auto-evolve.ps1 -Discover -Scope both
+pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover -Scope both
 ```
 
 ---

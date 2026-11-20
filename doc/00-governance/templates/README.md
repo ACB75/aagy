@@ -11,7 +11,7 @@
 El ciclo de desarrollo en `aagy` y `home-lab` sitúa la **Fase 3 (Documentación y Release Notes)** antes de la **Fase 4 (Propuesta de Commits y PR)** para garantizar:
 
 1. **Inclusión Atómica de la Documentación**: Notas de versión, manuales, diagramas y espina documental (`STATUS.md`, `LOG.md`, ADRs) viajan en el mismo árbol de trabajo que el código.
-2. **Revisión Pre-Flight Exhaustiva**: [`complete-task-pr.ps1`](../../../scripts/pwsh/complete-task-pr.ps1) evalúa el conjunto completo (código, tests, SDK y documentación) antes de abrir o fusionar la PR.
+2. **Revisión Pre-Flight Exhaustiva**: [`complete-task-pr.ps1`](../../../scripts/ps1/complete-task-pr.ps1) evalúa el conjunto completo (código, tests, SDK y documentación) antes de abrir o fusionar la PR.
 3. **Cero Deriva Contractual**: El squash-merge integra implementación y trazabilidad documental en un único commit atómico reversible.
 
 ---
@@ -34,12 +34,12 @@ El ciclo de desarrollo en `aagy` y `home-lab` sitúa la **Fase 3 (Documentación
 1. Instancia desde cualquier punto de entrada (`IDEAS`, `REQ`, `PLAN`, `TODO` o `ALL`):
 
    ```powershell
-   pwsh -NoProfile -File scripts/pwsh/new-lifecycle-task.ps1 -TaskId "feat/<proyecto>/<id>" -Phase PLAN
+   pwsh -NoProfile -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/<proyecto>/<id>" -Phase PLAN
    ```
 
 2. Tras implementar y validar (`pytest`, `lint-markdown`, `map-docs`, `audit-workspace`), ejecuta Pre-Flight Review y squash-automerge:
 
    ```powershell
-   pwsh -NoProfile -File scripts/pwsh/complete-task-pr.ps1 -ReviewOnly
-   pwsh -NoProfile -File scripts/pwsh/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
+   pwsh -NoProfile -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly
+   pwsh -NoProfile -File scripts/ps1/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
    ```
