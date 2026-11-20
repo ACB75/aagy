@@ -9,16 +9,16 @@
 
 ## 1. Contexto, Necesidad y Objetivos de Negocio
 
-- **Problema de Negocio / Técnico**: El repositorio actual `c:\Workspace\projects\ecc` arrastra documentación histórica fragmentada (múltiples planes, estados intermedios, referencias mixtas a `ecc` y `ecc-claude`) y mantiene el nombre de directorio/repositorio `/ecc`, el cual ya no representa la identidad nativa de **Anything Antigravity (`/aagy`)**.
-- **Objetivo Principal**: Ejecutar como **última tarea atómica del `TODO.md`** (tras completar las Prioridades 2, 3 y 4) la purga y regeneración limpia de toda la documentación junto con la creación del repositorio limpio `/aagy` (*Anything Antigravity*) y la retirada segura de `/ecc`.
+- **Problema de Negocio / Técnico**: El repositorio actual `c:\Workspace\projects\ecc` mantiene el nombre de directorio/repositorio `/ecc`, el cual ya no representa la identidad nativa de **Anything Antigravity (`/aagy`)**, y requiere mantener el plugin hermano **`ecc`** para Claude Code sincronizado dentro de `aagy/ecc/`.
+- **Objetivo Principal**: Ejecutar como **última tarea atómica del `TODO.md`** (tras completar las Prioridades 2, 3 y 4) la migración del repositorio `/ecc` hacia `/aagy` (*Anything Antigravity*) conservando el historial Git, aplicando *full rename* a `aagy` y sincronizando `aagy/ecc/`.
 - **Alcance (`In-Scope`)**:
   - Gate previo de completitud del backlog (`Tareas 2.3` a `4.4` completadas y verificadas).
-  - Migración del repositorio hacia `c:\Workspace\projects\aagy` (*Anything Antigravity*) **conservando el historial Git completo** y aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, `AGENTS.md`, scripts, tests e identificador `~/.gemini/config/plugins/aagy`).
-  - Mantenimiento y sincronización continua del **plugin de Claude Code llamado `ecc`** dentro de `/aagy`, garantizando paridad funcional y de capacidades multiagente entre `aagy` (Antigravity) y `ecc` (Claude Code).
-  - Eliminación de toda la documentación heredada y generación desde cero de la espina documental limpia en `aagy/doc/` (`INDEX.md`, `STATUS.md`, `LOG.md`, `TODO.md`, `adr/`, `manual/`, `diagrams/`, `.governance/docs-map.json`) y `aagy/README.md`.
+  - Migración del repositorio hacia `c:\Workspace\projects\aagy` (*Anything Antigravity*) **conservando el historial Git completo**, renombrando el remoto (`gh repo rename aagy`) y aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, `AGENTS.md`, scripts, tests e identificador `~/.gemini/config/plugins/aagy`).
+  - Mantenimiento y sincronización continua del **plugin de Claude Code llamado `ecc`** dentro de **`aagy/ecc/`**, garantizando paridad funcional y de capacidades multiagente entre `aagy` (Antigravity) y `ecc` (Claude Code).
   - Validación integral (`pytest`, `audit-workspace.ps1`, `lint-markdown.ps1`, presupuesto de tokens `rules` y `customizations`, paridad `aagy` $\leftrightarrow$ `ecc`) y retirada controlada de `/ecc` tras confirmación explícita del usuario.
 - **Fuera de Alcance (`Out-of-Scope`)**:
   - Ejecutar la migración antes de completar las `Tareas 2.3` a `4.4`.
+  - Borrar o regenerar toda la documentación actual en esta tarea (se realizarán cambios documentales a posteriori para evitar trabajo duplicado).
   - Modificar la lógica funcional de los microservicios de `home-lab` (salvo actualizar rutas o referencias al plugin si fuera necesario).
   - Borrar `/ecc` sin verificación previa al 100% en `/aagy` ni sin confirmación explícita del usuario.
 
@@ -28,8 +28,8 @@
 
 ### 2.1. Requisitos Funcionales
 
-- **`RF-01` (Orden de Ejecución Estricto)**: `Tarea 5.1` actúa como cierre maestro del backlog; no debe ejecutarse hasta que todas las tareas previas (`2.3`, `3.1`–`3.4`, `4.1`–`4.4`) estén archivadas en `TODO_DONE/` y fusionadas en `main`.
-- **`RF-02` (Regeneración Documental Limpia)**: Toda la documentación previa obsoleta, borradores de planes históricos (`doc/plan/`), historiales redundantes y referencias desactualizadas deben ser descartados en la rama de cierre, generando una documentación nueva, minimalista, veraz y 100% sincronizada con el código real de `/aagy` y su plugin hermano `ecc`.
+- **`RF-01` (Orden de Ejecución Estricto)**: `Tarea 5.1` actúa como cierre maestro del backlog; no debe ejecutarse hasta que todas las tareas previas (`2.3`, `3.1`–`3.5`, `4.1`–`4.4`) estén archivadas en `TODO_DONE/` y fusionadas en `main`.
+- **`RF-02` (Preservación Documental Sin Duplicar Trabajo)**: No se purga ni regenera la documentación completa en esta tarea; solo se actualizan las rutas/identificadores estrictamente necesarios para evitar enlaces rotos tras el rename a `/aagy`.
 - **`RF-03` (Full Rename `/ecc` $\rightarrow$ `/aagy` Conservando Historial Git y Remoto)**: El repositorio `c:\Workspace\projects\aagy` (*Anything Antigravity*) debe **conservar el historial Git completo** (`git log` íntegro), renombrar el remoto en GitHub (`gh repo rename aagy`) para preservar issues/PRs, y aplicar *full rename* a `aagy` (`plugin.json`, `package.json`, `AGENTS.md`, scripts, tests e identificador de plugin `~/.gemini/config/plugins/aagy`).
 - **`RF-04` (Invariante de Presupuesto y Calidad)**: El repositorio `/aagy` debe superar con código de salida `0` el hard gate de presupuesto (`rules` $\le 24\text{ KB}$/archivo y $\le 20.000$ tokens agregados, `MAX_SKILL_DESC = 140`, `MAX_AGENT_DESC = 120`, MCPs pesados desactivados por defecto), `pytest`, `audit-workspace.ps1` y `lint-markdown.ps1`.
 - **`RF-05` (Cutover en Dos Fases y Retirada Segura de `/ecc`)**: Primero se construye y valida completamente `/aagy`; únicamente tras confirmar que todas las pruebas, enlaces y los plugins (`aagy` + `ecc`) operan correctamente y contar con aprobación explícita del usuario, se elimina `/ecc`.

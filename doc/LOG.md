@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-11-20: Git Hooks Nativos e Instalador Determinista
+
+### Hitos y Decisiones Materiales
+
+1. **Hooks Git Locales (`scripts/ecc-agy/hooks/`)**:
+   - `pre-commit`: Hook POSIX sh que filtra archivos `.md` staged e invoca `lint-markdown.ps1 -CheckOnly` o `lint-markdown.sh --check-only`, impidiendo confirms con sintaxis rota.
+   - `commit-msg`: Hook POSIX sh que invoca `format_commit.py --validate-file <path> --strict`, exigiendo Conventional Commits y cuerpo explicativo $\ge 20$ caracteres.
+   - Soporte para variable de bypass de emergencia `GIT_HOOKS_BYPASS=1` y estándar Git `--no-verify`.
+2. **Instalador Idempotente (`scripts/bin/ecc-agy/`)**:
+   - `install-git-hooks.ps1` y `install-git-hooks.sh` con instalación determinista y soporte para desinstalación limpia con `-Uninstall` / `--uninstall`.
+3. **Documentación y Calidad**:
+   - Manual operativo [`doc/manual/MANUAL_git_hooks.md`](manual/MANUAL_git_hooks.md).
+   - Suite [`scripts/ecc-agy/tests/test_git_hooks.py`](../scripts/ecc-agy/tests/test_git_hooks.py) con 83/83 tests pasando (100%).
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Optimización de Prompt Caching de Gemini 3.8 y Reordenamiento Estático de Reglas
 
 ### Hitos y Decisiones Materiales
