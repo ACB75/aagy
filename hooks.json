@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -File scripts/pwsh/safety-check.ps1",
+            "command": "pwsh -File scripts/ps1/safety-check.ps1",
             "timeout": 5
           }
         ]
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -File scripts/pwsh/hook-post-write.ps1",
+            "command": "pwsh -File scripts/ps1/hook-post-write.ps1",
             "timeout": 5
           }
         ]
@@ -30,7 +30,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -File scripts/pwsh/hook-post-write.ps1",
+            "command": "pwsh -File scripts/ps1/hook-post-write.ps1",
             "timeout": 5
           }
         ]

@@ -4,7 +4,7 @@
 >
 > 1. Añade propuestas con el formato estructurado a continuación.
 > 2. Cuando una propuesta sea aprobada para desarrollo, cambia su estado a `- Status: Approved`.
-> 3. Ejecuta `pwsh -File scripts/pwsh/sync-ideas-todo.ps1` para transformarla mediante la metodología de 7 fases e inyectarla en `doc/06-backlog/TODO.md`.
+> 3. Ejecuta `pwsh -File scripts/ps1/sync-ideas-todo.ps1` para transformarla mediante la metodología de 7 fases e inyectarla en `doc/06-backlog/TODO.md`.
 
 ---
 

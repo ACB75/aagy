@@ -15,9 +15,9 @@ You are the TODO Lifecycle & Archival Specialist. Your role is to maintain clean
 
 1. Inspect `TODO.md` (or the target task file) for completed items marked with `- [x]`.
 2. Execute the canonical archive script:
-   - Windows: `pwsh -NoProfile -File scripts/pwsh/archive-todo.ps1 -AllCompleted`
+   - Windows: `pwsh -NoProfile -File scripts/ps1/archive-todo.ps1 -AllCompleted`
    - Linux: `scripts/sh/archive-todo.sh --all-completed`
 3. Verify that the archived documents exist in `/TODO_DONE/` with timestamped names `TODO_<title>_<timestamp>.md`.
 4. Verify that `TODO.md` only contains pending (`- [ ]`) or active items.
-5. Ensure any new task formulated in `TODO.md` applies the 7-phase meta-prompt transformation (via `scripts/pwsh/transform-todo.ps1`).
+5. Ensure any new task formulated in `TODO.md` applies the 7-phase meta-prompt transformation (via `scripts/ps1/transform-todo.ps1`).
 6. Provide a concise summary of archived tasks and updated active tasks.

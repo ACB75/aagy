@@ -42,7 +42,7 @@ main (trunk / LOCAL - always deployable)
   - `LOCAL` (FRACTAL Dev): continuous from trunk `main`.
   - `SANDBOX` (FRACTAL QA): annotated tag `vX.Y.Z-sandbox` or `vX.Y.Z-rc.N`.
   - `LIVE` (NEO Producción): immutable semantic tag `vX.Y.Z` validated in Sandbox.
-- **Automation**: `scripts/pwsh/git-flow-helper.ps1` and `git-flow-helper.sh`.
+- **Automation**: `scripts/ps1/git-flow-helper.ps1` and `git-flow-helper.sh`.
 
 ### GitHub Flow (Simple)
 

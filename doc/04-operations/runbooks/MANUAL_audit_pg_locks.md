@@ -2,7 +2,7 @@
 
 > **Ecosistema**: AAGY Ecosystem & Home-Lab  
 > **Ubicación Canónica**: `scripts/py/audit_pg_locks.py`  
-> **Wrappers CLI**: `scripts/pwsh/audit-pg-locks.ps1` y `audit-pg-locks.sh`  
+> **Wrappers CLI**: `scripts/ps1/audit-pg-locks.ps1` y `audit-pg-locks.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  
 
 ---
@@ -68,19 +68,19 @@ Adquieren `SHARE` o bloqueos exclusivos de índice:
 
 ```powershell
 # Escanear el repositorio (ignora automáticamente .git, node_modules y skills)
-pwsh -File scripts/pwsh/audit-pg-locks.ps1
+pwsh -File scripts/ps1/audit-pg-locks.ps1
 
 # Auditar un archivo de migración específico
-pwsh -File scripts/pwsh/audit-pg-locks.ps1 -File "services/kakebo/migrations/003_add_index.sql"
+pwsh -File scripts/ps1/audit-pg-locks.ps1 -File "services/kakebo/migrations/003_add_index.sql"
 
 # Auditar un directorio de migraciones
-pwsh -File scripts/pwsh/audit-pg-locks.ps1 -Dir "services/kakebo/migrations"
+pwsh -File scripts/ps1/audit-pg-locks.ps1 -Dir "services/kakebo/migrations"
 
 # Salida estructurada JSON
-pwsh -File scripts/pwsh/audit-pg-locks.ps1 -Json
+pwsh -File scripts/ps1/audit-pg-locks.ps1 -Json
 
 # Modo permisivo (no retornar error 1 ante riesgos MEDIUM)
-pwsh -File scripts/pwsh/audit-pg-locks.ps1 -NoStrict
+pwsh -File scripts/ps1/audit-pg-locks.ps1 -NoStrict
 ```
 
 ### Bash / Linux (WSL / Debian 12)

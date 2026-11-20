@@ -43,7 +43,7 @@ scripts/
 Cualquier invocación heredada a:
 
 ```powershell
-pwsh -File scripts/pwsh/sonar-audit.ps1
+pwsh -File scripts/ps1/sonar-audit.ps1
 ```
 
 o en Linux:
@@ -55,7 +55,7 @@ bash scripts/sh/sonar-audit.sh
 se delega de forma transparente e inmediata a:
 
 ```powershell
-pwsh -File scripts/pwsh/sonar-audit.ps1
+pwsh -File scripts/ps1/sonar-audit.ps1
 ```
 
 manteniendo códigos de salida, paso de argumentos (`$@`) y rendimiento idéntico.

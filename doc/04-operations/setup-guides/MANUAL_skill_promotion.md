@@ -28,7 +28,7 @@ Cuando una tarea específica requiere una skill de Tier 2, esta puede promoverse
 En Windows 11 (`pwsh`):
 
 ```powershell
-pwsh -File scripts/pwsh/enable-skill.ps1 -Name network-bgp-diagnostics
+pwsh -File scripts/ps1/enable-skill.ps1 -Name network-bgp-diagnostics
 ```
 
 En Linux o WSL (`bash` / `sh`):
@@ -40,7 +40,7 @@ En Linux o WSL (`bash` / `sh`):
 ### 2.2. Listar Skills Promovidas
 
 ```powershell
-pwsh -File scripts/pwsh/enable-skill.ps1 -List
+pwsh -File scripts/ps1/enable-skill.ps1 -List
 ```
 
 ### 2.3. Desactivar / Retirar una Skill
@@ -48,7 +48,7 @@ pwsh -File scripts/pwsh/enable-skill.ps1 -List
 Una vez concluida la tarea y fusionada la PR:
 
 ```powershell
-pwsh -File scripts/pwsh/disable-skill.ps1 -Name network-bgp-diagnostics
+pwsh -File scripts/ps1/disable-skill.ps1 -Name network-bgp-diagnostics
 ```
 
 ---

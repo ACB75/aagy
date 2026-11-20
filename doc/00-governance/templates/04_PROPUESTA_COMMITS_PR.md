@@ -82,10 +82,10 @@ M  doc/LOG.md
 
 ```powershell
 # 1. Modo de revisión previa sin mutaciones:
-pwsh -File scripts/pwsh/complete-task-pr.ps1 -ReviewOnly
+pwsh -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly
 
 # 2. Confirmación y fusión atómica tras visto bueno del usuario:
-pwsh -File scripts/pwsh/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
+pwsh -File scripts/ps1/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
 ```
 
 ### 5.2. Promoción Multi-Tier Home-Lab (ADR-0006)
@@ -94,8 +94,8 @@ Tras la fusión en `main` (entorno `LOCAL`), disparar la promoción hacia servid
 
 ```powershell
 # Promoción a SANDBOX (Servidor FRACTAL):
-pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action promote -Tag vX.Y.Z-sandbox
+pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag vX.Y.Z-sandbox
 
 # Promoción a LIVE (Servidor NEO):
-pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action promote -Tag vX.Y.Z
+pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag vX.Y.Z
 ```

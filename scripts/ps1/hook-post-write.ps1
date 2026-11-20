@@ -32,9 +32,9 @@ if (-not $Path -and [Console]::IsInputRedirected) {
 }
 
 if ($Path -and $Path.EndsWith(".md", [System.StringComparison]::OrdinalIgnoreCase) -and (Test-Path $Path)) {
-    $Linter = Join-Path $RepoRoot "scripts\pwsh\lint-markdown.ps1"
+    $Linter = Join-Path $RepoRoot "scripts\ps1\lint-markdown.ps1"
     if (-not (Test-Path $Linter) -and $PayloadCwd) {
-        $Linter = Join-Path $PayloadCwd "scripts\pwsh\lint-markdown.ps1"
+        $Linter = Join-Path $PayloadCwd "scripts\ps1\lint-markdown.ps1"
     }
     if (Test-Path $Linter) {
         pwsh -NoProfile -File $Linter -Target $Path -Fix | Out-Null

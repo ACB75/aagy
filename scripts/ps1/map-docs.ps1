@@ -7,8 +7,8 @@
 .PARAMETER DocRoot
     Directorio o archivo raíz opcional a auditar (si se omite, resuelve desde docs-map.json).
 .EXAMPLE
-    pwsh -File scripts/pwsh/map-docs.ps1
-    pwsh -File scripts/pwsh/map-docs.ps1 -DocRoot "doc/02-adr"
+    pwsh -File scripts/ps1/map-docs.ps1
+    pwsh -File scripts/ps1/map-docs.ps1 -DocRoot "doc/02-adr"
 #>
 [CmdletBinding()]
 param(

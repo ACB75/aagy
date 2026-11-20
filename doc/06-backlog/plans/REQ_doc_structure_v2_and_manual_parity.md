@@ -22,7 +22,7 @@
     - `05-post-mortems/`: `PM_<id>_<fecha>.md`.
     - `06-backlog/`: `IDEAS.md`, `TODO.md`, `done/`, `plans/`, `quick/`.
   - Convención transversal `<folder>/dgrms/` separando `.puml` (casos de uso), `.bpmn` (negocio) y `.mmd` (dominio, arquitectura, actividad y flujo).
-  - Parametrización de los 12 scripts en `scripts/py/` y `scripts/pwsh/` leyendo `.governance/docs-map.json` con *fallback* a rutas heredadas.
+  - Parametrización de los 12 scripts en `scripts/py/` y `scripts/ps1/` leyendo `.governance/docs-map.json` con *fallback* a rutas heredadas.
   - Absorción de la antigua `Tarea 3.5` (renames de `TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md`) para evitar doble movimiento.
 - **Fuera de Alcance (`Out-of-Scope`)**:
   - Re-escribir el contenido histórico de ADRs o `TODO_DONE/` ya archivados (solo se reubican y actualizan enlaces).

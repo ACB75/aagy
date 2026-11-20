@@ -4,7 +4,7 @@
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/py/sonar_audit.py.
 .EXAMPLE
-    pwsh -File scripts/pwsh/sonar-audit.ps1
+    pwsh -File scripts/ps1/sonar-audit.ps1
 #>
 [CmdletBinding()]
 param()

@@ -8,7 +8,7 @@
     "install:claude": "pwsh -NoProfile -File ./install.ps1 -Target aagy-ecc",
     "install:aagy-ecc": "pwsh -NoProfile -File ./install.ps1 -Target aagy-ecc",
     "install:agy": "pwsh -NoProfile -File ./install.ps1 -Target agy",
-    "audit": "pwsh -NoProfile -File ./scripts/pwsh/audit-workspace.ps1"
+    "audit": "pwsh -NoProfile -File ./scripts/ps1/audit-workspace.ps1"
   },
   "workspaces": [
     "aagy-ecc"

@@ -1,7 +1,7 @@
 # Manual de Operación: Despliegue Automatizado por Etiquetas (`git-flow-helper.ps1`)
 
 > **Ecosistema**: AAGY Ecosystem & Home-Lab  
-> **Ubicación Canónica**: `scripts/pwsh/git-flow-helper.ps1` y `git-flow-helper.sh`  
+> **Ubicación Canónica**: `scripts/ps1/git-flow-helper.ps1` y `git-flow-helper.sh`  
 > **Gobernanza**: ADR-0006 (Trunk-Based Development & Multi-Tier Promotion)  
 
 ---
@@ -52,16 +52,16 @@ sequenceDiagram
 
 ```powershell
 # 1. Simulación segura previa (-DryRun)
-pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox -Deploy -DryRun
+pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox -Deploy -DryRun
 
 # 2. Despliegue en SANDBOX (FRACTAL)
-pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox -Deploy
+pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox -Deploy
 
 # 3. Despliegue en LIVE (NEO)
-pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action promote -Tag v1.2.0 -Deploy -Environment live
+pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.2.0 -Deploy -Environment live
 
 # 4. Promoción clásica sin despliegue (solo etiquetado Git)
-pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox
+pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox
 ```
 
 ### Bash / Linux (WSL / Debian 12)

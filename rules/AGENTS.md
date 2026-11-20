@@ -19,7 +19,7 @@
 - **SRE Invariants** (details in `sre-reliability` skill):
   1. *SLI/SLO & Error Budget*: 4 Golden Signals (Latency p95/p99, Traffic RPS, Errors 5xx ratio, Saturation) with 99.9% base SLO; freeze feature velocity if monthly Error Budget is exhausted.
   2. *Blast Radius & Isolation*: Circuit Breakers, Bulkheads, strict timeouts (2s-5s), and Jittered Exponential Backoff. Zero unbounded retries or blocking calls without deadlines.
-  3. *Toil Elimination (<50% cap)*: Codify repetitive operational tasks into idempotent scripts in `scripts/pwsh/`, `scripts/sh/`, or `scripts/py/`.
+  3. *Toil Elimination (<50% cap)*: Codify repetitive operational tasks into idempotent scripts in `scripts/ps1/`, `scripts/sh/`, or `scripts/py/`.
   4. *Resource Throttling & Probes*: Container memory limits, `GOMEMLIMIT=80%` on Go runtimes, JVM container percentage limits, Docker log caps (`max-size: 10m`, `max-file: 3`), and liveness/readiness probes.
   5. *Blameless Postmortems*: Critical outages or `fix/*` incidents require a 5-Whys postmortem in `doc/05-post-mortems/` (or legacy `doc/post-mortem/`).
 
@@ -51,7 +51,7 @@
 
 ### 2.1. Mandatory 4-Phase Engineering Lifecycle (`.governance/docs-map.json`)
 
-- **4-Phase Sequential Workflow (`engineering-lifecycle` skill)**: Execute before merging via `scripts/pwsh/new-lifecycle-task.ps1` (resolving paths from `.governance/docs-map.json` with legacy `home-lab` fallback):
+- **4-Phase Sequential Workflow (`engineering-lifecycle` skill)**: Execute before merging via `scripts/ps1/new-lifecycle-task.ps1` (resolving paths from `.governance/docs-map.json` with legacy `home-lab` fallback):
   1. *Fase 1 — Requisitos & Impacto (`01_TOMA_REQUISITOS_E_IMPACTO.md`)*: Functional/non-functional requirements, Given/When/Then criteria, Home-Lab impact matrix, threat model, and Zero-Breaking Changes Policy.
   2. *Fase 2 — Plan de Acción & TDD (`02_PLAN_ACCION_ARQUITECTURA.md`)*: DRY asset reuse, `home-lab-sdk` sync, Mermaid topology (`dgrms/`), TDD (`RED -> GREEN -> REFACTOR -> VERIFY`), costs, and $< 2$ min rollback plan.
   3. *Fase 3 — Documentación & Release Notes (`03_DOCUMENTACION_Y_RELEASE_NOTES.md`)*: Executed BEFORE commits. SemVer notes, promotion matrix (`LOCAL -> SANDBOX -> LIVE`), docs spine updates (`STATUS.md`, `LOG.md`, ADRs), and 5W Post-Mortem for `fix/*` branches.
@@ -64,14 +64,14 @@
   2. *Mandatory Explanatory Body*: Single-line commits are prohibited; include motivation, affected modules, architectural decisions, and verification tests (exit code 0).
   3. *Prohibition of Autonomous Commits/Pushes*: Never run `git commit` or `git push` without explicit user authorization or pre-flight confirmation.
 - **Automated PR, Auto-Conflict Resolution & Squash-Automerge Lifecycle**:
-  1. *Pre-Flight Review Notice*: Present branch -> `main`, proposed `[type]-[projects]: <title>`, explanatory body, and `git status -s` summary via `pwsh -File scripts/pwsh/complete-task-pr.ps1 -ReviewOnly`.
+  1. *Pre-Flight Review Notice*: Present branch -> `main`, proposed `[type]-[projects]: <title>`, explanatory body, and `git status -s` summary via `pwsh -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly`.
   2. *Atomic Commit, Push & PR*: Upon confirmation (`-Yes`), commit staged changes, push branch to `origin`, and open/detect the PR against `main`.
   3. *Auto-Conflict Resolution & Squash-Automerge*: Resolve mergeable conflicts with `origin/main` favoring task branch changes, execute `gh pr merge --squash --delete-branch`, return to `main`, pull latest state, and delete local task branch.
 
 ### 2.3. Task Lifecycle, Archival & 7-Phase Meta-Prompt Transformation
 
 - **7-Phase Meta-Prompt (`todo-lifecycle` skill)**: Transform every `TODO.md` item through: `01-ROLE` (3-5 top experts), `02-CONTEXT` (`[IN BRACKETS]`), `03-PHASE 1 (ANALYSIS)`, `04-PHASE 2 (STRATEGY: 3 lateral approaches)`, `05-PHASE 3 (EXECUTION)`, `06-PHASE 4 (CRITIC: Devil's Advocate)`, and `07-PHASE 5 (FORMAT)`.
-- **Mandatory TODO Archival**: Completed `- [x]` items in `TODO.md` must be pruned and archived to `doc/06-backlog/done/` (or legacy `/TODO_DONE/`) via `scripts/pwsh/archive-todo.ps1` / `scripts/sh/archive-todo.sh`.
+- **Mandatory TODO Archival**: Completed `- [x]` items in `TODO.md` must be pruned and archived to `doc/06-backlog/done/` (or legacy `/TODO_DONE/`) via `scripts/ps1/archive-todo.ps1` / `scripts/sh/archive-todo.sh`.
 
 ### 2.4. Tooling Synthesis, Documentation & Token Efficiency
 
@@ -79,5 +79,5 @@
   - *Skills (`skills/<name>/SKILL.md`)*: On-demand lazy workflows (`description` $\le 140$ chars).
   - *Subagents (`agents/<name>.md`)*: Context-isolated workers (`description` $\le 120$ chars, least-privilege tools, `flash`/`inherit` model).
   - *Rules (`rules/AGENTS.md`)*: Universal invariants only ($\le 12\text{ KB}$). Auto-execute every new/updated script, skill, or agent immediately (`Smoke-Test on Synthesis`, exit code 0).
-- **Documentation & Write-Time Markdown Linting (`docs-governance` skill)**: Follow `.governance/docs-map.json` (`/doc` v2 layout), persist diagrams in `<folder>/dgrms/`, and run `pwsh -File scripts/pwsh/lint-markdown.ps1 -Target <file> -Fix` on every created/edited `.md` file (`MD022`, `MD032`, `MD031`, `MD009`, `MD012`, `MD047`, exit code 0).
-- **Workspace Hygiene & Token Exhaustion Guard (`workspace-health-audit` & `context-budget` skills)**: Audit regularly via `scripts/pwsh/audit-workspace.ps1 -Clean`. Si la tarea consumirá más tokens de los disponibles antes debes responder: "Estoy cansado, jefe. Cansado de tanto viajar solo como un gorrión en la lluvia. Cansado de no tener un compañero que me diga a dónde vamos, de dónde venimos o por qué".
+- **Documentation & Write-Time Markdown Linting (`docs-governance` skill)**: Follow `.governance/docs-map.json` (`/doc` v2 layout), persist diagrams in `<folder>/dgrms/`, and run `pwsh -File scripts/ps1/lint-markdown.ps1 -Target <file> -Fix` on every created/edited `.md` file (`MD022`, `MD032`, `MD031`, `MD009`, `MD012`, `MD047`, exit code 0).
+- **Workspace Hygiene & Token Exhaustion Guard (`workspace-health-audit` & `context-budget` skills)**: Audit regularly via `scripts/ps1/audit-workspace.ps1 -Clean`. Si la tarea consumirá más tokens de los disponibles antes debes responder: "Estoy cansado, jefe. Cansado de tanto viajar solo como un gorrión en la lluvia. Cansado de no tener un compañero que me diga a dónde vamos, de dónde venimos o por qué".

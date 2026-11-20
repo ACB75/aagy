@@ -34,7 +34,7 @@ Los hooks se distribuyen en `scripts/py/hooks/` y se vinculan a `.git/hooks/` me
 En Windows 11 (`pwsh`):
 
 ```powershell
-pwsh -File scripts/pwsh/install-git-hooks.ps1
+pwsh -File scripts/ps1/install-git-hooks.ps1
 ```
 
 En Linux o WSL (`bash` / `sh`):
@@ -48,7 +48,7 @@ En Linux o WSL (`bash` / `sh`):
 En caso de requerir la retirada de los hooks:
 
 ```powershell
-pwsh -File scripts/pwsh/install-git-hooks.ps1 -Uninstall
+pwsh -File scripts/ps1/install-git-hooks.ps1 -Uninstall
 ```
 
 O en Linux:

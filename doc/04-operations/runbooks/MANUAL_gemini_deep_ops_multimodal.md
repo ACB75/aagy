@@ -33,7 +33,7 @@ flowchart LR
 ### Ejemplo de Diagnóstico de Crash Dump
 
 ```powershell
-pwsh -File scripts/pwsh/gemini-deep-ops.ps1 analyze-log --file /var/log/cluster/service.log
+pwsh -File scripts/ps1/gemini-deep-ops.ps1 analyze-log --file /var/log/cluster/service.log
 ```
 
 Salida estructurada:
@@ -55,5 +55,5 @@ Recomendaciones SRE:
 Al ejecutar `generate-postmortem.ps1` en cualquier rama `fix/*`, la sección diagnóstica de `gemini-deep-ops` puede insertarse automáticamente mediante:
 
 ```powershell
-pwsh -File scripts/pwsh/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log >> doc/post-mortem/PM_fix_cluster_oom_timeout.md
+pwsh -File scripts/ps1/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log >> doc/post-mortem/PM_fix_cluster_oom_timeout.md
 ```

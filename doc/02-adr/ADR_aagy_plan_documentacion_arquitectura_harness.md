@@ -60,7 +60,7 @@
 - **`skills/agent-harness-construction`**: Principios de diseño de action spaces, granularity rules y observation format.
 - **`skills/continuous-agent-loop`**: Patrones de bucles autónomos y compuertas de evaluación.
 - **`skills/google-antigravity-sdk`** y **`agy-customizations`**: Mecánicas internas del runtime de Antigravity.
-- **`scripts/pwsh/lint-markdown.ps1`**: Linter automatizado para validación write-time.
+- **`scripts/ps1/lint-markdown.ps1`**: Linter automatizado para validación write-time.
 
 ### 3.2. Retrocompatibilidad
 

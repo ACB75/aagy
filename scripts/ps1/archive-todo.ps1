@@ -17,7 +17,7 @@
 .PARAMETER DryRun
     Muestra qué tareas se archivarían sin alterar el disco.
 .EXAMPLE
-    pwsh -File scripts/pwsh/archive-todo.ps1 -AllCompleted
+    pwsh -File scripts/ps1/archive-todo.ps1 -AllCompleted
 #>
 param(
     [string]$TodoPath = "",

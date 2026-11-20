@@ -2,7 +2,7 @@
 
 > **Ecosistema**: AAGY Ecosystem & Home-Lab  
 > **Ubicación Canónica**: `scripts/py/validate_ingress_routes.py`  
-> **Wrappers CLI**: `scripts/pwsh/validate-ingress-routes.ps1` y `validate-ingress-routes.sh`  
+> **Wrappers CLI**: `scripts/ps1/validate-ingress-routes.ps1` y `validate-ingress-routes.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  
 
 ---
@@ -31,16 +31,16 @@ El **Validador de Congruencia de Ingress** audita estáticamente esta relación 
 
 ```powershell
 # Comprobación estándar del repositorio
-pwsh -File scripts/pwsh/validate-ingress-routes.ps1
+pwsh -File scripts/ps1/validate-ingress-routes.ps1
 
 # Generar sugerencias exactas de configuración (--fix)
-pwsh -File scripts/pwsh/validate-ingress-routes.ps1 -Fix
+pwsh -File scripts/ps1/validate-ingress-routes.ps1 -Fix
 
 # Salida estructurada JSON
-pwsh -File scripts/pwsh/validate-ingress-routes.ps1 -Json
+pwsh -File scripts/ps1/validate-ingress-routes.ps1 -Json
 
 # Modo permisivo (no retornar error 1 ante discrepancias)
-pwsh -File scripts/pwsh/validate-ingress-routes.ps1 -NoStrict
+pwsh -File scripts/ps1/validate-ingress-routes.ps1 -NoStrict
 ```
 
 ### Bash / Linux (WSL / Debian 12)

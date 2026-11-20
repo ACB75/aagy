@@ -26,10 +26,10 @@ for FILE in $STAGED_MD; do
         continue
     fi
     if command -v pwsh >/dev/null 2>&1; then
-        pwsh -NoProfile -File "$REPO_ROOT/scripts/bin/aagy/lint-markdown.ps1" -Target "$REPO_ROOT/$FILE" -CheckOnly >/dev/null 2>&1
+        pwsh -NoProfile -File "$REPO_ROOT/scripts/ps1/lint-markdown.ps1" -Target "$REPO_ROOT/$FILE" -CheckOnly >/dev/null 2>&1
         STATUS=$?
-    elif [ -f "$REPO_ROOT/scripts/bin/aagy/lint-markdown.sh" ]; then
-        "$REPO_ROOT/scripts/bin/aagy/lint-markdown.sh" --check-only "$REPO_ROOT/$FILE" >/dev/null 2>&1
+    elif [ -f "$REPO_ROOT/scripts/sh/lint-markdown.sh" ]; then
+        "$REPO_ROOT/scripts/sh/lint-markdown.sh" --check-only "$REPO_ROOT/$FILE" >/dev/null 2>&1
         STATUS=$?
     else
         STATUS=0
@@ -37,7 +37,7 @@ for FILE in $STAGED_MD; do
 
     if [ $STATUS -ne 0 ]; then
         echo "[PRE-COMMIT ERROR] El archivo '$FILE' no cumple las reglas de markdownlint."
-        echo "Ejecute: pwsh -File scripts/bin/aagy/lint-markdown.ps1 -Target '$FILE' -Fix"
+        echo "Ejecute: pwsh -File scripts/ps1/lint-markdown.ps1 -Target '$FILE' -Fix"
         LINT_FAILED=1
     fi
 done

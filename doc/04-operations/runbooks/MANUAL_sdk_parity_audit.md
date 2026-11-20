@@ -2,7 +2,7 @@
 
 > **Ecosistema**: AAGY Ecosystem & Home-Lab  
 > **Ubicación Canónica**: `scripts/py/audit_sdk_parity.py`  
-> **Wrappers CLI**: `scripts/pwsh/audit-sdk-parity.ps1` y `audit-sdk-parity.sh`  
+> **Wrappers CLI**: `scripts/ps1/audit-sdk-parity.ps1` y `audit-sdk-parity.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  
 
 ---
@@ -28,16 +28,16 @@ El **Linter de Paridad Estática de Contratos** previene el *contract drift* med
 
 ```powershell
 # Ejecución estándar sobre la raíz del repositorio
-pwsh -File scripts/pwsh/audit-sdk-parity.ps1
+pwsh -File scripts/ps1/audit-sdk-parity.ps1
 
 # Especificando directorios personalizados
-pwsh -File scripts/pwsh/audit-sdk-parity.ps1 -ServicesDir "services" -SdkDir "home-lab-sdk"
+pwsh -File scripts/ps1/audit-sdk-parity.ps1 -ServicesDir "services" -SdkDir "home-lab-sdk"
 
 # Salida estructurada en JSON para pipelines CI/CD
-pwsh -File scripts/pwsh/audit-sdk-parity.ps1 -Json
+pwsh -File scripts/ps1/audit-sdk-parity.ps1 -Json
 
 # Modo no estricto (advertencia sin código de salida 1)
-pwsh -File scripts/pwsh/audit-sdk-parity.ps1 -NoStrict
+pwsh -File scripts/ps1/audit-sdk-parity.ps1 -NoStrict
 ```
 
 ### Bash / Linux (WSL / Debian 12)

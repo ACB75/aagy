@@ -19,20 +19,20 @@ This file provides guidance to Anthropic Claude Code when working with repositor
 
 ## 2. Multi-Runtime Automation & Verification Commands
 
-All operational workflows have 1-to-1 CLI scripts under `scripts/{py,pwsh,sh}/`:
+All operational workflows have 1-to-1 CLI scripts under `scripts/{py,ps1,sh}/`:
 
 ```bash
 # Run full multi-runtime unit test suite (Python, PowerShell, Shell)
-python -m pytest scripts/py/tests scripts/pwsh/tests scripts/sh/tests -q
+python -m pytest scripts/py/tests scripts/ps1/tests scripts/sh/tests -q
 
 # Run workspace hygiene, token budget, SonarQube Rating A, and AgentShield security audit
-pwsh -NoProfile -File scripts/pwsh/audit-workspace.ps1 -Clean
+pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1 -Clean
 
 # Verify multi-harness parity (aagy <-> aagy-ecc)
-pwsh -NoProfile -File scripts/pwsh/audit-plugin-parity.ps1
+pwsh -NoProfile -File scripts/ps1/audit-plugin-parity.ps1
 
 # Validate documentation links and .governance/docs-map.json
-pwsh -NoProfile -File scripts/pwsh/map-docs.ps1
+pwsh -NoProfile -File scripts/ps1/map-docs.ps1
 
 # Unified self-discovery and dual-level instinct manager
 python scripts/py/self_improve.py --discover --scope both
@@ -43,4 +43,4 @@ python scripts/py/self_improve.py --discover --scope both
 - **Canonical Rules**: [`rules/AGENTS.md`](../rules/AGENTS.md) (`< 12 KB`).
 - **Skills & Subagents**: [`skills/`](../skills/) (`description` $\le 140$ chars) and [`agents/`](../agents/) (`description` $\le 120$ chars).
 - **Documentation Spine**: [`doc/INDEX.md`](../doc/INDEX.md), [`doc/CONTEXT.md`](../doc/CONTEXT.md), [`doc/STATUS.md`](../doc/STATUS.md), [`doc/LOG.md`](../doc/LOG.md), and [`.governance/docs-map.json`](../.governance/docs-map.json).
-- **Git & PR Lifecycle**: Short-lived trunk-based branches (`feat/*`, `fix/*`, `refactor/*`, `chore/*`), commits formatted as `[type]-[projects]: <title>` with mandatory explanatory body, and automated PR squash-merge via `scripts/pwsh/complete-task-pr.ps1` / `scripts/sh/complete-task-pr.sh`.
+- **Git & PR Lifecycle**: Short-lived trunk-based branches (`feat/*`, `fix/*`, `refactor/*`, `chore/*`), commits formatted as `[type]-[projects]: <title>` with mandatory explanatory body, and automated PR squash-merge via `scripts/ps1/complete-task-pr.ps1` / `scripts/sh/complete-task-pr.sh`.
