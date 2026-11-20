@@ -1,6 +1,6 @@
 # Plan de Arquitectura y Requisitos: Ciclo de Vida de Tareas y Archivo de TODOs (`TODO_DONE`)
 
-> **Referencia de Gobernanza**: Generado a partir de [`doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`](file:///C:/Workspace/projects/home-lab/doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md) para dar cumplimiento a la regla obligatoria de análisis pre-implementación, gestión del ciclo de vida de tareas y archivo determinista de ítems completados.
+> **Referencia de Gobernanza**: Generado a partir de [`doc/adr/TEMPLATE_ADR.md`](file:///C:/Workspace/projects/home-lab/doc/adr/TEMPLATE_ADR.md) para dar cumplimiento a la regla obligatoria de análisis pre-implementación, gestión del ciclo de vida de tareas y archivo determinista de ítems completados.
 
 ---
 

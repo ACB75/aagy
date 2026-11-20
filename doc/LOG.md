@@ -5,6 +5,22 @@
 
 ---
 
+## 2026-11-20: Reubicación y Estandarización de Plantillas Documentales (ADR y Post-Mortem)
+
+### Hitos y Decisiones Materiales
+
+1. **Estandarización de Ubicaciones y Nombres Canónicos**:
+   - `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` trasladado canónicamente a [`doc/adr/TEMPLATE_ADR.md`](adr/TEMPLATE_ADR.md).
+   - `doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md` renombrado canónicamente a [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](post-mortem/TEMPLATE_POSTMORTEM.md).
+2. **Refactorización de Referencias en Código y Documentación**:
+   - Actualizadas referencias en `scripts/ecc-agy/generate_postmortem.py` y `scripts/bin/ecc-agy/generate-postmortem.ps1` con retrocompatibilidad ante templates existentes.
+   - Actualizadas referencias en `README.md`, `doc/INDEX.md`, `doc/README.md`, `.gemini/GEMINI.md`, `rules/common/development-workflow.md` y planes históricos.
+3. **Calidad y Verificación**:
+   - Suite [`scripts/ecc-agy/tests/test_generate_postmortem.py`](../scripts/ecc-agy/tests/test_generate_postmortem.py) con test específico de path por defecto.
+   - 88/88 tests pasando, markdownlint 100% compliant, SonarQube Rating A.
+
+---
+
 ## 2026-11-20: Promoción On-Demand de Skills Tier-2 a Tier-1
 
 ### Hitos y Decisiones Materiales
@@ -172,7 +188,7 @@
    - Bloqueo sistemático de commits y PRs directas en ramas protegidas (`main`, `master`).
 
 5. **Generador Automatizado de Post-Mortem SRE 5W** (PR #14 | Commit `30b89e5`):
-   - Creación de plantilla SRE [`doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md`](post-mortem/TEMPLATE_POSTMORTEM_5W.md) con análisis Who, What, When, Where, Why/How.
+   - Creación de plantilla SRE [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](post-mortem/TEMPLATE_POSTMORTEM.md) con análisis Who, What, When, Where, Why/How.
    - Desarrollo del generador [`generate_postmortem.py`](../scripts/ecc-agy/generate_postmortem.py) e integración automática en el cierre de ramas `fix/*`.
 
 6. **Consolidación de Cierre Atómico, Auto-PR y Pre-Flight Review** (PR #15, PR #16 | Commits `ef04125`, `23c40d9`):

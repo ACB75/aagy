@@ -2,7 +2,7 @@
 
 See `AGENTS.md` / `~/.gemini/config/plugins/ecc-agy/rules/AGENTS.md` for the unified rules across Antigravity and Gemini CLI:
 
-1. **Pipeline & Mandatory Per-Request Analysis**: `search-first -> plan -> test (RED) -> implement (GREEN) -> refactor -> review -> verify`. Every feature/bugfix/refactor request requires a structured Requirements & Architecture Plan (`doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`) covering:
+1. **Pipeline & Mandatory Per-Request Analysis**: `search-first -> plan -> test (RED) -> implement (GREEN) -> refactor -> review -> verify`. Every feature/bugfix/refactor request requires a structured Requirements & Architecture Plan (`doc/adr/TEMPLATE_ADR.md` or `doc/templates/`) covering:
    - Detailed requirements, edge cases, and implementation plan.
    - Strict backward compatibility and reuse of existing workspace code.
    - Architecture, GoF/architectural patterns, Clean Code (SOLID/KISS/DRY/YAGNI), and proactive UX/DX usability refactors.

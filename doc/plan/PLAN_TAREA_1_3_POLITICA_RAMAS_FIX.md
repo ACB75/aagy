@@ -1,6 +1,6 @@
 # Plan de Requisitos y Arquitectura: Tarea 1.3 - Estandarización de Política de Ramas de Incidencias en el Harness
 
-> **Documento de Requisitos y Arquitectura (Template `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`)**  
+> **Documento de Requisitos y Arquitectura (Template `doc/adr/TEMPLATE_ADR.md`)**  
 > **Proyecto**: `ecc` (Arnés de Gobernanza & GitOps)  
 > **Tipo de Intervención**: Gobernanza y Guardrails de Ramas Git  
 > **Fecha**: 2026-11-07  

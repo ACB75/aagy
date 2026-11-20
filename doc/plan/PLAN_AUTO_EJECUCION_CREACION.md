@@ -1,6 +1,6 @@
 # Plan de Arquitectura y Requisitos: Autoejecución Inmediata de Artefactos Creados (`Smoke-Test on Synthesis`)
 
-> **Referencia de Gobernanza**: Generado a partir de [`doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`](file:///C:/Workspace/projects/home-lab/doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md) para dar cumplimiento a la regla obligatoria de análisis pre-implementación, autoejecución inmediata de artefactos creados y validación de calidad.
+> **Referencia de Gobernanza**: Generado a partir de [`doc/adr/TEMPLATE_ADR.md`](file:///C:/Workspace/projects/home-lab/doc/adr/TEMPLATE_ADR.md) para dar cumplimiento a la regla obligatoria de análisis pre-implementación, autoejecución inmediata de artefactos creados y validación de calidad.
 
 ---
 

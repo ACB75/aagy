@@ -1,6 +1,6 @@
 # Plan de Requisitos y Arquitectura: Tarea 1.2 - Ingesta IDEAS -> TODO y Mapeo Documental
 
-> **Documento de Requisitos y Arquitectura (Template `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`)**  
+> **Documento de Requisitos y Arquitectura (Template `doc/adr/TEMPLATE_ADR.md`)**  
 > **Proyecto**: `ecc`  
 > **Tipo de Intervención**: Nueva Funcionalidad y Automatización DevX  
 > **Fecha**: 2026-11-07  

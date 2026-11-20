@@ -70,11 +70,17 @@ Todos los planes de diseño previos a implementación residen centralizados en [
 
 ## 6. Post-Mortem e Incidentes SRE (`doc/post-mortem/`)
 
-- 🩺 **[`TEMPLATE_POSTMORTEM_5W.md`](post-mortem/TEMPLATE_POSTMORTEM_5W.md)**: Plantilla canónica para autopsias post-incidencia 5W (*blameless*).
+- 🩺 **[`TEMPLATE_POSTMORTEM.md`](post-mortem/TEMPLATE_POSTMORTEM.md)**: Plantilla canónica para autopsias post-incidencia 5W (*blameless*).
 
 ---
 
-## 7. Plantillas del Ciclo de Vida de Ingeniería (`doc/templates/`)
+## 7. Plantillas de Arquitectura y ADR (`doc/adr/`)
+
+- 🏛️ **[`TEMPLATE_ADR.md`](adr/TEMPLATE_ADR.md)**: Plantilla canónica para Decisiones de Arquitectura y Requisitos.
+
+---
+
+## 8. Plantillas del Ciclo de Vida de Ingeniería (`doc/templates/`)
 
 - 📋 **[`doc/templates/README.md`](templates/README.md)**: Índice y guía del flujo de 4 fases (Requisitos -> Plan -> Docs -> Commits).
   - 📝 **[`01_TOMA_REQUISITOS_E_IMPACTO.md`](templates/01_TOMA_REQUISITOS_E_IMPACTO.md)**: Requisitos, matriz de impacto Home-Lab y política Zero-Breaking.
