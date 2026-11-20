@@ -2,13 +2,28 @@
 .SYNOPSIS
     Hook de seguridad determinista ejecutado antes de run_command (PreToolUse).
 .DESCRIPTION
-    Intercepta comandos de riesgo catastrófico (rm -rf /, DROP DATABASE, mkfs).
+    Intercepta comandos de riesgo catastrófico (rm -rf /, DROP DATABASE, mkfs)
+    siguiendo el contrato JSON stdin/stdout de Antigravity PreToolUse.
 #>
 param(
     [string]$CommandLine = ""
 )
 
 $ErrorActionPreference = "Stop"
+
+if (-not $CommandLine -and [Console]::IsInputRedirected) {
+    $rawInput = [Console]::In.ReadToEnd()
+    if ($rawInput -and $rawInput.Trim()) {
+        try {
+            $payload = $rawInput | ConvertFrom-Json
+            if ($payload.toolCall -and $payload.toolCall.args -and $payload.toolCall.args.CommandLine) {
+                $CommandLine = [string]$payload.toolCall.args.CommandLine
+            }
+        } catch {
+            # Ignorar payload no JSON y permitir por defecto si no hay comando parseable
+        }
+    }
+}
 
 if ($CommandLine) {
     $Dangerous = @(
@@ -20,9 +35,14 @@ if ($CommandLine) {
     )
     foreach ($pattern in $Dangerous) {
         if ($CommandLine -match $pattern) {
-            Write-Error "[SAFETY-GUARD] Comando bloqueado por regla de seguridad: $CommandLine"
-            exit 1
+            @{
+                decision = "deny"
+                reason   = "[SAFETY-GUARD] Comando bloqueado por regla de seguridad: $CommandLine"
+            } | ConvertTo-Json -Compress
+            exit 0
         }
     }
 }
+
+@{ decision = "allow" } | ConvertTo-Json -Compress
 exit 0

@@ -5,6 +5,22 @@
 
 ---
 
+## 2026-11-20: Optimización de Prompt Caching de Gemini 3.8 y Reordenamiento Estático de Reglas
+
+### Hitos y Decisiones Materiales
+
+1. **Reestructuración Binaria de `AGENTS.md` y `rules/AGENTS.md`**:
+   - Separación formal en Bloque Estático Invariable (Google 5-Pillar, SRE, Security, Quality, Multi-Stack Standards, Microservice SDK Parity) y Bloque Contextual / Dinámico (Lifecycle 4-fases, Commit PR automation, TODO lifecycle, Archival, Token Exhaustion).
+   - Inclusión de marcador canónico `<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->`.
+   - Sincronización exacta con el plugin global `~/.gemini/config/plugins/ecc-agy/rules/AGENTS.md`.
+2. **Documentación Técnica**:
+   - Creado [`doc/manual/MANUAL_gemini_prompt_caching.md`](manual/MANUAL_gemini_prompt_caching.md) detallando el mecanismo de coincidencia de prefijos determinista y directrices para desarrolladores.
+3. **Calidad y Verificación**:
+   - Test unitario `test_static_prompt_caching_prefix_invariance` incorporado en [`test_workspace_audit.py`](../scripts/ecc-agy/tests/test_workspace_audit.py).
+   - 79/79 tests superados (100%), SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Hooks Nativos, Auditoría AgentShield e Instintos por Proyecto
 
 ### Hitos y Decisiones Materiales
