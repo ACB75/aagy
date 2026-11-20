@@ -21,6 +21,7 @@ EXPECTED_SH_SCRIPTS = [
     "generate-postmortem.sh",
     "git-flow-helper.sh",
     "hook-post-write.sh",
+    "hook-stop-capture.sh",
     "install-git-hooks.sh",
     "lint-markdown.sh",
     "manage-instincts.sh",
@@ -54,3 +55,9 @@ def test_sh_scripts_have_shebang_and_lf():
     bin_dir = REPO_ROOT / "scripts" / "bin" / "ecc-agy"
     for proxy_sh in bin_dir.glob("*.sh"):
         assert b"\r\n" not in proxy_sh.read_bytes(), f"Proxy {proxy_sh.name} must use strict LF"
+
+
+def test_auto_evolve_sh_is_agnostic():
+    content = (SH_DIR / "auto-evolve.sh").read_text(encoding="utf-8")
+    assert "home-lab" not in content.lower()
+    assert "self_improve.py" in content

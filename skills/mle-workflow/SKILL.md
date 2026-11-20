@@ -31,7 +31,7 @@ Use only the lanes that fit the system in front of you. This skill is useful for
 
 - `python-patterns` and `python-testing` for Python implementation and pytest coverage
 - `pytorch-patterns` for deep learning models, data loaders, device handling, and training loops
-- `eval-harness` and `ai-regression-testing` for promotion gates and agent-assisted regression checks
+- `agent-self-evaluation` and `ai-regression-testing` for promotion gates and agent-assisted regression checks
 - `database-migrations`, `postgres-patterns`, and `clickhouse-io` for data storage and analytics surfaces
 - `deployment-patterns`, `docker-patterns`, and `security-review` for serving, secrets, containers, and production hardening
 
@@ -50,7 +50,7 @@ The recommended `minimal --with capability:machine-learning` install keeps the c
 | `code-reviewer` / `mle-reviewer` | Review code quality plus ML-specific leakage, reproducibility, promotion, and monitoring risks |
 | `build-fix` / `pr-test-analyzer` | Diagnose broken CI, flaky evals, missing fixtures, and environment-specific model or dependency failures |
 | `quality-gate` / `test-coverage` | Require automated evidence for transforms, metrics, inference contracts, promotion gates, and rollback behavior |
-| `eval-harness` / `verification-loop` | Turn offline metrics, slice checks, latency budgets, and rollback drills into repeatable gates |
+| `agent-self-evaluation` / `verification-loop` | Turn offline metrics, slice checks, latency budgets, and rollback drills into repeatable gates |
 | `ai-regression-testing` | Preserve every production bug as a regression: missing feature, stale label, bad artifact, schema drift, or serving mismatch |
 | `api-design` / `backend-patterns` | Design prediction APIs, batch jobs, idempotent retraining endpoints, and response envelopes |
 | `database-migrations` / `postgres-patterns` / `clickhouse-io` | Version labels, feature snapshots, prediction logs, experiment metrics, and drift analytics |

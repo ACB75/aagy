@@ -6,20 +6,15 @@ command: true
 
 # Promote Command
 
-Promote instincts from project scope to global scope in continuous-learning-v2.
+Promote instincts and recurring candidates using the unified self-improvement engine (`scripts/py/self_improve.py`).
 
 ## Implementation
 
-Run the instinct CLI using the plugin root path:
+Run the unified self-improvement CLI from the repository root:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" promote [instinct-id] [--force] [--dry-run]
-```
-
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
-
-```bash
-python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py promote [instinct-id] [--force] [--dry-run]
+python3 scripts/py/self_improve.py --review [candidate-id] --repo-root .
+python3 scripts/py/self_improve.py --promote [candidate-id] --confirm --repo-root .
 ```
 
 ## Usage

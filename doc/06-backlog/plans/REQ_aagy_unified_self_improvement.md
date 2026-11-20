@@ -40,10 +40,10 @@
 
 ### 2.2. Criterios de Aceptación Verificables (Given / When / Then)
 
-- [ ] **`CA-01`**: Dado un cierre de sesión con hook `Stop`, cuando se detecte un patrón repetitivo o aprendizaje válido, entonces se registrará en `.agents/instincts/` (o `PLUGIN_DATA`) en $< 1\text{ s}$ sin modificar `AGENTS.md` ni consumir tokens del prompt.
-- [ ] **`CA-02`**: Dado un candidato listo para promoción, cuando supere el umbral y se ejecute el comando de revisión/promoción, entonces el sistema validará el presupuesto de tokens y ejecutará un *smoke-test* antes de solicitar confirmación al usuario.
-- [ ] **`CA-03`**: Dado el rechazo o falta de confirmación del usuario, el artefacto no se escribirá en `skills/`, `rules/` ni `scripts/`.
-- [ ] **`CA-04`**: Cobertura de tests unitarios $\ge 80\%$ sobre el motor unificado (`pytest` exit code `0`).
+- [x] **`CA-01`**: Dado un cierre de sesión con hook `Stop`, cuando se detecte un patrón repetitivo o aprendizaje válido, entonces se registrará en `.agents/instincts/` (o `PLUGIN_DATA`) en $< 1\text{ s}$ sin modificar `AGENTS.md` ni consumir tokens del prompt.
+- [x] **`CA-02`**: Dado un candidato listo para promoción, cuando supere el umbral y se ejecute el comando de revisión/promoción, entonces el sistema validará el presupuesto de tokens y ejecutará un *smoke-test* antes de solicitar confirmación al usuario.
+- [x] **`CA-03`**: Dado el rechazo o falta de confirmación del usuario, el artefacto no se escribirá en `skills/`, `rules/` ni `scripts/`.
+- [x] **`CA-04`**: Cobertura de tests unitarios $\ge 80\%$ sobre el motor unificado (`pytest` exit code `0`).
 
 ---
 

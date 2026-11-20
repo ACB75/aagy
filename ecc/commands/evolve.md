@@ -11,13 +11,13 @@ command: true
 Run the instinct CLI using the plugin root path:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/skills/continuous-learning-v2/scripts/instinct-cli.py" evolve [--generate]
+python3 "${CLAUDE_PLUGIN_ROOT}/../scripts/py/self_improve.py" --discover --repo-root .
 ```
 
-Or if `CLAUDE_PLUGIN_ROOT` is not set (manual installation):
+Or if running directly from the repository root:
 
 ```bash
-python3 ~/.claude/skills/continuous-learning-v2/scripts/instinct-cli.py evolve [--generate]
+python3 scripts/py/self_improve.py --discover --repo-root .
 ```
 
 Analyzes instincts and clusters related ones into higher-level structures:
