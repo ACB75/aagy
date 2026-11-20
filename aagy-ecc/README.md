@@ -1,6 +1,6 @@
-# Anything Antigravity for Claude Code (`aagy-ecc`)
+# Anything Antigravity for Everything Claude Code (`aagy-ecc`)
 
-> **Distribución hermana de Anything Antigravity (`aagy`) para Anthropic Claude Code**
+> **Distribución hermana de Anything Antigravity (`aagy`) para Everything Claude Code**
 > Parte del ecosistema maestro [`aagy`](../README.md).
 
 ---
