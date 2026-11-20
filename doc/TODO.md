@@ -12,25 +12,6 @@
 
 ### Tarea 0.1: Optimización Máxima de Tokens, Purga de Artefactos Muertos, Unificación y Reestructuración `scripts/`
 
-- [ ] **Ejecutar optimización máxima de tokens, purgar archivos no usados, unificar skills/agents/rules duplicados y reestructurar `scripts/{py,sh,pwsh}/tests/`**
-  - **01 - ROLE:** Principal Agentic Runtime & Token Budget Optimizer (experto en compresión de system prompts, poda de contexto y arquitectura modular de plugins Antigravity / Claude Code).
-  - **02 - CONTEXT:** `[Sector: Token Optimization & Plugin Architecture]` `[Data Type: rules/ (39 archivos), skills/ (263), agents/ (49), commands/ (97), scripts/ (192)]` `[Objective: (1) Eliminar duplicación entre rules/AGENTS.md y <repo>/AGENTS.md; (2) Dejar en rules/ únicamente AGENTS.md + pr-automerge-lifecycle.md, moviendo las 37 reglas de lenguaje/stack a skills lazy-loaded (unificando duplicados/similares); (3) Purgar skills/agents/commands muertos o redundantes unificando similares y separando Core Tier-1 vs Tier-2; (4) Reestructurar scripts/ en scripts/py/ (+ /tests), scripts/sh/ (+ /tests) y scripts/pwsh/ (+ /tests)]` `[Restrictions: Cero pérdida de cobertura (pytest >= 80% en verde); cero incremento en reglas siempre activas; mantener presupuesto rules <= 24 KB/archivo y <= 20k tokens agregados]`.
-  - **03 - PHASE 1 (ANALYSIS):**
-    - El plugin actual carga `39` archivos en `rules/` en cada turno y duplica `AGENTS.md`, mientras el repo arrastra `263` skills, `49` agentes, `97` comandos legacy y `192` scripts mezclados en `scripts/ecc-agy/` y `scripts/bin/ecc-agy/`.
-  - **04 - PHASE 2 (STRATEGY):**
-    - Auditar uso real, unificar duplicados/similares en `skills/`, `agents/` y `rules/`, migrar guías de stack a skills lazy-loaded, purgar artefactos muertos y reorganizar `scripts/` por runtime (`py/`, `sh/`, `pwsh/`) con su propia subcarpeta `tests/`.
-  - **05 - PHASE 3 (EXECUTION):**
-    1. Deduplicar `AGENTS.md` y migrar las `37` reglas de stack a skills lazy-loaded unificadas.
-    2. Unificar y podar `skills/`, `agents/` y `commands/` dejando solo Core Tier-1 + catálogo Tier-2 limpio.
-    3. Reorganizar `scripts/` en `scripts/py/tests/`, `scripts/sh/tests/` y `scripts/pwsh/tests/` actualizando invocaciones en `hooks.json` y skills.
-    4. Ejecutar `pytest`, `audit-workspace.ps1` y `lint-markdown.ps1` con código de salida `0`.
-  - **06 - PHASE 4 (CRITIC):**
-    - *Auditoría*: Verificar que ningún hook o skill activo rompa rutas tras mover `scripts/bin/ecc-agy/` $\rightarrow$ `scripts/pwsh/` / `scripts/sh/` / `scripts/py/`.
-  - **07 - PHASE 5 (FORMAT):**
-    - Plugin ordenado, consumo mínimo de tokens en `rules/` y `customizations`, y tests 100% en verde.
-  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens) para poda y unificación; **Carbon ($C_6$)** para migración de rutas y tests.
-  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
-
 ### Tarea 0.2: Purga y Regeneración Limpia de `/doc` v2, Parametrización `docs-map.json` y Paridad 1-a-1 Manual
 
 - [ ] **Purgar `/doc` y regenerarlo desde cero con estructura v2 (`00-governance`..`06-backlog`, `<folder>/dgrms/`), parametrizar scripts y garantizar paridad manual $\leftrightarrow$ plugin**

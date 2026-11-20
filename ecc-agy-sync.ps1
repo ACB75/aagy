@@ -132,6 +132,7 @@ if ($Clean) {
     Write-Host "[+] Limpiando directorio destino: $destRoot" -ForegroundColor Cyan
     if (Test-Path "$destRoot\skills") { Remove-Item -Path "$destRoot\skills" -Recurse -Force }
     if (Test-Path "$destRoot\agents") { Remove-Item -Path "$destRoot\agents" -Recurse -Force }
+    if (Test-Path "$destRoot\rules") { Remove-Item -Path "$destRoot\rules" -Recurse -Force }
 }
 New-Item -ItemType Directory -Force -Path "$destRoot\skills" | Out-Null
 New-Item -ItemType Directory -Force -Path "$destRoot\agents" | Out-Null
@@ -139,10 +140,10 @@ New-Item -ItemType Directory -Force -Path "$destRoot\agents" | Out-Null
 # Sincronizar reglas si es destino global
 if (-not $TargetProject) {
     New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\rules" | Out-Null
-    $ruleSrc = Join-Path $EccRoot "rules\AGENTS.md"
-    if (Test-Path $ruleSrc) {
-        Copy-Item -Path $ruleSrc -Destination "$GlobalPluginDir\rules\AGENTS.md" -Force
-        Write-Host "[+] Regla global sincronizada: AGENTS.md -> $GlobalPluginDir\rules\AGENTS.md" -ForegroundColor Cyan
+    $rulesSrc = Join-Path $EccRoot "rules"
+    if (Test-Path $rulesSrc) {
+        Copy-Item -Path (Join-Path $rulesSrc "*.md") -Destination "$GlobalPluginDir\rules\" -Force
+        Write-Host "[+] Reglas globales sincronizadas -> $GlobalPluginDir\rules\" -ForegroundColor Cyan
     }
     $pluginJsonSrc = Join-Path $EccRoot "plugin.json"
     if (Test-Path $pluginJsonSrc) {

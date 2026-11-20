@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
-# Alterna de forma segura el plugin opcional gemini-mcp (zero-overhead).
-set -euo pipefail
-
+# Forwarding proxy towards canonical scripts/sh/toggle-gemini-mcp.sh
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
-PY_SCRIPT="$REPO_ROOT/scripts/ecc-agy/toggle_gemini_mcp.py"
-
-if [[ ! -f "$PY_SCRIPT" ]]; then
-    echo "[ERROR] No se encuentra $PY_SCRIPT" >&2
-    exit 1
-fi
-
-python3 "$PY_SCRIPT" "$@"
+CANONICAL_SCRIPT="$SCRIPT_DIR/../../sh/toggle-gemini-mcp.sh"
+exec bash "$CANONICAL_SCRIPT" "$@"

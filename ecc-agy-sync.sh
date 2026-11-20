@@ -67,9 +67,9 @@ for a in "${AGENTS[@]}"; do
   fi
 done
 
-if [ -f "$ECC_ROOT/rules/AGENTS.md" ]; then
-  cp "$ECC_ROOT/rules/AGENTS.md" "$TARGET_DIR/rules/AGENTS.md"
-  echo "[+] Reglas sincronizadas: AGENTS.md"
+if [ -d "$ECC_ROOT/rules" ]; then
+  cp "$ECC_ROOT/rules/"*.md "$TARGET_DIR/rules/"
+  echo "[+] Reglas sincronizadas -> $TARGET_DIR/rules/"
 fi
 
 echo "[OK] Sincronización completada exitosamente."

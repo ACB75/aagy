@@ -1,0 +1,52 @@
+#!/bin/sh
+# Git hook: pre-commit
+# Audita y valida que los archivos Markdown staged cumplan con .markdownlint.json
+
+# Bypass mediante variable de entorno
+if [ "$GIT_HOOKS_BYPASS" = "1" ]; then
+    exit 0
+fi
+
+STAGED_MD=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.md$')
+
+if [ -z "$STAGED_MD" ]; then
+    exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+if [ -z "$REPO_ROOT" ]; then
+    REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+fi
+
+echo "[PRE-COMMIT] Validando archivos Markdown en staging..."
+
+LINT_FAILED=0
+for FILE in $STAGED_MD; do
+    if [ ! -f "$REPO_ROOT/$FILE" ]; then
+        continue
+    fi
+    if command -v pwsh >/dev/null 2>&1; then
+        pwsh -NoProfile -File "$REPO_ROOT/scripts/bin/ecc-agy/lint-markdown.ps1" -Target "$REPO_ROOT/$FILE" -CheckOnly >/dev/null 2>&1
+        STATUS=$?
+    elif [ -f "$REPO_ROOT/scripts/bin/ecc-agy/lint-markdown.sh" ]; then
+        "$REPO_ROOT/scripts/bin/ecc-agy/lint-markdown.sh" --check-only "$REPO_ROOT/$FILE" >/dev/null 2>&1
+        STATUS=$?
+    else
+        STATUS=0
+    fi
+
+    if [ $STATUS -ne 0 ]; then
+        echo "[PRE-COMMIT ERROR] El archivo '$FILE' no cumple las reglas de markdownlint."
+        echo "Ejecute: pwsh -File scripts/bin/ecc-agy/lint-markdown.ps1 -Target '$FILE' -Fix"
+        LINT_FAILED=1
+    fi
+done
+
+if [ $LINT_FAILED -ne 0 ]; then
+    echo ""
+    echo "[PRE-COMMIT REJECTED] Se rechazo el commit debido a violaciones en Markdown."
+    echo "Para omitir esta comprobacion en emergencias, use 'git commit --no-verify'."
+    exit 1
+fi
+
+exit 0
