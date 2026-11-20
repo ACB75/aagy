@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Motor Unificado y Agnóstico de Autodescubrimiento y Automejora (aagy / ecc).
+    Motor Unificado y Agnóstico de Autodescubrimiento y Automejora (aagy / aagy).
 .DESCRIPTION
     Delega en scripts/py/self_improve.py para descubrir patrones repetitivos,
     revisar candidatos contra AgentShield y el Hard Gate de presupuesto de tokens,

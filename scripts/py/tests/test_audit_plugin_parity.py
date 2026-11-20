@@ -2,7 +2,7 @@
 """
 Pruebas unitarias para audit_plugin_parity.py.
 Valida la compuerta de paridad multi-harness entre Anything Antigravity (aagy)
-y el plugin hermano para Claude Code (ecc).
+y el plugin hermano para Claude Code (aagy).
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ import sys
 import pytest
 from unittest.mock import patch
 
-# Asegurar import de modulos ecc-agy
+# Asegurar import de modulos aagy
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 _SCRIPTS_DIR = _REPO_ROOT / "scripts" / "py"
 if str(_SCRIPTS_DIR) not in sys.path:
@@ -28,7 +28,7 @@ from audit_plugin_parity import (
 
 @pytest.fixture
 def mock_repo_structure(tmp_path: Path):
-    """Crea una estructura mock de repositorio con paridad aagy <-> ecc."""
+    """Crea una estructura mock de repositorio con paridad aagy <-> aagy."""
     # Root plugin aagy
     root_plugin = tmp_path / "plugin.json"
     root_plugin.write_text(json.dumps({
@@ -43,18 +43,18 @@ def mock_repo_structure(tmp_path: Path):
     (skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD", encoding="utf-8")
 
     # Claude Code plugin aagy-ecc
-    ecc_dir = tmp_path / "aagy-ecc"
-    ecc_plugin_dir = ecc_dir / ".claude-plugin"
-    ecc_plugin_dir.mkdir(parents=True)
-    (ecc_plugin_dir / "plugin.json").write_text(json.dumps({
+    claude_dir = tmp_path / "aagy-ecc"
+    claude_plugin_dir = claude_dir / ".claude-plugin"
+    claude_plugin_dir.mkdir(parents=True)
+    (claude_plugin_dir / "plugin.json").write_text(json.dumps({
         "name": "aagy-ecc",
         "version": "4.0.0"
     }), encoding="utf-8")
 
-    ecc_skills_dir = ecc_dir / "skills"
-    ecc_skills_dir.mkdir(parents=True)
-    (ecc_skills_dir / "tdd-workflow").mkdir()
-    (ecc_skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD", encoding="utf-8")
+    claude_skills_dir = claude_dir / "skills"
+    claude_skills_dir.mkdir(parents=True)
+    (claude_skills_dir / "tdd-workflow").mkdir()
+    (claude_skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD", encoding="utf-8")
 
     return tmp_path
 
@@ -68,14 +68,14 @@ def test_audit_parity_success(mock_repo_structure: Path):
     assert len(result.discrepancies) == 0
 
 
-def test_audit_parity_missing_ecc_dir(tmp_path: Path):
+def test_audit_parity_missing_claude_dir(tmp_path: Path):
     root_plugin = tmp_path / "plugin.json"
     root_plugin.write_text(json.dumps({"name": "aagy"}), encoding="utf-8")
 
     result = audit_parity(tmp_path)
     assert result.is_valid is False
     assert result.status == "FAIL"
-    assert any("ecc" in d.lower() for d in result.discrepancies)
+    assert any("aagy" in d.lower() for d in result.discrepancies)
 
 
 def test_audit_parity_wrong_root_name(mock_repo_structure: Path):

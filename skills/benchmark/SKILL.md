@@ -3,7 +3,7 @@ name: benchmark
 description: "Measure performance baselines and detect regressions across browser Core Web Vitals (LCP, INP, CLS, page weight), API endpoint latency..."
 license: MIT
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Benchmark — Performance Baseline & Regression Detection
@@ -87,7 +87,7 @@ Output:
 
 ## Output
 
-Stores baselines in `.ecc/benchmarks/` as JSON. Git-tracked so the team shares baselines.
+Stores baselines in `.aagy/benchmarks/` as JSON. Git-tracked so the team shares baselines.
 
 ## Integration
 

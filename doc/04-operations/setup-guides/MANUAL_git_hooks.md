@@ -1,7 +1,7 @@
 # Manual de Operación: Git Hooks Nativos e Infraestructura de Calidad
 
 > **Referencia de Gobernanza**: Automatización y Aseguramiento de Calidad en Git  
-> **Ámbito**: Repositorio Local `ACB75/ecc`, Monorepo `home-lab` y Arneses de Desarrollo  
+> **Ámbito**: Repositorio Local `ACB75/aagy`, Monorepo `home-lab` y Arneses de Desarrollo  
 > **Fecha de Publicación**: `2026-11-20`  
 
 ---

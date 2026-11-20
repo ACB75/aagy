@@ -2,7 +2,7 @@
 name: agent-security-hardening
 description: "Security hardening for AI agent frameworks that process untrusted content, invoke tools, write workspace files, manage runtime..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Agent Security Hardening

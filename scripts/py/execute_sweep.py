@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Módulo de barrido y optimización de skills y agentes de ECC-AGY.
+Módulo de barrido y optimización de skills y agentes de AAGY.
 Elimina skills y agentes que no corresponden al workspace y normaliza frontmatters.
 Cumple con SonarQube Quality Gate A (S3776 <= 15, S1192 sin duplicados).
 """

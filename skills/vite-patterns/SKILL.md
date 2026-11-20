@@ -2,7 +2,7 @@
 name: vite-patterns
 description: "Vite build tool for config, plugins, HMR, env variables, proxy setup, SSR, library mode, dependency pre-bundling, and build..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Vite Patterns

@@ -19,7 +19,7 @@ completed_at: "2026-11-07 23:48:53"
   - Tras solventar incidencias críticas, la redacción de autopsias suele omitirse o quedar incompleta, perdiendo el aprendizaje institucional y las acciones preventivas.
   - Se requiere un disparador automático en el arnés que instancie la plantilla al fusionar o cerrar ramas `fix/*`.
 - **04 - PHASE 2 (STRATEGY):**
-  - Diseñar el script generador `scripts/bin/ecc-agy/generate-postmortem.ps1` / `.sh`.
+  - Diseñar el script generador `scripts/bin/aagy/generate-postmortem.ps1` / `.sh`.
   - Integrar la generación en `complete-task-pr.ps1` cuando la rama procesada comience con `fix/`.
   - Enforzar la estructura de 5W: Who (actores/servicios), What (anomalía e impacto), When (tiempos UTC), Where (entorno LOCAL/SANDBOX/LIVE y rutas), Why/How (causa raíz y remediación).
 - **05 - PHASE 3 (EXECUTION):**
@@ -38,7 +38,7 @@ completed_at: "2026-11-07 23:48:53"
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/sre-postmortem-5w-generator`
+- **Rama / PR**: `feat/aagy/sre-postmortem-5w-generator`
 - **Commit SHA**: `2bef381`
 - **Fecha**: `2026-11-07 23:48:53`
 - **Gobernanza**: Quality Gate A / markdownlint OK

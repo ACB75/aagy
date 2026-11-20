@@ -129,4 +129,4 @@ This command invokes:
 
 ---
 
-*Part of [ECC](https://github.com/affaan-m/ECC)*
+*Part of [AAGY](https://github.com/ACB75/aagy)*

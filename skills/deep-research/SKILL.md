@@ -2,7 +2,7 @@
 name: deep-research
 description: "Produce cited research reports from multiple web sources using firecrawl and exa MCP tools — plan sub-questions, search and deep-read..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Deep Research

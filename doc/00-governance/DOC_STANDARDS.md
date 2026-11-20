@@ -2,7 +2,7 @@
 
 > **Versión del Esquema**: `2.0`  
 > **Contrato de Rutas**: [`.governance/docs-map.json`](../../.governance/docs-map.json) | **Motor**: [`docs_map.py`](../../scripts/py/docs_map.py)  
-> **ADR Asociada**: [`ADR-0003`](../02-adr/ADR_ecc_0003_doc_structure_v2_and_manual_parity.md)
+> **ADR Asociada**: [`ADR-0003`](../02-adr/ADR_aagy_0003_doc_structure_v2_and_manual_parity.md)
 
 ---
 

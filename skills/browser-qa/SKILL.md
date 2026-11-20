@@ -2,7 +2,7 @@
 name: browser-qa
 description: "Run automated post-deploy UI verification with a browser automation MCP (claude-in-chrome, Playwright, or Puppeteer): console-error and..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Browser QA — Automated Visual Testing & Interaction

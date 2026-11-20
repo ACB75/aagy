@@ -10,7 +10,7 @@
 .PARAMETER Type
     Tipo de commit Conventional (feat, fix, refactor, chore, docs, test, perf, build, ci, sec).
 .PARAMETER Projects
-    Proyectos o módulos afectados (ej. cluster, kakebo, whoiam, net, ecc-agy).
+    Proyectos o módulos afectados (ej. cluster, kakebo, whoiam, net, aagy).
 .PARAMETER Title
     Título en modo imperativo.
 .PARAMETER Body

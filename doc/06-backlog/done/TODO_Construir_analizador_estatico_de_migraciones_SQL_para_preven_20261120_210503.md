@@ -25,7 +25,7 @@ completed_at: "2026-11-20 21:05:03"
     - *Rojo*: `ACCESS EXCLUSIVE` o reescritura de tabla completa.
   - Para sentencias en *Rojo*, sugerir la alternativa segura sin bloqueo (estrategia dual-write o adición en 3 pasos).
 - **05 - PHASE 3 (EXECUTION):**
-    1. Programar `scripts/ecc-agy/audit_pg_locks.py` y `audit-pg-locks.ps1`.
+    1. Programar `scripts/aagy/audit_pg_locks.py` y `audit-pg-locks.ps1`.
     2. Crear reglas de detección léxica para sentencias DDL bloqueantes de PostgreSQL.
     3. Añadir suite de tests `test_audit_pg_locks.py` con fixtures de migraciones seguras y peligrosas.
     4. Integrar en `complete-task-pr.ps1` cuando se detecten archivos `.sql` modificados.
@@ -46,7 +46,7 @@ Desarrollo de audit_pg_locks.py y wrappers CLI para prevencion de bloqueos DDL e
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/audit-pg-locks`
+- **Rama / PR**: `feat/aagy/audit-pg-locks`
 - **Commit SHA**: `1e57bad`
 - **Fecha**: `2026-11-20 21:05:03`
 - **Gobernanza**: Quality Gate A / markdownlint OK

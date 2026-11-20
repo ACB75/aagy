@@ -1,6 +1,6 @@
 # Manual de Operación: Despliegue Automatizado por Etiquetas (`git-flow-helper.ps1`)
 
-> **Ecosistema**: ECC Ecosystem & Home-Lab  
+> **Ecosistema**: AAGY Ecosystem & Home-Lab  
 > **Ubicación Canónica**: `scripts/pwsh/git-flow-helper.ps1` y `git-flow-helper.sh`  
 > **Gobernanza**: ADR-0006 (Trunk-Based Development & Multi-Tier Promotion)  
 

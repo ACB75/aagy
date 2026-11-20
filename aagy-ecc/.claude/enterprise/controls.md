@@ -1,10 +1,10 @@
 # Enterprise Controls
 
-This is a starter governance file for enterprise ECC deployments.
+This is a starter governance file for enterprise AAGY deployments.
 
 ## Baseline
 
-- Repository: https://github.com/affaan-m/ECC
+- Repository: <https://github.com/ACB75/aagy>
 - Recommended profile: full
 - Keep install manifests, audit allowlists, and Codex baselines under review.
 

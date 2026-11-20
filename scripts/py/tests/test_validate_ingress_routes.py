@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-# Asegurar import de modulos ecc-agy
+# Asegurar import de modulos aagy
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 _SCRIPTS_DIR = _REPO_ROOT / "scripts" / "py"
 if str(_SCRIPTS_DIR) not in sys.path:

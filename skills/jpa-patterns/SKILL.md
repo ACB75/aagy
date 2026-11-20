@@ -2,7 +2,7 @@
 name: jpa-patterns
 description: "JPA/Hibernate entity, transaction, pagination, and N+1 query patterns. Do not use on pure JdbcClient projects."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # JPA/Hibernate Patterns

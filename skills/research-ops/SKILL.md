@@ -1,8 +1,8 @@
 ---
 name: research-ops
-description: "Evidence-first current-state research workflow for ECC."
+description: "Evidence-first current-state research workflow for AAGY."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Research Ops
@@ -13,7 +13,7 @@ This is the operator wrapper around the repo's research stack. It is not a repla
 
 ## Skill Stack
 
-Pull these ECC-native skills into the workflow when relevant:
+Pull these AAGY-native skills into the workflow when relevant:
 
 - `exa-search` for fast current-web discovery
 - `deep-research` for multi-source synthesis with citations

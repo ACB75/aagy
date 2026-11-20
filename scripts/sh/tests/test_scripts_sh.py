@@ -15,7 +15,7 @@ EXPECTED_SH_SCRIPTS = [
     "auto-evolve.sh",
     "complete-task-pr.sh",
     "disable-skill.sh",
-    "ecc-agy-sync.sh",
+    "aagy-sync.sh",
     "enable-skill.sh",
     "format-commit.sh",
     "gemini-deep-ops.sh",

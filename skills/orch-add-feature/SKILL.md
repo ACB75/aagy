@@ -2,7 +2,7 @@
 name: orch-add-feature
 description: "Orchestrate building a brand-new feature end to end — research, plan, TDD implementat. Use when adding a capability that does not exist yet."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # orch-add-feature

@@ -2,7 +2,7 @@
 name: sonarqube-quality-gate
 description: "Enforce SonarQube Quality Gate (S3776, S1192, S107, S112, S1452) via scripts/pwsh/sonar-audit.ps1. Not for style formatting."
 metadata:
-  origin: ECC-AGY
+  origin: AAGY
 ---
 
 # SonarQube Quality Gate & Clean as You Code

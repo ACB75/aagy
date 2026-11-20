@@ -2,7 +2,7 @@
 name: rules-distill
 description: "Scan skills to extract cross-cutting principl. Use when the same principle keeps recurring across skills and belongs in a rule file instead."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Rules Distill

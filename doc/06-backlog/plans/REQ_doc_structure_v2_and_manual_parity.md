@@ -1,6 +1,6 @@
 # Fase 1: Toma de Requisitos, Análisis de Superficie e Impacto Home-Lab
 
-> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería ECC / Home-Lab  
+> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / Home-Lab  
 > **ID de Tarea**: `refactor/aagy/doc-structure-v2-manual-parity`  
 > **Fecha**: `2026-11-20` | **Autor/Rol**: `Documentation Governance & Developer Experience Architect`  
 > **Estado**: `APROBADO`
@@ -26,7 +26,7 @@
   - Absorción de la antigua `Tarea 3.5` (renames de `TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md`) para evitar doble movimiento.
 - **Fuera de Alcance (`Out-of-Scope`)**:
   - Re-escribir el contenido histórico de ADRs o `TODO_DONE/` ya archivados (solo se reubican y actualizan enlaces).
-  - Ejecutar en este paso la migración física `/ecc` $\rightarrow$ `/aagy` (`Tarea 5.1`, que permanece como última tarea del backlog).
+  - Ejecutar en este paso la migración física `/aagy` $\rightarrow$ `/aagy` (`Tarea 5.1`, que permanece como última tarea del backlog).
 
 ---
 
@@ -38,7 +38,7 @@
 - **`RF-02` (Convención Universal de Diagramas `<folder>/dgrms/`)**: Toda carpeta con diagramas utiliza la subcarpeta `dgrms/` organizando `.puml` (casos de uso), `.bpmn` (procesos de negocio) y `.mmd` (dominio, arquitectura, actividad y flujo), documentado en `00-governance/DOC_STANDARDS.md`.
 - **`RF-03` (Parametrización de Rutas en `.governance/docs-map.json`)**: Todos los scripts (`archive_todo.py`, `sync_ideas_todo.py`, `new_lifecycle_task.py`, `generate_postmortem.py`, `complete-task-pr.ps1`, `format_commit.py`, `map-docs.ps1`, `lint-markdown.ps1`) resuelven las rutas dinámicamente desde `.governance/docs-map.json` con *fallback* automático a las rutas clásicas (`doc/TODO.md`, `doc/adr/`, etc.) para mantener compatibilidad con `home-lab`.
 - **`RF-04` (Flujo Flexible `[IDEAS -> REQUISITOS -> PLAN -> TODO]`)**: Los scripts y plantillas permiten iniciar trabajo desde cualquiera de los 4 puntos de entrada (`IDEAS`, `REQ`, `PLAN` o `TODO`) sin forzar pasos previos innecesarios cuando la tarea ya está definida.
-- **`RF-05` (Paridad 1-a-1 Manual $\leftrightarrow$ Plugin)**: Cada operación automatizada por el plugin (`aagy` / `ecc`) dispone de un comando CLI idempotente documentado en `00-governance/MANUAL_WORKFLOW.md` para su ejecución manual en terminal, incluyendo el ciclo Git (`validate_branch.py`, `complete-task-pr.ps1` con gate obligatorio de `pytest` + `lint-markdown` + SonarQube).
+- **`RF-05` (Paridad 1-a-1 Manual $\leftrightarrow$ Plugin)**: Cada operación automatizada por el plugin (`aagy` / `aagy`) dispone de un comando CLI idempotente documentado en `00-governance/MANUAL_WORKFLOW.md` para su ejecución manual en terminal, incluyendo el ciclo Git (`validate_branch.py`, `complete-task-pr.ps1` con gate obligatorio de `pytest` + `lint-markdown` + SonarQube).
 - **`RF-06` (Absorción de `Tarea 3.5`)**: Los renames `TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md` se aplican directamente en `00-governance/templates/` dentro de esta intervención.
 
 ### 2.2. Criterios de Aceptación Verificables (Given / When / Then)

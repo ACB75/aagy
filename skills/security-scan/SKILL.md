@@ -2,7 +2,7 @@
 name: security-scan
 description: "Audit agent configs, hooks, MCPs, and repo boundaries for prompt injection and secret exposure."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Security Scan Skill
@@ -33,13 +33,13 @@ AgentShield must be installed. Check and install if needed:
 
 ```bash
 # Check if installed
-npx ecc-agentshield --version
+npx aagy-agentshield --version
 
 # Install globally (recommended)
-npm install -g ecc-agentshield
+npm install -g aagy-agentshield
 
 # Or run directly via npx (no install needed)
-npx ecc-agentshield scan .
+npx aagy-agentshield scan .
 ```
 
 ## Usage
@@ -50,29 +50,29 @@ Run against the current project's `.claude/` directory:
 
 ```bash
 # Scan current project
-npx ecc-agentshield scan
+npx aagy-agentshield scan
 
 # Scan a specific path
-npx ecc-agentshield scan --path /path/to/.claude
+npx aagy-agentshield scan --path /path/to/.claude
 
 # Scan with minimum severity filter
-npx ecc-agentshield scan --min-severity medium
+npx aagy-agentshield scan --min-severity medium
 ```
 
 ### Output Formats
 
 ```bash
 # Terminal output (default) — colored report with grade
-npx ecc-agentshield scan
+npx aagy-agentshield scan
 
 # JSON — for CI/CD integration
-npx ecc-agentshield scan --format json
+npx aagy-agentshield scan --format json
 
 # Markdown — for documentation
-npx ecc-agentshield scan --format markdown
+npx aagy-agentshield scan --format markdown
 
 # HTML — self-contained dark-theme report
-npx ecc-agentshield scan --format html > security-report.html
+npx aagy-agentshield scan --format html > security-report.html
 ```
 
 ### Auto-Fix
@@ -80,7 +80,7 @@ npx ecc-agentshield scan --format html > security-report.html
 Apply safe fixes automatically (only fixes marked as auto-fixable):
 
 ```bash
-npx ecc-agentshield scan --fix
+npx aagy-agentshield scan --fix
 ```
 
 This will:
@@ -96,7 +96,7 @@ Run the adversarial three-agent pipeline for deeper analysis:
 ```bash
 # Requires ANTHROPIC_API_KEY
 export ANTHROPIC_API_KEY=your-key
-npx ecc-agentshield scan --opus --stream
+npx aagy-agentshield scan --opus --stream
 ```
 
 This runs:
@@ -110,7 +110,7 @@ This runs:
 Scaffold a new secure `.claude/` configuration from scratch:
 
 ```bash
-npx ecc-agentshield init
+npx aagy-agentshield init
 ```
 
 Creates:
@@ -170,4 +170,4 @@ Add to your CI pipeline:
 ## Links
 
 - **GitHub**: [github.com/affaan-m/agentshield](https://github.com/affaan-m/agentshield)
-- **npm**: [npmjs.com/package/ecc-agentshield](https://www.npmjs.com/package/ecc-agentshield)
+- **npm**: [npmjs.com/package/aagy-agentshield](https://www.npmjs.com/package/aagy-agentshield)

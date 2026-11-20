@@ -2,7 +2,7 @@
 name: hexagonal-architecture
 description: "Design, implement, and refactor Ports & Adapters systems with clear domain boundaries, dependency inversion, and testable use-case..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Hexagonal Architecture

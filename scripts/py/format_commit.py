@@ -45,8 +45,8 @@ ALLOWED_TYPES: frozenset[str] = frozenset({
 })
 
 ALLOWED_PROJECTS: frozenset[str] = frozenset({
-    "cluster", "kakebo", "whoiam", "net", "scripts", "ecc", "ecc-agy", "ecc-aecb", "ecc-claude", "ecc-agy-homelab", "doc",
-    "docs", "infra", "portal", "token-hill", "uoc", "sdk", "home-lab-sdk", "all", "aagy", "aagy-ecc",
+    "cluster", "kakebo", "whoiam", "net", "scripts", "aagy", "aagy-ecc", "aagy-homelab", "doc",
+    "docs", "infra", "portal", "token-hill", "uoc", "sdk", "home-lab-sdk", "all",
 })
 
 
@@ -116,7 +116,7 @@ def _validate_header(first_line: str) -> Tuple[Optional[str], Sequence[str], str
             f"  Formatos validos admitidos:\n"
             f"    - feat-doc: <titulo>              (formato rapido por proyecto)\n"
             f"    - feat(doc): <titulo>             (Conventional Commits estandar)\n"
-            f"    - feat-[doc]: <titulo>            (monorepo extendido, ej. feat-[ecc-agy]: ...)\n"
+            f"    - feat-[doc]: <titulo>            (monorepo extendido, ej. feat-[aagy]: ...)\n"
             f"    - feat: <titulo>                  (Conventional Commits simple)\n"
             f"  Tipos permitidos: {', '.join(sorted(ALLOWED_TYPES))}"
         )

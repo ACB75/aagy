@@ -37,7 +37,7 @@ completed_at: "2026-11-07 23:54:11"
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/consolidate-complete-task-pr`
+- **Rama / PR**: `feat/aagy/consolidate-complete-task-pr`
 - **Commit SHA**: `30b89e5`
 - **Fecha**: `2026-11-07 23:54:11`
 - **Gobernanza**: Quality Gate A / markdownlint OK

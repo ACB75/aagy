@@ -1,6 +1,6 @@
 # Fase 1: Toma de Requisitos, Análisis de Superficie e Impacto Home-Lab
 
-> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería ECC / Home-Lab  
+> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / Home-Lab  
 > **ID de Tarea**: `<tipo>/<proyecto>/<id>` (ej. `feat/kakebo/export-csv`, `fix/cluster/oom-timeout`)  
 > **Fecha**: `YYYY-MM-DD` | **Autor/Rol**: `<Nombre / Rol>`  
 > **Estado**: `BORRADOR | EN REVISIÓN | APROBADO`  

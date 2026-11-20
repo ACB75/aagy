@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generador automatizado de Post-Mortem 5W para ramas fix/* en ECC (generate_postmortem.py).
+Generador automatizado de Post-Mortem 5W para ramas fix/* en AAGY (generate_postmortem.py).
 Extrae metadatos de Git, instancia TEMPLATE_POSTMORTEM.md y guarda en doc/post-mortem/.
 Cumple con SonarQube Quality Gate A (S3776 <= 15, S1192 sin duplicados).
 """

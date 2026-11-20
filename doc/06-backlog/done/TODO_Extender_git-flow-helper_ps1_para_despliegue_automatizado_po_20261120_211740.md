@@ -22,7 +22,7 @@ completed_at: "2026-11-20 21:17:40"
   - Añadir parámetro `-Deploy` y `-Environment [sandbox|live]`.
   - Secuencia de despliegue: Backup de estado -> Pull/Recreate contenedores -> Liveness probes (3 intentos x 5s) -> Si OK: Confirmar tag; Si FAIL: Ejecutar rollback automático al tag anterior.
 - **05 - PHASE 3 (EXECUTION):**
-    1. Actualizar `scripts/bin/ecc-agy/git-flow-helper.ps1` con la lógica de despliegue y sondas de salud.
+    1. Actualizar `scripts/bin/aagy/git-flow-helper.ps1` con la lógica de despliegue y sondas de salud.
     2. Añadir modo `-DryRun` para simular la secuencia sin impactar contenedores reales.
     3. Incorporar tests en `test_git_flow_helper.py` o suite de integración.
     4. Actualizar ADR-0006 con el flujo automatizado de promoción y despliegue.
@@ -43,7 +43,7 @@ Extension de git-flow-helper.ps1 y .sh para despliegue automatizado por etiqueta
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/git-flow-deploy`
+- **Rama / PR**: `feat/aagy/git-flow-deploy`
 - **Commit SHA**: `e57794f`
 - **Fecha**: `2026-11-20 21:17:40`
 - **Gobernanza**: Quality Gate A / markdownlint OK

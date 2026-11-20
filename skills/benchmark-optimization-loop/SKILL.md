@@ -3,7 +3,7 @@ name: benchmark-optimization-loop
 description: "Hypothesis-driven benchmark loop to measure baseline, test one variant, verify correctness, and keep fastest."
 license: MIT
 metadata:
-  origin: ECC
+  origin: AAGY
 tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 

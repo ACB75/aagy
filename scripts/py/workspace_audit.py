@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ECC Workspace Auditor & Context Token Budget Engine (stdlib pura).
+AAGY Workspace Auditor & Context Token Budget Engine (stdlib pura).
 
 Audita y optimiza de forma recurrente:
   1. Higiene del workspace:
@@ -60,7 +60,7 @@ CHARS_PER_TOKEN: float = 3.8
 
 SKILL_FILE_NAME: str = "SKILL.md"
 README_FILE: str = "README.md"
-PLUGIN_NAME_ECC_AGY: str = "aagy"
+PLUGIN_NAME_AAGY: str = "aagy"
 DESC_KEY: str = "description"
 MODEL_KEY: str = "model"
 
@@ -447,7 +447,7 @@ def scan_dead_artifacts(targets: Sequence[AgentTarget]) -> DeadArtifactReport:
 # CLI y Ejecución Principal
 # --------------------------------------------------------------------------- #
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="ECC Workspace hygiene and token budget audit.")
+    parser = argparse.ArgumentParser(description="AAGY Workspace hygiene and token budget audit.")
     parser.add_argument("--root", type=Path, default=None, help="Raíz del repositorio.")
     parser.add_argument("--clean", action="store_true", help="Elimina backups y cachés detectados.")
     parser.add_argument("--optimize", action="store_true", help="Poda redundancias y optimiza descripciones.")
@@ -514,7 +514,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stdout, force=True)
 
     logger.info("==================================================================")
-    logger.info("           AUDITORÍA DE TOKENS, HIGIENE Y HARNESS (ECC)          ")
+    logger.info("           AUDITORÍA DE TOKENS, HIGIENE Y HARNESS (AAGY)          ")
     logger.info("==================================================================")
     logger.info("Raíz de trabajo: %s\n", root)
 
@@ -529,12 +529,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         clean_targets(hygiene.all_targets())
 
     # 2. Objetivos de tokens
-    targets = [AgentTarget("ECC Root", root, include_rules=True)]
-    global_plugin = Path.home() / ".gemini" / "config" / "plugins" / PLUGIN_NAME_ECC_AGY
+    targets = [AgentTarget("AAGY Root", root, include_rules=True)]
+    global_plugin = Path.home() / ".gemini" / "config" / "plugins" / PLUGIN_NAME_AAGY
     if global_plugin.is_dir():
-        targets.append(AgentTarget(f"Global Plugin ({PLUGIN_NAME_ECC_AGY})", global_plugin, include_rules=True, is_plugin=True))
-    elif (root / PLUGIN_NAME_ECC_AGY).is_dir():
-        targets.append(AgentTarget(f"{PLUGIN_NAME_ECC_AGY} distribution", root / PLUGIN_NAME_ECC_AGY, include_rules=True, is_plugin=True))
+        targets.append(AgentTarget(f"Global Plugin ({PLUGIN_NAME_AAGY})", global_plugin, include_rules=True, is_plugin=True))
+    elif (root / PLUGIN_NAME_AAGY).is_dir():
+        targets.append(AgentTarget(f"{PLUGIN_NAME_AAGY} distribution", root / PLUGIN_NAME_AAGY, include_rules=True, is_plugin=True))
 
     total_violations = _audit_targets_budget(targets)
 

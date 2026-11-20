@@ -42,7 +42,7 @@ Mover doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md a doc/adr/TEMPLATE_ADR.md y TEMPLA
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `refactor/ecc/doc-templates-standardization`
+- **Rama / PR**: `refactor/aagy/doc-templates-standardization`
 - **Commit SHA**: `0fb1a8f`
 - **Fecha**: `2026-11-20 20:49:54`
 - **Gobernanza**: Quality Gate A / markdownlint OK

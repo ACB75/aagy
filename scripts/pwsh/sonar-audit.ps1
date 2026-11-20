@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Ejecuta la auditoría estática de SonarQube Quality Gate A en ECC.
+    Ejecuta la auditoría estática de SonarQube Quality Gate A en AAGY.
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/py/sonar_audit.py.
 .EXAMPLE

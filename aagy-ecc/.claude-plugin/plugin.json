@@ -6,8 +6,8 @@
     "name": "Affaan Mustafa",
     "url": "https://x.com/affaanmustafa"
   },
-  "homepage": "https://ecc.tools",
-  "repository": "https://github.com/affaan-m/ECC",
+  "homepage": "https://aagy.tools",
+  "repository": "https://github.com/ACB75/aagy",
   "license": "MIT",
   "keywords": [
     "claude-code",
@@ -25,13 +25,13 @@
   "userConfig": {
     "hooks_enabled": {
       "type": "boolean",
-      "title": "Enable ECC hooks",
-      "description": "Run ECC's local lifecycle, quality, and safety automation. Disable this to keep skills and commands without local hook automation.",
+      "title": "Enable AAGY hooks",
+      "description": "Run AAGY's local lifecycle, quality, and safety automation. Disable this to keep skills and commands without local hook automation.",
       "default": true
     },
     "hook_profile": {
       "type": "string",
-      "title": "ECC hook profile",
+      "title": "AAGY hook profile",
       "description": "Choose minimal, standard, or strict. Invalid values safely fall back to standard.",
       "default": "standard"
     }

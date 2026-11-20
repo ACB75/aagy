@@ -2,7 +2,7 @@
 name: accessibility
 description: "Audit and implement accessible UI to WCAG 2.2 Level AA across Web, iOS, and Android — semantic ARIA roles and labels, accessibility..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Accessibility (WCAG 2.2)

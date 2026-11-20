@@ -2,7 +2,7 @@
 name: council-multi-model
 description: "Add one optional external Codex critique after the existing council has produced a decision draft."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Council - External Review
@@ -117,7 +117,7 @@ places an outside-directory sentinel beside the review sandbox and proves a
 real Codex invocation cannot read it:
 
 ```bash
-ECC_CODEX_ISOLATION_INTEGRATION=1 \
+AAGY_CODEX_ISOLATION_INTEGRATION=1 \
   node tests/scripts/council-multi-model.test.js
 ```
 

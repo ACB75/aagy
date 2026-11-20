@@ -2,7 +2,7 @@
 name: exa-search
 description: "Neural search via Exa MCP for web, code, and company research."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Exa Search

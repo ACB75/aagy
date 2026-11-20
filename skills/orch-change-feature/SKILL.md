@@ -2,7 +2,7 @@
 name: orch-change-feature
 description: "Orchestrate altering an existing, working feature to new desired behavior — update. Use when behavior is not broken but should be different."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # orch-change-feature

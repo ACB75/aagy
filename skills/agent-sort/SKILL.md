@@ -1,19 +1,19 @@
 ---
 name: agent-sort
-description: "Build an evidence-backed ECC install pl. Use when ECC should be trimmed to what a project actually needs instead of loading the full bundle."
+description: "Build an evidence-backed AAGY install plan. Use to trim AAGY to what a project actually needs instead of loading the full bundle."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Agent Sort
 
-Use this skill when a repo needs a project-specific ECC surface instead of the default full install.
+Use this skill when a repo needs a project-specific AAGY surface instead of the default full install.
 
-The goal is not to guess what "feels useful." The goal is to classify ECC components with evidence from the actual codebase.
+The goal is not to guess what "feels useful." The goal is to classify AAGY components with evidence from the actual codebase.
 
 ## When to Use
 
-- A project only needs a subset of ECC and full installs are too noisy
+- A project only needs a subset of AAGY and full installs are too noisy
 - The repo stack is clear, but nobody wants to hand-curate skills one by one
 - A team wants a repeatable install decision backed by grep evidence instead of opinion
 - You need to separate always-loaded daily workflow surfaces from searchable library/reference surfaces
@@ -25,7 +25,7 @@ The goal is not to guess what "feels useful." The goal is to classify ECC compon
 - Every DAILY decision must cite concrete repo evidence
 - LIBRARY does not mean "delete"; it means "keep accessible without loading by default"
 - Do not install hooks, rules, or scripts that the current repo cannot use
-- Prefer ECC-native surfaces; do not introduce a second install system
+- Prefer AAGY-native surfaces; do not introduce a second install system
 
 ## Outputs
 
@@ -184,7 +184,7 @@ Return a compact report with:
 
 If the next step is interactive installation or repair, hand off to:
 
-- `configure-ecc`
+- `configure-aagy`
 
 If the next step is overlap cleanup or catalog review, hand off to:
 

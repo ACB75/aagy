@@ -2,7 +2,7 @@
 name: database-migrations
 description: "Safe forward-only SQL schema migrations, zero-downtime expand-contract, and concurrent indexing."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Database Migration Patterns

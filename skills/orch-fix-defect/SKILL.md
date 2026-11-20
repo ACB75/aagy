@@ -2,7 +2,7 @@
 name: orch-fix-defect
 description: "Orchestrate fixing a bug — reproduce it as a failing regression test, fix to green, review,. Use when existing behavior is broken or wrong."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # orch-fix-defect

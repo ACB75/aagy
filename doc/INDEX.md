@@ -1,6 +1,6 @@
 # Índice Maestro de Documentación y Gobernanza (`/doc` v2)
 
-> **Espina Dorsal Documental**: Repositorio [ACB75/aagy](https://github.com/ACB75/ecc) (`ecc` en transición a `aagy`)  
+> **Espina Dorsal Documental**: Repositorio [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` en transición a `aagy`)  
 > **Versión del Esquema**: `2.0.0` | **Última Actualización**: 2026-11-20
 
 ---
@@ -28,30 +28,30 @@
 ## 3. Arquitectura y Diagramas Estructurales (`doc/01-architecture/`)
 
 - 📘 **[`GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md`](01-architecture/GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md)**: Manual maestro sobre los arneses de IA, runtime Google Antigravity y Gemini 3.8.
-- 🤝 **[`MANUAL_aagy_ecc_parity_and_migration.md`](01-architecture/MANUAL_aagy_ecc_parity_and_migration.md)**: Arquitectura y paridad multi-harness entre `aagy` y `ecc`.
+- 🤝 **[`MANUAL_aagy_ecc_parity_and_migration.md`](01-architecture/MANUAL_aagy_ecc_parity_and_migration.md)**: Arquitectura y paridad multi-harness entre `aagy` y `aagy`.
 - 🔌 **[`doc/01-architecture/api-contracts/README.md`](01-architecture/api-contracts/README.md)**: Contratos JSON y salidas estandarizadas `--json`.
 - 📐 **Diagramas de Arquitectura (`doc/01-architecture/dgrms/`)**:
   - **[`DGRM_aagy_doc_v2_structure.mmd`](01-architecture/dgrms/DGRM_aagy_doc_v2_structure.mmd)**: Resolución de `/doc` v2 vs fallback clásico en `docs_map.py`.
-  - **[`DGRM_ecc_harness_anatomy_and_lifecycle.mmd`](01-architecture/dgrms/DGRM_ecc_harness_anatomy_and_lifecycle.mmd)**: Anatomía del arnés y ciclo de razonamiento/ejecución.
-  - **[`DGRM_ecc_agy_environment_architecture.mmd`](01-architecture/dgrms/DGRM_ecc_agy_environment_architecture.mmd)**: Capas de descubrimiento, disclosure progresivo y wakeup reactivo.
-  - **[`DGRM_ecc_harness_dual_claude_vs_agy.mmd`](01-architecture/dgrms/DGRM_ecc_harness_dual_claude_vs_agy.mmd)**: Comparativa Claude Code CLI vs Google Antigravity.
-  - **[`DGRM_ecc_actors.mmd`](01-architecture/dgrms/DGRM_ecc_actors.mmd)**: Mapa de actores y límites del ecosistema.
+  - **[`DGRM_aagy_harness_anatomy_and_lifecycle.mmd`](01-architecture/dgrms/DGRM_aagy_harness_anatomy_and_lifecycle.mmd)**: Anatomía del arnés y ciclo de razonamiento/ejecución.
+  - **[`DGRM_aagy_agy_environment_architecture.mmd`](01-architecture/dgrms/DGRM_aagy_agy_environment_architecture.mmd)**: Capas de descubrimiento, disclosure progresivo y wakeup reactivo.
+  - **[`DGRM_aagy_harness_dual_claude_vs_agy.mmd`](01-architecture/dgrms/DGRM_aagy_harness_dual_claude_vs_agy.mmd)**: Comparativa Claude Code CLI vs Google Antigravity.
+  - **[`DGRM_aagy_actors.mmd`](01-architecture/dgrms/DGRM_aagy_actors.mmd)**: Mapa de actores y límites del ecosistema.
 
 ---
 
 ## 4. Decisiones de Arquitectura (`doc/02-adr/`)
 
 - 📑 **[`doc/02-adr/README.md`](02-adr/README.md)**: Índice consolidado de ADRs:
-  - **[`ADR-0001`](02-adr/ADR_ecc_0001_two_tier_global_plugin_and_project_scaffolding.md)**: Arquitectura Two-Tier (Plugin Global + Scaffolding por Proyecto).
-  - **[`ADR-0002`](02-adr/ADR_ecc_0002_multi_harness_architecture_and_agent_runtime_design.md)**: Arquitectura Multi-Harness (`ecc` vs `aagy`).
-  - **[`ADR-0003`](02-adr/ADR_ecc_0003_doc_structure_v2_and_manual_parity.md)**: Arquitectura documental `/doc` v2, `.governance/docs-map.json` parametrizado y paridad CLI manual.
+  - **[`ADR-0001`](02-adr/ADR_aagy_0001_two_tier_global_plugin_and_project_scaffolding.md)**: Arquitectura Two-Tier (Plugin Global + Scaffolding por Proyecto).
+  - **[`ADR-0002`](02-adr/ADR_aagy_0002_multi_harness_architecture_and_agent_runtime_design.md)**: Arquitectura Multi-Harness (`aagy` vs `aagy`).
+  - **[`ADR-0003`](02-adr/ADR_aagy_0003_doc_structure_v2_and_manual_parity.md)**: Arquitectura documental `/doc` v2, `.governance/docs-map.json` parametrizado y paridad CLI manual.
 
 ---
 
 ## 5. Dominio, Procesos de Negocio y Secuencias (`doc/03-domain-and-flows/`)
 
 - 🔄 **[`doc/03-domain-and-flows/business-processes/`](03-domain-and-flows/business-processes/README.md)**: Procesos de negocio y ciclo de entrega ([`BP_aagy_task_delivery.bpmn`](03-domain-and-flows/dgrms/BP_aagy_task_delivery.bpmn), [`UC_aagy_lifecycle_parity.puml`](03-domain-and-flows/dgrms/UC_aagy_lifecycle_parity.puml)).
-- 🧩 **[`doc/03-domain-and-flows/domain-models/`](03-domain-and-flows/domain-models/README.md)**: Modelos de calidad, presupuesto de tokens y 7 fases ([`doc/03-domain-and-flows/dgrms/`](03-domain-and-flows/dgrms/DGRM_ecc_business_flow.mmd)).
+- 🧩 **[`doc/03-domain-and-flows/domain-models/`](03-domain-and-flows/domain-models/README.md)**: Modelos de calidad, presupuesto de tokens y 7 fases ([`doc/03-domain-and-flows/dgrms/`](03-domain-and-flows/dgrms/DGRM_aagy_business_flow.mmd)).
 - 🔁 **[`doc/03-domain-and-flows/sequences/`](03-domain-and-flows/sequences/README.md)**: Recuperación autónoma de bucles, smoke-test al sintetizar, formato de commits y sync-clean-align.
 
 ---

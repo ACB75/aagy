@@ -2,7 +2,7 @@
 name: agentic-engineering
 description: "Operate as an agentic engineer using eval-first exec. Use when planning or executing engineering work that agents will carry out end to end."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Agentic Engineering

@@ -2,7 +2,7 @@
 name: angular-developer
 description: "Angular 21+ standalone components, OnPush, inject(), Signals, @if/@for, functional guards, and Angular Material."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Angular Developer Guidelines

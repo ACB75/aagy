@@ -435,7 +435,7 @@ This will automatically select the next pending phase and create an implementati
 
 ---
 
-## Integration with ECC
+## Integration with AAGY
 
 After PRD generation:
 

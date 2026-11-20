@@ -2,7 +2,7 @@
 name: content-hash-cache-pattern
 description: "Cache expensive file processing results. Use when repeated file processing is slow and results should be cached and invalidated by content."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Content-Hash File Cache Pattern

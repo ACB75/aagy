@@ -5,7 +5,7 @@ skinparam packageStyle rectangle
 actor "Desarrollador (Terminal CLI)" as Dev
 actor "Agente Autónomo (AGY / Claude)" as Agent
 
-rectangle "Ecosistema aagy / ecc (docs-map.json)" {
+rectangle "Ecosistema aagy / aagy (docs-map.json)" {
   usecase "Registrar Idea\n(--phase IDEAS)" as UC1
   usecase "Ingerir IDEAS -> TODO\n(sync-ideas-todo)" as UC2
   usecase "Instanciar Ciclo Flexible\n(REQ / PLAN / TODO)" as UC3

@@ -2,7 +2,7 @@
 name: google-workspace-ops
 description: "Operate across Google Drive, Docs, Sheets,. Use when the user needs to find, summarize, edit, migrate, or clean up Google Workspace assets."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Google Workspace Ops

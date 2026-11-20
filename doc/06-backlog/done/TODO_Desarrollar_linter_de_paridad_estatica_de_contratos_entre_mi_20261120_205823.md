@@ -22,9 +22,9 @@ completed_at: "2026-11-20 20:58:23"
   - Parser estático en Python que extraiga endpoints declarados en controladores Go (`r.GET(...)`, `r.POST(...)`) y los contraste contra los métodos cliente en `home-lab-sdk/`.
   - Reporte de diferencias: endpoints sin cliente, modelos con campos desalineados.
 - **05 - PHASE 3 (EXECUTION):**
-    1. Desarrollar `scripts/ecc-agy/audit_sdk_parity.py` y wrapper `scripts/bin/ecc-agy/audit-sdk-parity.ps1`.
+    1. Desarrollar `scripts/aagy/audit_sdk_parity.py` y wrapper `scripts/bin/aagy/audit-sdk-parity.ps1`.
     2. Integrar el chequeo como paso de validación en la Fase 4 del lifecycle (`04_PROPUESTA_COMMITS_PR.md` y `complete-task-pr.ps1`).
-    3. Crear suite de tests `scripts/ecc-agy/tests/test_audit_sdk_parity.py` simulando contratos sincronizados y desincronizados.
+    3. Crear suite de tests `scripts/aagy/tests/test_audit_sdk_parity.py` simulando contratos sincronizados y desincronizados.
     4. Ejecutar verificación y documentar en `doc/manual/`.
 - **06 - PHASE 4 (CRITIC):**
   - *Auditoría*: Excluir del escaneo rutas internas no públicas como `/metrics`, `/health`, `/livez`, `/readyz` y endpoints de depuración.
@@ -43,7 +43,7 @@ Desarrollo de audit_sdk_parity.py y wrappers CLI para auditoria estatica de cont
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/audit-sdk-parity`
+- **Rama / PR**: `feat/aagy/audit-sdk-parity`
 - **Commit SHA**: `4a22c4e`
 - **Fecha**: `2026-11-20 20:58:23`
 - **Gobernanza**: Quality Gate A / markdownlint OK

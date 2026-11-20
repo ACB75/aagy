@@ -2,7 +2,7 @@
 name: orch-build-mvp
 description: "Orchestrate bootstrapping a working MVP from. Use when a design or spec document must become a running MVP through planned vertical slices."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # orch-build-mvp

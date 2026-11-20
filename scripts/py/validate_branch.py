@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Módulo de validación de nombres de rama Git en ECC (validate_branch.py).
+Módulo de validación de nombres de rama Git en AAGY (validate_branch.py).
 Enforza la convención canónica de ramas de tarea e incidencias (fix/*).
 Cumple con SonarQube Quality Gate A (S3776 <= 15, S1192 sin duplicados).
 """
@@ -75,7 +75,7 @@ def get_current_git_branch() -> str:
 
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     """Parsea argumentos de línea de comandos."""
-    parser = argparse.ArgumentParser(description="Validador canónico de nombres de rama Git en ECC.")
+    parser = argparse.ArgumentParser(description="Validador canónico de nombres de rama Git en AAGY.")
     parser.add_argument("--branch", type=str, default="", help="Nombre de la rama a validar (por defecto la activa).")
     parser.add_argument("--allow-main", action="store_true", help="Permite 'main' como rama válida.")
     return parser.parse_args(argv)

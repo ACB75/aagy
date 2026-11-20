@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: "Analyze draft prompts, detect intent and missing context, match ECC commands, skills, and agents, and output a ready-to-paste optimized..."
+description: "Analyze draft prompts, detect intent and missing context, match AAGY commands, skills, and agents, and output a ready-to-paste optimized..."
 metadata:
   origin: community
   author: YannJY02
@@ -9,7 +9,7 @@ metadata:
 
 # Prompt Optimizer
 
-Analyze a draft prompt, critique it, match it to ECC ecosystem components,
+Analyze a draft prompt, critique it, match it to AAGY ecosystem components,
 and output a complete optimized prompt the user can paste and run.
 
 ## When to Use
@@ -20,14 +20,14 @@ and output a complete optimized prompt the user can paste and run.
 - User says "优化prompt", "改进prompt", "怎么写prompt", "帮我优化这个指令"
 - User pastes a draft prompt and asks for feedback or enhancement
 - User says "I don't know how to prompt for this"
-- User says "how should I use ECC for..."
+- User says "how should I use AAGY for..."
 - User explicitly invokes `/prompt-optimize`
 
 ### Do Not Use When
 
 - User wants the task done directly (just execute it)
 - User says "优化代码", "优化性能", "optimize this code", "optimize performance" — these are refactoring tasks, not prompt optimization
-- User is asking about ECC configuration (use `configure-ecc` instead)
+- User is asking about AAGY configuration (use `configure-aagy` instead)
 - User wants a skill inventory (use `skill-stocktake` instead)
 - User says "just do it" or "直接做"
 
@@ -98,9 +98,9 @@ from the prompt description alone and mark the estimate as uncertain.
 | HIGH | Cross-domain, 5+ files | /plan first, then phased execution |
 | EPIC | Multi-session, multi-PR, architectural shift | Use blueprint skill for multi-session plan |
 
-### Phase 3: ECC Component Matching
+### Phase 3: AAGY Component Matching
 
-Map intent + scope + tech stack (from Phase 0) to specific ECC components.
+Map intent + scope + tech stack (from Phase 0) to specific AAGY components.
 
 #### By Intent Type
 
@@ -202,7 +202,7 @@ as the user's input.
 **Needs Clarification:** Numbered list of questions the user should answer.
 If Phase 0 auto-detected the answer, state it instead of asking.
 
-### Section 2: Recommended ECC Components
+### Section 2: Recommended AAGY Components
 
 | Type | Component | Purpose |
 |------|-----------|---------|
@@ -228,7 +228,7 @@ For items that reference blueprint, write: "Use the blueprint skill to..."
 
 ### Section 4: Optimized Prompt — Quick Version
 
-A compact version for experienced ECC users. Vary by intent type:
+A compact version for experienced AAGY users. Vary by intent type:
 
 | Intent | Quick Pattern |
 |--------|--------------|
@@ -258,10 +258,10 @@ A compact version for experienced ECC users. Vary by intent type:
 
 ### Trigger Examples
 
-- "Optimize this prompt for ECC"
+- "Optimize this prompt for AAGY"
 - "Rewrite this prompt so Claude Code uses the right commands"
 - "帮我优化这个指令"
-- "How should I prompt ECC for this task?"
+- "How should I prompt AAGY for this task?"
 
 ### Example 1: Vague Chinese Prompt (Project Detected)
 
@@ -387,7 +387,7 @@ Recommended: Opus 5 for blueprint planning, Sonnet 5 for phase execution.
 
 | Component | When to Reference |
 |-----------|------------------|
-| `configure-ecc` | User hasn't set up ECC yet |
+| `configure-aagy` | User hasn't set up AAGY yet |
 | `skill-stocktake` | Audit which components are installed (use instead of hardcoded catalog) |
 | `search-first` | Research phase in optimized prompts |
 | `blueprint` | EPIC-scope optimized prompts (invoke as skill, not command) |

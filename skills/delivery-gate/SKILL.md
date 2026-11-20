@@ -3,7 +3,7 @@ name: delivery-gate
 description: "Stop hook that blocks Claude from finishing until quality checks pass. Detects rationalization patterns (surface text heuristics)..."
 metadata:
   version: 1.1.1
-  origin: ECC
+  origin: AAGY
 ---
 
 # Delivery Gate — Mechanical Quality Gate for Claude Code
@@ -36,7 +36,7 @@ Over many sessions of "ship and forget," the human hasn't grown. This hook enfor
 
 ## Install
 
-From the ECC repository root:
+From the AAGY repository root:
 
 ```bash
 mkdir -p ~/.claude/scripts

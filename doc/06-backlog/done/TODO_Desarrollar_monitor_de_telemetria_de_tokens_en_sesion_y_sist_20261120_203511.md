@@ -19,7 +19,7 @@ completed_at: "2026-11-20 20:35:11"
   - Conforme la conversación avanza acumulando logs y difs de código, el coste por turno crece linealmente y la precisión de atención del modelo puede experimentar degradación en los detalles iniciales.
   - Se requiere un indicador objetivo en el entorno que informe cuándo es el momento óptimo para compactar.
 - **04 - PHASE 2 (STRATEGY):**
-  - Crear `scripts/bin/ecc-agy/session-token-monitor.ps1` y script de soporte `scripts/ecc-agy/session_token_monitor.py` que lea `transcript.jsonl` y determine el recuento estimado de tokens.
+  - Crear `scripts/bin/aagy/session-token-monitor.ps1` y script de soporte `scripts/aagy/session_token_monitor.py` que lea `transcript.jsonl` y determine el recuento estimado de tokens.
   - Integrar la recomendación proactiva en el resumen de `complete-task-pr.ps1`.
 - **05 - PHASE 3 (EXECUTION):**
     1. Programar `session_token_monitor.py` para parsear los pasos de la sesión y sumar tokens de entrada/salida.
@@ -43,7 +43,7 @@ Monitor session_token_monitor.py, wrappers .ps1/.sh, integracion en complete-tas
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/session-budget-telemetry`
+- **Rama / PR**: `feat/aagy/session-budget-telemetry`
 - **Commit SHA**: `f9ef3a4`
 - **Fecha**: `2026-11-20 20:35:11`
 - **Gobernanza**: Quality Gate A / markdownlint OK

@@ -64,7 +64,7 @@ switch ($Target) {
         }
         Write-Host "[+] Desplegando plugin Anything Antigravity (aagy) en: $Destination" -ForegroundColor Green
 
-        $syncScript = Join-Path $ScriptRoot "scripts\pwsh\ecc-agy-sync.ps1"
+        $syncScript = Join-Path $ScriptRoot "scripts\pwsh\aagy-sync.ps1"
         $phase = if ($Profile -eq "full") { "all" } else { "generic" }
         pwsh -NoProfile -File $syncScript -Phase $phase -Clean
         Write-Host "[✓] Plugin aagy instalado en Antigravity bajo perfil '$Profile'." -ForegroundColor Green

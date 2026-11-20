@@ -2,7 +2,7 @@
 name: todo-lifecycle
 description: "Transform tasks with 7-phase meta-prompt, archive completed TODOs into /TODO_DONE/, and prune active list."
 metadata:
-  origin: ECC-AGY
+  origin: AAGY
 ---
 
 # TODO Lifecycle, Meta-Prompt Transformation & Completed Tasks Archive

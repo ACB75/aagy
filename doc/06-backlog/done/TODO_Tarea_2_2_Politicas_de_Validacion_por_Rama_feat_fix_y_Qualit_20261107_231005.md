@@ -40,7 +40,7 @@ Implementadas y verificadas con éxito Tareas 2.1 y 2.2: Reducción del 53.8% en
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/token-opt-ci-quality-gate`
+- **Rama / PR**: `feat/aagy/token-opt-ci-quality-gate`
 - **Commit SHA**: `e4659d6`
 - **Fecha**: `2026-11-07 23:10:05`
 - **Gobernanza**: Quality Gate A / markdownlint OK

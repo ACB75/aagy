@@ -20,7 +20,7 @@ completed_at: "2026-11-07 23:44:59"
   - El arnés debe interceptar el checkout/branching y rechazar commits o PRs de solución de incidentes que no cumplan `fix/<identificador>`.
 - **04 - PHASE 2 (STRATEGY):**
   - Configurar regla transversal en `.agents/rules/` y `rules/AGENTS.md`.
-  - Extender `scripts/bin/ecc-agy/git-flow-helper.ps1` y los hooks pre-commit/pre-push para validar la nomenclatura canónica de ramas de fix.
+  - Extender `scripts/bin/aagy/git-flow-helper.ps1` y los hooks pre-commit/pre-push para validar la nomenclatura canónica de ramas de fix.
 - **05 - PHASE 3 (EXECUTION):**
     1. Codificar validador regex de nombres de rama en `git-flow-helper.ps1` / `.sh`.
     2. Actualizar el hook de pre-push del arnés para rechazar ramas no conformes.
@@ -36,7 +36,7 @@ completed_at: "2026-11-07 23:44:59"
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/fix-branch-policy-guardrails`
+- **Rama / PR**: `feat/aagy/fix-branch-policy-guardrails`
 - **Commit SHA**: `8877291`
 - **Fecha**: `2026-11-07 23:44:59`
 - **Gobernanza**: Quality Gate A / markdownlint OK

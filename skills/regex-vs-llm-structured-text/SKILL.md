@@ -2,7 +2,7 @@
 name: regex-vs-llm-structured-text
 description: "Decision framework for parsing structured text (quizzes, forms, invoices, receipts, tables) with a hybrid regex-first pipeline — regex..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Regex vs LLM for Structured Text Parsing

@@ -2,7 +2,7 @@
 .SYNOPSIS
     Promueve una skill especializada de Tier 2 al plugin activo de Antigravity (Tier 1).
 .DESCRIPTION
-    Copia skills/<name> a ~/.gemini/config/plugins/ecc-agy/skills/<name>, valida frontmatter
+    Copia skills/<name> a ~/.gemini/config/plugins/aagy/skills/<name>, valida frontmatter
     y registra la promoción en .active_promotions.json.
 .PARAMETER Name
     Nombre de la skill a activar/promover (ej. chrome-devtools, generative_ui).

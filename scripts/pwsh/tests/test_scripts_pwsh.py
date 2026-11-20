@@ -15,7 +15,7 @@ EXPECTED_PWSH_SCRIPTS = [
     "auto-evolve.ps1",
     "complete-task-pr.ps1",
     "disable-skill.ps1",
-    "ecc-agy-sync.ps1",
+    "aagy-sync.ps1",
     "enable-skill.ps1",
     "format-commit.ps1",
     "gemini-deep-ops.ps1",

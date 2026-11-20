@@ -2,7 +2,7 @@
 name: continuous-agent-loop
 description: "Patterns for continuous autonomous agent loo. Use when running an agent loop that must self-check, gate on evals, and recover from failures."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Continuous Agent Loop

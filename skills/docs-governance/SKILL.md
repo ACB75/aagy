@@ -5,7 +5,7 @@ description: "Audit documentation spine, role mappings (.governance/docs-map.jso
 
 # Documentation Governance Router
 
-Use this optional router to select the smallest existing ECC capability for a
+Use this optional router to select the smallest existing AAGY capability for a
 documentation-governance request. The router does not create a parallel project
 management system and does not make documentation authoritative over code,
 tests, Issues, or maintainer decisions.

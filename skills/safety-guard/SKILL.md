@@ -2,7 +2,7 @@
 name: safety-guard
 description: "Pre-execution safety gate for destructive commands (rm, drop, firewall/route flushes, volume purges)."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Safety Guard — Prevent Destructive Operations
@@ -72,5 +72,5 @@ Uses PreToolUse hooks to intercept Bash, Write, Edit, and MultiEdit tool calls. 
 ## Integration
 
 - Enable by default for `codex -a never` sessions
-- Pair with observability risk scoring in ECC 2.0
+- Pair with observability risk scoring in AAGY 2.0
 - Logs all blocked actions to `~/.claude/safety-guard.log`

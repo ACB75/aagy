@@ -1,6 +1,6 @@
 # Manual de Operación: Linter de Paridad Estática de Contratos SDK (`audit_sdk_parity.py`)
 
-> **Ecosistema**: ECC Ecosystem & Home-Lab  
+> **Ecosistema**: AAGY Ecosystem & Home-Lab  
 > **Ubicación Canónica**: `scripts/py/audit_sdk_parity.py`  
 > **Wrappers CLI**: `scripts/pwsh/audit-sdk-parity.ps1` y `audit-sdk-parity.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  
@@ -17,7 +17,7 @@ El **Linter de Paridad Estática de Contratos** previene el *contract drift* med
 
 1. **Zero Runtime Overhead**: Análisis puramente léxico y sintáctico sin levantar contenedores ni servidores.
 2. **Exclusión Inteligente de Rutas Internas**: Ignora automáticamente `/metrics`, `/health`, `/livez`, `/readyz`, `/debug/*`, `/ping` y endpoints de documentación OpenAPI/Swagger.
-3. **Omisión Elegante (Safe Skip)**: Si se ejecuta en un repositorio de tooling como `ecc` (sin `services/` ni `home-lab-sdk/`), retorna código `0` y estado `SKIPPED`, evitando falsos positivos.
+3. **Omisión Elegante (Safe Skip)**: Si se ejecuta en un repositorio de tooling como `aagy` (sin `services/` ni `home-lab-sdk/`), retorna código `0` y estado `SKIPPED`, evitando falsos positivos.
 4. **Normalización de Parámetros**: Homologa parámetros en formato Go (`:id`), FastAPI (`{id}`) y Spring Boot (`{id}`) para coincidencia exacta con clientes.
 
 ---

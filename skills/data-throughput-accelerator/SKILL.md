@@ -3,7 +3,7 @@ name: data-throughput-accelerator
 description: "High-throughput batching, Kafka streaming, and bulk DB ingestion with row/timestamp verification."
 license: MIT
 metadata:
-  origin: ECC
+  origin: AAGY
 tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 

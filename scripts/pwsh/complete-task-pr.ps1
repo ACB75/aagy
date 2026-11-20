@@ -208,7 +208,7 @@ Estrategia Fast-Rollback:
         }
     }
     if ($testTargets.Count -eq 0) {
-        $fallbackTests = Join-Path $RepoRoot "scripts\ecc-agy\tests"
+        $fallbackTests = Join-Path $RepoRoot "scripts\aagy\tests"
         if (Test-Path $fallbackTests) {
             $testTargets += $fallbackTests
         }
@@ -260,13 +260,13 @@ Estrategia Fast-Rollback:
         }
     }
 
-    # 7.6. Auditoría de Paridad Multi-Harness (aagy <-> ecc)
+    # 7.6. Auditoría de Paridad Multi-Harness (aagy <-> aagy)
     $pluginParityScript = Join-Path $PSScriptRoot "audit-plugin-parity.ps1"
     if (Test-Path $pluginParityScript) {
-        Write-Host "[+] Ejecutando auditoría de paridad multi-harness (aagy <-> ecc)..." -ForegroundColor Cyan
+        Write-Host "[+] Ejecutando auditoría de paridad multi-harness (aagy <-> aagy)..." -ForegroundColor Cyan
         pwsh -NoProfile -File $pluginParityScript
         if ($LASTEXITCODE -ne 0) {
-            throw "La auditoría de paridad multi-harness detectó divergencias entre aagy y ecc. Corrija los manifiestos antes de continuar."
+            throw "La auditoría de paridad multi-harness detectó divergencias entre aagy y aagy. Corrija los manifiestos antes de continuar."
         }
     }
 

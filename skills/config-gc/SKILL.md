@@ -2,7 +2,7 @@
 name: config-gc
 description: "Garbage collection for your Claude Code configuration. Periodically scans ~/.claude (skills, memory, hooks, permissions, MCP servers..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Config GC — Garbage Collection for Claude Code Setups
@@ -115,6 +115,6 @@ jq '.permissions.allow -= ["Bash(git push)"]' ~/.claude/settings.local.json.bak 
 
 - `skill-stocktake` — audits skill *quality*; config-gc audits skill *existence*. Run stocktake on what survives GC.
 - `workspace-surface-audit` — the additive counterpart: recommends what to install. config-gc is the subtractive half of the same lifecycle.
-- `configure-ecc` — after installing skills with it, run config-gc to reconcile overlaps with your pre-existing setup.
+- `configure-aagy` — after installing skills with it, run config-gc to reconcile overlaps with your pre-existing setup.
 - `agent-self-evaluation` — unified self-improvement engine that produces instinct and memory files this skill later audits.
 - `security-review` — pairs well with the permissions channel.

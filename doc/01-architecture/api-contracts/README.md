@@ -1,6 +1,6 @@
 # Contratos y Esquemas del Ecosistema (`01-architecture/api-contracts/`)
 
-Esta sección centraliza los contratos estructurales y de interfaz CLI del arnés `aagy` / `ecc`.
+Esta sección centraliza los contratos estructurales y de interfaz CLI del arnés `aagy` / `aagy`.
 
 ## Contratos Vigentes
 
@@ -14,5 +14,5 @@ Esta sección centraliza los contratos estructurales y de interfaz CLI del arné
 ## Salidas `--json` Estandarizadas
 
 - `python scripts/py/docs_map.py --repo-root . --validate --json`: emite `{ "valid": bool, "issues": list[str], "schema_version": 1|2 }`.
-- `python scripts/py/audit_plugin_parity.py --repo-root . --json`: emite contrato `ParityAuditResult` verificando simetría `aagy` $\leftrightarrow$ `ecc`.
+- `python scripts/py/audit_plugin_parity.py --repo-root . --json`: emite contrato `ParityAuditResult` verificando simetría `aagy` $\leftrightarrow$ `aagy`.
 - `python scripts/py/format_commit.py --validate "<msg>" --strict --json`: emite `CommitValidationResult`.

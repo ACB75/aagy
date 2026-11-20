@@ -3,7 +3,7 @@
 scripts/py/skill_promotion.py - Gestor de Promoción On-Demand de Skills Tier 2 a Tier 1
 
 Permite promover temporalmente una skill especializada de Tier 2 (skills/<name>)
-hacia el plugin activo de Antigravity (~/.gemini/config/plugins/ecc-agy/skills/),
+hacia el plugin activo de Antigravity (~/.gemini/config/plugins/aagy/skills/),
 validando los límites de frontmatter (<= 140c) y registrándola en .active_promotions.json
 para su posterior retirada limpia (disable-skill).
 """
@@ -26,7 +26,7 @@ logger: logging.Logger = logging.getLogger("skill-promotion")
 REGISTRY_FILE = ".active_promotions.json"
 SKILL_DOC = "SKILL.md"
 MAX_SKILL_DESC_CHARS = 140
-PLUGIN_NAME_ECC_AGY = "aagy"
+PLUGIN_NAME_AAGY = "aagy"
 
 
 def _default_repo_skills_dir() -> Path:
@@ -35,7 +35,7 @@ def _default_repo_skills_dir() -> Path:
 
 
 def _default_plugin_dir() -> Path:
-    return Path.home() / ".gemini" / "config" / "plugins" / PLUGIN_NAME_ECC_AGY
+    return Path.home() / ".gemini" / "config" / "plugins" / PLUGIN_NAME_AAGY
 
 
 def _load_registry(plugin_dir: Path) -> dict[str, str]:

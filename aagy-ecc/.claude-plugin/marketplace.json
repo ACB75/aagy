@@ -1,24 +1,24 @@
 {
-  "name": "ecc",
+  "name": "aagy",
   "owner": {
     "name": "Affaan Mustafa",
     "email": "me@affaanmustafa.com"
   },
   "metadata": {
-    "description": "Harness-native ECC skills, hooks, rules, MCP conventions, and operator workflows"
+    "description": "Harness-native AAGY skills, hooks, rules, MCP conventions, and operator workflows"
   },
   "plugins": [
     {
-      "name": "ecc",
+      "name": "aagy",
       "source": "./",
-      "description": "Harness-native ECC operator layer - 71 agents, 311 skills, 97 legacy command shims, reusable hooks, rules, selective install profiles, and production-ready workflows for Claude Code, Codex, OpenCode, Cursor, and related agent harnesses",
+      "description": "Harness-native AAGY operator layer - 71 agents, 311 skills, 97 legacy command shims, reusable hooks, rules, selective install profiles, and production-ready workflows for Claude Code, Codex, OpenCode, Cursor, and related agent harnesses",
       "version": "2.2.3",
       "author": {
         "name": "Affaan Mustafa",
         "email": "me@affaanmustafa.com"
       },
-      "homepage": "https://ecc.tools",
-      "repository": "https://github.com/affaan-m/ECC",
+      "homepage": "https://aagy.tools",
+      "repository": "https://github.com/ACB75/aagy",
       "license": "MIT",
       "keywords": [
         "agents",

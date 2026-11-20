@@ -1,8 +1,8 @@
 ---
 name: messages-ops
-description: "Evidence-first live messaging workflow for ECC."
+description: "Evidence-first live messaging workflow for AAGY."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Messages Ops
@@ -13,7 +13,7 @@ This is not email work. If the dominant surface is a mailbox, use `email-ops`.
 
 ## Skill Stack
 
-Pull these ECC-native skills into the workflow when relevant:
+Pull these AAGY-native skills into the workflow when relevant:
 
 - `email-ops` when the message task is really mailbox work
 - `connections-optimizer` when the DM thread belongs to outbound network work

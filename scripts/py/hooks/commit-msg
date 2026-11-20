@@ -28,7 +28,7 @@ if [ $EXIT_CODE -ne 0 ]; then
     echo ""
     echo "[GIT HOOK ERROR] El mensaje de commit no cumple con el formato requerido."
     echo "Formato esperado: [type]-[projects]: <title> o type(project): <title>"
-    echo "Ejemplo: [feat]-[ecc]: nueva funcionalidad implementada"
+    echo "Ejemplo: [feat]-[aagy]: nueva funcionalidad implementada"
     echo "Y un cuerpo explicativo de al menos 20 caracteres."
     echo "Para omitir esta comprobacion en emergencias, use 'git commit --no-verify'."
     exit 1

@@ -1,10 +1,10 @@
 ---
 name: agent-self-evaluation
 description: "Unified 5-axis self-evaluation, instinct discovery, and budget-gated self-improvement via Stop hook and CLI. Not for raw rule edits."
-origin: ECC
+origin: AAGY
 ---
 
-# Unified Agent Self-Evaluation & Continuous Self-Improvement (`aagy` / `ecc`)
+# Unified Agent Self-Evaluation & Continuous Self-Improvement (`aagy` / `aagy`)
 
 Combines post-task 5-axis quality evaluation, passive `Stop` hook instinct capture (`0` prompt tokens, $< 500\text{ ms}$), dual-level instinct persistence (`<repo>/.agents/instincts/` + `$PLUGIN_DATA/instincts/`), Eval-Driven Development (`pass@k` / `pass^k`), and budget-gated artifact promotion (`scripts/py/self_improve.py`).
 

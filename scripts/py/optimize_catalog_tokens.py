@@ -215,12 +215,12 @@ def main() -> None:
     m_skills = optimize_skills(repo_root)
     print(f"Root: {m_agents} agents updated, {m_skills} skills updated.")
 
-    # Optimizar ecc-agy si existe
-    ecc_agy = repo_root / "ecc-agy"
-    if ecc_agy.is_dir():
-        m_agents_sub = optimize_agents(ecc_agy)
-        m_skills_sub = optimize_skills(ecc_agy)
-        print(f"ecc-agy: {m_agents_sub} agents updated, {m_skills_sub} skills updated.")
+    # Optimizar aagy si existe
+    aagy = repo_root / "aagy"
+    if aagy.is_dir():
+        m_agents_sub = optimize_agents(aagy)
+        m_skills_sub = optimize_skills(aagy)
+        print(f"aagy: {m_agents_sub} agents updated, {m_skills_sub} skills updated.")
 
 
 if __name__ == "__main__":

@@ -29,7 +29,7 @@
       },
       {
         "id": "pre:governance-capture",
-        "description": "Capture governance events (secrets, policy violations, approval requests). Enable with ECC_GOVERNANCE_CAPTURE=1",
+        "description": "Capture governance events (secrets, policy violations, approval requests). Enable with AAGY_GOVERNANCE_CAPTURE=1",
         "fingerprint": "d471aed407c3"
       },
       {

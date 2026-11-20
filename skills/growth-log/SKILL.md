@@ -3,7 +3,7 @@ name: growth-log
 description: "Write growth log entries that extract reusable patterns from completed work — root cause, transferable rule, and a recognizable signal..."
 metadata:
   version: 1.1.0
-  origin: ECC
+  origin: AAGY
 ---
 
 # Growth Log Skill

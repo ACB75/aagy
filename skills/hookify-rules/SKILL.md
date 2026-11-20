@@ -7,8 +7,8 @@ description: "Create and configure hookify rules — markdown files with YAML fr
 
 ## Overview
 
-ECC evaluates project-local Hookify rules with its built-in Node runtime. No
-separate Hookify plugin or Python installation is required when ECC hooks are
+AAGY evaluates project-local Hookify rules with its built-in Node runtime. No
+separate Hookify plugin or Python installation is required when AAGY hooks are
 enabled.
 
 Hookify rules are markdown files with YAML frontmatter that define patterns to watch for and messages to show when those patterns match. Rules are stored in `.claude/hookify.{rule-name}.local.md` files.
@@ -122,7 +122,7 @@ symlinked, or oversized local rules fail open and emit a
 diagnostic without disabling other Hookify rules.
 
 Git-tracked local rules are disabled by default. Set
-`ECC_HOOKIFY_ALLOW_TRACKED=1` only after reviewing those files; ordinary
+`AAGY_HOOKIFY_ALLOW_TRACKED=1` only after reviewing those files; ordinary
 gitignored rules created locally remain active without that override.
 
 ## Runtime Behavior

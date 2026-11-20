@@ -1,7 +1,7 @@
 # Manual de Operación: Optimización de Prompt Caching de Gemini 3.8
 
 > **Referencia de Gobernanza**: Optimización de Rendimiento y Presupuesto de Contexto  
-> **Ámbito**: Ecosistema Antigravity (`AGY`), Plugin `ecc-agy` y Reglas Globales `AGENTS.md`  
+> **Ámbito**: Ecosistema Antigravity (`AGY`), Plugin `aagy` y Reglas Globales `AGENTS.md`  
 > **Fecha de Publicación**: `2026-11-20`  
 
 ---
@@ -64,7 +64,7 @@ Para garantizar que las optimizaciones de context caching permanezcan efectivas:
 2. **Sincronización multi-ubicación**: Mantener siempre paridad estricta entre:
    - `./AGENTS.md` (raíz del repositorio)
    - `./rules/AGENTS.md` (subdirectorio de reglas versionadas)
-   - `~/.gemini/config/plugins/ecc-agy/rules/AGENTS.md` (plugin global cargado en memoria de Antigravity)
+   - `~/.gemini/config/plugins/aagy/rules/AGENTS.md` (plugin global cargado en memoria de Antigravity)
 3. **Verificación automatizada en CI/Tests**: Toda modificación a las reglas del sistema debe ser validada mediante `test_static_prompt_caching_prefix_invariance` en `scripts/py/tests/test_workspace_audit.py`.
 
 ---

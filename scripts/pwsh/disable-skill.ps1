@@ -2,7 +2,7 @@
 .SYNOPSIS
     Desactiva y retira una skill temporalmente promovida del plugin activo de Antigravity.
 .DESCRIPTION
-    Elimina la copia en ~/.gemini/config/plugins/ecc-agy/skills/<name> y remueve
+    Elimina la copia en ~/.gemini/config/plugins/aagy/skills/<name> y remueve
     la entrada de .active_promotions.json.
 .PARAMETER Name
     Nombre de la skill promovida a retirar.

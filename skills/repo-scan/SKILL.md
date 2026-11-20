@@ -120,7 +120,7 @@ fi
 
 > Review the source before installing any agent skill.
 
-Installation completes only the bootstrap. Reload your agent harness, then invoke `repo-scan` again. This ECC pointer installs the external skill but does not run a scan itself.
+Installation completes only the bootstrap. Reload your agent harness, then invoke `repo-scan` again. This AAGY pointer installs the external skill but does not run a scan itself.
 
 ## Core Capabilities
 

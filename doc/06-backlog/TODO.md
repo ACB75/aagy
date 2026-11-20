@@ -1,4 +1,4 @@
-# PROTOCOLO DE EJECUCIÓN Y BACKLOG MAESTRO | ECC ECOSYSTEM
+# PROTOCOLO DE EJECUCIÓN Y BACKLOG MAESTRO | AAGY ECOSYSTEM
 
 > **Directiva de Agente Autónomo:**
 >
@@ -16,9 +16,9 @@
 
 ---
 
-## 5. Prioridad 5: Cierre Maestro — Rebranding y Migración de `/ecc` a `/aagy` (`Anything Antigravity`)
+## 5. Prioridad 5: Cierre Maestro — Rebranding y Migración de `/aagy` a `/aagy` (`Anything Antigravity`)
 
-### Tarea 5.1: Migración de `/ecc` a `/aagy` (*Anything Antigravity*), Nuevo `README.md`, Reinstalación del Plugin y Sincronización `aagy-ecc`
+### Tarea 5.1: Migración de `/aagy` a `/aagy` (*Anything Antigravity*), Nuevo `README.md`, Reinstalación del Plugin y Sincronización `aagy-ecc`
 
 ---
 

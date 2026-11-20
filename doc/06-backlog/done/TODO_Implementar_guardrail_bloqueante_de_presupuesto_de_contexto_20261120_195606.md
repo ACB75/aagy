@@ -23,9 +23,9 @@ completed_at: "2026-11-20 19:56:06"
   - *Enfoque B (Manifiesto + Caché)*: Mantener un manifiesto de huella estimada por MCP conocido cuando el servidor no expone esquema estático, bloqueando cualquier MCP activo no declarado o sin `"disabled": true` cuando supere el umbral.
   - *Enfoque C (Híbrido recomendado)*: Combinar validación estricta de `rules` (`<= 24.000` bytes/archivo y techo seguro `<= 16.000` tokens agregados) + validación de `customizations` (`Tier 1 + MCP activos <= MAX_EAGER_CUSTOMIZATION_TOKENS`) exigiendo `"disabled": true` en plugins pesados.
 - **05 - PHASE 3 (EXECUTION):**
-    1. Extender `scripts/ecc-agy/workspace_audit.py` con auditoría de `rules` (bytes por archivo y tokens agregados) y de `mcp_config.json` en plugins activos (`disabled != true`).
+    1. Extender `scripts/aagy/workspace_audit.py` con auditoría de `rules` (bytes por archivo y tokens agregados) y de `mcp_config.json` en plugins activos (`disabled != true`).
     2. Definir constantes explícitas de presupuesto máximo y devolver código de salida distinto de `0` ante cualquier violación.
-    3. Añadir pruebas unitarias en `scripts/ecc-agy/tests/test_workspace_audit.py` cubriendo casos límite (archivo > 24 KB, rules > presupuesto, MCP pesado habilitado por defecto).
+    3. Añadir pruebas unitarias en `scripts/aagy/tests/test_workspace_audit.py` cubriendo casos límite (archivo > 24 KB, rules > presupuesto, MCP pesado habilitado por defecto).
     4. Ejecutar `pytest` y `audit-workspace.ps1` para verificar exit code `0`.
 - **06 - PHASE 4 (CRITIC):**
   - *Auditoría*: ¿Qué pasa si un `mcp_config.json` usa `npx` y no tiene caché local de schemas? Contabilizar un coste mínimo conservador por servidor activo y exigir opt-in explícito para servidores pesados (`gemini-mcp`), evitando falsos negativos.
@@ -44,7 +44,7 @@ Hard gate implementado en workspace_audit.py, SonarQube Rating A alcanzado, 69 t
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/workspace-audit-budget-hard-gate`
+- **Rama / PR**: `feat/aagy/workspace-audit-budget-hard-gate`
 - **Commit SHA**: `e0cf43e`
 - **Fecha**: `2026-11-20 19:56:06`
 - **Gobernanza**: Quality Gate A / markdownlint OK

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Gestor de Instintos y Aprendizajes a Doble Nivel (Proyecto + PLUGIN_DATA) para aagy / ecc (stdlib pura).
+Gestor de Instintos y Aprendizajes a Doble Nivel (Proyecto + PLUGIN_DATA) para aagy / aagy (stdlib pura).
 
 Permite capturar, sanitizar (AgentShield + redacción de secretos), almacenar y exportar
 instintos en <repo>/.agents/instincts/*.md (nivel proyecto) y $PLUGIN_DATA/instincts/*.md
@@ -93,7 +93,7 @@ class Instinct:
 
 
 def resolve_plugin_data_dir(plugin_data_dir: Optional[Path] = None) -> Path:
-    """Resuelve el directorio global PLUGIN_DATA para instintos transversales de aagy/ecc."""
+    """Resuelve el directorio global PLUGIN_DATA para instintos transversales de aagy/aagy."""
     if plugin_data_dir is not None:
         return plugin_data_dir.resolve()
 

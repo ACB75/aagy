@@ -2,7 +2,7 @@
 name: code-tour
 description: "Create CodeTour `.tour` files — persona-targeted, step-by-step walkthroughs with real file and line anchors. Use for onboarding tours..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Code Tour

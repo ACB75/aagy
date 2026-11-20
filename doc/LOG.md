@@ -1,6 +1,6 @@
-# Registro Histórico de Decisiones y Cambios Materiales | ECC / `aagy` Ecosystem
+# Registro Histórico de Decisiones y Cambios Materiales | AAGY / `aagy` Ecosystem
 
-> **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`ecc` -> `aagy`)  
+> **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
 > **Versión Canónica**: `4.1.0`
 
 ---
@@ -23,14 +23,14 @@
 ### Hitos y Decisiones Materiales
 
 1. **Consolidación Final de `scripts/{py,pwsh,sh}/tests/` y Purga de Raíz**:
-   - Eliminados los directorios proxy heredados `scripts/bin/` y `scripts/ecc-agy/`, junto con los scripts `scripts/*.js` y `scripts/lib/` del antiguo instalador Node.js.
-   - Purgados en raíz `manifests/`, `schemas/`, `templates/` (reubicando la plantilla opcional Gemini MCP en [`skills/gemini-deep-ops/templates/gemini-mcp/`](../skills/gemini-deep-ops/templates/gemini-mcp/README.md)), `.gemini/GEMINI.md`, `ecc.json`, `VERSION`, `package-lock.json` y `.vscode/ecc-aecb.code-workspace`.
-   - Trasladados `ecc-agy-sync.ps1` y `ecc-agy-sync.sh` a [`scripts/pwsh/ecc-agy-sync.ps1`](../scripts/pwsh/ecc-agy-sync.ps1) y [`scripts/sh/ecc-agy-sync.sh`](../scripts/sh/ecc-agy-sync.sh), manteniendo en raíz [`install.ps1`](../install.ps1) e [`install.sh`](../install.sh).
-2. **Compactación de `rules/AGENTS.md` (< 12 KB), `AGENTS.md` Raíz y Retiro de Copia Duplicada `ecc-agy`**:
+   - Eliminados los directorios proxy heredados `scripts/bin/` y `scripts/aagy/`, junto con los scripts `scripts/*.js` y `scripts/lib/` del antiguo instalador Node.js.
+   - Purgados en raíz `manifests/`, `schemas/`, `templates/` (reubicando la plantilla opcional Gemini MCP en [`skills/gemini-deep-ops/templates/gemini-mcp/`](../skills/gemini-deep-ops/templates/gemini-mcp/README.md)), `.gemini/GEMINI.md`, `plugin.json`, `VERSION`, `package-lock.json` y `.vscode/aagy.code-workspace`.
+   - Trasladados `aagy-sync.ps1` y `aagy-sync.sh` a [`scripts/pwsh/aagy-sync.ps1`](../scripts/pwsh/aagy-sync.ps1) y [`scripts/sh/aagy-sync.sh`](../scripts/sh/aagy-sync.sh), manteniendo en raíz [`install.ps1`](../install.ps1) e [`install.sh`](../install.sh).
+2. **Compactación de `rules/AGENTS.md` (< 12 KB), `AGENTS.md` Raíz y Retiro de Copia Duplicada `aagy`**:
    - Fusionada `rules/pr-automerge-lifecycle.md` dentro de [`rules/AGENTS.md`](../rules/AGENTS.md) y compactado el archivo único a `< 12 KB` (~7.8 KB / ~2.050 tokens) delegando tutoriales a skills *lazy-loaded*.
-   - Reducido [`AGENTS.md`](../AGENTS.md) de raíz a 14 líneas (~1 KB) preservando el marcador de Prompt Caching y retirada la copia duplicada `~/.gemini/config/plugins/ecc-agy` dejando únicamente `~/.gemini/config/plugins/aagy`.
+   - Reducido [`AGENTS.md`](../AGENTS.md) de raíz a 14 líneas (~1 KB) preservando el marcador de Prompt Caching y retirada la copia duplicada `~/.gemini/config/plugins/aagy` dejando únicamente `~/.gemini/config/plugins/aagy`.
 3. **Renombrado y Paridad Total `aagy-ecc/`**:
-   - Renombrado `ecc/` a `aagy-ecc/`, actualizados [`package.json`](../package.json) (`workspaces: ["aagy-ecc"]`), [`aagy-ecc/package.json`](../aagy-ecc/package.json), [`aagy-ecc/.claude-plugin/plugin.json`](../aagy-ecc/.claude-plugin/plugin.json) y [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
+   - Renombrado `aagy/` a `aagy-ecc/`, actualizados [`package.json`](../package.json) (`workspaces: ["aagy-ecc"]`), [`aagy-ecc/package.json`](../aagy-ecc/package.json), [`aagy-ecc/.claude-plugin/plugin.json`](../aagy-ecc/.claude-plugin/plugin.json) y [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
 
 ---
 
@@ -85,10 +85,10 @@
 
 1. **Rebranding Maestro a Anything Antigravity (`aagy`)**:
    - Rebranding estructural del ecosistema unificado a **Anything Antigravity (`aagy`)**, manteniendo el historial Git completo (`git log` intacto).
-   - Consolidación del subplugin para Anthropic Claude Code en `aagy/ecc/`, garantizando una arquitectura multi-harness coordinada y sin acoplamientos.
+   - Consolidación del subplugin para Anthropic Claude Code en `aagy/aagy/`, garantizando una arquitectura multi-harness coordinada y sin acoplamientos.
    - Actualización de identificadores en `plugin.json` (`name: aagy`, `displayName: Anything Antigravity (aagy)`).
 2. **Linter Automático de Paridad de Plugins (`audit_plugin_parity.py`)**:
-   - Analizador de simetría estructural y de capacidades entre el plugin raíz `aagy` y el subplugin `ecc/`.
+   - Analizador de simetría estructural y de capacidades entre el plugin raíz `aagy` y el subplugin `aagy/`.
    - Verificación de consistencia de manifiestos, coincidencia de nombres e integración en el paso 7.6 de `complete-task-pr.ps1` y `complete-task-pr.sh`.
    - Wrappers `scripts/pwsh/audit-plugin-parity.ps1` y `audit-plugin-parity.sh`.
 3. **Calidad y Documentación**:
@@ -194,7 +194,7 @@
 ### Hitos y Decisiones Materiales
 
 1. **Gestor de Promoción On-Demand (`skill_promotion.py`)**:
-   - Copia dinámica de skills especializadas de `skills/<name>` a `~/.gemini/config/plugins/ecc-agy/skills/<name>`.
+   - Copia dinámica de skills especializadas de `skills/<name>` a `~/.gemini/config/plugins/aagy/skills/<name>`.
    - Validación estricta de frontmatter (`description` $\le 140$ caracteres).
    - Protección de skills core de Tier 1 frente a sobreescritura o eliminación accidental.
    - Registro transaccional en `.active_promotions.json`.
@@ -249,7 +249,7 @@
 1. **Reestructuración Binaria de `AGENTS.md` y `rules/AGENTS.md`**:
    - Separación formal en Bloque Estático Invariable (Google 5-Pillar, SRE, Security, Quality, Multi-Stack Standards, Microservice SDK Parity) y Bloque Contextual / Dinámico (Lifecycle 4-fases, Commit PR automation, TODO lifecycle, Archival, Token Exhaustion).
    - Inclusión de marcador canónico `<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->`.
-   - Sincronización exacta con el plugin global `~/.gemini/config/plugins/ecc-agy/rules/AGENTS.md`.
+   - Sincronización exacta con el plugin global `~/.gemini/config/plugins/aagy/rules/AGENTS.md`.
 2. **Documentación Técnica**:
    - Creado [`doc/manual/MANUAL_gemini_prompt_caching.md`](04-operations/setup-guides/MANUAL_gemini_prompt_caching.md) detallando el mecanismo de coincidencia de prefijos determinista y directrices para desarrolladores.
 3. **Calidad y Verificación**:
@@ -298,13 +298,13 @@
 
 ### Hitos y Decisiones Materiales
 
-1. **Guardrail Bloqueante de Presupuesto (`feat/ecc/workspace-audit-budget-hard-gate`)**:
+1. **Guardrail Bloqueante de Presupuesto (`feat/aagy/workspace-audit-budget-hard-gate`)**:
    - Extendido [`workspace_audit.py`](../scripts/py/workspace_audit.py) con funciones `audit_rules()` y `audit_mcps()`.
    - Límite por archivo de reglas: $\le 24.000$ bytes (24 KB) por archivo Markdown.
    - Techo seguro de reglas agregadas: $\le 16.000$ tokens (frente al defaultRulesBudget de 20.000 tokens de Antigravity).
    - Auditoría de configuración MCP: detección de servidores pesados (`gemini-mcp`) exigiendo `"disabled": true` para garantizar 0 tokens en reposo.
    - Presupuesto eager en plugins activos: $\le 3.000$ tokens en reposo para Tier 1.
-   - Integración automática del plugin global `~/.gemini/config/plugins/ecc-agy` en la auditoría.
+   - Integración automática del plugin global `~/.gemini/config/plugins/aagy` en la auditoría.
 2. **Validación y Tests Unitarios (TDD)**:
    - Añadidos tests unitarios exhaustivos en [`test_workspace_audit.py`](../scripts/py/tests/test_workspace_audit.py) cubriendo archivos sobredimensionados, exceso de tokens de reglas, detección de MCPs pesados activos vs desactivados y desbordamiento eager.
    - Cobertura completa con 69/69 tests pasando al 100%.
@@ -337,14 +337,14 @@
 ### Hitos y Decisiones Materiales
 
 1. **Arquitectura Two-Tier y Reducción del 98.25% de Tokens** (PR #9, PR #10 | Commit `352c079`):
-   - Adopción de la arquitectura Two-Tier: Tier 1 Global Plugin (`~/.gemini/config/plugins/ecc-agy`) con 21 skills nucleares transversales consumiendo ~701 tokens (reducido de 40.000 tokens iniciales).
+   - Adopción de la arquitectura Two-Tier: Tier 1 Global Plugin (`~/.gemini/config/plugins/aagy`) con 21 skills nucleares transversales consumiendo ~701 tokens (reducido de 40.000 tokens iniciales).
    - Barrido y purgado del repositorio: eliminación de 147 skills y 27 agentes redundantes o no relacionados con los stacks autorizados (Java 25/Spring Boot 4, Angular 21/TS, Go/Microservices, Python/FastAPI, PyTorch/RecSys y automatización de oficina).
    - Normalización de 169 skills en Tier 2 con frontmatter $\le 140$ caracteres y 48 subagentes con $\le 120$ caracteres.
 
 2. **Desacoplamiento Agnóstico y Saneamiento de Submódulos** (PR #11 | Commit `0106e39`):
-   - Erradicación del subdirectorio anidado duplicado `ecc-agy/` (530 archivos duplicados purgados).
-   - Consolidación del plugin agnóstico `aagy` / `ecc-agy` directamente en la raíz de `ACB75/ecc`.
-   - Ajuste de `package.json` y `ecc.json` eliminando dependencias obsoletas.
+   - Erradicación del subdirectorio anidado duplicado `aagy/` (530 archivos duplicados purgados).
+   - Consolidación del plugin agnóstico `aagy` / `aagy` directamente en la raíz de `ACB75/aagy`.
+   - Ajuste de `package.json` y `plugin.json` eliminando dependencias obsoletas.
 
 3. **Pipeline Automatizado de Ingesta IDEAS -> TODO y CLI de Mapeo Documental** (PR #12 | Commit `8877291`):
    - Implementación del motor de ingesta [`sync_ideas_todo.py`](../scripts/py/sync_ideas_todo.py) con Meta-Prompt de 7 Fases.
