@@ -203,6 +203,16 @@ Estrategia Fast-Rollback:
         }
     }
 
+    # 7.3. Auditoría de Paridad SDK (home-lab-sdk)
+    $parityScript = Join-Path $PSScriptRoot "audit-sdk-parity.ps1"
+    if (Test-Path $parityScript) {
+        Write-Host "[+] Ejecutando auditoría de paridad de contratos SDK..." -ForegroundColor Cyan
+        pwsh -NoProfile -File $parityScript
+        if ($LASTEXITCODE -ne 0) {
+            throw "La auditoría de paridad SDK detectó divergencias de contratos. Sincronice home-lab-sdk antes de continuar."
+        }
+    }
+
     # 7. Commit si hay cambios staged o unstaged
     $dirty = (git status --porcelain)
     if ($dirty) {
