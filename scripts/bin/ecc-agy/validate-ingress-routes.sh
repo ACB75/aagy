@@ -1,9 +1,5 @@
-#!/usr/bin/env sh
-# Wrapper POSIX para el validador de congruencia Ingress, Split-DNS y Portal.
-set -e
-
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
-PY_SCRIPT="$REPO_ROOT/scripts/ecc-agy/validate_ingress_routes.py"
-
-python3 "$PY_SCRIPT" "$@"
+#!/usr/bin/env bash
+# Forwarding proxy towards canonical scripts/sh/validate-ingress-routes.sh
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CANONICAL_SCRIPT="$SCRIPT_DIR/../../sh/validate-ingress-routes.sh"
+exec bash "$CANONICAL_SCRIPT" "$@"
