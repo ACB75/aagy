@@ -1,46 +1,26 @@
 {
-  "name": "aagy",
+  "name": "aagy-ecc",
   "owner": {
-    "name": "Affaan Mustafa",
-    "email": "me@affaanmustafa.com"
+    "name": "ACB75",
+    "url": "https://github.com/ACB75"
   },
   "metadata": {
-    "description": "Harness-native AAGY skills, hooks, rules, MCP conventions, and operator workflows"
+    "description": "Marketplace local de Anything Antigravity para Claude Code (aagy-ecc)."
   },
   "plugins": [
     {
-      "name": "aagy",
+      "name": "aagy-ecc",
       "source": "./",
-      "description": "Harness-native AAGY operator layer - 71 agents, 311 skills, 97 legacy command shims, reusable hooks, rules, selective install profiles, and production-ready workflows for Claude Code, Codex, OpenCode, Cursor, and related agent harnesses",
-      "version": "2.2.3",
+      "description": "Skills, subagentes, reglas y hooks de aagy para Claude Code, con paridad verificada por audit_plugin_parity.py.",
+      "version": "4.1.0",
       "author": {
-        "name": "Affaan Mustafa",
-        "email": "me@affaanmustafa.com"
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
       },
-      "homepage": "https://aagy.tools",
+      "homepage": "https://github.com/ACB75/aagy",
       "repository": "https://github.com/ACB75/aagy",
       "license": "MIT",
-      "keywords": [
-        "agents",
-        "skills",
-        "hooks",
-        "commands",
-        "tdd",
-        "code-review",
-        "security",
-        "best-practices"
-      ],
       "category": "workflow",
-      "tags": [
-        "agents",
-        "skills",
-        "hooks",
-        "commands",
-        "tdd",
-        "code-review",
-        "security",
-        "best-practices"
-      ],
       "strict": false
     }
   ]

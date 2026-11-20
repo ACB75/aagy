@@ -1,6 +1,6 @@
 ---
 name: recursive-decision-ledger
-description: "Run repeated rollouts ("Prime Gauss" style recursive prompting) while keeping an append-only decision ledger of trials, marks..."
+description: 'Run repeated rollouts ("Prime Gauss" style recursive prompting) while keeping an append-only decision ledger of trials, marks...'
 license: MIT
 metadata:
   origin: AAGY

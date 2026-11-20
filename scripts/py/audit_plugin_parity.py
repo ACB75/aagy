@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Módulo de auditoría de paridad multi-harness entre Anything Antigravity (aagy)
-y el subplugin para Claude Code (aagy) (audit_plugin_parity.py).
+y el subplugin para Claude Code (aagy-ecc) (audit_plugin_parity.py).
 
 Verifica la simetría y coherencia estructural entre el arnés Antigravity/Gemini
 y el arnés Claude Code para garantizar capacidades equivalentes sin deriva.
@@ -15,8 +15,15 @@ from dataclasses import asdict, dataclass
 import json
 import logging
 from pathlib import Path
+import re
 import sys
 from typing import Any, Dict, List, Optional, Sequence, Tuple
+
+_SCRIPT_DIR = str(Path(__file__).resolve().parent)
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+
+from sync_aagy_ecc import compare as sync_compare  # noqa: E402
 
 # Constantes de Estado y Literales para SonarQube (S1192)
 STATUS_PASS = "PASS"
@@ -27,8 +34,11 @@ PLUGIN_NAME_AAGY = "aagy"
 PLUGIN_NAME_AAGY_ECC = "aagy-ecc"
 
 FILE_PLUGIN_JSON = "plugin.json"
+FILE_MARKETPLACE_JSON = "marketplace.json"
 DIR_SKILLS = "skills"
+DIR_AGENTS = "agents"
 DIR_AAGY_ECC = "aagy-ecc"
+PLUGIN_ROOT_REF = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/([A-Za-z0-9_./-]+)")
 
 # Configuración de codificación UTF-8
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -51,6 +61,8 @@ class ParityAuditResult:
     skills_count: int
     claude_skills_count: int
     discrepancies: Tuple[str, ...]
+    agents_count: int = 0
+    claude_agents_count: int = 0
 
     def to_dict(self) -> Dict[str, Any]:
         """Serializa a diccionario."""
@@ -86,37 +98,86 @@ def _check_root_plugin(repo_root: Path, discrepancies: List[str]) -> str:
     return root_name
 
 
-def _check_claude_plugin(repo_root: Path, discrepancies: List[str]) -> Tuple[str, int]:
+def _count_dirs(base: Path) -> int:
+    return sum(1 for p in base.iterdir() if p.is_dir()) if base.is_dir() else 0
+
+
+def _count_md(base: Path) -> int:
+    return sum(1 for p in base.glob("*.md") if p.is_file()) if base.is_dir() else 0
+
+
+def _load_claude_manifest(claude_dir: Path, discrepancies: List[str]) -> Dict[str, Any]:
+    claude_data = _load_json_file(claude_dir / ".claude-plugin" / FILE_PLUGIN_JSON)
+    if claude_data:
+        return claude_data
+    pkg_data = _load_json_file(claude_dir / "package.json")
+    if pkg_data:
+        return pkg_data
+    discrepancies.append(f"No se encontró manifiesto válido de plugin en '{claude_dir.name}/.claude-plugin/' ni 'package.json'.")
+    return {}
+
+
+def _check_marketplace(claude_dir: Path, discrepancies: List[str]) -> None:
+    market = _load_json_file(claude_dir / ".claude-plugin" / FILE_MARKETPLACE_JSON)
+    if market is None:
+        return
+    names = [str(p.get("name", "")) for p in market.get("plugins", []) if isinstance(p, dict)]
+    if PLUGIN_NAME_AAGY_ECC not in names:
+        discrepancies.append(
+            f"'{FILE_MARKETPLACE_JSON}' no publica un plugin llamado '{PLUGIN_NAME_AAGY_ECC}' (encontrado: {names})."
+        )
+
+
+def _check_hook_targets(claude_dir: Path, discrepancies: List[str]) -> None:
+    """Cada script referenciado con ${CLAUDE_PLUGIN_ROOT} en hooks.json debe existir dentro del plugin."""
+    hooks_file = claude_dir / "hooks" / "hooks.json"
+    if not hooks_file.is_file():
+        discrepancies.append(f"No se encontró '{DIR_AAGY_ECC}/hooks/hooks.json'.")
+        return
+    text = hooks_file.read_text(encoding="utf-8")
+    for rel in sorted(set(PLUGIN_ROOT_REF.findall(text))):
+        if not (claude_dir / rel).is_file():
+            discrepancies.append(f"El hook referencia '{rel}', que no existe dentro de '{DIR_AAGY_ECC}/'.")
+
+
+def _check_mirror(repo_root: Path, discrepancies: List[str]) -> None:
+    report = sync_compare(repo_root)
+    if report.in_sync:
+        return
+    discrepancies.append(
+        f"Espejo de '{DIR_AAGY_ECC}/' desincronizado: {len(report.missing)} faltan, "
+        f"{len(report.changed)} distintos, {len(report.extra)} sobrantes. "
+        "Ejecuta scripts/ps1/sync-aagy-ecc.ps1 (o scripts/sh/sync-aagy-ecc.sh)."
+    )
+
+
+def _check_claude_plugin(repo_root: Path, root_version: str, discrepancies: List[str]) -> Tuple[str, int, int]:
     """Valida el subplugin aagy-ecc para Claude Code."""
     claude_dir = repo_root / DIR_AAGY_ECC
     if not claude_dir.is_dir():
         discrepancies.append(f"No se encontró el subdirectorio del plugin Claude Code '{DIR_AAGY_ECC}/'.")
-        return "", 0
+        return "", 0, 0
 
-    claude_manifest = claude_dir / ".claude-plugin" / FILE_PLUGIN_JSON
-    claude_data = _load_json_file(claude_manifest)
-    claude_name = ""
-    if not claude_data:
-        pkg_json = claude_dir / "package.json"
-        pkg_data = _load_json_file(pkg_json)
-        if pkg_data:
-            claude_name = str(pkg_data.get("name", "")).strip()
-        else:
-            discrepancies.append(f"No se encontró manifiesto válido de plugin en '{claude_dir.name}/.claude-plugin/' ni 'package.json'.")
-    else:
-        claude_name = str(claude_data.get("name", "")).strip()
-
+    claude_data = _load_claude_manifest(claude_dir, discrepancies)
+    claude_name = str(claude_data.get("name", "")).strip()
     if claude_name and claude_name != PLUGIN_NAME_AAGY_ECC:
         discrepancies.append(f"El nombre del plugin Claude Code ('{claude_name}') no es '{PLUGIN_NAME_AAGY_ECC}'.")
 
-    claude_skills_dir = claude_dir / DIR_SKILLS
-    claude_skills_count = 0
-    if claude_skills_dir.is_dir():
-        claude_skills_count = sum(1 for p in claude_skills_dir.iterdir() if p.is_dir())
-    elif (repo_root / DIR_SKILLS).is_dir():
-        claude_skills_count = sum(1 for p in (repo_root / DIR_SKILLS).iterdir() if p.is_dir())
+    claude_version = str(claude_data.get("version", "")).strip()
+    if claude_data and root_version and claude_version != root_version:
+        discrepancies.append(
+            f"Versión de '{PLUGIN_NAME_AAGY_ECC}' ('{claude_version}') distinta de la de '{PLUGIN_NAME_AAGY}' ('{root_version}')."
+        )
 
-    return claude_name, claude_skills_count
+    if not (claude_dir / DIR_SKILLS).is_dir():
+        discrepancies.append(f"No existe '{DIR_AAGY_ECC}/{DIR_SKILLS}/': Claude Code no cargaría ninguna skill.")
+
+    _check_marketplace(claude_dir, discrepancies)
+    _check_hook_targets(claude_dir, discrepancies)
+    if (repo_root / DIR_SKILLS).is_dir():
+        _check_mirror(repo_root, discrepancies)
+
+    return claude_name, _count_dirs(claude_dir / DIR_SKILLS), _count_md(claude_dir / DIR_AGENTS)
 
 
 def audit_parity(repo_root: Path) -> ParityAuditResult:
@@ -126,13 +187,12 @@ def audit_parity(repo_root: Path) -> ParityAuditResult:
     discrepancies: List[str] = []
 
     root_name = _check_root_plugin(repo_root, discrepancies)
-    claude_name, claude_skills_count = _check_claude_plugin(repo_root, discrepancies)
+    root_data = _load_json_file(repo_root / FILE_PLUGIN_JSON) or {}
+    root_version = str(root_data.get("version", "")).strip()
+    claude_name, claude_skills_count, claude_agents_count = _check_claude_plugin(repo_root, root_version, discrepancies)
 
-    # Contar skills raíz en Antigravity
-    root_skills_dir = repo_root / DIR_SKILLS
-    root_skills_count = 0
-    if root_skills_dir.is_dir():
-        root_skills_count = sum(1 for p in root_skills_dir.iterdir() if p.is_dir())
+    root_skills_count = _count_dirs(repo_root / DIR_SKILLS)
+    root_agents_count = _count_md(repo_root / DIR_AGENTS)
 
     is_valid = len(discrepancies) == 0
     status = STATUS_PASS if is_valid else STATUS_FAIL
@@ -145,6 +205,8 @@ def audit_parity(repo_root: Path) -> ParityAuditResult:
         skills_count=root_skills_count,
         claude_skills_count=claude_skills_count,
         discrepancies=tuple(discrepancies),
+        agents_count=root_agents_count,
+        claude_agents_count=claude_agents_count,
     )
 
 
@@ -161,6 +223,8 @@ def print_report(result: ParityAuditResult) -> None:
     logger.info(f"Subplugin Claude Code:    {result.claude_plugin_name or 'N/A'}")
     logger.info(f"Habilidades Antigravity:  {result.skills_count}")
     logger.info(f"Habilidades Claude Code:  {result.claude_skills_count}")
+    logger.info(f"Subagentes Antigravity:   {result.agents_count}")
+    logger.info(f"Subagentes Claude Code:   {result.claude_agents_count}")
 
     if result.discrepancies:
         logger.info("\nDiscrepancias Detectadas:")
@@ -172,7 +236,7 @@ def print_report(result: ParityAuditResult) -> None:
 def parse_args(args: Optional[Sequence[str]] = None) -> argparse.Namespace:
     """Parsea los argumentos de línea de comandos."""
     parser = argparse.ArgumentParser(
-        description="Auditoría de paridad multi-harness entre Anything Antigravity (aagy) y Claude Code (aagy)."
+        description="Auditoría de paridad multi-harness entre Anything Antigravity (aagy) y Claude Code (aagy-ecc)."
     )
     parser.add_argument(
         "--repo-root",

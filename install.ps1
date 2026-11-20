@@ -4,7 +4,9 @@
 .DESCRIPTION
     Permite desplegar de forma interactiva o parametrizada cualquiera de las distribuciones:
       - agy      : Distribución nativa para Google Antigravity & Gemini (~/.gemini/config/plugins/aagy).
-      - claude   : Distribución hermana aagy-ecc para Claude Code (.claude/, CLAUDE.md, hooks).
+      - claude   : Distribución hermana aagy-ecc para Claude Code: sincroniza el espejo y la instala
+                   como plugin (marketplace local). Con -Destination copia además la plantilla
+                   de proyecto (CLAUDE.md + .claude/).
       - aagy-ecc : Alias explícito de 'claude'.
       - homelab  : Alias de compatibilidad hacia 'agy'.
 .PARAMETER Target
@@ -13,9 +15,13 @@
     minimal (por defecto: Nivel 1 Global con ~22 skills nucleares universales) |
     full    (despliegue del catálogo completo optimizado a <=140c)
 .PARAMETER Destination
-    Directorio de destino (por defecto ~/.gemini/config/plugins/aagy o proyecto actual).
+    agy: directorio de destino (por defecto ~/.gemini/config/plugins/aagy).
+    claude / aagy-ecc: proyecto opcional donde copiar la plantilla CLAUDE.md + .claude/.
+.PARAMETER NoPlugin
+    claude / aagy-ecc: solo sincroniza (y copia la plantilla), sin instalar el plugin en Claude Code.
 .EXAMPLE
     pwsh -File install.ps1 -Target agy -Profile minimal
+    pwsh -File install.ps1 -Target aagy-ecc
     pwsh -File install.ps1 -Target aagy-ecc -Destination C:\Workspace\my-app
 #>
 param(
@@ -25,7 +31,9 @@ param(
     [ValidateSet("minimal", "full")]
     [string]$Profile = "minimal",
 
-    [string]$Destination
+    [string]$Destination,
+
+    [switch]$NoPlugin
 )
 
 $ErrorActionPreference = "Stop"
@@ -47,16 +55,36 @@ if ($Target -eq "aagy-ecc") {
 switch ($Target) {
     "claude" {
         $sourceDir = Join-Path $ScriptRoot "aagy-ecc"
-        if (-not $Destination) {
-            $Destination = (Get-Location).Path
+
+        # 1. Regenerar el espejo (skills, agentes, reglas y motores Python) dentro de aagy-ecc/
+        Write-Host "[+] Sincronizando aagy-ecc desde la raíz del repositorio..." -ForegroundColor Green
+        python (Join-Path $ScriptRoot "scripts\py\sync_aagy_ecc.py") --repo-root $ScriptRoot
+        if ($LASTEXITCODE -ne 0) { throw "Falló la sincronización de aagy-ecc." }
+
+        # 2. Instalar como plugin de Claude Code (marketplace local + plugin)
+        if ($NoPlugin) {
+            Write-Host "[i] -NoPlugin: se omite la instalación del plugin en Claude Code." -ForegroundColor Yellow
+        } elseif (Get-Command claude -ErrorAction SilentlyContinue) {
+            Write-Host "[+] Registrando marketplace local e instalando aagy-ecc en Claude Code..." -ForegroundColor Green
+            claude plugin marketplace add $sourceDir
+            claude plugin install aagy-ecc@aagy-ecc
+        } else {
+            Write-Host "[!] No se encontró el CLI 'claude'. Instala el plugin manualmente con:" -ForegroundColor Yellow
+            Write-Host "    claude plugin marketplace add `"$sourceDir`"" -ForegroundColor Yellow
+            Write-Host "    claude plugin install aagy-ecc@aagy-ecc" -ForegroundColor Yellow
         }
-        Write-Host "[+] Desplegando aagy-ecc (Claude Code) en: $Destination" -ForegroundColor Green
-        if (-not (Test-Path $Destination)) {
-            New-Item -ItemType Directory -Force -Path $Destination | Out-Null
+
+        # 3. Opcional: plantilla de proyecto (CLAUDE.md + .claude/) en un proyecto destino
+        if ($Destination) {
+            $templateDir = Join-Path $sourceDir "project-template"
+            Write-Host "[+] Copiando plantilla de proyecto (CLAUDE.md + .claude/) a: $Destination" -ForegroundColor Green
+            if (-not (Test-Path $Destination)) {
+                New-Item -ItemType Directory -Force -Path $Destination | Out-Null
+            }
+            Copy-Item -Path (Join-Path $templateDir "CLAUDE.md") -Destination $Destination -Force
+            Copy-Item -Path (Join-Path $templateDir ".claude") -Destination $Destination -Recurse -Force
         }
-        Copy-Item -Path (Join-Path $sourceDir "CLAUDE.md") -Destination $Destination -Force
-        Copy-Item -Path (Join-Path $sourceDir ".claude") -Destination (Join-Path $Destination ".claude") -Recurse -Force
-        Write-Host "[✓] Distribución aagy-ecc instalada con éxito." -ForegroundColor Green
+        Write-Host "[✓] Distribución aagy-ecc lista." -ForegroundColor Green
     }
     "agy" {
         if (-not $Destination) {

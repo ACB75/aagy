@@ -56,6 +56,19 @@ def mock_repo_structure(tmp_path: Path):
     (claude_skills_dir / "tdd-workflow").mkdir()
     (claude_skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD", encoding="utf-8")
 
+    (tmp_path / "agents").mkdir()
+    (tmp_path / "agents" / "planner.md").write_text("# planner", encoding="utf-8")
+    (claude_dir / "agents").mkdir()
+    (claude_dir / "agents" / "planner.md").write_text("# planner", encoding="utf-8")
+
+    hooks_dir = claude_dir / "hooks"
+    hooks_dir.mkdir()
+    (hooks_dir / "hooks.json").write_text(json.dumps({"hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [
+        {"type": "command", "command": "python \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/safety_check.py\""}
+    ]}]}}), encoding="utf-8")
+    (claude_dir / "scripts" / "hooks").mkdir(parents=True)
+    (claude_dir / "scripts" / "hooks" / "safety_check.py").write_text("# hook", encoding="utf-8")
+
     return tmp_path
 
 
@@ -101,3 +114,49 @@ def test_audit_parity_cli_check_only(mock_repo_structure: Path):
     with patch("sys.argv", ["audit_plugin_parity.py", "--repo-root", str(mock_repo_structure), "--check-only"]):
         exit_code = main()
         assert exit_code == 0
+
+
+def test_audit_parity_missing_claude_skills_dir_fails(mock_repo_structure: Path):
+    """Sin aagy-ecc/skills/ Claude Code no carga skills: no debe caer en las de la raíz."""
+    import shutil
+    shutil.rmtree(mock_repo_structure / "aagy-ecc" / "skills")
+    result = audit_parity(mock_repo_structure)
+    assert result.is_valid is False
+    assert result.claude_skills_count == 0
+    assert any("skills" in d for d in result.discrepancies)
+
+
+def test_audit_parity_detects_mirror_drift(mock_repo_structure: Path):
+    (mock_repo_structure / "skills" / "tdd-workflow" / "SKILL.md").write_text("# TDD v2", encoding="utf-8")
+    result = audit_parity(mock_repo_structure)
+    assert result.is_valid is False
+    assert any("desincronizado" in d for d in result.discrepancies)
+
+
+def test_audit_parity_detects_missing_hook_script(mock_repo_structure: Path):
+    (mock_repo_structure / "aagy-ecc" / "scripts" / "hooks" / "safety_check.py").unlink()
+    result = audit_parity(mock_repo_structure)
+    assert result.is_valid is False
+    assert any("scripts/hooks/safety_check.py" in d for d in result.discrepancies)
+
+
+def test_audit_parity_detects_version_mismatch(mock_repo_structure: Path):
+    manifest = mock_repo_structure / "aagy-ecc" / ".claude-plugin" / "plugin.json"
+    manifest.write_text(json.dumps({"name": "aagy-ecc", "version": "9.9.9"}), encoding="utf-8")
+    result = audit_parity(mock_repo_structure)
+    assert result.is_valid is False
+    assert any("9.9.9" in d for d in result.discrepancies)
+
+
+def test_audit_parity_detects_wrong_marketplace_name(mock_repo_structure: Path):
+    market = mock_repo_structure / "aagy-ecc" / ".claude-plugin" / "marketplace.json"
+    market.write_text(json.dumps({"name": "x", "plugins": [{"name": "aagy", "source": "./"}]}), encoding="utf-8")
+    result = audit_parity(mock_repo_structure)
+    assert result.is_valid is False
+    assert any("marketplace.json" in d for d in result.discrepancies)
+
+
+def test_audit_parity_counts_agents(mock_repo_structure: Path):
+    result = audit_parity(mock_repo_structure)
+    assert result.agents_count == 1
+    assert result.claude_agents_count == 1

@@ -79,6 +79,23 @@ bash scripts/sh/audit-plugin-parity.sh --check-only
 # Instalar / sincronizar plugin para Google Antigravity (aagy)
 pwsh -File install.ps1 -Target agy -Profile minimal
 
-# Desplegar boilerplates para Claude Code (aagy) en un proyecto
-pwsh -File install.ps1 -Target claude -Destination C:\Ruta\A\Proyecto
+# Sincronizar el espejo e instalar aagy-ecc como plugin de Claude Code
+pwsh -File install.ps1 -Target aagy-ecc
+
+# Además, copiar la plantilla CLAUDE.md + .claude/ en un proyecto
+pwsh -File install.ps1 -Target aagy-ecc -Destination C:\Ruta\A\Proyecto
+```
+
+### 3.1. Qué verifica la auditoría de paridad
+
+[`audit_plugin_parity.py`](../../scripts/py/audit_plugin_parity.py) falla (`exit 1`) si:
+
+- `aagy-ecc/skills/`, `aagy-ecc/agents/`, `aagy-ecc/rules/AGENTS.md` o `aagy-ecc/scripts/py/` difieren de la raíz (comparación por contenido vía [`sync_aagy_ecc.py`](../../scripts/py/sync_aagy_ecc.py)).
+- Algún script referenciado con `${CLAUDE_PLUGIN_ROOT}` en `aagy-ecc/hooks/hooks.json` no existe dentro del plugin.
+- El nombre o la versión de `aagy-ecc/.claude-plugin/plugin.json` no coinciden con `aagy-ecc` y con la versión de `plugin.json` raíz, o `marketplace.json` no publica `aagy-ecc`.
+
+Tras editar skills, agentes, reglas o motores Python en la raíz:
+
+```powershell
+pwsh -File scripts/ps1/sync-aagy-ecc.ps1
 ```

@@ -1,46 +1,23 @@
 {
   "name": "aagy-ecc",
-  "version": "4.0.0",
-  "description": "Anything Antigravity (aagy-ecc) plugin for Claude Code - full parity with aagy across agents, skills, hooks, rules, and engineering lifecycle",
+  "version": "4.1.0",
+  "description": "Anything Antigravity (aagy) para Claude Code: mismas skills, subagentes, reglas y hooks de seguridad que el plugin aagy de Antigravity, mas comandos slash propios.",
   "author": {
-    "name": "Affaan Mustafa",
-    "url": "https://x.com/affaanmustafa"
+    "name": "ACB75",
+    "url": "https://github.com/ACB75"
   },
-  "homepage": "https://aagy.tools",
+  "homepage": "https://github.com/ACB75/aagy",
   "repository": "https://github.com/ACB75/aagy",
   "license": "MIT",
   "keywords": [
+    "aagy",
     "claude-code",
     "agents",
     "skills",
     "hooks",
-    "rules",
     "tdd",
     "code-review",
     "security",
-    "workflow",
-    "automation",
-    "best-practices"
-  ],
-  "userConfig": {
-    "hooks_enabled": {
-      "type": "boolean",
-      "title": "Enable AAGY hooks",
-      "description": "Run AAGY's local lifecycle, quality, and safety automation. Disable this to keep skills and commands without local hook automation.",
-      "default": true
-    },
-    "hook_profile": {
-      "type": "string",
-      "title": "AAGY hook profile",
-      "description": "Choose minimal, standard, or strict. Invalid values safely fall back to standard.",
-      "default": "standard"
-    }
-  },
-  "mcpServers": {},
-  "skills": [
-    "./skills/"
-  ],
-  "commands": [
-    "./commands/"
+    "workflow"
   ]
 }

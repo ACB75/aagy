@@ -37,7 +37,7 @@ flowchart TD
 | Distribución | Destino | Características Clave | Presupuesto en Reposo |
 | :--- | :--- | :--- | :--- |
 | **`aagy` (Raíz)** | Google Antigravity & Gemini (`~/.gemini/config/plugins/aagy`) | **Tier 1 Global**: [`rules/AGENTS.md`](rules/AGENTS.md) compactado (`< 12 KB`), 22 skills nucleares transversales, 12 subagentes y [`hooks.json`](hooks.json) deterministas (`PreToolUse`, `PostToolUse`, `Stop`). **Tier 2 Lazy**: 169 skills ($\le 140$ chars) y 49 subagentes ($\le 120$ chars) cargados bajo demanda. | **~3.635 tokens** (bajo el límite duro de 16.000 tokens de reglas y 3.000 tokens eager). |
-| **[`aagy-ecc`](aagy-ecc/README.md)** | Anthropic Claude Code (`aagy-ecc/`) | Distribución hermana sincronizada ([`CLAUDE.md`](aagy-ecc/CLAUDE.md), `.claude/`, `.claude-plugin/plugin.json`, `commands/`, `hooks/`) validada continuamente por [`audit_plugin_parity.py`](scripts/py/audit_plugin_parity.py). | Paridad 100% con `aagy`. |
+| **[`aagy-ecc`](aagy-ecc/README.md)** | Anthropic Claude Code (`aagy-ecc/`) | Plugin hermano con espejo generado de `skills/`, `agents/` y `rules/AGENTS.md` ([`sync_aagy_ecc.py`](scripts/py/sync_aagy_ecc.py)), hooks propios de Claude Code (`SessionStart` reglas, `PreToolUse` safety gate, `PostToolUse` markdownlint, `Stop` self-improve), `commands/` y [`project-template/`](aagy-ecc/project-template/CLAUDE.md); deriva bloqueada por [`audit_plugin_parity.py`](scripts/py/audit_plugin_parity.py). | Paridad 100% con `aagy`. |
 
 ---
 
@@ -52,7 +52,8 @@ pwsh -NoProfile -File install.ps1 -Target agy -Profile minimal
 # 2. Instalar el catálogo completo de skills en Antigravity
 pwsh -NoProfile -File install.ps1 -Target agy -Profile full
 
-# 3. Desplegar la distribución hermana aagy-ecc (Claude Code) en un proyecto destino
+# 3. Sincronizar e instalar la distribución hermana aagy-ecc como plugin de Claude Code
+#    (-Destination opcional: copia además la plantilla CLAUDE.md + .claude/ al proyecto)
 pwsh -NoProfile -File install.ps1 -Target aagy-ecc -Destination C:\Ruta\A\MiProyecto
 
 # 4. Sincronizar perfil de dominio específico (infra, kakebo, cluster, token-hill)
@@ -65,7 +66,7 @@ pwsh -NoProfile -File scripts/ps1/aagy-sync.ps1 -Phase kakebo -TargetProject C:\
 # 1. Instalar plugin global aagy (Tier 1)
 ./install.sh agy
 
-# 2. Desplegar aagy-ecc (Claude Code) en un proyecto destino
+# 2. Sincronizar e instalar aagy-ecc (Claude Code); el destino opcional recibe la plantilla de proyecto
 ./install.sh aagy-ecc /ruta/a/mi-proyecto
 ```
 
