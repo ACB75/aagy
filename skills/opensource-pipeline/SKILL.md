@@ -2,7 +2,7 @@
 name: opensource-pipeline
 description: "Open-source pipeline: fork, sanitize, and. Use when a private project must be forked, stripped of secrets, and packaged for public release."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Open-Source Pipeline Skill

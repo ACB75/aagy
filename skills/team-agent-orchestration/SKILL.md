@@ -2,7 +2,7 @@
 name: team-agent-orchestration
 description: "Run team-based orchestration for agent squads: work items with owners and scope, agent Kanban state, branch isolation, control pane..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Team Agent Orchestration

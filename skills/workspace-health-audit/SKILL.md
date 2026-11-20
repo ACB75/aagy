@@ -2,7 +2,7 @@
 name: workspace-health-audit
 description: "Audit workspace hygiene, token budget, redundant skills, rules and docs governance. Delegates to scripts/py/workspace-audit.py."
 metadata:
-  origin: ECC-AGY
+  origin: AAGY
 ---
 
 # Workspace Health Audit

@@ -2,7 +2,7 @@
 name: backend-patterns
 description: "API layering, caching, rate limiting, and idempotent service patterns. Defer to fastapi-patterns for FastAPI specifics."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Backend Development Patterns

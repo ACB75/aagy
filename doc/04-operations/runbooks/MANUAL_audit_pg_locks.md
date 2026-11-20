@@ -1,6 +1,6 @@
 # Manual de Operación: Analizador de Bloqueos DDL en PostgreSQL LTS (`audit_pg_locks.py`)
 
-> **Ecosistema**: ECC Ecosystem & Home-Lab  
+> **Ecosistema**: AAGY Ecosystem & Home-Lab  
 > **Ubicación Canónica**: `scripts/py/audit_pg_locks.py`  
 > **Wrappers CLI**: `scripts/pwsh/audit-pg-locks.ps1` y `audit-pg-locks.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  

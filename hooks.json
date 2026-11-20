@@ -1,5 +1,5 @@
 {
-  "ecc-safety-gate": {
+  "aagy-safety-gate": {
     "PreToolUse": [
       {
         "matcher": "run_command",
@@ -13,7 +13,7 @@
       }
     ]
   },
-  "ecc-markdown-linter": {
+  "aagy-markdown-linter": {
     "PostToolUse": [
       {
         "matcher": "write_file",

@@ -23,7 +23,7 @@ def test_valid_fix_branches(branch: str):
     assert is_fix_branch(branch) is True
 
 @pytest.mark.parametrize("branch", [
-    "feat/ecc/new-feature",
+    "feat/aagy/new-feature",
     "feat/cluster-portal",
     "refactor/kakebo/signals",
     "infra/cluster/traefik-v3",

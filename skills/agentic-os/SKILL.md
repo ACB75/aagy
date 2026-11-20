@@ -2,7 +2,7 @@
 name: agentic-os
 description: "Build persistent multi-agent operating systems on Claude Code. Covers kernel architecture, specialist agents, slash commands..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Agentic OS

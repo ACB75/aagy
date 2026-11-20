@@ -45,7 +45,7 @@ def test_commit_msg_hook_validation(tmp_path):
     # Caso 2: Mensaje válido con cuerpo explicativo
     valid_file = tmp_path / "msg_valid.txt"
     valid_content = (
-        "[feat]-[ecc]: implementacion de nueva funcionalidad\n\n"
+        "[feat]-[aagy]: implementacion de nueva funcionalidad\n\n"
         "Cuerpo explicativo detallado con mas de veinte caracteres para pasar el modo strict."
     )
     valid_file.write_text(valid_content, encoding="utf-8")

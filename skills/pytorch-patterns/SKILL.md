@@ -2,7 +2,7 @@
 name: pytorch-patterns
 description: "PyTorch deep learning patterns and for building robust, efficient, and reproducible training pipelines, model architectures, and data..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # PyTorch Development Patterns

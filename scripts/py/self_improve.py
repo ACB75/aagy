@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Motor Unificado de Autodescubrimiento, Autoevaluación y Automejora para aagy / ecc (stdlib pura).
+Motor Unificado de Autodescubrimiento, Autoevaluación y Automejora para aagy / aagy (stdlib pura).
 
 Unifica auto-evolve, instinct_manager y agent-self-evaluation con:
   1. Captura Híbrida Zero-Overhead (RF-01): Hook Stop (< 500 ms, 0 tokens, {}) + CLI manual.
@@ -681,7 +681,7 @@ def evaluate_agent_output(task: Optional[str], output: str) -> EvaluationReport:
 
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Motor Unificado de Autodescubrimiento y Automejora (aagy / ecc)."
+        description="Motor Unificado de Autodescubrimiento y Automejora (aagy / aagy)."
     )
     parser.add_argument("--repo-root", type=Path, default=Path("."), help="Raíz del repositorio objetivo.")
     parser.add_argument("--plugin-data", type=Path, default=None, help="Ruta a PLUGIN_DATA global.")

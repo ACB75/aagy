@@ -42,7 +42,7 @@ Reestructuración binaria de AGENTS.md, marcador GEMINI CONTEXT CACHING, manual 
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/prompt-caching-static-reorder`
+- **Rama / PR**: `feat/aagy/prompt-caching-static-reorder`
 - **Commit SHA**: `aa83290`
 - **Fecha**: `2026-11-20 20:23:39`
 - **Gobernanza**: Quality Gate A / markdownlint OK

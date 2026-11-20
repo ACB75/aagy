@@ -23,7 +23,7 @@ def test_agentshield_hooks_valid_and_violations(tmp_path):
     valid_hooks = tmp_path / "hooks.json"
     valid_hooks.write_text(
         json.dumps({
-            "ecc-linter": {
+            "aagy-linter": {
                 "PostToolUse": [
                     {
                         "matcher": "write_file",

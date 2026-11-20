@@ -2,7 +2,7 @@
 
 ## Core Identity
 
-ECC is a production-ready AI coding plugin with 71 specialized agents, 311 skills, 97 commands, and automated hook workflows for software development.
+AAGY is a production-ready AI coding plugin with 71 specialized agents, 311 skills, 97 commands, and automated hook workflows for software development.
 
 ## Core Principles
 
@@ -14,8 +14,8 @@ ECC is a production-ready AI coding plugin with 71 specialized agents, 311 skill
 
 ## Agent Orchestration Philosophy
 
-ECC is designed so specialists are invoked proactively: planners for implementation strategy, reviewers for code quality, security reviewers for sensitive code, and build resolvers when the toolchain breaks.
+AAGY is designed so specialists are invoked proactively: planners for implementation strategy, reviewers for code quality, security reviewers for sensitive code, and build resolvers when the toolchain breaks.
 
 ## Cross-Harness Vision
 
-This gitagent surface is an initial portability layer for ECC's shared identity, governance, and skill catalog. Native agents, commands, and hooks remain authoritative in the repository until full manifest coverage is added.
+This gitagent surface is an initial portability layer for AAGY's shared identity, governance, and skill catalog. Native agents, commands, and hooks remain authoritative in the repository until full manifest coverage is added.

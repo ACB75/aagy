@@ -5,7 +5,7 @@
     Copia scripts/py/hooks/* a .git/hooks/, asegurando validación determinista
     de mensajes de commit y archivos Markdown staged en cada confirmación.
 .PARAMETER Uninstall
-    Elimina los hooks instalados por ecc-agy en .git/hooks/.
+    Elimina los hooks instalados por aagy en .git/hooks/.
 .PARAMETER Force
     Sobrescribe hooks existentes sin confirmación interactiva.
 #>
@@ -29,7 +29,7 @@ if (-not (Test-Path $GitHooksDir)) {
 $HookNames = @("pre-commit", "commit-msg")
 
 if ($Uninstall) {
-    Write-Host "[+] Desinstalando Git hooks de ecc-agy en $GitHooksDir..."
+    Write-Host "[+] Desinstalando Git hooks de aagy en $GitHooksDir..."
     foreach ($name in $HookNames) {
         $target = Join-Path $GitHooksDir $name
         if (Test-Path $target) {
@@ -41,7 +41,7 @@ if ($Uninstall) {
     exit 0
 }
 
-Write-Host "[+] Instalando Git hooks nativos de ecc-agy en $GitHooksDir..."
+Write-Host "[+] Instalando Git hooks nativos de aagy en $GitHooksDir..."
 
 foreach ($name in $HookNames) {
     $src = Join-Path $SourceHooksDir $name

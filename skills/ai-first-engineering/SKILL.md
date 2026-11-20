@@ -2,7 +2,7 @@
 name: ai-first-engineering
 description: "Engineering operating model for t. Use when setting team process, review gates, or ownership rules for a codebase largely written by agents."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # AI-First Engineering

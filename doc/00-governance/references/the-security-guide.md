@@ -2,9 +2,9 @@
 
 ---
 
-It's been a while since my last article now. Spent time working on building out the ECC devtooling ecosystem. One of the few hot but important topics during that stretch has been agent security.
+It's been a while since my last article now. Spent time working on building out the AAGY devtooling ecosystem. One of the few hot but important topics during that stretch has been agent security.
 
-Widespread adoption of open source agents is here. OpenClaw and others run about your computer. Continuous run harnesses like Claude Code and Codex (using ECC) increase the surface area; and on February 25, 2026, Check Point Research published a Claude Code disclosure that should have ended the "this could happen but won't / is overblown" phase of the conversation for good. With the tooling reaching critical mass, the gravity of exploits multiplies.
+Widespread adoption of open source agents is here. OpenClaw and others run about your computer. Continuous run harnesses like Claude Code and Codex (using AAGY) increase the surface area; and on February 25, 2026, Check Point Research published a Claude Code disclosure that should have ended the "this could happen but won't / is overblown" phase of the conversation for good. With the tooling reaching critical mass, the gravity of exploits multiplies.
 
 One issue, CVE-2025-59536 (CVSS 8.7), allowed project-contained code to execute before the user accepted the trust dialog. Another, CVE-2026-21852, allowed API traffic to be redirected through an attacker-controlled `ANTHROPIC_BASE_URL`, leaking the API key before trust was confirmed. All it took was that you clone the repo and open the tool.
 
@@ -386,7 +386,7 @@ OWASP has an MCP Top 10. Still a living project, but the categories now exist be
 
 Snyk's `agent-scan` and related work are useful for MCP / skill review.
 
-And if you are using ECC specifically, this is also the problem space I built AgentShield for: suspicious hooks, hidden prompt injection patterns, over-broad permissions, risky MCP config, secret exposure, and the stuff people absolutely will miss in manual review.
+And if you are using AAGY specifically, this is also the problem space I built AgentShield for: suspicious hooks, hidden prompt injection patterns, over-broad permissions, risky MCP config, secret exposure, and the stuff people absolutely will miss in manual review.
 
 The surface area is growing. The tooling to defend against it is improving. But the criminal indifference to basic opsec / cogsec within the 'vibe coding' space is still wrong.
 
@@ -460,11 +460,11 @@ Scan your setup: [github.com/affaan-m/agentshield](https://github.com/affaan-m/a
 
 If you haven't read the previous guides, start here:
 
-> [The Shorthand Guide to ECC](https://x.com/affaanmustafa/status/2012378465664745795)
+> [The Shorthand Guide to AAGY](https://x.com/affaanmustafa/status/2012378465664745795)
 >
-> [The Longform Guide to ECC](https://x.com/affaanmustafa/status/2014040193557471352)
+> [The Longform Guide to AAGY](https://x.com/affaanmustafa/status/2014040193557471352)
 
 go do that and also save these repos:
 
-- [github.com/affaan-m/ECC](https://github.com/affaan-m/ECC)
+- [github.com/ACB75/aagy](https://github.com/ACB75/aagy)
 - [github.com/affaan-m/agentshield](https://github.com/affaan-m/agentshield)

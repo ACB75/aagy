@@ -20,7 +20,7 @@ El ecosistema **Anything Antigravity (`aagy`)** implementa una arquitectura desa
 flowchart LR
     subgraph Repo["Repositorio Unificado /aagy"]
         AAGY["aagy<br/>(Google Antigravity & Gemini)"]
-        ECC["aagy-ecc/<br/>(Anthropic Claude Code)"]
+        AAGY["aagy-ecc/<br/>(Anthropic Claude Code)"]
     end
 
     subgraph Harnesses["Harnesses de Ejecución"]
@@ -33,17 +33,17 @@ flowchart LR
     end
 
     AAGY --> AGY_Harness
-    ECC --> Claude_Harness
+    AAGY --> Claude_Harness
     AAGY -.-> Linter
-    ECC -.-> Linter
+    AAGY -.-> Linter
 
     classDef core fill:#e1f5fe,stroke:#0288d1,stroke-width:2px;
-    classDef ecc fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
+    classDef aagy fill:#fff3e0,stroke:#f57c00,stroke-width:2px;
     classDef harness fill:#e8f5e9,stroke:#388e3c,stroke-width:1px;
     classDef tool fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px;
 
     class AAGY core;
-    class ECC ecc;
+    class AAGY aagy;
     class AGY_Harness,Claude_Harness harness;
     class Linter tool;
 ```
@@ -79,6 +79,6 @@ bash scripts/sh/audit-plugin-parity.sh --check-only
 # Instalar / sincronizar plugin para Google Antigravity (aagy)
 pwsh -File install.ps1 -Target agy -Profile minimal
 
-# Desplegar boilerplates para Claude Code (ecc) en un proyecto
+# Desplegar boilerplates para Claude Code (aagy) en un proyecto
 pwsh -File install.ps1 -Target claude -Destination C:\Ruta\A\Proyecto
 ```

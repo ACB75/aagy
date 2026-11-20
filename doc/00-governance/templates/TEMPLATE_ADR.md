@@ -1,13 +1,13 @@
 # Plantilla de Toma de Requisitos, Diseño de Arquitectura, Seguridad y Análisis de Costes
 
-> **Instrucciones de Uso (Regla Global ECC-AGY)**:
+> **Instrucciones de Uso (Regla Global AAGY)**:
 > Por cada petición de **nueva funcionalidad** o **corrección (bugfix/refactor)**, el agente debe generar y adaptar esta toma de requisitos y plan arquitectónico antes de escribir código de producción.
 
 ---
 
 ## 1. Contexto y Metadatos de la Petición
 
-- **Proyecto / Módulo**: `<cluster | kakebo-backend | kakebo-frontend | net | ecc-agy | scripts | token-hill | ecc>`
+- **Proyecto / Módulo**: `<cluster | kakebo-backend | kakebo-frontend | net | aagy | scripts | token-hill | aagy>`
 - **Tipo de Intervención**: `<Nueva Funcionalidad | Corrección de Bug | Refactorización Arquitectónica | Bastionado de Seguridad>`
 - **Fecha**: `YYYY-MM-DD`
 - **Objetivo Principal**: Resumen conciso (1-3 líneas) del problema a resolver o valor a entregar.

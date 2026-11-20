@@ -2,7 +2,7 @@
 name: api-design
 description: "REST API design for resource naming, HTTP status codes, pagination, validation errors, and backward compatibility."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # API Design Patterns

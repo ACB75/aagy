@@ -2,7 +2,7 @@
 name: living-docs-governance
 description: "Keep a long-lived project's documentation from rotting by assigning existing project docs clear constitution, map, status, and history..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Living Docs Governance

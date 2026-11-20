@@ -56,7 +56,7 @@ pwsh -NoProfile -File install.ps1 -Target agy -Profile full
 pwsh -NoProfile -File install.ps1 -Target aagy-ecc -Destination C:\Ruta\A\MiProyecto
 
 # 4. Sincronizar perfil de dominio específico (infra, kakebo, cluster, token-hill)
-pwsh -NoProfile -File scripts/pwsh/ecc-agy-sync.ps1 -Phase kakebo -TargetProject C:\Ruta\A\MiProyecto
+pwsh -NoProfile -File scripts/pwsh/aagy-sync.ps1 -Phase kakebo -TargetProject C:\Ruta\A\MiProyecto
 ```
 
 ### Linux / WSL / macOS (POSIX LF `\n`)
@@ -76,7 +76,7 @@ pwsh -NoProfile -File scripts/pwsh/ecc-agy-sync.ps1 -Phase kakebo -TargetProject
 Toda la automatización del ecosistema reside en tres motores multi-runtime con suites `pytest` dedicadas (`154/154` tests) y **paridad manual 1-a-1** (cualquier flujo es ejecutable desde terminal sin depender del plugin):
 
 - **[`scripts/py/`](scripts/py/)**: Motores Python 3 stdlib pura (`docs_map.py`, `new_lifecycle_task.py`, `self_improve.py`, `instinct_manager.py`, `workspace_audit.py`, `sonar_audit.py`, `security_audit.py`, `audit_plugin_parity.py`, `map_docs.py`, `archive_todo.py`, `sync_ideas_todo.py`, `format_commit.py`, `validate_branch.py`, `generate_postmortem.py`) y pruebas en `scripts/py/tests/`.
-- **[`scripts/pwsh/`](scripts/pwsh/)**: Wrappers nativos para Windows PowerShell 7 (`complete-task-pr.ps1`, `new-lifecycle-task.ps1`, `audit-workspace.ps1`, `auto-evolve.ps1`, `ecc-agy-sync.ps1`, `lint-markdown.ps1`, `map-docs.ps1`, etc.) y pruebas en `scripts/pwsh/tests/`.
+- **[`scripts/pwsh/`](scripts/pwsh/)**: Wrappers nativos para Windows PowerShell 7 (`complete-task-pr.ps1`, `new-lifecycle-task.ps1`, `audit-workspace.ps1`, `auto-evolve.ps1`, `aagy-sync.ps1`, `lint-markdown.ps1`, `map-docs.ps1`, etc.) y pruebas en `scripts/pwsh/tests/`.
 - **[`scripts/sh/`](scripts/sh/)**: Wrappers POSIX con finales de línea `LF (\n)` estrictos para Linux/WSL y pruebas en `scripts/sh/tests/`.
 
 ### Comandos Frecuentes de Verificación y Ciclo de Vida

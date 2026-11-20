@@ -21,9 +21,9 @@ completed_at: "2026-11-20 20:29:16"
 - **04 - PHASE 2 (STRATEGY):**
   - Hook `commit-msg` para validar el título `[type]-[projects]: <title>` y el cuerpo explicativo.
   - Hook `pre-commit` para validar con markdownlint solo los archivos `.md` en el área de preparación (*staged*).
-  - Scripts idempotentes de instalación en `scripts/bin/ecc-agy/install-git-hooks.ps1` y `.sh`.
+  - Scripts idempotentes de instalación en `scripts/bin/aagy/install-git-hooks.ps1` y `.sh`.
 - **05 - PHASE 3 (EXECUTION):**
-    1. Implementar scripts de hooks en `scripts/ecc-agy/hooks/` (POSIX sh para compatibilidad Git universal).
+    1. Implementar scripts de hooks en `scripts/aagy/hooks/` (POSIX sh para compatibilidad Git universal).
     2. Crear instalador `install-git-hooks.ps1` y `install-git-hooks.sh` que vincule o copie a `.git/hooks/`.
     3. Añadir soporte para bypass controlado en emergencias (`git commit --no-verify`).
     4. Crear test unitario en `test_scripts_bin.py` verificando la instalación y el comportamiento del hook.
@@ -44,7 +44,7 @@ Hooks pre-commit y commit-msg, instalador install-git-hooks.ps1/sh, manual MANUA
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/git-pre-commit-hooks`
+- **Rama / PR**: `feat/aagy/git-pre-commit-hooks`
 - **Commit SHA**: `8c3c5ee`
 - **Fecha**: `2026-11-20 20:29:16`
 - **Gobernanza**: Quality Gate A / markdownlint OK

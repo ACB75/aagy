@@ -2,7 +2,7 @@
 name: skill-comply
 description: "Visualize whether skills, rules, and a. Use when checking whether agents actually follow the skills, rules, and definitions they were given."
 metadata:
-  origin: ECC
+  origin: AAGY
 tools: Read, Bash
 ---
 

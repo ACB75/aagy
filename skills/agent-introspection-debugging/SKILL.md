@@ -2,7 +2,7 @@
 name: agent-introspection-debugging
 description: "Structured self-debugging workflow for AI agent failu. Use when an agent run fails and you need a reproducible diagnosis instead of a retry."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Agent Introspection Debugging
@@ -31,7 +31,7 @@ Activate this skill for:
 Do not use this skill as the primary source for:
 
 - feature verification after code changes; use `verification-loop`
-- framework-specific debugging when a narrower ECC skill already exists
+- framework-specific debugging when a narrower AAGY skill already exists
 - runtime promises the current harness cannot enforce automatically
 
 ## Four-Phase Loop
@@ -143,7 +143,7 @@ Good pattern:
 - run one direct check
 - change the plan only if the check supports it
 
-## Integration with ECC
+## Integration with AAGY
 
 - Use `verification-loop` after recovery if code was changed.
 - Use `agent-self-evaluation` (`scripts/py/self_improve.py`) when the failure pattern is worth turning into an instinct or later skill.

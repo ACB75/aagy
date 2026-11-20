@@ -2,7 +2,7 @@
 name: knowledge-ops
 description: "Knowledge base management, ingestio. Use when the user wants to save, organize, sync, deduplicate, or search across their knowledge systems."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Knowledge Operations

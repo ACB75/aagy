@@ -3,9 +3,9 @@ name: engineering-lifecycle
 description: "Orchestrate 4-phase lifecycle (requirements, plan, docs, commits) with Home-Lab retrocompatibility, SDK parity and safety gates."
 ---
 
-# Engineering Lifecycle Workflow (Home-Lab & ECC)
+# Engineering Lifecycle Workflow (Home-Lab & AAGY)
 
-Execute the mandatory 4-phase engineering lifecycle for any non-trivial feature, bugfix, or refactoring in `home-lab` and `ecc`:
+Execute the mandatory 4-phase engineering lifecycle for any non-trivial feature, bugfix, or refactoring in `home-lab` and `aagy`:
 
 ```
 1. Requisitos & Impacto -> 2. Plan de Acción & TDD -> 3. Documentación & Release Notes -> 4. Commits & PR

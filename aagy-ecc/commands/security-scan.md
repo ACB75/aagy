@@ -1,6 +1,6 @@
 ---
 description: Run AgentShield against agent, hook, MCP, permission, and secret surfaces. This is the slash-command entrypoint for that audit; prefer the security-scan skill for the same AgentShield audit in conversation.
-agent: ecc:security-reviewer
+agent: aagy:security-reviewer
 subtask: true
 ---
 
@@ -22,7 +22,7 @@ Run AgentShield against the current project or a target path, then turn the find
 Prefer the packaged scanner:
 
 ```bash
-npx ecc-agentshield scan --path "${TARGET_PATH:-.}" --format text
+npx aagy-agentshield scan --path "${TARGET_PATH:-.}" --format text
 ```
 
 For local AgentShield development, run from the AgentShield checkout:

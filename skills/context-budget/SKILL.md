@@ -2,7 +2,7 @@
 name: context-budget
 description: "Audit always-on context token budget across rules, skills, and subagents. Only scan files when explicitly requested."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Context Budget
@@ -30,7 +30,7 @@ Route by the active harness:
 | Codex CLI | `/status` | Shows current token usage and remaining context capacity. Use `/statusline` and enable **Context stats** plus **Token counters** for a persistent footer meter. |
 | Codex app | `/status` | Shows current thread context usage and rate limits. |
 | Claude Code | `/context` | Shows the live context breakdown. Use `/context all` for expanded items. |
-| Other or unknown | None verified | State that ECC cannot read live provider state and ask which harness is active. |
+| Other or unknown | None verified | State that AAGY cannot read live provider state and ask which harness is active. |
 
 These commands are documented in the [Codex command reference](https://developers.openai.com/codex/cli/slash-commands) and [Claude Code command reference](https://code.claude.com/docs/en/commands).
 

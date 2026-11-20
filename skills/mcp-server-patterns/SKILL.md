@@ -2,7 +2,7 @@
 name: mcp-server-patterns
 description: "Build MCP servers with Node/Type. Use when building or debugging an MCP server — tools, resources, prompts, validation, or transport choice."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # MCP Server Patterns

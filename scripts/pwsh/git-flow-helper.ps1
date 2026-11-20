@@ -7,7 +7,7 @@
 .PARAMETER Type
     feat | fix | infra | docs | chore
 .PARAMETER Project
-    cluster | kakebo | whoiam | doc-viewer | token-hill | net | ecc-agy | all
+    cluster | kakebo | whoiam | doc-viewer | token-hill | net | aagy | all
 .PARAMETER Name
     Descripción corta de la rama (ej. 'export-csv')
 .PARAMETER Tag
@@ -29,7 +29,7 @@ param(
     [ValidateSet("feat", "fix", "infra", "docs", "chore")]
     [string]$Type = "feat",
 
-    [ValidateSet("cluster", "kakebo", "whoiam", "doc-viewer", "token-hill", "net", "ecc-agy", "all")]
+    [ValidateSet("cluster", "kakebo", "whoiam", "doc-viewer", "token-hill", "net", "aagy", "all")]
     [string]$Project = "cluster",
 
     [string]$Name,

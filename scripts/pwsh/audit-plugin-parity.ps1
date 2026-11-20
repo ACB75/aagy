@@ -1,8 +1,8 @@
 ﻿<#
 .SYNOPSIS
-    Linter estático de paridad multi-harness entre Anything Antigravity (aagy) y Claude Code (ecc).
+    Linter estático de paridad multi-harness entre Anything Antigravity (aagy) y Claude Code (aagy).
 .DESCRIPTION
-    Inspecciona los manifiestos y estructura de plugins en la raíz (Antigravity) y ecc/ (Claude Code)
+    Inspecciona los manifiestos y estructura de plugins en la raíz (Antigravity) y aagy/ (Claude Code)
     certificando que ambos arneses mantienen capacidades simétricas y sin deriva de contratos.
 .PARAMETER RepoRoot
     Ruta raíz opcional del repositorio a auditar.

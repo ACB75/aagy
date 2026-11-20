@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Ejecuta la auditoría integral de higiene, tokens y calidad de arnés de ECC.
+    Ejecuta la auditoría integral de higiene, tokens y calidad de arnés de AAGY.
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/py/workspace_audit.py.
 .PARAMETER Clean

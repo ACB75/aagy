@@ -2,7 +2,7 @@
 name: connections-optimizer
 description: "Reorganize the user's X and LinkedIn network with review-first pruning, add/follow recommendations, and channel-specific warm outreach..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Connections Optimizer

@@ -1,29 +1,29 @@
-# Guía Maestra de Arquitectura de Harnesses y Entorno Google Antigravity (`ecc`)
+# Guía Maestra de Arquitectura de Harnesses y Entorno Google Antigravity (`aagy`)
 
 > **Documento de Arquitectura, Manual de Referencia y Especificación Técnica**  
-> Repositorio: [`ACB75/ecc`](https://github.com/ACB75/ecc)  
+> Repositorio: [`ACB75/aagy`](https://github.com/ACB75/aagy)  
 > Versión del Ecosistema: `3.0.0` | Fecha: 2026-11-01  
 > Clasificación: Ingeniería de Agentes Autónomos & Runtimes de IA
 
 ---
 
-## 1. Visión General del Ecosistema Multi-Harness `ecc`
+## 1. Visión General del Ecosistema Multi-Harness `aagy`
 
-El proyecto `ecc` (Everything Claude Code / Antigravity Master Ecosystem) representa una plataforma de ingeniería avanzada diseñada para orquestar, estandarizar y ejecutar agentes autónomos de inteligencia artificial sobre múltiples motores de inferencia y entornos de desarrollo.
+El proyecto `aagy` (Everything Claude Code / Antigravity Master Ecosystem) representa una plataforma de ingeniería avanzada diseñada para orquestar, estandarizar y ejecutar agentes autónomos de inteligencia artificial sobre múltiples motores de inferencia y entornos de desarrollo.
 
-Históricamente, las configuraciones de agentes de codificación estaban rígidamente acopladas a una única herramienta (por ejemplo, el CLI de Claude Code). El ecosistema `ecc` resuelve este acoplamiento introduciendo una **Arquitectura Multi-Harness Desacoplada**, permitiendo que las mismas reglas de ingeniería de nivel industrial (los 5 Pilares de Google, TDD riguroso, SonarQube Rating A, SRE Baseline y Trunk-Based PRs) se ejecuten con idéntica fiabilidad tanto en entornos de terminal como en runtimes agénticos integrados.
+Históricamente, las configuraciones de agentes de codificación estaban rígidamente acopladas a una única herramienta (por ejemplo, el CLI de Claude Code). El ecosistema `aagy` resuelve este acoplamiento introduciendo una **Arquitectura Multi-Harness Desacoplada**, permitiendo que las mismas reglas de ingeniería de nivel industrial (los 5 Pilares de Google, TDD riguroso, SonarQube Rating A, SRE Baseline y Trunk-Based PRs) se ejecuten con idéntica fiabilidad tanto en entornos de terminal como en runtimes agénticos integrados.
 
 ```mermaid
 flowchart TD
-    subgraph ECCMaster["Repositorio Maestro ecc"]
-        RootOrchestrator["ecc (Orquestador Maestro Multi-Distribución)"]
-        ECCJson["ecc.json / install.ps1 / install.sh"]
-        RootOrchestrator --> ECCJson
+    subgraph AAGYMaster["Repositorio Maestro aagy"]
+        RootOrchestrator["aagy (Orquestador Maestro Multi-Distribución)"]
+        AAGYJson["plugin.json / install.ps1 / install.sh"]
+        RootOrchestrator --> AAGYJson
     end
 
     subgraph HarnessDistributions["Distribuciones Especializadas"]
-        ClaudeDist["1. ecc-claude<br/>(Harness para Anthropic Claude Code)"]
-        AGYDist["2. ecc-agy<br/>(Harness para Google Antigravity & Gemini)"]
+        ClaudeDist["1. aagy-ecc<br/>(Harness para Anthropic Claude Code)"]
+        AGYDist["2. aagy<br/>(Harness para Google Antigravity & Gemini)"]
     end
 
     subgraph ExecutionSurfaces["Superficies de Ejecución"]
@@ -36,8 +36,8 @@ flowchart TD
         TargetHomeLab["Laboratorios y Monorepos Complejos<br/>(Home-Lab / Microservicios Políglotas)"]
     end
 
-    ECCJson -->|"Target: claude"| ClaudeDist
-    ECCJson -->|"Target: agy"| AGYDist
+    AAGYJson -->|"Target: claude"| ClaudeDist
+    AAGYJson -->|"Target: agy"| AGYDist
 
     ClaudeDist --> ClaudeCLI
     AGYDist --> AGYIDE
@@ -51,7 +51,7 @@ flowchart TD
     classDef surf fill:#fff8e1,stroke:#f57f17,stroke-width:1px;
     classDef target fill:#e8f5e9,stroke:#2e7d32,stroke-width:1px;
 
-    class ECCMaster,RootOrchestrator,ECCJson master;
+    class AAGYMaster,RootOrchestrator,AAGYJson master;
     class ClaudeDist,AGYDist harness;
     class ClaudeCLI,AGYIDE surf;
     class TargetCorp,TargetHomeLab target;
@@ -59,13 +59,13 @@ flowchart TD
 
 ### 1.1. Distribuciones Integradas
 
-1. **`ecc-claude`**:
+1. **`aagy-ecc`**:
    - **Motor**: Anthropic Claude Code CLI.
-   - **Artefactos**: [`CLAUDE.md`](file:///c:/Workspace/projects/ecc/ecc-claude/CLAUDE.md), directiva `.claude/`, hooks de ciclo de vida en Python/Bash y comandos slash (`/plan`, `/review`, `/prp-*`).
+   - **Artefactos**: [`CLAUDE.md`](file:///c:/Workspace/projects/aagy/aagy-ecc/CLAUDE.md), directiva `.claude/`, hooks de ciclo de vida en Python/Bash y comandos slash (`/plan`, `/review`, `/prp-*`).
    - **Paradigma**: Ejecución secuencial interactiva en terminal con captura directa de flujos estándar (`stdin`/`stdout`).
-2. **`ecc-agy`**:
+2. **`aagy`**:
    - **Motor**: Google Antigravity & Gemini (modelos Gemini 2.5 Pro / Flash).
-   - **Artefactos**: Reglas jerárquicas ([`rules/AGENTS.md`](file:///c:/Workspace/projects/ecc/rules/AGENTS.md)), catálogo de más de 315 skills ([`skills/`](file:///c:/Workspace/projects/ecc/skills/)), 73 subagentes especializados ([`agents/`](file:///c:/Workspace/projects/ecc/agents/)), esquemas de validación JSON ([`schemas/`](file:///c:/Workspace/projects/ecc/schemas/)) y comandos agénticos ([`commands/`](file:///c:/Workspace/projects/ecc/commands/)).
+   - **Artefactos**: Reglas jerárquicas ([`rules/AGENTS.md`](file:///c:/Workspace/projects/aagy/rules/AGENTS.md)), catálogo de más de 315 skills ([`skills/`](file:///c:/Workspace/projects/aagy/skills/)), 73 subagentes especializados ([`agents/`](file:///c:/Workspace/projects/aagy/agents/)), esquemas de validación JSON ([`schemas/`](file:///c:/Workspace/projects/aagy/schemas/)) y comandos agénticos ([`commands/`](file:///c:/Workspace/projects/aagy/commands/)).
    - **Paradigma**: Invocación estructurada de herramientas en sandboxes OS, orquestación concurrente de subagentes en workspaces aislados (`branch`/`share`), integración nativa de Model Context Protocol (MCP) y bucle de despertar reactivo (*reactive wakeup*).
 
 ---
@@ -164,7 +164,7 @@ Todo resultado devuelto al modelo debe ajustarse al siguiente contrato de observ
   "status": "success | warning | error",
   "summary": "Resumen conciso del resultado en una sola línea",
   "artifacts": [
-    "c:/Workspace/projects/ecc/doc/INDEX.md"
+    "c:/Workspace/projects/aagy/doc/INDEX.md"
   ],
   "next_actions": [
     "Ejecutar linter de markdown para verificar cumplimiento de DavidAnson",
@@ -189,7 +189,7 @@ flowchart TD
     subgraph DiscoveryHierarchy["1. Jerarquía de Descubrimiento (Precedencia Canónica)"]
         Tier1["1. Proyecto Local: <project>/.agents/ (Máxima Precedencia)"]
         Tier2["2. Reglas de Directorio: AGENTS.md / GEMINI.md"]
-        Tier3["3. Configuración Global de Usuario: ~/.gemini/config/plugins/ecc-agy/"]
+        Tier3["3. Configuración Global de Usuario: ~/.gemini/config/plugins/aagy/"]
         Tier4["4. Customizaciones Built-in: Runtime Antigravity"]
         Tier1 --> ResolvePrecedence["Motor de Precedencia y Deduplicación Canónica"]
         Tier2 --> ResolvePrecedence
@@ -256,7 +256,7 @@ Antigravity localiza e inyecta configuraciones recorriendo la estructura de arch
 
 1. **Workspace Project (`<project>/.agents/`)**: Reglas, subagentes y skills específicos del repositorio, comprometidos en Git y compartidos con el equipo.
 2. **Reglas Jerárquicas de Directorio (`GEMINI.md`, `AGENTS.md`, `.agents/rules/*.md`)**: Se descubren al abrir o modificar archivos en cualquier nivel del árbol.
-3. **Configuración Global de Usuario (`~/.gemini/config/plugins/`)**: Plugins instalados en la máquina del usuario (donde se aloja la distribución `ecc-agy`).
+3. **Configuración Global de Usuario (`~/.gemini/config/plugins/`)**: Plugins instalados en la máquina del usuario (donde se aloja la distribución `aagy`).
 4. **Customizaciones Nativas (*Built-in*)**: Capacidades base montadas por el propio binario de Antigravity.
 
 ### 4.2. El Principio de Revelación Progresiva (*Progressive Disclosure*)
@@ -266,7 +266,7 @@ Uno de los mayores cuellos de botella en agentes basados en LLMs es la **saturac
 Antigravity resuelve este desafío mediante **Progressive Disclosure**:
 
 - En el arranque, el arnés inyecta en el prompt del sistema únicamente los metadatos condensados de cada skill: su nombre y una descripción de una sola línea ($\le 140$ caracteres).
-- El cuerpo completo de la skill ([`SKILL.md`](file:///c:/Workspace/projects/ecc/skills/agent-harness-construction/SKILL.md)) se mantiene en disco en frío.
+- El cuerpo completo de la skill ([`SKILL.md`](file:///c:/Workspace/projects/aagy/skills/agent-harness-construction/SKILL.md)) se mantiene en disco en frío.
 - Únicamente cuando el modelo evalúa que una tarea requiere un procedimiento especializado (o el usuario lo invoca explícitamente), el arnés carga el archivo `SKILL.md` correspondiente en el turno activo.
 - Al cambiar de fase o tarea, el contenido se puede descartar o compactar, preservando intacto el presupuesto de tokens.
 
@@ -276,7 +276,7 @@ En los arneses de primera generación, cuando un agente lanzaba un comando de la
 
 El entorno Antigravity implementa el **Despertar Reactivo (*Reactive Wakeup*)**:
 
-- Toda tarea en segundo plano ([`run_command`](file:///c:/Workspace/projects/ecc/commands/run.md) con `WaitMsBeforeAsync` superado o `IsDaemon: true`) o subagente ([`invoke_subagent`](file:///c:/Workspace/projects/ecc/commands/subagent.md)) se registra en el gestor de tareas de fondo.
+- Toda tarea en segundo plano ([`run_command`](file:///c:/Workspace/projects/aagy/commands/run.md) con `WaitMsBeforeAsync` superado o `IsDaemon: true`) o subagente ([`invoke_subagent`](file:///c:/Workspace/projects/aagy/commands/subagent.md)) se registra en el gestor de tareas de fondo.
 - El agente **concluye su turno inmediatamente** sin emitir más herramientas y pasa a estado de reposo (*idle*).
 - Cuando el proceso finaliza, el sistema operativo emite una señal de terminación capturada por el runtime de Antigravity, el cual inyecta una notificación de alta prioridad (`MESSAGE_PRIORITY_HIGH`) en el buzón del agente y **reanuda automáticamente la ejecución**.
 - Cero polling, cero consumo de tokens durante la espera y latencia mínima de reacción ante eventos del sistema.
@@ -295,7 +295,7 @@ Antigravity permite la bifurcación de la ejecución mediante subagentes especia
 
 ## 5. Flujos de Trabajo Operativos (Engineering Workflows)
 
-Todo agente operando bajo el ecosistema `ecc` está estrictamente vinculado a los siguientes flujos de trabajo estandarizados:
+Todo agente operando bajo el ecosistema `aagy` está estrictamente vinculado a los siguientes flujos de trabajo estandarizados:
 
 ```mermaid
 flowchart TD
@@ -342,7 +342,7 @@ Cada requerimiento o tarea en `TODO.md` se formula obligatoriamente mediante una
 Conforme al **ADR-0006**, el repositorio utiliza desarrollo basado en tronco (*Trunk-Based Development*) sobre la rama canónica `main`:
 
 - Toda intervención se realiza en una rama corta aislada (`feat/*`, `fix/*`, `refactor/*`, `chore/*`).
-- El formato del commit debe ser rigurosamente validado por [`format_commit.py`](file:///c:/Workspace/projects/ecc/scripts/py/format_commit.py): `[type]-[projects]: <title>` acompañado de un cuerpo explicativo obligatorio detallando motivación, componentes y pruebas ejecutadas.
+- El formato del commit debe ser rigurosamente validado por [`format_commit.py`](file:///c:/Workspace/projects/aagy/scripts/py/format_commit.py): `[type]-[projects]: <title>` acompañado de un cuerpo explicativo obligatorio detallando motivación, componentes y pruebas ejecutadas.
 - **Regla de Creación Automática de PR**: Inmediatamente tras la confirmación de commit y push por parte del usuario, el arnés genera automáticamente la Pull Request correspondiente mediante `gh pr create --fill`, asegurando que ninguna rama quede huérfana y permitiendo la ejecución aislada del CI (*Fast-Failure*) y reversión atómica de un solo commit (*Fast-Rollback*).
 
 ---
@@ -351,10 +351,10 @@ Conforme al **ADR-0006**, el repositorio utiliza desarrollo basado en tronco (*T
 
 | Caso de Uso | Harness Recomendado | Configuración de Despliegue | Salvaguardas Críticas |
 | :--- | :---: | :--- | :--- |
-| **1. Empresa / Cliente Externo (ej. Barcelona)** | `ecc-agy` (Nivel 1) | `pwsh -File install.ps1 -Target agy`<br/>Reglas locales en `.agents/rules/` | Cero fuga de secretos, validación de dependencias oficiales únicamente, SonarQube A. |
-| **2. Laboratorio Complejo Monorepo (`home-lab`)** | `ecc-agy` (Niveles 1 y 2) | Sincronización vía `ecc-agy-sync.ps1`<br/>Reglas de clúster en `home-lab/.agents/rules/` | SRE Error Budgets, GOMEMLIMIT=80% en Go, límites de memoria Docker, probes de salud. |
-| **3. Entorno de Terminal Rápido con Claude** | `ecc-claude` | `pwsh -File install.ps1 -Target claude -Destination <repo>` | Hooks bash nativos, comandos slash en `.claude/commands/`. |
-| **4. Bucle Autónomo de Generador-Evaluador (GAN)** | `ecc-agy` con Subagentes | Subagente Generador (`gan-generator`) + Subagente Evaluador (`gan-evaluator`) | Workspace aislado en modo `branch`, límite estricto de 3 iteraciones antes de congelación. |
+| **1. Empresa / Cliente Externo (ej. Barcelona)** | `aagy` (Nivel 1) | `pwsh -File install.ps1 -Target agy`<br/>Reglas locales en `.agents/rules/` | Cero fuga de secretos, validación de dependencias oficiales únicamente, SonarQube A. |
+| **2. Laboratorio Complejo Monorepo (`home-lab`)** | `aagy` (Niveles 1 y 2) | Sincronización vía `aagy-sync.ps1`<br/>Reglas de clúster en `home-lab/.agents/rules/` | SRE Error Budgets, GOMEMLIMIT=80% en Go, límites de memoria Docker, probes de salud. |
+| **3. Entorno de Terminal Rápido con Claude** | `aagy-ecc` | `pwsh -File install.ps1 -Target claude -Destination <repo>` | Hooks bash nativos, comandos slash en `.claude/commands/`. |
+| **4. Bucle Autónomo de Generador-Evaluador (GAN)** | `aagy` con Subagentes | Subagente Generador (`gan-generator`) + Subagente Evaluador (`gan-evaluator`) | Workspace aislado en modo `branch`, límite estricto de 3 iteraciones antes de congelación. |
 
 ---
 

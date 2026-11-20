@@ -37,8 +37,8 @@ case "${TARGET}" in
   agy)
     DEST="${DESTINATION:-${HOME}/.gemini/config/plugins/aagy}"
     echo "[+] Deploying unified Anything Antigravity (aagy) plugin (Tier 1) to: ${DEST}"
-    if [ -f "${SCRIPT_DIR}/scripts/sh/ecc-agy-sync.sh" ]; then
-      bash "${SCRIPT_DIR}/scripts/sh/ecc-agy-sync.sh" generic "${DEST}"
+    if [ -f "${SCRIPT_DIR}/scripts/sh/aagy-sync.sh" ]; then
+      bash "${SCRIPT_DIR}/scripts/sh/aagy-sync.sh" generic "${DEST}"
     else
       mkdir -p "${DEST}/skills" "${DEST}/agents" "${DEST}/rules"
       cp -f "${SCRIPT_DIR}/plugin.json" "${DEST}/"

@@ -19,14 +19,14 @@ completed_at: "2026-11-07 23:10:05"
   - La sobrecarga de reglas, instrucciones y skills no utilizadas en la carga inicial penaliza el presupuesto de tokens y degrada la capacidad de razonamiento del LLM.
   - Deben aplicarse límites estrictos: frontmatter description <= 140 chars en skills, <= 120 chars en agentes, y lazy-loading para procedimientos no transversales.
 - **04 - PHASE 2 (STRATEGY):**
-  - Ejecutar `scripts/bin/ecc-agy/audit-workspace.ps1 -Clean -Optimize` para medir el tamaño total del contexto.
+  - Ejecutar `scripts/bin/aagy/audit-workspace.ps1 -Clean -Optimize` para medir el tamaño total del contexto.
   - Prioridad 1: Mantener intactas directivas operativas de workflows nucleares.
   - Prioridad 2: Condensar meta-capacidades y skills esenciales de orquestación.
   - Depuración: Eliminar prompts sobrecargados, skills obsoletas o duplicadas entre global y local.
 - **05 - PHASE 3 (EXECUTION):**
     1. Medir métricas de tokens actuales por módulo (rules, skills, agents).
     2. Refactorizar descripciones extensas a formato ultra-conciso de activación precisa.
-    3. Mover lógica procedimental a scripts deterministas en `scripts/bin/ecc-agy/`.
+    3. Mover lógica procedimental a scripts deterministas en `scripts/bin/aagy/`.
     4. Validar reducción de huella de tokens mediante informe comparativo.
 - **06 - PHASE 4 (CRITIC):**
   - Comprobar que la poda de tokens no afecte la precisión de activación ni introduzca alucinaciones en los subagentes.
@@ -43,7 +43,7 @@ Implementadas y verificadas con éxito Tareas 2.1 y 2.2: Reducción del 53.8% en
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/token-opt-ci-quality-gate`
+- **Rama / PR**: `feat/aagy/token-opt-ci-quality-gate`
 - **Commit SHA**: `e4659d6`
 - **Fecha**: `2026-11-07 23:10:05`
 - **Gobernanza**: Quality Gate A / markdownlint OK

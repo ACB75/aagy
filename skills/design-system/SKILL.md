@@ -2,7 +2,7 @@
 name: design-system
 description: "Generate a design system from an existing codebase or audit one for visual consistency: extract tokens (colors, typography, spacing..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Design System — Generate & Audit Visual Systems

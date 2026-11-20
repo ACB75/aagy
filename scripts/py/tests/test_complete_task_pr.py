@@ -15,7 +15,7 @@ def test_validate_branch_integration():
 
     # Rama válida
     res_valid = subprocess.run(
-        [sys.executable, str(script_path), "--branch", "feat/ecc/consolidate-complete-task-pr"],
+        [sys.executable, str(script_path), "--branch", "feat/aagy/consolidate-complete-task-pr"],
         capture_output=True,
         text=True,
     )

@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Wrapper POSIX para el linter de paridad multi-harness aagy <-> ecc.
+# Wrapper POSIX para el linter de paridad multi-harness aagy <-> aagy.
 # Finales de línea estrictamente POSIX LF (\n).
 set -e
 

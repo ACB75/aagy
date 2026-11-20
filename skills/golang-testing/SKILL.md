@@ -2,7 +2,7 @@
 name: golang-testing
 description: "Go testing with table-driven tests, subtests, benchmarks, and coverage following TDD. Not for non-Go code."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Go Testing Patterns

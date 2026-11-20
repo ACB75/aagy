@@ -2,7 +2,7 @@
 name: conventional-commit-review
 description: "Draft and review git commits following [type]-[projects]: <title> format with mandatory explanatory body comments."
 metadata:
-  origin: ECC-AGY
+  origin: AAGY
 ---
 
 # Conventional Commit & Message Review
@@ -16,7 +16,7 @@ Review staged git diffs and draft commit messages that strictly follow the works
 
 - **`[type]`**: Conventional Commit type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`, `build`, `ci`, `sec` (or `security`).
 - **`-`**: Mandatory delimiter between type and affected projects.
-- **`[projects]`**: One or more affected projects or modules: `[cluster]`, `[kakebo]`, `[whoiam]`, `[net]`, `[scripts]`, `[ecc-agy]`, `[doc]` (or comma-separated `[cluster,net]` for cross-cutting changes).
+- **`[projects]`**: One or more affected projects or modules: `[cluster]`, `[kakebo]`, `[whoiam]`, `[net]`, `[scripts]`, `[aagy]`, `[doc]` (or comma-separated `[cluster,net]` for cross-cutting changes).
 - **`: <title>`**: Colon followed by a concise, imperative title in lowercase without a trailing period.
 
 ### 2. Mandatory Explanatory Body Comment (`msg comment`)

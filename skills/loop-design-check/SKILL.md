@@ -2,7 +2,7 @@
 name: loop-design-check
 description: "Design a goal-oriented agent loop or review one for failure modes: spinning, Goodhart-gaming the verifier, or running a wrong answer to..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Loop Design + Review

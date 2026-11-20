@@ -2,7 +2,7 @@
 name: redis-patterns
 description: "Redis data structure patterns, caching strategies, distributed locks, rate limiting, pub/sub, and connection management for production..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Redis Patterns

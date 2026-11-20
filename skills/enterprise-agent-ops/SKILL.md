@@ -2,7 +2,7 @@
 name: enterprise-agent-ops
 description: "Operational controls for long-lived or cloud-hosted agent systems — runtime lifecycle (start, pause, stop, restart), observability..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Enterprise Agent Ops

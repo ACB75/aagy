@@ -2,7 +2,7 @@
 name: springboot-security
 description: "Spring Security 6/Boot 4 with stateless JWT, SecurityFilterChain, RBAC, CORS, and boundary validation."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Spring Boot Security Review

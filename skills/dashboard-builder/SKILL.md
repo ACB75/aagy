@@ -3,7 +3,7 @@ name: dashboard-builder
 description: "Build monitoring dashboards that answer real operator question. Use when turning metrics into a working dashboard instead of a vanity board."
 metadata:
   version: "1.0.0"
-  origin: ECC direct-port adaptation
+  origin: AAGY direct-port adaptation
 ---
 
 # Dashboard Builder

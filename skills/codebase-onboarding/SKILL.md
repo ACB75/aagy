@@ -2,7 +2,7 @@
 name: codebase-onboarding
 description: "Analyze an unfamiliar codebase and generate a struct. Use when joining a new project or setting up Claude Code for the first time in a repo."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Codebase Onboarding

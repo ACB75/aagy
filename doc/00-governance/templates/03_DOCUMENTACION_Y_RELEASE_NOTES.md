@@ -49,7 +49,7 @@ Marcar las actualizaciones ejecutadas según el contrato de gobernanza:
 
 - [ ] **Registro de Decisiones de Arquitectura (`doc/02-adr/`)**:
   - ¿Introduce una decisión de diseño de alto impacto o difícil reversión?
-  - *Si aplica*: Creado `doc/02-adr/ADR_ecc_000X_<nombre>.md` e indexado en `doc/02-adr/README.md`.
+  - *Si aplica*: Creado `doc/02-adr/ADR_aagy_000X_<nombre>.md` e indexado en `doc/02-adr/README.md`.
 - [ ] **Arquitectura y Operaciones (`doc/01-architecture/`, `doc/04-operations/`)**:
   - Actualizado el manual, runbook o guía correspondiente.
 - [ ] **Diagramas (`<folder>/dgrms/`)**:

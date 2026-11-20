@@ -2,7 +2,7 @@
 name: github-ops
 description: "GitHub repository operations, automation, and management. Issue triage, PR management, CI/CD operations, release management, and..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # GitHub Operations
@@ -117,9 +117,9 @@ When preparing a release:
 3. Generate changelog from PR titles
 4. Create release: `gh release create`
 
-For the ECC repository's maintainer release path, especially `ECC-031` and any
+For the AAGY repository's maintainer release path, especially `AAGY-031` and any
 follow-up where tag identity, npm provenance, and announcement evidence must
-all line up, read [references/ecc-release-checklist.md](references/ecc-release-checklist.md)
+all line up, read [references/aagy-release-checklist.md](references/aagy-release-checklist.md)
 before mutating tags, npm dist-tags, or GitHub Releases. That checklist
 captures the exact-green-main, signed-tag, registry-readback, and announcement
 requirements that the generic examples below do not.

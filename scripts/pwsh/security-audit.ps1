@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Ejecuta el escaneo estático de seguridad y detección de credenciales en ECC.
+    Ejecuta el escaneo estático de seguridad y detección de credenciales en AAGY.
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/py/security_audit.py.
 .EXAMPLE

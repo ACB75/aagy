@@ -24,7 +24,7 @@ completed_at: "2026-11-20 21:11:40"
       2. Registros en los archivos de zona de CoreDNS.
       3. Entradas del mapa `/portal` en `cluster/cmd/server/main.go`.
 - **05 - PHASE 3 (EXECUTION):**
-    1. Desarrollar `scripts/ecc-agy/validate_ingress_routes.py` y `validate-ingress-routes.ps1`.
+    1. Desarrollar `scripts/aagy/validate_ingress_routes.py` y `validate-ingress-routes.ps1`.
     2. Añadir opción `-Audit` y `-Fix` para sugerir las líneas faltantes en `/portal` o DNS.
     3. Crear tests unitarios en `test_validate_ingress_routes.py`.
     4. Documentar en `doc/manual/`.
@@ -45,7 +45,7 @@ Desarrollo de validate_ingress_routes.py y wrappers CLI para congruencia Ingress
 
 ## 4. Metadatos de Integración y Commit
 
-- **Rama / PR**: `feat/ecc/validate-ingress-routes`
+- **Rama / PR**: `feat/aagy/validate-ingress-routes`
 - **Commit SHA**: `bc8990f`
 - **Fecha**: `2026-11-20 21:11:40`
 - **Gobernanza**: Quality Gate A / markdownlint OK

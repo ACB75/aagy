@@ -41,25 +41,25 @@ Normalize curve parameters and ensure public keys match Ed25519 specification.
     assert len(result.errors) == 0
 
 
-def test_validate_ecc_agy_commit():
-    ecc_msg = """feat-[ecc-agy]: incorporar baseline de software reliability engineering sre
+def test_validate_aagy_commit():
+    aagy_msg = """feat-[aagy]: incorporar baseline de software reliability engineering sre
 
 - Formalizar regla transversal de SRE en AGENTS.md, rules/AGENTS.md y .gemini/GEMINI.md.
 - Crear skill sre-reliability/SKILL.md y agente sre-engineer.md con presupuesto de tokens acotado.
-- Sincronizar plugin global en ~/.gemini/config/plugins/ecc-agy/.
+- Sincronizar plugin global en ~/.gemini/config/plugins/aagy/.
 - Verificado con audit-workspace.ps1 (6/6 fases OK).
 """
-    result = validate_commit_message(ecc_msg)
+    result = validate_commit_message(aagy_msg)
     assert result.is_valid is True
     assert result.commit_type == "feat"
-    assert result.projects == ("ecc-agy",)
+    assert result.projects == ("aagy",)
     assert result.title == "incorporar baseline de software reliability engineering sre"
     assert len(result.errors) == 0
 
 
 def test_validate_backwards_compatible_plus_commit():
     # Asegura compatibilidad hacia atrás con commits previos que usaban '+'
-    legacy_msg = """feat+[ecc-agy]: legacy format with plus
+    legacy_msg = """feat+[aagy]: legacy format with plus
 
 This commit uses the legacy plus separator and must still validate cleanly.
 - Preserves backwards compatibility with git history.
@@ -67,7 +67,7 @@ This commit uses the legacy plus separator and must still validate cleanly.
     result = validate_commit_message(legacy_msg)
     assert result.is_valid is True
     assert result.commit_type == "feat"
-    assert result.projects == ("ecc-agy",)
+    assert result.projects == ("aagy",)
     assert len(result.errors) == 0
 
 

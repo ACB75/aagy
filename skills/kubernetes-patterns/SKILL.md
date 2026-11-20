@@ -2,7 +2,7 @@
 name: kubernetes-patterns
 description: "Kubernetes manifests, probes, resource limits, RBAC, NetworkPolicies, and secret management. Not for Docker Compose."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Kubernetes Patterns

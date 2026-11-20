@@ -34,8 +34,8 @@ scripts/
 │   ├── audit-workspace.sh
 │   ├── ...
 │   └── tests/           # Suites de verificación para Bash
-├── bin/ecc-agy/         # Proxies de retrocompatibilidad (.ps1, .sh)
-└── ecc-agy/             # Proxies de retrocompatibilidad (.py)
+├── bin/aagy/         # Proxies de retrocompatibilidad (.ps1, .sh)
+└── aagy/             # Proxies de retrocompatibilidad (.py)
 ```
 
 ### Garantía de Retrocompatibilidad (Zero-Breaking Changes)

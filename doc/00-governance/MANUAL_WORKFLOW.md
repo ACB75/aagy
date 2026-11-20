@@ -1,6 +1,6 @@
 # Guía de Flujo Manual y Paridad 1-a-1 (`MANUAL_WORKFLOW.md`)
 
-> **Principio Operativo**: Cualquier flujo automatizado por el plugin (`aagy` / `ecc`) puede ejecutarse de forma determinista desde terminal (`pwsh`, `bash` o `python`) sin depender del agente.  
+> **Principio Operativo**: Cualquier flujo automatizado por el plugin (`aagy` / `aagy`) puede ejecutarse de forma determinista desde terminal (`pwsh`, `bash` o `python`) sin depender del agente.  
 > **Contrato de Rutas**: [`.governance/docs-map.json`](../../.governance/docs-map.json) | **Estándar**: [`DOC_STANDARDS.md`](DOC_STANDARDS.md)
 
 ---
@@ -45,7 +45,7 @@ bash scripts/sh/sync-ideas-todo.sh
 
 ---
 
-## 2. Matriz de Paridad 1-a-1 Manual $\leftrightarrow$ Plugin (`aagy` / `ecc`)
+## 2. Matriz de Paridad 1-a-1 Manual $\leftrightarrow$ Plugin (`aagy` / `aagy`)
 
 | Capacidad del Plugin / Agente | Windows 11 (`pwsh`) | Linux / WSL (`bash`) | Núcleo Python (`scripts/py/`) |
 | :--- | :--- | :--- | :--- |
@@ -61,7 +61,7 @@ bash scripts/sh/sync-ideas-todo.sh
 | **SonarQube Rating A Gate** | `scripts/pwsh/sonar-audit.ps1` | `scripts/sh/sonar-audit.sh` | [`sonar_audit.py`](../../scripts/py/sonar_audit.py) |
 | **Seguridad y AgentShield** | `scripts/pwsh/security-audit.ps1` | `scripts/sh/security-audit.sh` | [`security_audit.py`](../../scripts/py/security_audit.py) |
 | **Validar formato de commit** | `scripts/pwsh/format-commit.ps1` | `scripts/sh/format-commit.sh` | [`format_commit.py`](../../scripts/py/format_commit.py) |
-| **Paridad `aagy` $\leftrightarrow$ `ecc`** | `scripts/pwsh/audit-plugin-parity.ps1` | `scripts/sh/audit-plugin-parity.sh` | [`audit_plugin_parity.py`](../../scripts/py/audit_plugin_parity.py) |
+| **Paridad `aagy` $\leftrightarrow$ `aagy`** | `scripts/pwsh/audit-plugin-parity.ps1` | `scripts/sh/audit-plugin-parity.sh` | [`audit_plugin_parity.py`](../../scripts/py/audit_plugin_parity.py) |
 | **Autodescubrimiento y automejora** | `scripts/pwsh/auto-evolve.ps1` | `scripts/sh/auto-evolve.sh` | [`self_improve.py`](../../scripts/py/self_improve.py) |
 | **Gestión de instintos doble nivel** | `scripts/pwsh/manage-instincts.ps1` | `scripts/sh/manage-instincts.sh` | [`instinct_manager.py`](../../scripts/py/instinct_manager.py) |
 | **Revisión previa e integración PR** | `scripts/pwsh/complete-task-pr.ps1` | `scripts/sh/complete-task-pr.sh` | *(Orquestador TBD + `gh` CLI)* |

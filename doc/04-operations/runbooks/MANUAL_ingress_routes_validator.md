@@ -1,6 +1,6 @@
 # Manual de Operación: Validador de Congruencia Ingress, Split-DNS y Portal (`validate_ingress_routes.py`)
 
-> **Ecosistema**: ECC Ecosystem & Home-Lab  
+> **Ecosistema**: AAGY Ecosystem & Home-Lab  
 > **Ubicación Canónica**: `scripts/py/validate_ingress_routes.py`  
 > **Wrappers CLI**: `scripts/pwsh/validate-ingress-routes.ps1` y `validate-ingress-routes.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  

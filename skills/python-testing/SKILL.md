@@ -2,7 +2,7 @@
 name: python-testing
 description: "Pytest TDD workflow with unit/integration markers, fixtures, dependency overrides, and 80%+ coverage gates."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Python Testing Patterns

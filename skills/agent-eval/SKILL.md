@@ -3,7 +3,7 @@ name: agent-eval
 description: "Head-to-head comparison of coding agents (Claude Code, Aider, Codex, etc.) on custom tasks with pass rate, cost, time, and consistency..."
 license: MIT
 metadata:
-  origin: ECC
+  origin: AAGY
 tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 

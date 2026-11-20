@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Script: auto-evolve.sh (Debian 12 / Linux / WSL)
-# Descripción: Motor unificado y agnóstico de autodescubrimiento y automejora (aagy / ecc).
+# Descripción: Motor unificado y agnóstico de autodescubrimiento y automejora (aagy / aagy).
 # Finales de línea estrictamente POSIX LF (\n).
 # ==============================================================================
 set -euo pipefail

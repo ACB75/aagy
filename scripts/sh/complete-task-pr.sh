@@ -174,7 +174,7 @@ if [[ -f "$SCRIPT_DIR/validate-ingress-routes.sh" ]]; then
 fi
 
 if [[ -f "$SCRIPT_DIR/audit-plugin-parity.sh" ]]; then
-    echo "[+] Ejecutando auditoría de paridad multi-harness (aagy <-> ecc)..."
+    echo "[+] Ejecutando auditoría de paridad multi-harness (aagy <-> aagy)..."
     bash "$SCRIPT_DIR/audit-plugin-parity.sh" --check-only
 fi
 

@@ -1,4 +1,4 @@
-# Plantillas del Workflow de Ingeniería ECC / `aagy` (`00-governance/templates/`)
+# Plantillas del Workflow de Ingeniería AAGY / `aagy` (`00-governance/templates/`)
 
 > **Espina Dorsal del Ciclo de Vida**: Gobernanza, Retrocompatibilidad, Rendimiento y Calidad  
 > **Flujo Canónico**: `1. Requisitos & Impacto` -> `2. Plan de Acción & TDD` -> `3. Documentación & Release Notes` -> `4. Commits & PR`  

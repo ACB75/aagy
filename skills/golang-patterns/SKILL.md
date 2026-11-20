@@ -2,7 +2,7 @@
 name: golang-patterns
 description: "Idiomatic Go patterns, clean architecture, concurrency, and error handling for Go microservices. Not for non-Go code."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Go Development Patterns

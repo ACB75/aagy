@@ -2,7 +2,7 @@
 name: contract-first
 description: "Coordinate frontend/backend or service-to-service work thr. Use when parallel consumer and provider work must evolve an API or event schema."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Contract-First Collaboration

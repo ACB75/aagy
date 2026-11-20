@@ -3,7 +3,7 @@ name: parallel-execution-optimizer
 description: "Speed up a task by turning it into a dependency graph of parallel lanes with a lane matrix, batched reads and checks, write surfaces..."
 license: MIT
 metadata:
-  origin: ECC
+  origin: AAGY
 tools: Read, Write, Edit, Bash, Grep, Glob
 ---
 

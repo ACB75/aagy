@@ -1,8 +1,8 @@
 ---
 name: terminal-ops
-description: "Evidence-first repo execution workflow for ECC."
+description: "Evidence-first repo execution workflow for AAGY."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Terminal Ops
@@ -13,7 +13,7 @@ This skill is intentionally narrower than general coding guidance. It is an oper
 
 ## Skill Stack
 
-Pull these ECC-native skills into the workflow when relevant:
+Pull these AAGY-native skills into the workflow when relevant:
 
 - `verification-loop` for exact proving steps after changes
 - `tdd-workflow` when the right fix needs regression coverage

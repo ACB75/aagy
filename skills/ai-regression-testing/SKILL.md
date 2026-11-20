@@ -2,7 +2,7 @@
 name: ai-regression-testing
 description: "Regression testing strategies for AI-assisted development. Sandbox-mode API testing without database dependencies, automated bug-check..."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # AI Regression Testing

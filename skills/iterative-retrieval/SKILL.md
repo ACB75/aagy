@@ -2,7 +2,7 @@
 name: iterative-retrieval
 description: "Progressive multi-pass context retrieval pattern for subagents. Skip when target files are already known."
 metadata:
-  origin: ECC
+  origin: AAGY
 ---
 
 # Iterative Retrieval Pattern
@@ -212,4 +212,4 @@ When retrieving context for this task:
 
 - [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Subagent orchestration section
 - `agent-self-evaluation` skill - For instinct patterns that improve over time
-- Agent definitions bundled with ECC (manual install path: `agents/`)
+- Agent definitions bundled with AAGY (manual install path: `agents/`)
