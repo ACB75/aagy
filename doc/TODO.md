@@ -35,30 +35,7 @@
 *(Completadas y Archivadas en `doc/TODO_DONE/`)*:
 
 - Tarea 3.1: Alineación de Prompt Caching de Gemini 3.8 y Reordenamiento Estático de System Prompts -> `TODO_DONE/`
-
-### Tarea 3.2: Git Pre-Commit Hook Nativo y Scripts de Instalación (`install-git-hooks.ps1` / `.sh`)
-
-- [ ] **Construir instalador e infraestructura de pre-commit hooks nativos para validación determinista de commits y markdown**
-  - **01 - ROLE:** Git Operations Engineer & Developer Tooling Specialist.
-  - **02 - CONTEXT:** `[Sector: Developer Infrastructure & Tooling]` `[Data Type: Git hooks (POSIX sh & pwsh), PowerShell y Bash]` `[Objective: Crear una utilidad de instalación de git hooks que intercepte 'git commit' localmente y ejecute format_commit.py --strict sobre el mensaje propuesto y lint-markdown.ps1 sobre los archivos staged, previniendo commits no conformes antes de subir a origin]` `[Restrictions: Tiempo de ejecución < 800ms; soporte nativo dual Windows 11 (pwsh) y Linux/WSL (bash)]`.
-  - **03 - PHASE 1 (ANALYSIS):**
-    - Actualmente la validación de formato depende de que el desarrollador invoque `format-commit.ps1` o de que la PR corra `audit-workspace.ps1`.
-    - Si un desarrollador humano o agente emite un commit manual fuera del arnés, puede eludir la regla y romper la uniformidad del monorepo.
-  - **04 - PHASE 2 (STRATEGY):**
-    - Hook `commit-msg` para validar el título `[type]-[projects]: <title>` y el cuerpo explicativo.
-    - Hook `pre-commit` para validar con markdownlint solo los archivos `.md` en el área de preparación (*staged*).
-    - Scripts idempotentes de instalación en `scripts/bin/ecc-agy/install-git-hooks.ps1` y `.sh`.
-  - **05 - PHASE 3 (EXECUTION):**
-    1. Implementar scripts de hooks en `scripts/ecc-agy/hooks/` (POSIX sh para compatibilidad Git universal).
-    2. Crear instalador `install-git-hooks.ps1` y `install-git-hooks.sh` que vincule o copie a `.git/hooks/`.
-    3. Añadir soporte para bypass controlado en emergencias (`git commit --no-verify`).
-    4. Crear test unitario en `test_scripts_bin.py` verificando la instalación y el comportamiento del hook.
-  - **06 - PHASE 4 (CRITIC):**
-    - *Auditoría*: Evitar que el hook tarde más de 1 segundo en validar, asegurando que solo revise los archivos staged (`git diff --cached --name-only`).
-  - **07 - PHASE 5 (FORMAT):**
-    - Scripts idempotentes, código limpio sin dependencias externas y tests pasando con exit code `0`.
-  - **MODELO & AGENTE ASIGNADO:** **Carbon ($C_6$) / Gemini 3.8 Flash** (~1.200 tokens).
-  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
+- Tarea 3.2: Git Pre-Commit Hook Nativo y Scripts de Instalación (`install-git-hooks.ps1` / `.sh`) -> `TODO_DONE/`
 
 ### Tarea 3.3: Telemetría Proactiva de Presupuesto en Sesión y Política de Auto-Compact / Compact Estratégico
 
@@ -104,6 +81,28 @@
   - **07 - PHASE 5 (FORMAT):**
     - Scripts documentados, con validación de parámetros y mensajes estructurados.
   - **MODELO & AGENTE ASIGNADO:** **Carbon ($C_6$) / Gemini 3.8 Flash** (~1.100 tokens).
+  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
+
+### Tarea 3.5: Reubicación y Estandarización de Plantillas Documentales (`TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md`)
+
+- [ ] **Mover `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` a `doc/adr/TEMPLATE_ADR.md` y renombrar `doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md` a `doc/post-mortem/TEMPLATE_POSTMORTEM.md`**
+  - **01 - ROLE:** Documentation Governance Architect & Repository Hygiene Specialist.
+  - **02 - CONTEXT:** `[Sector: Documentation Spine & Governance]` `[Data Type: Markdown templates, .governance/docs-map.json, scripts/skills references]` `[Objective: Mover doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md a doc/adr/TEMPLATE_ADR.md y renombrar doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md a doc/post-mortem/TEMPLATE_POSTMORTEM.md manteniendo cero enlaces rotos]` `[Restrictions: Actualizar todas las referencias en scripts, skills, reglas, INDEX.md y docs-map.json; verificar con audit-workspace.ps1 y lint-markdown.ps1]`.
+  - **03 - PHASE 1 (ANALYSIS):**
+    - Actualmente las plantillas de ADR/Requisitos y Post-Mortem tienen nombres y ubicaciones inconsistentes (`doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` suelto en `doc/` y `TEMPLATE_POSTMORTEM_5W.md` en `doc/post-mortem/`).
+    - Mover o renombrar archivos sin actualizar referencias rompe `.governance/docs-map.json`, scripts de automatización y enlaces Markdown.
+  - **04 - PHASE 2 (STRATEGY):**
+    - Localizar todas las referencias con búsqueda global (`Select-String` / `git grep`) antes de mover/renombrar usando `git mv`.
+    - Actualizar referencias en scripts, skills, `doc/INDEX.md` y `.governance/docs-map.json`.
+  - **05 - PHASE 3 (EXECUTION):**
+    1. Ejecutar `git mv doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md doc/adr/TEMPLATE_ADR.md` y `git mv doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md doc/post-mortem/TEMPLATE_POSTMORTEM.md`.
+    2. Actualizar todas las referencias detectadas en `scripts/`, `skills/`, `doc/` y `.governance/docs-map.json`.
+    3. Validar con `lint-markdown.ps1`, `audit-workspace.ps1` y `pytest` (exit code `0`).
+  - **06 - PHASE 4 (CRITIC):**
+    - *Auditoría*: Verificar que ningún test unitario ni skill (`architecture-decision-records`, `todo-lifecycle`, `lifecycle-coordinator`) apunte a los nombres anteriores.
+  - **07 - PHASE 5 (FORMAT):**
+    - Rutas renombradas con `git mv`, cero enlaces rotos y auditoría completa en verde.
+  - **MODELO & AGENTE ASIGNADO:** **Carbon ($C_6$) / Gemini 3.8 Flash** (~800 tokens).
   - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
 
 ---
@@ -209,35 +208,34 @@
 
 ---
 
-## 5. Prioridad 5: Cierre Maestro — Regeneración Limpia de Documentación y Rebranding a `/aagy` (`Anything Antigravity`)
+## 5. Prioridad 5: Cierre Maestro — Rebranding y Migración de `/ecc` a `/aagy` (`Anything Antigravity`)
 
-### Tarea 5.1: Purga y Regeneración Limpia de Documentación + Recreación de `/ecc` como `/aagy` (`Anything Antigravity`)
+### Tarea 5.1: Migración de `/ecc` a `/aagy` (*Anything Antigravity*) y Sincronización del Plugin `ecc`
 
-- [ ] **Ejecutar el cierre maestro del backlog: regenerar toda la documentación desde cero sin deuda histórica y recrear el repositorio `/ecc` como `/aagy` (*Anything Antigravity*)**
-  - **01 - ROLE:** Principal Release & Repository Migration Architect (experto en rebranding estructural de monorepos, gobernanza documental zero-drift, migración segura de git remotes/workspaces y publicación limpia de plugins Antigravity).
-  - **02 - CONTEXT:** `[Sector: Repository Lifecycle & Brand Migration]` `[Data Type: Markdown docs/manuals/ADRs, Git repo /ecc -> /aagy (preservando historial), plugin aagy + plugin Claude Code ecc sincronizado]` `[Objective: (1) Eliminar toda la documentación actual obsoleta y generar una suite documental 100% limpia y alineada con el estado final tras completar las prioridades 2-4; (2) Migrar el repositorio actual /ecc a /aagy ("Anything Antigravity") preservando el historial Git, aplicando full rename a aagy (incluido ~/.gemini/config/plugins/aagy) y manteniendo dentro de /aagy el plugin para Claude Code llamado ecc siempre sincronizado con aagy para paridad multiagente]` `[Restrictions: Ejecutar EXCLUSIVAMENTE como última tarea del TODO.md tras completar y verificar todas las prioridades anteriores; conservar el historial Git completo; prohibido ejecutar rm/delete destructivo sin verificación previa en /aagy y confirmación explícita del usuario; mantener 0 enlaces rotos y 100% cumplimiento de markdownlint + budget hard gate + paridad aagy<->ecc]`.
+- [ ] **Ejecutar el cierre maestro del backlog: migrar `/ecc` a `/aagy` (*Anything Antigravity*) conservando el historial Git, aplicando *full rename* a `aagy` y sincronizando el plugin `ecc` para Claude Code en `aagy/ecc/`**
+  - **01 - ROLE:** Principal Release & Repository Migration Architect (experto en rebranding estructural de monorepos, migración segura de git remotes/workspaces y publicación de plugins multiagente).
+  - **02 - CONTEXT:** `[Sector: Repository Lifecycle & Brand Migration]` `[Data Type: Git repo /ecc -> /aagy (preservando historial), plugin aagy + plugin Claude Code aagy/ecc/ sincronizado]` `[Objective: Migrar el repositorio actual /ecc a /aagy ("Anything Antigravity") conservando el historial Git, renombrando el remoto en GitHub (gh repo rename aagy), aplicando full rename a aagy (incluido ~/.gemini/config/plugins/aagy) y manteniendo dentro de aagy/ecc/ el plugin para Claude Code llamado ecc siempre sincronizado con aagy para paridad multiagente]` `[Restrictions: Ejecutar EXCLUSIVAMENTE como última tarea del TODO.md tras completar y verificar todas las prioridades anteriores; conservar el historial Git completo; NO regenerar ni purgar la documentación en esta tarea (se ajustará a posteriori); prohibido ejecutar rm/delete destructivo sin verificación previa en /aagy y confirmación explícita del usuario; mantener 0 enlaces rotos y 100% cumplimiento de budget hard gate + paridad aagy<->ecc]`.
   - **03 - PHASE 1 (ANALYSIS):**
-    - Tras múltiples iteraciones desde `affaan-m/ECC`, el repositorio `/ecc` arrastra documentación histórica fragmentada (`doc/`, `README.md`, referencias mixtas a `ecc` / `ecc-claude`) y el directorio/nombre raíz `/ecc` ya no refleja la identidad nativa de *Anything Antigravity* (`/aagy`).
-    - Hacer esta migración antes de terminar las Tareas 2.3–4.4 generaría retrabajo y rompería rutas activas; por ello ambas acciones (regeneración documental limpia + recreación `/ecc` -> `/aagy`) conforman **una única tarea atómica de cierre**.
+    - El directorio/nombre raíz `/ecc` ya no refleja la identidad nativa de *Anything Antigravity* (`/aagy`), y es necesario unificar el ecosistema manteniendo el plugin de Claude Code (`ecc`) sincronizado dentro de `aagy/ecc/`.
+    - La documentación se actualizará a posteriori, por lo que esta tarea se centra exclusivamente en la migración limpia de repositorio, remoto, plugin instalado y paridad `aagy` $\leftrightarrow$ `ecc` sin duplicar trabajo documental.
   - **04 - PHASE 2 (STRATEGY):**
-    - *Enfoque A (In-Place Rename)*: Renombrar carpeta y editar archivos en sitio, arriesgando arrastrar basura documental o romper rutas activas.
+    - *Enfoque A (In-Place Rename)*: Renombrar carpeta y editar archivos en sitio, arriesgando romper rutas activas antes de validar.
     - *Enfoque B (History-Preserving Cutover & Dual-Plugin Parity - Recomendado)*:
       1. Verificar que todas las tareas previas (`2.3` a `4.4`) estén archivadas en `TODO_DONE/` y en verde (`audit-workspace.ps1` + `pytest`).
-      2. Clonar/migrar `c:\Workspace\projects\ecc` hacia `c:\Workspace\projects\aagy` (*Anything Antigravity*) **conservando el historial Git completo**, aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, rutas y `~/.gemini/config/plugins/aagy`).
-      3. Estructurar y sincronizar dentro de `/aagy` el plugin para Claude Code llamado **`ecc`** (con chequeo de paridad automatizado `aagy` $\leftrightarrow$ `ecc` para operar de forma idéntica en multiagentes).
-      4. Purgar la documentación histórica heredada y generar desde cero la documentación limpia (`README.md`, `doc/INDEX.md`, `doc/STATUS.md`, `doc/LOG.md`, `doc/adr/`, `doc/manual/`, `doc/diagrams/`) reflejando exclusivamente la arquitectura final `aagy` + `ecc`.
-      5. Validar integridad completa en `/aagy` (`pytest`, `audit-workspace.ps1`, `lint-markdown.ps1`, smoke-test de ambos plugins) y, solo tras confirmación explícita del usuario, eliminar el antiguo directorio `/ecc`.
+      2. Migrar `c:\Workspace\projects\ecc` hacia `c:\Workspace\projects\aagy` (*Anything Antigravity*) **conservando el historial Git completo** y renombrar el remoto (`gh repo rename aagy`), aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, rutas y `~/.gemini/config/plugins/aagy`).
+      3. Estructurar y sincronizar dentro de `aagy/ecc/` el plugin para Claude Code llamado **`ecc`** (con chequeo de paridad automatizado `aagy` $\leftrightarrow$ `ecc` para operar de forma idéntica en multiagentes).
+      4. Validar integridad completa en `/aagy` (`pytest`, `audit-workspace.ps1`, `lint-markdown.ps1`, smoke-test de ambos plugins) y, solo tras confirmación explícita del usuario, eliminar el antiguo directorio `/ecc`.
   - **05 - PHASE 3 (EXECUTION):**
     1. Gate previo: confirmar backlog previo (`2.3`–`4.4`) completado al 100%.
-    2. Crear `/aagy` preservando el historial Git (`git log` íntegro) y ejecutar *full rename* de identidad a `aagy` / *Anything Antigravity*.
-    3. Consolidar dentro de `/aagy` el plugin de Claude Code **`ecc`** y su mecanismo/script de sincronización y paridad continua con `aagy`.
-    4. Purgar documentación heredada y generar desde cero el árbol `doc/` limpio, pasando `lint-markdown.ps1` y `audit-workspace.ps1` con código de salida `0`.
+    2. Crear `/aagy` preservando el historial Git (`git log` íntegro), renombrar remoto en GitHub (`gh repo rename aagy`) y ejecutar *full rename* de identidad a `aagy` / *Anything Antigravity*.
+    3. Consolidar dentro de `aagy/ecc/` el plugin de Claude Code **`ecc`** y su mecanismo/script de sincronización y paridad continua con `aagy`.
+    4. Validar `pytest`, `audit-workspace.ps1` y `lint-markdown.ps1` con código de salida `0`.
     5. Actualizar el plugin instalado a `~/.gemini/config/plugins/aagy`, obtener confirmación final del usuario y retirar `/ecc`.
   - **06 - PHASE 4 (CRITIC):**
     - *Auditoría*: Riesgo crítico de pérdida irreversible si se borra `/ecc` antes de validar el 100% de tests, git remote y enlaces en `home-lab` o `~/.gemini/`. Mitigación: cutover en dos pasos con verificación integral en `/aagy` y confirmación explícita antes de borrar `/ecc`.
   - **07 - PHASE 5 (FORMAT):**
-    - Repositorio `/aagy` inicializado, tests y `audit-workspace.ps1` en verde (exit `0`), documentación limpia regenerada y cero referencias rotas.
-  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~8.000 tokens) para la auditoría de cutover y arquitectura documental; **Carbon ($C_6$)** para generación limpia y validación.
+    - Repositorio `/aagy` operativo con historial íntegro, remoto renombrado, `aagy/ecc/` sincronizado, tests y `audit-workspace.ps1` en verde (exit `0`).
+  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens) para la auditoría de cutover y paridad; **Carbon ($C_6$)** para *full rename* y validación.
   - **COMPACT TRIGGER:** Al completar el cutover final en `/aagy`.
 
 ---
@@ -255,11 +253,12 @@
 | **3.2 Git Pre-Commit Hooks** | **Carbon ($C_6$)** | `flash` | ~1.200 tokens | Scripts de automatización en PowerShell y Bash POSIX. |
 | **3.3 Telemetría Tokens Sesión**| **Carbon ($C_6$)** | `flash` | ~1.000 tokens | Análisis de archivos JSONL y métricas numéricas. |
 | **3.4 CLI Promoción Skills** | **Carbon ($C_6$)** | `flash` | ~1.100 tokens | Operaciones de archivos y validación de frontmatter. |
+| **3.5 Estandarización Plantillas**| **Carbon ($C_6$)** | `flash` | ~800 tokens | `git mv` y actualización determinista de referencias y enlaces. |
 | **4.1 Linter Paridad SDK** | **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (análisis) + `flash` (código) | ~8.000 tokens | Análisis de contratos políglotas (Go/TS/Python) requiere Pro Thinking. |
 | **4.2 Analizador Bloqueos PG** | **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (semántica) + `flash` (parser) | ~10.000 tokens| El análisis de transacciones, deadlocks y bloqueos LTS requiere Pro Thinking. |
 | **4.3 Validador Ingress / Portal**| **Carbon ($C_6$)** | `flash` | ~1.200 tokens | Cruce de configuraciones estáticas YAML, Go y CoreDNS. |
 | **4.4 Despliegue Tagged CD** | **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (rollback) + `flash` (script) | ~6.000 tokens | Garantía de rollback $< 2$ min y probes de resiliencia SRE. |
-| **5.1 Clean Docs & Repo `/aagy`**| **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (cutover) + `flash` (docs) | ~8.000 tokens | Auditoría de migración sin pérdida y regeneración documental limpia. |
+| **5.1 Migración Repo `/aagy` + `ecc`**| **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (cutover) + `flash` (rename) | ~6.000 tokens | Migración con historial Git, *full rename* y paridad `aagy` $\leftrightarrow$ `ecc`. |
 
 ---
 
