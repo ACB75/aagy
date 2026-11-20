@@ -25,10 +25,12 @@ STATUS_SKIPPED = "SKIPPED"
 
 PLUGIN_NAME_AAGY = "aagy"
 PLUGIN_NAME_ECC_AGY = "ecc-agy"
+PLUGIN_NAME_AAGY_ECC = "aagy-ecc"
 PLUGIN_NAME_ECC = "ecc"
 
 FILE_PLUGIN_JSON = "plugin.json"
 DIR_SKILLS = "skills"
+DIR_AAGY_ECC = "aagy-ecc"
 DIR_ECC = "ecc"
 
 # Configuración de codificación UTF-8
@@ -88,34 +90,36 @@ def _check_root_plugin(repo_root: Path, discrepancies: List[str]) -> str:
 
 
 def _check_claude_plugin(repo_root: Path, discrepancies: List[str]) -> Tuple[str, int]:
-    """Valida el subplugin ecc para Claude Code."""
-    ecc_dir = repo_root / DIR_ECC
+    """Valida el subplugin aagy-ecc (o legado ecc) para Claude Code."""
+    ecc_dir = repo_root / DIR_AAGY_ECC
     if not ecc_dir.is_dir():
-        discrepancies.append(f"No se encontró el subdirectorio del plugin Claude Code '{DIR_ECC}/'.")
+        ecc_dir = repo_root / DIR_ECC
+    if not ecc_dir.is_dir():
+        discrepancies.append(f"No se encontró el subdirectorio del plugin Claude Code '{DIR_AAGY_ECC}/'.")
         return "", 0
 
     claude_manifest = ecc_dir / ".claude-plugin" / FILE_PLUGIN_JSON
     claude_data = _load_json_file(claude_manifest)
     claude_name = ""
     if not claude_data:
-        # Fallback a ecc/package.json
         pkg_json = ecc_dir / "package.json"
         pkg_data = _load_json_file(pkg_json)
         if pkg_data:
             claude_name = str(pkg_data.get("name", "")).strip()
         else:
-            discrepancies.append(f"No se encontró manifiesto válido de plugin en '{DIR_ECC}/.claude-plugin/' ni 'package.json'.")
+            discrepancies.append(f"No se encontró manifiesto válido de plugin en '{ecc_dir.name}/.claude-plugin/' ni 'package.json'.")
     else:
         claude_name = str(claude_data.get("name", "")).strip()
 
-    if claude_name and claude_name != PLUGIN_NAME_ECC:
-        discrepancies.append(f"El nombre del plugin Claude Code ('{claude_name}') no es '{PLUGIN_NAME_ECC}'.")
+    if claude_name and claude_name not in (PLUGIN_NAME_AAGY_ECC, PLUGIN_NAME_ECC):
+        discrepancies.append(f"El nombre del plugin Claude Code ('{claude_name}') no es '{PLUGIN_NAME_AAGY_ECC}'.")
 
-    # Contar skills en ecc si existen
     ecc_skills_dir = ecc_dir / DIR_SKILLS
     ecc_skills_count = 0
     if ecc_skills_dir.is_dir():
         ecc_skills_count = sum(1 for p in ecc_skills_dir.iterdir() if p.is_dir())
+    elif (repo_root / DIR_SKILLS).is_dir():
+        ecc_skills_count = sum(1 for p in (repo_root / DIR_SKILLS).iterdir() if p.is_dir())
 
     return claude_name, ecc_skills_count
 

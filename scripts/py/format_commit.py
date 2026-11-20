@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scripts/ecc-agy/format_commit.py - Validador y Generador de Mensajes de Commit Estandarizados
+scripts/py/format_commit.py - Validador y Generador de Mensajes de Commit Estandarizados
 
 Soporta formatos Conventional Commits flexibles y ergonómicos:
   1. Formato extendido de monorepo: [type]-[projects]: <title>  (ej. feat-[doc]: update todo.md)
@@ -46,7 +46,7 @@ ALLOWED_TYPES: frozenset[str] = frozenset({
 
 ALLOWED_PROJECTS: frozenset[str] = frozenset({
     "cluster", "kakebo", "whoiam", "net", "scripts", "ecc", "ecc-agy", "ecc-aecb", "ecc-claude", "ecc-agy-homelab", "doc",
-    "docs", "infra", "portal", "token-hill", "uoc", "sdk", "home-lab-sdk", "all", "aagy",
+    "docs", "infra", "portal", "token-hill", "uoc", "sdk", "home-lab-sdk", "all", "aagy", "aagy-ecc",
 })
 
 

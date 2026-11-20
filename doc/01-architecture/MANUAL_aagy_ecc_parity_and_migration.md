@@ -1,7 +1,7 @@
-# Manual de Arquitectura y Paridad Multi-Harness: Anything Antigravity (`aagy`) y Claude Code (`ecc`)
+# Manual de Arquitectura y Paridad Multi-Harness: Anything Antigravity (`aagy`) y Claude Code (`aagy-ecc`)
 
-> **Referencia Canónica**: `doc/manual/MANUAL_aagy_ecc_parity_and_migration.md`  
-> **Ámbito**: Orquestación y Gobernanza Dual `aagy` (Google Antigravity & Gemini) $\leftrightarrow$ `ecc` (Anthropic Claude Code)  
+> **Referencia Canónica**: `doc/01-architecture/MANUAL_aagy_ecc_parity_and_migration.md`  
+> **Ámbito**: Orquestación y Gobernanza Dual `aagy` (Google Antigravity & Gemini) $\leftrightarrow$ `aagy-ecc` (Anthropic Claude Code)  
 
 ---
 
@@ -12,7 +12,7 @@ El ecosistema **Anything Antigravity (`aagy`)** implementa una arquitectura desa
 1. **`aagy` (Raíz del Repositorio)**:
    - Diseñado específicamente para **Google Antigravity** y **Gemini CLI**.
    - Integra catálogo de habilidades en dos niveles (Two-Tier Architecture), agentes canónicos (`argon`, `hydrogen`, `carbon`, `neon`), compuertas de calidad SonarQube Rating A y telemetría de tokens.
-2. **`ecc` (`aagy/ecc/`)**:
+2. **`aagy-ecc` (`aagy-ecc/`)**:
    - Subplugin dedicado para **Anthropic Claude Code**.
    - Provee artefactos nativos como `CLAUDE.md`, `.claude/commands/`, hooks bash/python de ciclo de vida y configuración de plugins Claude.
 
@@ -20,12 +20,12 @@ El ecosistema **Anything Antigravity (`aagy`)** implementa una arquitectura desa
 flowchart LR
     subgraph Repo["Repositorio Unificado /aagy"]
         AAGY["aagy<br/>(Google Antigravity & Gemini)"]
-        ECC["ecc/<br/>(Anthropic Claude Code)"]
+        ECC["aagy-ecc/<br/>(Anthropic Claude Code)"]
     end
 
     subgraph Harnesses["Harnesses de Ejecución"]
         AGY_Harness["Google Antigravity IDE / CLI<br/>(~/.gemini/config/plugins/aagy)"]
-        Claude_Harness["Claude Code CLI<br/>(claude plugin install ./ecc)"]
+        Claude_Harness["Claude Code CLI<br/>(claude plugin install ./aagy-ecc)"]
     end
 
     subgraph Parity["Compuerta de Paridad"]
@@ -56,19 +56,19 @@ Para verificar que no exista deriva ni discrepancias entre ambos plugins:
 
 ```powershell
 # En Windows 11 con PowerShell 7
-pwsh -File scripts/bin/ecc-agy/audit-plugin-parity.ps1
+pwsh -File scripts/pwsh/audit-plugin-parity.ps1
 
 # Solo verificación (retorna código 0 o 1)
-pwsh -File scripts/bin/ecc-agy/audit-plugin-parity.ps1 -CheckOnly
+pwsh -File scripts/pwsh/audit-plugin-parity.ps1 -CheckOnly
 
 # Salida estructurada JSON para pipelines CI/CD
-pwsh -File scripts/bin/ecc-agy/audit-plugin-parity.ps1 -Json
+pwsh -File scripts/pwsh/audit-plugin-parity.ps1 -Json
 ```
 
 En entornos Linux / WSL (POSIX LF):
 
 ```bash
-bash scripts/bin/ecc-agy/audit-plugin-parity.sh --check-only
+bash scripts/sh/audit-plugin-parity.sh --check-only
 ```
 
 ---

@@ -23,9 +23,9 @@
 .PARAMETER Help
     Muestra la ayuda detallada.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/complete-task-pr.ps1 -ReviewOnly
+    pwsh -File scripts/pwsh/complete-task-pr.ps1 -ReviewOnly
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/complete-task-pr.ps1 -Title "feat-[cluster]: migrar servicios" -Yes
+    pwsh -File scripts/pwsh/complete-task-pr.ps1 -Title "feat-[cluster]: migrar servicios" -Yes
 #>
 [CmdletBinding()]
 param(

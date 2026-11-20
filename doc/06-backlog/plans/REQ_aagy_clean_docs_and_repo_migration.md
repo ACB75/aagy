@@ -39,7 +39,7 @@
 
 - [ ] **`CA-01`**: Dado el backlog `TODO.md` con las tareas `2.3`–`4.4` completadas, cuando se construya `c:\Workspace\projects\aagy`, entonces se conservará el historial Git íntegro y no existirá ningún archivo de documentación heredado ni enlaces rotos.
 - [ ] **`CA-02`**: Dado el nuevo árbol `aagy/doc/`, cuando se ejecuten `lint-markdown.ps1` y `audit-workspace.ps1`, entonces ambos finalizarán con código de salida `0`, cero enlaces rotos en `.governance/docs-map.json` y cumplimiento estricto de presupuestos de tokens.
-- [ ] **`CA-03`**: Dado el conjunto de suites en `aagy/scripts/ecc-agy/tests/` (o su ruta renombrada `aagy`), cuando se ejecute `pytest`, entonces el 100% de los tests pasarán con cobertura $\ge 80\%$ y código de salida `0`.
+- [ ] **`CA-03`**: Dado el conjunto de suites en `aagy/scripts/py/tests/` (o su ruta renombrada `aagy`), cuando se ejecute `pytest`, entonces el 100% de los tests pasarán con cobertura $\ge 80\%$ y código de salida `0`.
 - [ ] **`CA-04`**: Dado el *full rename* a `aagy`, cuando se instale en `~/.gemini/config/plugins/aagy`, entonces Antigravity cargará las skills, agentes y hooks sin errores de manifiesto ni desbordamiento de presupuesto.
 - [ ] **`CA-05`**: Antes de ejecutar cualquier borrado sobre `c:\Workspace\projects\ecc`, el sistema presentará el reporte de verificación completo de `/aagy` y esperará confirmación explícita del usuario.
 - [ ] **`CA-06`**: Dado el plugin **`ecc`** para Claude Code dentro de `/aagy`, cuando se ejecute la validación de sincronización/paridad `aagy` $\leftrightarrow$ `ecc`, entonces ambos plugins compartirán capacidades equivalentes sin deriva de contratos ni skills huérfanas.

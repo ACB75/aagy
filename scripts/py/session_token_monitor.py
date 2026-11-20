@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scripts/ecc-agy/session_token_monitor.py - Monitor de Telemetría de Presupuesto en Sesión
+scripts/py/session_token_monitor.py - Monitor de Telemetría de Presupuesto en Sesión
 
 Analiza el archivo transcript.jsonl de la conversación activa de Antigravity,
 calcula el recuento estimado de tokens consumidos y alerta cuando supera

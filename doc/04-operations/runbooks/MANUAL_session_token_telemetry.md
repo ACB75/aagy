@@ -28,19 +28,19 @@ En Windows 11 (`pwsh`):
 
 ```powershell
 # Diagnóstico completo interactivo
-pwsh -File scripts/bin/ecc-agy/session-token-monitor.ps1
+pwsh -File scripts/pwsh/session-token-monitor.ps1
 
 # Salida en JSON para automatizaciones
-pwsh -File scripts/bin/ecc-agy/session-token-monitor.ps1 -Json
+pwsh -File scripts/pwsh/session-token-monitor.ps1 -Json
 
 # Modo alerta (silencioso salvo si excede 45k tokens)
-pwsh -File scripts/bin/ecc-agy/session-token-monitor.ps1 -AlertOnly
+pwsh -File scripts/pwsh/session-token-monitor.ps1 -AlertOnly
 ```
 
 En Linux o WSL (`bash` / `sh`):
 
 ```sh
-./scripts/bin/ecc-agy/session-token-monitor.sh --alert-only
+./scripts/sh/session-token-monitor.sh --alert-only
 ```
 
 ---
@@ -50,7 +50,7 @@ En Linux o WSL (`bash` / `sh`):
 Al concluir con éxito una tarea e integrar su PR en `main`, `complete-task-pr.ps1` ejecuta automáticamente:
 
 ```powershell
-pwsh -File scripts/bin/ecc-agy/session-token-monitor.ps1 -Threshold 45000 -AlertOnly
+pwsh -File scripts/pwsh/session-token-monitor.ps1 -Threshold 45000 -AlertOnly
 ```
 
 Si el transcript supera los 45.000 tokens acumulados, el arnés emite una advertencia destacada recomendando al desarrollador o agente ejecutar `/compact` antes de comenzar la siguiente tarea del backlog.

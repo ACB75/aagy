@@ -4,7 +4,7 @@ Tests unitarios para la auditoría de higiene, tokens y presupuesto de contexto 
 import sys
 from pathlib import Path
 
-# Añadir ruta para importar scripts/ecc-agy
+# Añadir ruta para importar scripts/py
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from workspace_audit import (

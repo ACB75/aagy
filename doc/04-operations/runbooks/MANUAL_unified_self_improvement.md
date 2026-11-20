@@ -33,34 +33,34 @@ El sistema unifica `auto-evolve`, `instinct_manager` y `agent-self-evaluation` e
 
 ```powershell
 # Windows 11 (PowerShell 7)
-pwsh -NoProfile -File scripts/bin/ecc-agy/auto-evolve.ps1 -Discover -RepoRoot . -Scope all
+pwsh -NoProfile -File scripts/pwsh/auto-evolve.ps1 -Discover -RepoRoot . -Scope all
 
 # Salida JSON estructurada
-pwsh -NoProfile -File scripts/bin/ecc-agy/auto-evolve.ps1 -Discover -Json
+pwsh -NoProfile -File scripts/pwsh/auto-evolve.ps1 -Discover -Json
 ```
 
 ```bash
 # Linux / WSL / macOS (Bash)
-bash scripts/bin/ecc-agy/auto-evolve.sh --discover --repo-root . --scope all
+bash scripts/sh/auto-evolve.sh --discover --repo-root . --scope all
 ```
 
 ### 2.2. Revisión de Compuertas y Promoción Segura (`--review` / `--promote`)
 
 ```powershell
 # Revisar candidato (ejecuta AgentShield + Budget Gate + Smoke-Test sin promover)
-pwsh -NoProfile -File scripts/bin/ecc-agy/auto-evolve.ps1 -Review "pg-lock-safety" -Tier skill
+pwsh -NoProfile -File scripts/pwsh/auto-evolve.ps1 -Review "pg-lock-safety" -Tier skill
 
 # Promover candidato tras confirmación explícita del usuario
-pwsh -NoProfile -File scripts/bin/ecc-agy/auto-evolve.ps1 -Promote "pg-lock-safety" -Tier skill -Confirm
+pwsh -NoProfile -File scripts/pwsh/auto-evolve.ps1 -Promote "pg-lock-safety" -Tier skill -Confirm
 ```
 
 ### 2.3. Gestión Directa de Instintos (`manage-instincts`) y Autoevaluación 5 Ejes (`--evaluate`)
 
 ```powershell
 # Guardar, listar y exportar instintos (project | global | all)
-pwsh -NoProfile -File scripts/bin/ecc-agy/manage-instincts.ps1 save --id pg-ddl --trigger "PostgreSQL DDL" --learning "Usar CREATE INDEX CONCURRENTLY" --scope project
-pwsh -NoProfile -File scripts/bin/ecc-agy/manage-instincts.ps1 list --scope all
-pwsh -NoProfile -File scripts/bin/ecc-agy/manage-instincts.ps1 export --scope all
+pwsh -NoProfile -File scripts/pwsh/manage-instincts.ps1 save --id pg-ddl --trigger "PostgreSQL DDL" --learning "Usar CREATE INDEX CONCURRENTLY" --scope project
+pwsh -NoProfile -File scripts/pwsh/manage-instincts.ps1 list --scope all
+pwsh -NoProfile -File scripts/pwsh/manage-instincts.ps1 export --scope all
 
 # Evaluar salida del agente en los 5 ejes (Accuracy, Completeness, Clarity, Actionability, Conciseness)
 python scripts/py/self_improve.py --evaluate "All 154 tests passed (exit code 0)." --task "Run verification suite" --json

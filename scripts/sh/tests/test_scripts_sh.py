@@ -15,6 +15,7 @@ EXPECTED_SH_SCRIPTS = [
     "auto-evolve.sh",
     "complete-task-pr.sh",
     "disable-skill.sh",
+    "ecc-agy-sync.sh",
     "enable-skill.sh",
     "format-commit.sh",
     "gemini-deep-ops.sh",
@@ -51,10 +52,6 @@ def test_sh_scripts_have_shebang_and_lf():
         assert len(raw) > 0, f"Script {script_name} must not be empty"
         assert raw.startswith(b"#!/"), f"Script {script_name} must begin with shebang #!/"
         assert b"\r\n" not in raw, f"Script {script_name} must use strict LF line endings"
-
-    bin_dir = REPO_ROOT / "scripts" / "bin" / "ecc-agy"
-    for proxy_sh in bin_dir.glob("*.sh"):
-        assert b"\r\n" not in proxy_sh.read_bytes(), f"Proxy {proxy_sh.name} must use strict LF"
 
 
 def test_auto_evolve_sh_is_agnostic():

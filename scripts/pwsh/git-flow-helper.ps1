@@ -17,9 +17,9 @@
 .PARAMETER Body
     Cuerpo opcional explicativo de la Pull Request
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/git-flow-helper.ps1 -Action new-branch -Type feat -Project kakebo -Name export-csv
-    pwsh -File scripts/bin/ecc-agy/git-flow-helper.ps1 -Action create-pr -Title "feat-[kakebo]: exportar transacciones a csv"
-    pwsh -File scripts/bin/ecc-agy/git-flow-helper.ps1 -Action promote -Tag v1.1.0-sandbox
+    pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action new-branch -Type feat -Project kakebo -Name export-csv
+    pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action create-pr -Title "feat-[kakebo]: exportar transacciones a csv"
+    pwsh -File scripts/pwsh/git-flow-helper.ps1 -Action promote -Tag v1.1.0-sandbox
 #>
 param(
     [Parameter(Mandatory=$true)]

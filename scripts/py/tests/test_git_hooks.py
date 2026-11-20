@@ -9,15 +9,16 @@ import sys
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 HOOKS_DIR = REPO_ROOT / "scripts" / "py" / "hooks"
-SCRIPTS_BIN_DIR = REPO_ROOT / "scripts" / "bin" / "ecc-agy"
+SCRIPTS_PWSH_DIR = REPO_ROOT / "scripts" / "pwsh"
+SCRIPTS_SH_DIR = REPO_ROOT / "scripts" / "sh"
 
 
 def test_hook_files_exist_and_executable():
     pre_commit = HOOKS_DIR / "pre-commit"
     commit_msg = HOOKS_DIR / "commit-msg"
 
-    assert pre_commit.exists(), "Hook pre-commit debe existir en scripts/ecc-agy/hooks/"
-    assert commit_msg.exists(), "Hook commit-msg debe existir en scripts/ecc-agy/hooks/"
+    assert pre_commit.exists(), "Hook pre-commit debe existir en scripts/py/hooks/"
+    assert commit_msg.exists(), "Hook commit-msg debe existir en scripts/py/hooks/"
 
     pre_content = pre_commit.read_text(encoding="utf-8")
     msg_content = commit_msg.read_text(encoding="utf-8")
@@ -58,11 +59,11 @@ def test_commit_msg_hook_validation(tmp_path):
 
 
 def test_installer_scripts_exist():
-    ps1_installer = SCRIPTS_BIN_DIR / "install-git-hooks.ps1"
-    sh_installer = SCRIPTS_BIN_DIR / "install-git-hooks.sh"
+    ps1_installer = SCRIPTS_PWSH_DIR / "install-git-hooks.ps1"
+    sh_installer = SCRIPTS_SH_DIR / "install-git-hooks.sh"
 
-    assert ps1_installer.exists(), "install-git-hooks.ps1 debe existir en scripts/bin/ecc-agy/"
-    assert sh_installer.exists(), "install-git-hooks.sh debe existir en scripts/bin/ecc-agy/"
+    assert ps1_installer.exists(), "install-git-hooks.ps1 debe existir en scripts/pwsh/"
+    assert sh_installer.exists(), "install-git-hooks.sh debe existir en scripts/sh/"
 
 
 def test_hook_content_matches_requirements():

@@ -9,8 +9,8 @@
 .PARAMETER DryRun
     Simula la sincronización y muestra los resultados en consola.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/sync-ideas-todo.ps1
-    pwsh -File scripts/bin/ecc-agy/sync-ideas-todo.ps1 -Check
+    pwsh -File scripts/pwsh/sync-ideas-todo.ps1
+    pwsh -File scripts/pwsh/sync-ideas-todo.ps1 -Check
 #>
 [CmdletBinding()]
 param(

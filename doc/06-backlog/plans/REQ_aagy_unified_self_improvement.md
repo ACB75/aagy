@@ -9,7 +9,7 @@
 
 ## 1. Contexto, Necesidad y Objetivos de Negocio
 
-- **Problema de Negocio / Técnico**: El repositorio contiene piezas desconectadas para autodescubrimiento y aprendizaje continuo (`scripts/bin/ecc-agy/auto-evolve.ps1/.sh` acoplado a `home-lab`, `scripts/ecc-agy/instinct_manager.py`, y skills heredadas `continuous-learning`, `continuous-learning-v2`, `agent-self-evaluation`, `eval-harness`, `prompt-optimizer`) que no comparten un ciclo unificado ni están conectadas a los hooks de Antigravity (`hooks.json` `Stop`) ni al hard gate de presupuesto de tokens.
+- **Problema de Negocio / Técnico**: El repositorio contiene piezas desconectadas para autodescubrimiento y aprendizaje continuo (`scripts/pwsh/auto-evolve.ps1/.sh` acoplado a `home-lab`, `scripts/py/instinct_manager.py`, y skills heredadas `continuous-learning`, `continuous-learning-v2`, `agent-self-evaluation`, `eval-harness`, `prompt-optimizer`) que no comparten un ciclo unificado ni están conectadas a los hooks de Antigravity (`hooks.json` `Stop`) ni al hard gate de presupuesto de tokens.
 - **Objetivo Principal**: Unificar y optimizar todas las capacidades de autodescubrimiento y automejora en un motor único agnóstico para `aagy` (con paridad en `ecc` y ejecución manual CLI), operando con captura híbrida (`Stop` hook `0` tokens + CLI bajo demanda), almacenamiento a doble nivel (proyecto + `PLUGIN_DATA`) y promoción controlada por confirmación explícita, *smoke-test* y *budget gate*.
 - **Alcance (`In-Scope`)**:
   - Unificación de `auto-evolve`, `instinct_manager` y evaluación/aprendizaje continuo en un único motor modular bajo `scripts/{py,sh,pwsh}/` (con sus `/tests`).

@@ -6,7 +6,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 GIT_HOOKS_DIR="$REPO_ROOT/.git/hooks"
-SOURCE_HOOKS_DIR="$REPO_ROOT/scripts/ecc-agy/hooks"
+SOURCE_HOOKS_DIR="$REPO_ROOT/scripts/py/hooks"
 
 if [ ! -d "$GIT_HOOKS_DIR" ]; then
     echo "[ERROR] Directorio .git/hooks no encontrado en $REPO_ROOT" >&2

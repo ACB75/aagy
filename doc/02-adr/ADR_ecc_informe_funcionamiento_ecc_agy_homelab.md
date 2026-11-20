@@ -127,10 +127,10 @@ El fork mantiene 12 subagentes especializados y 16 skills ajustadas con presupue
 
 ## 4. Herramientas y Scripts de Automatización
 
-El fork delega su ejecución en scripts idempotentes ubicados en `scripts/bin/ecc-agy/`:
+El fork delega su ejecución en scripts idempotentes ubicados en `scripts/pwsh/`:
 
 ```
-scripts/bin/ecc-agy/
+scripts/pwsh/
 ├── audit-workspace.ps1 / .sh    # Auditoría integral en 6 fases (Higiene, Tokens, Redundancia, Reglas, Docs, Sonar)
 ├── audit-sre.ps1 / .sh          # Auditoría estática SRE (límites de memoria, GOMEMLIMIT, healthchecks, timeouts)
 ├── git-flow-helper.ps1 / .sh    # Gestión de ramas efímeras, promoción tri-tier y apertura automática de PRs

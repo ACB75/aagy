@@ -146,8 +146,8 @@ for rel_dir in "scripts/py/tests" "scripts/pwsh/tests" "scripts/sh/tests"; do
         TEST_TARGETS+=("$REPO_ROOT/$rel_dir")
     fi
 done
-if [[ ${#TEST_TARGETS[@]} -eq 0 && -d "$REPO_ROOT/scripts/ecc-agy/tests" ]]; then
-    TEST_TARGETS+=("$REPO_ROOT/scripts/ecc-agy/tests")
+if [[ ${#TEST_TARGETS[@]} -eq 0 && -d "$REPO_ROOT/scripts/py/tests" ]]; then
+    TEST_TARGETS+=("$REPO_ROOT/scripts/py/tests")
 fi
 if [[ ${#TEST_TARGETS[@]} -gt 0 ]]; then
     echo "[+] Ejecutando suite de pruebas unitarias (pytest)..."

@@ -4,7 +4,7 @@
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/py/security_audit.py.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/security-audit.ps1
+    pwsh -File scripts/pwsh/security-audit.ps1
 #>
 [CmdletBinding()]
 param()

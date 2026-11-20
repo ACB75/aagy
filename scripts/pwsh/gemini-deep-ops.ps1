@@ -6,9 +6,9 @@
 .PARAMETER Subcommand
     Comando a ejecutar: status, analyze-log o postmortem.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/gemini-deep-ops.ps1 status
-    pwsh -File scripts/bin/ecc-agy/gemini-deep-ops.ps1 analyze-log --file path/to/error.log
-    pwsh -File scripts/bin/ecc-agy/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-123 --file path/to/crash.log
+    pwsh -File scripts/pwsh/gemini-deep-ops.ps1 status
+    pwsh -File scripts/pwsh/gemini-deep-ops.ps1 analyze-log --file path/to/error.log
+    pwsh -File scripts/pwsh/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-123 --file path/to/crash.log
 #>
 param(
     [Parameter(Position=0)]

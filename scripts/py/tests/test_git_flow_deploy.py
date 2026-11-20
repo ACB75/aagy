@@ -11,9 +11,8 @@ import pytest
 
 # Asegurar import de modulos ecc-agy
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
-_BIN_DIR = _REPO_ROOT / "scripts" / "bin" / "ecc-agy"
-_PS_SCRIPT = _BIN_DIR / "git-flow-helper.ps1"
-_SH_SCRIPT = _BIN_DIR / "git-flow-helper.sh"
+_PS_SCRIPT = _REPO_ROOT / "scripts" / "pwsh" / "git-flow-helper.ps1"
+_SH_SCRIPT = _REPO_ROOT / "scripts" / "sh" / "git-flow-helper.sh"
 
 
 def test_dry_run_sandbox_promotion() -> None:

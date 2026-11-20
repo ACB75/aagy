@@ -12,7 +12,7 @@
 .PARAMETER SkipSecurity
     Omite la fase estática de seguridad.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/audit-workspace.ps1 -Clean -Optimize
+    pwsh -File scripts/pwsh/audit-workspace.ps1 -Clean -Optimize
 #>
 param(
     [switch]$Clean,

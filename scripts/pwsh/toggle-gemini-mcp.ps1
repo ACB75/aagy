@@ -10,9 +10,9 @@
 .PARAMETER Status
     Muestra el estado actual.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/toggle-gemini-mcp.ps1 -Status
-    pwsh -File scripts/bin/ecc-agy/toggle-gemini-mcp.ps1 -Enable
-    pwsh -File scripts/bin/ecc-agy/toggle-gemini-mcp.ps1 -Disable
+    pwsh -File scripts/pwsh/toggle-gemini-mcp.ps1 -Status
+    pwsh -File scripts/pwsh/toggle-gemini-mcp.ps1 -Enable
+    pwsh -File scripts/pwsh/toggle-gemini-mcp.ps1 -Disable
 #>
 param(
     [switch]$Enable,

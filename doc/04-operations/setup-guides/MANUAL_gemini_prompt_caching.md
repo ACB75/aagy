@@ -65,7 +65,7 @@ Para garantizar que las optimizaciones de context caching permanezcan efectivas:
    - `./AGENTS.md` (raíz del repositorio)
    - `./rules/AGENTS.md` (subdirectorio de reglas versionadas)
    - `~/.gemini/config/plugins/ecc-agy/rules/AGENTS.md` (plugin global cargado en memoria de Antigravity)
-3. **Verificación automatizada en CI/Tests**: Toda modificación a las reglas del sistema debe ser validada mediante `test_static_prompt_caching_prefix_invariance` en `scripts/ecc-agy/tests/test_workspace_audit.py`.
+3. **Verificación automatizada en CI/Tests**: Toda modificación a las reglas del sistema debe ser validada mediante `test_static_prompt_caching_prefix_invariance` en `scripts/py/tests/test_workspace_audit.py`.
 
 ---
 

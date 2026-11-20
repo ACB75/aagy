@@ -11,7 +11,7 @@ El ecosistema Home-Lab y Antigravity prioriza la economía estricta de tokens en
 
 Para combinar la máxima potencia analítica con coste cero en reposo, se implementa una arquitectura en tres capas:
 
-1. **Plantilla Aislada (`templates/plugins/gemini-mcp/`)**: Contiene `"disabled": true` por defecto y referencias seguras `${GEMINI_API_KEY}`.
+1. **Plantilla Aislada (`skills/gemini-deep-ops/templates/gemini-mcp/`)**: Contiene `"disabled": true` por defecto y referencias seguras `${GEMINI_API_KEY}`.
 2. **Utilidad de Alternancia (`toggle-gemini-mcp.ps1`)**: Permite conmutar el estado del plugin en segundos para sesiones específicas.
 3. **Skill Tier 2 y CLI Nativo (`gemini-deep-ops.ps1`)**: Provee capacidades diagnósticas sobre logs masivos y volcados de memoria sin requerir la inyección de esquemas MCP en el contexto del modelo.
 
@@ -33,7 +33,7 @@ flowchart LR
 ### Ejemplo de Diagnóstico de Crash Dump
 
 ```powershell
-pwsh -File scripts/bin/ecc-agy/gemini-deep-ops.ps1 analyze-log --file /var/log/cluster/service.log
+pwsh -File scripts/pwsh/gemini-deep-ops.ps1 analyze-log --file /var/log/cluster/service.log
 ```
 
 Salida estructurada:
@@ -55,5 +55,5 @@ Recomendaciones SRE:
 Al ejecutar `generate-postmortem.ps1` en cualquier rama `fix/*`, la sección diagnóstica de `gemini-deep-ops` puede insertarse automáticamente mediante:
 
 ```powershell
-pwsh -File scripts/bin/ecc-agy/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log >> doc/post-mortem/PM_fix_cluster_oom_timeout.md
+pwsh -File scripts/pwsh/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log >> doc/post-mortem/PM_fix_cluster_oom_timeout.md
 ```

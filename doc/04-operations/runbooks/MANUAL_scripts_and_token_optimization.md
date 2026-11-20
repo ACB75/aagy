@@ -43,13 +43,13 @@ scripts/
 Cualquier invocación heredada a:
 
 ```powershell
-pwsh -File scripts/bin/ecc-agy/sonar-audit.ps1
+pwsh -File scripts/pwsh/sonar-audit.ps1
 ```
 
 o en Linux:
 
 ```bash
-bash scripts/bin/ecc-agy/sonar-audit.sh
+bash scripts/sh/sonar-audit.sh
 ```
 
 se delega de forma transparente e inmediata a:
@@ -69,7 +69,7 @@ manteniendo códigos de salida, paso de argumentos (`$@`) y rendimiento idéntic
 El directorio `rules/` solo debe contener reglas transversales invariantes de aplicación global en cada turno de conversación:
 
 1. `rules/AGENTS.md`: Constitución y estándares universales de ingeniería (Google 5-Pillars, SRE, TBD, SonarQube Rating A).
-2. `rules/pr-automerge-lifecycle.md`: Ciclo de vida completo de PR, autoresolución de conflictos y squash-automerge.
+2. `rules/AGENTS.md`: Ciclo de vida completo de PR, autoresolución de conflictos y squash-automerge.
 
 ### Migración de Reglas de Stack a Skills
 
