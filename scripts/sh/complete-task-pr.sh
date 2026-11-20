@@ -55,6 +55,14 @@ if [[ $SHOW_HELP -eq 1 ]]; then
 fi
 
 CURRENT_BRANCH="$(git branch --show-current | tr -d '[:space:]')"
+# HEAD desacoplado (p. ej. evento pull_request de GitHub Actions): usar GITHUB_HEAD_REF / GITHUB_REF_NAME.
+if [[ -z "$CURRENT_BRANCH" ]]; then
+    CURRENT_BRANCH="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME:-}}"
+    if [[ -z "$CURRENT_BRANCH" ]]; then
+        echo "Error: HEAD desacoplado: no se puede determinar la rama de trabajo." >&2
+        exit 1
+    fi
+fi
 
 # Gobernanza de ramas canónicas
 VALIDATE_SCRIPT="$REPO_ROOT/scripts/py/validate_branch.py"
