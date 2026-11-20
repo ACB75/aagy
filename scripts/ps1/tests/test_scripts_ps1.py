@@ -17,6 +17,8 @@ EXPECTED_PS1_SCRIPTS = [
     "complete-task-pr.ps1",
     "disable-skill.ps1",
     "aagy-sync.ps1",
+    "aagy-doctor.ps1",
+    "aagy-ecc-doctor.ps1",
     "enable-skill.ps1",
     "format-commit.ps1",
     "gemini-deep-ops.ps1",
