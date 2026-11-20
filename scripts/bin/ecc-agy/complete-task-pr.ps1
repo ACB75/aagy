@@ -213,6 +213,16 @@ Estrategia Fast-Rollback:
         }
     }
 
+    # 7.4. Auditoría de Bloqueos DDL en PostgreSQL LTS
+    $pgLockScript = Join-Path $PSScriptRoot "audit-pg-locks.ps1"
+    if (Test-Path $pgLockScript) {
+        Write-Host "[+] Ejecutando auditoría de bloqueos DDL en PostgreSQL LTS..." -ForegroundColor Cyan
+        pwsh -NoProfile -File $pgLockScript
+        if ($LASTEXITCODE -ne 0) {
+            throw "La auditoría de bloqueos DDL detectó sentencias SQL de alto riesgo. Corrija los bloqueos antes de continuar."
+        }
+    }
+
     # 7. Commit si hay cambios staged o unstaged
     $dirty = (git status --porcelain)
     if ($dirty) {

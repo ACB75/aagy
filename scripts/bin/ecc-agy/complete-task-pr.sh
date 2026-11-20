@@ -140,6 +140,11 @@ if [[ -f "$SCRIPT_DIR/audit-sdk-parity.sh" ]]; then
     bash "$SCRIPT_DIR/audit-sdk-parity.sh"
 fi
 
+if [[ -f "$SCRIPT_DIR/audit-pg-locks.sh" ]]; then
+    echo "[+] Ejecutando auditoría de bloqueos DDL en PostgreSQL LTS..."
+    bash "$SCRIPT_DIR/audit-pg-locks.sh"
+fi
+
 # Sincronizar y archivar tareas completadas en doc/TODO.md
 if [[ $HAS_COMPLETED_TODOS -eq 1 ]]; then
     echo "[+] Archivando tareas completadas en doc/TODO_DONE/..."

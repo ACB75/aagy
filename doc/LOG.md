@@ -5,6 +5,26 @@
 
 ---
 
+## 2026-11-20: Analizador Estático de Bloqueos DDL y Concurrencia en PostgreSQL LTS
+
+### Hitos y Decisiones Materiales
+
+1. **Analizador Estático de Bloqueos DDL (`audit_pg_locks.py`)**:
+   - Clasificación léxica de sentencias SQL en tres niveles de riesgo (`HIGH`, `MEDIUM`, `LOW`).
+   - Detección de bloqueos críticos `ACCESS EXCLUSIVE` y reescritura de tablas (`DROP TABLE`, `TRUNCATE`, `DROP COLUMN`, `ALTER COLUMN TYPE`, `ADD CONSTRAINT` sin `NOT VALID`, y `DEFAULT` volátiles).
+   - Detección de bloqueos `SHARE` sobre escrituras (`CREATE INDEX` y `DROP INDEX` sin `CONCURRENTLY`).
+   - Sugerencias inmediatas de remediación segura para garantizar disponibilidad en PostgreSQL LTS multitenant.
+   - Exclusión automática de directorios internos (`.git`, `node_modules`, `skills`, `.agents`) en escaneos de árbol.
+2. **Ergonomía CLI e Integración en Lifecycle**:
+   - Wrappers multiplataforma [`scripts/bin/ecc-agy/audit-pg-locks.ps1`](../scripts/bin/ecc-agy/audit-pg-locks.ps1) y `audit-pg-locks.sh` con flags `--file`, `--dir`, `--json` y `--no-strict`.
+   - Integración en la compuerta de validación previa en el paso 7.4 de [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y `complete-task-pr.sh`.
+3. **Calidad y Documentación**:
+   - Manual operativo [`doc/manual/MANUAL_audit_pg_locks.md`](manual/MANUAL_audit_pg_locks.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_audit_pg_locks.py`](../scripts/ecc-agy/tests/test_audit_pg_locks.py) con 8/8 tests pasando (total 102/102 superados al 100%).
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Linter de Paridad Estática de Contratos entre Microservicios y SDK
 
 ### Hitos y Decisiones Materiales
