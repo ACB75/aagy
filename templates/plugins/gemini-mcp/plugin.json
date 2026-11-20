@@ -1,0 +1,7 @@
+{
+  "name": "gemini-mcp",
+  "displayName": "Google Gemini MCP (Optional / Deep Ops)",
+  "version": "1.0.0",
+  "description": "Optional Gemini MCP provider with context caching and multimodal diagnostics. Disabled by default to preserve token budget.",
+  "disabled": true
+}

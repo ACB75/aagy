@@ -16,7 +16,7 @@
 | **Parámetros de Función** | $\le 7$ parámetros (`S107`) | Cumple en todos los módulos | ✅ PASS |
 | **Seguridad Estática** | 0 secretos / 0 inyecciones de comandos | 0 vulnerabilidades detectadas | ✅ PASS |
 | **Estándar Markdown** | DavidAnson `.markdownlint.json` | 100% compliant (`--check-only`) | ✅ PASS |
-| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 69/69 tests superados (1.85s) | ✅ PASS |
+| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 74/74 tests superados (1.96s) | ✅ PASS |
 | **Hard Gate Presupuesto** | Reglas $\le 24$ KB, tokens $\le 16$k, eager $\le 3$k | 100% compliant en ECC Root y Plugin | ✅ PASS |
 
 ---
@@ -28,10 +28,10 @@
   - **Consumo de Caracteres**: ~2.945 caracteres (~736 tokens).
   - **Optimización Lograda**: Reducción del **98.2%** respecto al estado previo de 40.000 tokens.
 - **Tier 2 (Repositorio Base `ACB75/ecc`)**:
-  - **Skills Canónicas Disponibles**: 170 skills especializadas (frontmatter `description` normalizado a $\le 140$ caracteres).
+  - **Skills Canónicas Disponibles**: 171 skills especializadas (incluye `gemini-deep-ops`, frontmatter $\le 140$ caracteres).
   - **Subagentes Disponibles**: 49 agentes especializados (frontmatter `description` $\le 120$ caracteres).
   - **Reglas Universales**: `rules/AGENTS.md` (20.547 caracteres).
-  - **Total Repositorio**: ~12.064 tokens (completamente desacoplado del prompt global).
+  - **Total Repositorio**: ~12.097 tokens (completamente desacoplado del prompt global).
 
 ---
 
@@ -39,7 +39,8 @@
 
 - **Workflow de Ingeniería 4 Fases**: Estandarizado en [`doc/templates/`](templates/README.md) (`1. Requisitos & Impacto` -> `2. Plan de Acción & TDD` -> `3. Documentación & Release Notes` -> `4. Commits & PR`) con enforzamiento de paridad `home-lab-sdk`, PostgreSQL LTS multitenant lock safety, Ingress único y SRE throttling.
 - **Hard Gate de Presupuesto en Harness**: Implementado en [`workspace_audit.py`](../scripts/ecc-agy/workspace_audit.py) con límites bloqueantes para bytes de reglas ($\le 24$ KB), tokens agregados ($\le 16.000$), servidores MCP pesados y personalizaciones eager ($\le 3.000$ tokens en plugins).
+- **Integración Zero-Overhead Gemini MCP & Deep Ops**: Plantilla opcional en `templates/plugins/gemini-mcp/` con `"disabled": true` y CLI determinista `gemini_deep_ops.py` / `toggle_gemini_mcp.py` para diagnósticos multimodales a 0 tokens en reposo.
 - **Gobernanza de Ramas**: Enforzada mediante [`validate_branch.py`](../scripts/ecc-agy/validate_branch.py) (patrones `fix/<id>`, `feat/*`, `refactor/*`, `infra/*`, `chore/*`, `docs/*`, `test/*`; bloqueo directo en `main`).
 - **Autopsias SRE 5W**: Generación automática obligatoria mediante [`generate_postmortem.py`](../scripts/ecc-agy/generate_postmortem.py) ante cualquier cierre de rama `fix/*`.
 - **Ciclo Completo de PR y Automerge**: Implementado de forma idempotente y multiplataforma en [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y [`complete-task-pr.sh`](../scripts/bin/ecc-agy/complete-task-pr.sh) con Pre-Flight Review, auto-archivo de TODOs, Quality Gates y squash-automerge.
-- **Backlog Activo**: 10 tareas pendientes en [`doc/TODO.md`](TODO.md) (Tarea 2.1 completada y archivada en [`doc/TODO_DONE/`](TODO_DONE/)).
+- **Backlog Activo**: 9 tareas pendientes en [`doc/TODO.md`](TODO.md) (Tareas 2.1 y 2.2 archivadas en [`doc/TODO_DONE/`](TODO_DONE/)).
