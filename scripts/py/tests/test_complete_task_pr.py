@@ -1,5 +1,6 @@
 """Tests para consolidación y auditoría de complete-task-pr."""
 
+import os
 import re
 import subprocess
 import sys
@@ -72,8 +73,14 @@ def test_preflight_review_mode_dryrun():
         capture_output=True,
         text=True,
     ).stdout.strip()
+    # En HEAD desacoplado (evento pull_request de GitHub Actions) el script usa GITHUB_HEAD_REF / GITHUB_REF_NAME.
+    if not current_branch:
+        current_branch = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME") or ""
 
-    if current_branch in ("main", "master"):
+    if not current_branch:
+        assert res.returncode != 0
+        assert "desacoplado" in (res.stdout + res.stderr).lower()
+    elif current_branch in ("main", "master"):
         assert res.returncode != 0
         assert "gobernanza" in res.stderr.lower() or "rama" in res.stderr.lower()
     else:

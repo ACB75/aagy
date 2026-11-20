@@ -52,7 +52,18 @@ Push-Location $RepoRoot
 
 try {
     # 2. Verificar rama actual mediante validador canónico de gobernanza
-    $currentBranch = (git branch --show-current).Trim()
+    # Con HEAD desacoplado (p. ej. evento pull_request de GitHub Actions) 'git branch --show-current'
+    # devuelve vacío: se recurre a GITHUB_HEAD_REF / GITHUB_REF_NAME y el rango de commits usa HEAD.
+    $currentBranch = "$(git branch --show-current)".Trim()
+    $headRef = $currentBranch
+    if (-not $currentBranch) {
+        $currentBranch = "$($env:GITHUB_HEAD_REF)".Trim()
+        if (-not $currentBranch) { $currentBranch = "$($env:GITHUB_REF_NAME)".Trim() }
+        if (-not $currentBranch) {
+            throw "HEAD desacoplado: no se puede determinar la rama de trabajo. Haga checkout de una rama de tarea (feat/*, fix/*, refactor/*, etc.)."
+        }
+        $headRef = "HEAD"
+    }
     $validateScript = Join-Path $RepoRoot "scripts\py\validate_branch.py"
     if (Test-Path $validateScript) {
         $valOutput = python $validateScript --branch $currentBranch 2>&1
@@ -68,7 +79,7 @@ try {
     $stagedDiffStat = git diff --cached --stat
     $workingDiffStat = git diff --stat
 
-    if ($statusLines.Length -eq 0 -and -not (git log origin/$TargetBranch..$currentBranch --oneline 2>$null)) {
+    if ($statusLines.Length -eq 0 -and -not (git log origin/$TargetBranch..$headRef --oneline 2>$null)) {
         Write-Host "[INFO] No hay cambios pendientes ni commits por fusionar en '$currentBranch'." -ForegroundColor Yellow
         exit 0
     }
