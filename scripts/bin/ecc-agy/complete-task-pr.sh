@@ -145,6 +145,11 @@ if [[ -f "$SCRIPT_DIR/audit-pg-locks.sh" ]]; then
     bash "$SCRIPT_DIR/audit-pg-locks.sh"
 fi
 
+if [[ -f "$SCRIPT_DIR/validate-ingress-routes.sh" ]]; then
+    echo "[+] Ejecutando validación de congruencia Ingress, Split-DNS y /portal..."
+    bash "$SCRIPT_DIR/validate-ingress-routes.sh"
+fi
+
 # Sincronizar y archivar tareas completadas en doc/TODO.md
 if [[ $HAS_COMPLETED_TODOS -eq 1 ]]; then
     echo "[+] Archivando tareas completadas en doc/TODO_DONE/..."
