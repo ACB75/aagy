@@ -11,7 +11,7 @@ command: true
 Run the instinct CLI using the plugin root path:
 
 ```bash
-python3 "${CLAUDE_PLUGIN_ROOT}/../scripts/py/self_improve.py" --discover --repo-root .
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/py/self_improve.py" --discover --repo-root .
 ```
 
 Or if running directly from the repository root:

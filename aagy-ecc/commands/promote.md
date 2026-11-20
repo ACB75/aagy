@@ -13,8 +13,8 @@ Promote instincts and recurring candidates using the unified self-improvement en
 Run the unified self-improvement CLI from the repository root:
 
 ```bash
-python3 scripts/py/self_improve.py --review [candidate-id] --repo-root .
-python3 scripts/py/self_improve.py --promote [candidate-id] --confirm --repo-root .
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/py/self_improve.py" --review [candidate-id] --repo-root .
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/py/self_improve.py" --promote [candidate-id] --confirm --repo-root .
 ```
 
 ## Usage

@@ -10,6 +10,7 @@ EXPECTED_PS1_SCRIPTS = [
     "archive-todo.ps1",
     "audit-pg-locks.ps1",
     "audit-plugin-parity.ps1",
+    "sync-aagy-ecc.ps1",
     "audit-sdk-parity.ps1",
     "audit-workspace.ps1",
     "auto-evolve.ps1",

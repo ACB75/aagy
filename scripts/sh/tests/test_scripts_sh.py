@@ -10,6 +10,7 @@ EXPECTED_SH_SCRIPTS = [
     "archive-todo.sh",
     "audit-pg-locks.sh",
     "audit-plugin-parity.sh",
+    "sync-aagy-ecc.sh",
     "audit-sdk-parity.sh",
     "audit-workspace.sh",
     "auto-evolve.sh",

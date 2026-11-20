@@ -5,13 +5,25 @@
 
 ---
 
+## 2026-11-20: Paridad Real `aagy-ecc` para Claude Code (Espejo, Hooks Python y Auditoría Estricta)
+
+### Hitos y Decisiones Materiales
+
+1. **Espejo generado dentro del plugin**: Claude Code solo carga archivos de la carpeta del plugin, así que [`sync_aagy_ecc.py`](../scripts/py/sync_aagy_ecc.py) copia `skills/` (169), `agents/` (49), `rules/AGENTS.md` y los motores Python de self-improve en `aagy-ecc/`. Wrappers `scripts/ps1/sync-aagy-ecc.ps1` y `scripts/sh/sync-aagy-ecc.sh`.
+2. **Hooks reescritos**: el `hooks.json` heredado llamaba a ~25 scripts Node inexistentes. Sustituido por hooks Python stdlib equivalentes a los de `aagy`: `SessionStart` (inyecta `rules/AGENTS.md`), `PreToolUse` safety gate, `PostToolUse` markdownlint y `Stop` self-improve.
+3. **Limpieza**: retirados restos de otros harnesses (`hermes`, `codex`, `qoder`, `cursor`, `memory-persistence`, `agent.yaml`, `SOUL.md`, `.claude/` generado) y 50 comandos que dependían de scripts, skills o subagentes inexistentes. `CLAUDE.md` pasa a [`project-template/`](../aagy-ecc/project-template/CLAUDE.md).
+4. **Auditoría de paridad estricta**: [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py) ya no cuenta las skills de la raíz cuando falta `aagy-ecc/skills/`; ahora detecta deriva de contenido, scripts de hooks ausentes, versión y marketplace.
+5. **Frontmatter**: corregidas 5 skills con `description` YAML inválido (`module-regression`, `change-impact`, `context-and-decisions`, `prompt-caching-strategy`, `recursive-decision-ledger`). Versión `4.1.0` alineada en `plugin.json` raíz y `aagy-ecc`.
+
+---
+
 ## 2026-11-20: Cierre Maestro — Migración a `/aagy` (`Anything Antigravity`), Nuevo `README.md`, Sincronización `aagy-ecc` y Reinstalación Limpia (`Tarea 5.1`)
 
 ### Hitos y Decisiones Materiales
 
 1. **Nuevo `README.md` Raíz y Sincronización `aagy-ecc/`**:
    - Regenerado [`README.md`](../README.md) de raíz reflejando la arquitectura definitiva (`aagy` + `aagy-ecc/`, `/doc` v2 con `.governance/docs-map.json`, `scripts/{py,ps1,sh}/tests/`, motor `self_improve.py`, instalación manual `install.ps1` / `install.sh` y paridad CLI 1-a-1).
-   - Sincronizados [`aagy-ecc/README.md`](../aagy-ecc/README.md) y [`aagy-ecc/CLAUDE.md`](../aagy-ecc/CLAUDE.md) con paridad verificada al 100% mediante [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
+   - Sincronizados [`aagy-ecc/README.md`](../aagy-ecc/README.md) y [`aagy-ecc/project-template/CLAUDE.md`](../aagy-ecc/project-template/CLAUDE.md) con paridad verificada al 100% mediante [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
 2. **Cutover a `c:\Workspace\projects\aagy` Conservando Historial Git y Reinstalación Limpia del Plugin**:
    - Construido y sincronizado `c:\Workspace\projects\aagy` conservando el historial Git íntegro y el remoto renombrado `https://github.com/ACB75/aagy.git`.
    - Reinstalado limpiamente el plugin global en `~/.gemini/config/plugins/aagy` mediante `install.ps1 -Target agy -Profile minimal` y superadas todas las compuertas (`pytest` 154/154, `audit-workspace.ps1 -Clean`, `audit-plugin-parity.ps1`, `map-docs.ps1`, `audit-docs.py`, `lint-markdown.ps1 -CheckOnly`, SonarQube Rating A).

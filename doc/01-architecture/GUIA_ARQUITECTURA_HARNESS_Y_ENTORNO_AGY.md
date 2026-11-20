@@ -61,7 +61,7 @@ flowchart TD
 
 1. **`aagy-ecc`**:
    - **Motor**: Anthropic Claude Code CLI.
-   - **Artefactos**: [`CLAUDE.md`](file:///c:/Workspace/projects/aagy/aagy-ecc/CLAUDE.md), directiva `.claude/`, hooks de ciclo de vida en Python/Bash y comandos slash (`/plan`, `/review`, `/prp-*`).
+   - **Artefactos**: espejo generado de `skills/`, `agents/` y `rules/AGENTS.md`, hooks Python de Claude Code (`aagy-ecc/hooks/hooks.json`), comandos slash (`/plan`, `/code-review`, `/prp-*`) y plantilla de proyecto [`CLAUDE.md`](../../aagy-ecc/project-template/CLAUDE.md).
    - **Paradigma**: Ejecución secuencial interactiva en terminal con captura directa de flujos estándar (`stdin`/`stdout`).
 2. **`aagy`**:
    - **Motor**: Google Antigravity & Gemini (modelos Gemini 2.5 Pro / Flash).
