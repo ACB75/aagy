@@ -235,3 +235,29 @@ def test_audit_target_budget_eager_customization_overflow(tmp_path):
     report = audit_target_budget(target)
     assert any("Eager customizations in plugin" in v and "exceed budget" in v for v in report.violations)
 
+
+def test_static_prompt_caching_prefix_invariance():
+    repo_root = Path(__file__).resolve().parent.parent.parent.parent
+    agents_root = repo_root / "AGENTS.md"
+    rules_agents = repo_root / "rules" / "AGENTS.md"
+
+    assert agents_root.exists(), "Root AGENTS.md must exist"
+    assert rules_agents.exists(), "rules/AGENTS.md must exist"
+
+    marker = "<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->"
+    content_root = agents_root.read_text(encoding="utf-8")
+    content_rules = rules_agents.read_text(encoding="utf-8")
+
+    assert marker in content_root, "AGENTS.md must contain static prefix caching marker"
+    assert marker in content_rules, "rules/AGENTS.md must contain static prefix caching marker"
+
+    # Verify static section appears before dynamic section
+    static_hdr = "## 1. Core Engineering Invariants & Universal Architecture"
+    dynamic_hdr = "## 2. Dynamic Task Lifecycle, Governance & Workflow"
+
+    assert static_hdr in content_root
+    assert dynamic_hdr in content_root
+    assert content_root.index(static_hdr) < content_root.index(dynamic_hdr)
+    assert content_rules.index(static_hdr) < content_rules.index(dynamic_hdr)
+
+
