@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# format-commit.sh - Valida y formatea mensajes de commit bajo [type]+[projects]: <title>
+# format-commit.sh - Valida y formatea mensajes de commit bajo [type]-[projects]: <title>
 # Entorno: Debian 12 / Linux / WSL
 # ==============================================================================
 set -euo pipefail

@@ -13,12 +13,12 @@
 .PARAMETER Tag
     Etiqueta semántica para promoción (ej. 'v1.1.0-sandbox', 'v1.1.0')
 .PARAMETER Title
-    Título para la Pull Request (con formato [type]+[projects]: <title>)
+    Título para la Pull Request (con formato [type]-[projects]: <title>)
 .PARAMETER Body
     Cuerpo opcional explicativo de la Pull Request
 .EXAMPLE
     pwsh -File scripts/bin/ecc-agy/git-flow-helper.ps1 -Action new-branch -Type feat -Project kakebo -Name export-csv
-    pwsh -File scripts/bin/ecc-agy/git-flow-helper.ps1 -Action create-pr -Title "feat+[kakebo]: exportar transacciones a csv"
+    pwsh -File scripts/bin/ecc-agy/git-flow-helper.ps1 -Action create-pr -Title "feat-[kakebo]: exportar transacciones a csv"
     pwsh -File scripts/bin/ecc-agy/git-flow-helper.ps1 -Action promote -Tag v1.1.0-sandbox
 #>
 param(
@@ -91,7 +91,7 @@ try {
                 throw "No se puede crear PR desde la rama protegida o vacía '$currentBranch'. Use una rama de tarea (feat/*, fix/*, etc.)."
             }
             if (-not $Title) {
-                throw "Debe proporcionar un título para la PR (-Title '[type]+[projects]: <title>')."
+                throw "Debe proporcionar un título para la PR (-Title '[type]-[projects]: <title>')."
             }
             Write-Host "[+] Verificando pre-merge Quality Gate en rama '$currentBranch'..." -ForegroundColor Cyan
             $auditScript = Join-Path $PSScriptRoot "audit-workspace.ps1"

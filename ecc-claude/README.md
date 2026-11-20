@@ -1,7 +1,7 @@
 # ECC-Claude (`ecc-claude`)
 
 > **Distribución Oficial de Boilerplates de Everything Claude Code (ECC) para Claude Code**  
-> Parte del ecosistema multiproyecto [`ecc-aecb`](../README.md).
+> Parte del ecosistema multiproyecto [`ecc`](../README.md).
 
 ---
 

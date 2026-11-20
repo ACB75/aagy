@@ -21,7 +21,7 @@ Sin embargo, para poder **utilizar este sistema en cualquier empresa externa, cl
 
 | Área / Componente | Acoplamiento Previo (Home-Lab) | Solución Agnóstica (`ecc-agy` para $N$ Proyectos) |
 | ----------------- | ------------------------------ | ------------------------------------------------- |
-| **Scopes de Commits** | `[cluster]`, `[kakebo]`, `[whoiam]`, `[net]` hardcodeados en validadores y reglas. | Formato parametrizado `[type]+[scope]: <title>`, donde `[scope]` se autodescubre o se configura en `.agents/config.json`. |
+| **Scopes de Commits** | `[cluster]`, `[kakebo]`, `[whoiam]`, `[net]` hardcodeados en validadores y reglas. | Formato parametrizado `[type]-[scope]: <title>`, donde `[scope]` se autodescubre o se configura en `.agents/config.json`. |
 | **Rutas del Monorepo** | Rutas fijas `C:\Workspace\projects\home-lab\` en scripts Python y PowerShell. | Detección dinámica de la raíz del proyecto (`git rev-parse --show-toplevel` o variable `WORKSPACE_ROOT`). |
 | **Reglas de Portal Web** | Invariante de sincronización de `/portal` en `cmd/server/main.go`. | Trasladado exclusivamente al nivel de proyecto (`home-lab/.agents/rules/portal.md`). El core agnóstico desconoce `/portal`. |
 | **Topología y Servidores** | Referencias explícitas a servidores `FRACTAL`, `NEO` y dominios `*.asuscomm.com`. | Eliminación total. Los entornos se parametrizan como `LOCAL`, `STAGING`/`SANDBOX` y `PRODUCTION`/`LIVE`. |
@@ -109,7 +109,7 @@ Para iniciar cualquier nuevo proyecto (ej. en una empresa en Barcelona):
 ### Paso 1: Instalar el Plugin Agnóstico
 
 ```powershell
-pwsh -File C:\Workspace\projects\ecc-aecb\install.ps1 -Target agy
+pwsh -File C:\Workspace\projects\ecc\install.ps1 -Target agy
 ```
 
 ### Paso 2: Inicializar el Scaffolding del Proyecto

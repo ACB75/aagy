@@ -71,7 +71,7 @@ El comportamiento de los agentes en este fork se rige por las siguientes reglas 
 
 ### 2.1. Formato Obligatorio de Commits y Mensajes Explicativos
 
-- **Sintaxis**: `[type]+[projects]: <title>`
+- **Sintaxis**: `[type]-[projects]: <title>`
   - Tipos válidos: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`, `build`, `ci`, `sec`.
   - Proyectos autorizados: `[cluster]`, `[kakebo]`, `[whoiam]`, `[net]`, `[scripts]`, `[ecc-agy]`, `[doc]`, o combinaciones (`[cluster,doc]`).
 - **Cuerpo Explicativo Obligatorio (`msg comment`)**: Todo commit debe incluir un cuerpo explicativo multilínea detallando la motivación, cambios técnicos, arquitectura y tests ejecutados (código de salida 0). Prohibidos los commits de una sola línea.
