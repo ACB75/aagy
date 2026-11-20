@@ -223,6 +223,16 @@ Estrategia Fast-Rollback:
         }
     }
 
+    # 7.5. Validación de Congruencia Ingress, Split-DNS y /portal
+    $ingressScript = Join-Path $PSScriptRoot "validate-ingress-routes.ps1"
+    if (Test-Path $ingressScript) {
+        Write-Host "[+] Ejecutando validación de congruencia Ingress, Split-DNS y /portal..." -ForegroundColor Cyan
+        pwsh -NoProfile -File $ingressScript
+        if ($LASTEXITCODE -ne 0) {
+            throw "La validación de Ingress/Split-DNS detectó discrepancias. Corrija las rutas antes de continuar."
+        }
+    }
+
     # 7. Commit si hay cambios staged o unstaged
     $dirty = (git status --porcelain)
     if ($dirty) {

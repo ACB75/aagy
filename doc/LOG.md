@@ -5,6 +5,25 @@
 
 ---
 
+## 2026-11-20: Validador de Congruencia Ingress Traefik, Split-DNS y Catálogo Portal
+
+### Hitos y Decisiones Materiales
+
+1. **Validador Trilateral de Congruencia (`validate_ingress_routes.py`)**:
+   - Extracción léxica de hostnames en etiquetas Traefik (`docker-compose*.yml`), registros Split-DNS (`Corefile` de CoreDNS) y servicios catalogados en `/portal` (`cluster/cmd/server/main.go`).
+   - Detección de subdominios huérfanos sin entrada en DNS o sin visibilidad en el portal.
+   - Generador de sugerencias exactas de configuración (`--fix`) para Corefile y código Go.
+   - Omisión limpia (`SKIPPED`, exit code 0) en repositorios sin infraestructura compose ni CoreDNS.
+2. **Ergonomía CLI e Integración en Lifecycle**:
+   - Wrappers multiplataforma [`scripts/bin/ecc-agy/validate-ingress-routes.ps1`](../scripts/bin/ecc-agy/validate-ingress-routes.ps1) y `validate-ingress-routes.sh` con flags `--fix`, `--json` y `--no-strict`.
+   - Integración como compuerta de validación previa en el paso 7.5 de [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y `complete-task-pr.sh`.
+3. **Calidad y Documentación**:
+   - Manual operativo [`doc/manual/MANUAL_ingress_routes_validator.md`](manual/MANUAL_ingress_routes_validator.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_validate_ingress_routes.py`](../scripts/ecc-agy/tests/test_validate_ingress_routes.py) con 6/6 tests pasando (total 108/108 superados al 100%).
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Analizador Estático de Bloqueos DDL y Concurrencia en PostgreSQL LTS
 
 ### Hitos y Decisiones Materiales

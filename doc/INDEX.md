@@ -20,6 +20,7 @@
 - 📘 **[`GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md`](manual/GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md)**: Manual maestro exhaustivo sobre el funcionamiento de los arneses de IA, runtime de Google Antigravity & Gemini, flujos de ingeniería, espacios de acción/observación y principios de diseño para agentes autónomos.
 - 🔄 **[`MANUAL_sdk_parity_audit.md`](manual/MANUAL_sdk_parity_audit.md)**: Manual operativo del linter de paridad estática entre microservicios y `home-lab-sdk`.
 - 🔒 **[`MANUAL_audit_pg_locks.md`](manual/MANUAL_audit_pg_locks.md)**: Manual operativo del analizador estático de bloqueos DDL y concurrencia en PostgreSQL LTS.
+- 🌐 **[`MANUAL_ingress_routes_validator.md`](manual/MANUAL_ingress_routes_validator.md)**: Manual operativo del validador de congruencia entre Ingress Traefik, Split-DNS (CoreDNS) y `/portal`.
 - ⚡ **[`MANUAL_gemini_prompt_caching.md`](manual/MANUAL_gemini_prompt_caching.md)**: Guía de optimización y estructuración de KV-cache prompt caching para Gemini 3.8.
 - 🎣 **[`MANUAL_git_hooks.md`](manual/MANUAL_git_hooks.md)**: Guía de instalación y operación de hooks Git locales (`pre-commit` y `commit-msg`).
 - 📊 **[`MANUAL_session_token_telemetry.md`](manual/MANUAL_session_token_telemetry.md)**: Manual de telemetría de tokens en sesión y auto-compactación.
