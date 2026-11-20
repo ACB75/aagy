@@ -5,6 +5,24 @@
 
 ---
 
+## 2026-11-20: Hooks Nativos, Auditoría AgentShield e Instintos por Proyecto
+
+### Hitos y Decisiones Materiales
+
+1. **Hooks Nativos Deterministas (`hooks.json`)**:
+   - Incorporado [`hooks.json`](../hooks.json) para intercepción de seguridad en `PreToolUse` (safety guard de comandos de riesgo vía `safety-check.ps1` / `.sh`) y formateo automático de Markdown en `PostToolUse` (`hook-post-write.ps1` / `.sh`).
+2. **Suite de Seguridad AgentShield (`security_audit.py`)**:
+   - Auditoría estática de sintaxis, timeouts ($\le 30\text{ s}$) y comandos de riesgo en `hooks.json`.
+   - Detección de secretos en texto plano en `mcp_config.json` exigiendo `${ENV_VAR}`.
+   - Prevención de patrones de *prompt injection* o jailbreaks en `skills/`.
+3. **Motor de Instintos por Proyecto (`instinct_manager.py`)**:
+   - CLI [`instinct_manager.py`](../scripts/ecc-agy/instinct_manager.py) y wrappers `manage-instincts.ps1` / `.sh` para capturar y consultar directivas operacionales en `.agents/instincts/*.md` sin inflar `AGENTS.md`.
+4. **Calidad y Tests**:
+   - Suite [`test_agentshield_instincts.py`](../scripts/ecc-agy/tests/test_agentshield_instincts.py) con 78/78 tests pasando (100%).
+   - SonarQube Rating A (0 violaciones, Complejidad Cognitiva $\le 10$).
+
+---
+
 ## 2026-11-20: Integración Zero-Overhead de Gemini MCP y Skill Gemini Deep Ops
 
 ### Hitos y Decisiones Materiales
