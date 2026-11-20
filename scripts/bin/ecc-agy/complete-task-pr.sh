@@ -150,6 +150,11 @@ if [[ -f "$SCRIPT_DIR/validate-ingress-routes.sh" ]]; then
     bash "$SCRIPT_DIR/validate-ingress-routes.sh"
 fi
 
+if [[ -f "$SCRIPT_DIR/audit-plugin-parity.sh" ]]; then
+    echo "[+] Ejecutando auditoría de paridad multi-harness (aagy <-> ecc)..."
+    bash "$SCRIPT_DIR/audit-plugin-parity.sh" --check-only
+fi
+
 # Sincronizar y archivar tareas completadas en doc/TODO.md
 if [[ $HAS_COMPLETED_TODOS -eq 1 ]]; then
     echo "[+] Archivando tareas completadas en doc/TODO_DONE/..."

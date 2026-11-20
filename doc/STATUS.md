@@ -1,7 +1,7 @@
 # Estado de Salud y Métricas Operacionales | ECC Ecosystem
 
-> **Espina Dorsal de Gobernanza Documental**: Repositorio [`ACB75/ecc`](https://github.com/ACB75/ecc)  
-> **Versión**: `3.3.0` | **Fecha de Auditoría**: 2026-11-20  
+> **Espina Dorsal de Gobernanza Documental**: Repositorio [`ACB75/aagy`](https://github.com/ACB75/aagy)  
+> **Versión**: `4.0.0` | **Fecha de Auditoría**: 2026-11-20  
 > **Estado Operativo Global**: 🟢 **SALUDABLE (VERDE)**  
 
 ---
@@ -53,5 +53,6 @@
 - **Analizador Estático de Bloqueos DDL PostgreSQL LTS**: Desarrollado en [`audit_pg_locks.py`](../scripts/ecc-agy/audit_pg_locks.py) y [`audit-pg-locks.ps1`](../scripts/bin/ecc-agy/audit-pg-locks.ps1) con clasificación de riesgos HIGH/MEDIUM/LOW, prevención de `ACCESS EXCLUSIVE` y remediaciones de concurrencia, integrado en compuertas de PR.
 - **Linter de Paridad Estática de Contratos SDK**: Implementado en [`audit_sdk_parity.py`](../scripts/ecc-agy/audit_sdk_parity.py) y [`audit-sdk-parity.ps1`](../scripts/bin/ecc-agy/audit-sdk-parity.ps1) para auditar endpoints de microservicios (Go, Python, Java) frente a `home-lab-sdk/` con exclusión de rutas diagnósticas, integrado en compuertas de PR.
 - **Estandarización de Plantillas Documentales**: Reubicación de plantillas sueltas hacia sus ubicaciones canónicas por tipo: `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` a [`doc/adr/TEMPLATE_ADR.md`](adr/TEMPLATE_ADR.md) y `TEMPLATE_POSTMORTEM_5W.md` a [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](post-mortem/TEMPLATE_POSTMORTEM.md) con cero enlaces rotos.
+- **Paridad Multi-Harness `aagy` y `ecc`**: Consolidación del plugin para Claude Code en `aagy/ecc/`, validación continua con [`audit_plugin_parity.py`](../scripts/ecc-agy/audit_plugin_parity.py) y [`audit-plugin-parity.ps1`](../scripts/bin/ecc-agy/audit-plugin-parity.ps1), integrado en compuertas de PR.
 - **Ciclo Completo de PR y Automerge**: Implementado de forma idempotente y multiplataforma en [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y [`complete-task-pr.sh`](../scripts/bin/ecc-agy/complete-task-pr.sh) con Pre-Flight Review, auto-archivo de TODOs, Quality Gates y squash-automerge.
-- **Backlog Activo**: 8 tareas pendientes en [`doc/TODO.md`](TODO.md) (Prioridad 2 completada al 100%, archivada en [`doc/TODO_DONE/`](TODO_DONE/)).
+- **Backlog Activo**: 0 tareas pendientes en [`doc/TODO.md`](TODO.md) (Todas las prioridades 1 a 5 completadas al 100%, archivadas en [`doc/TODO_DONE/`](TODO_DONE/)).

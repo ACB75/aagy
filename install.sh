@@ -23,7 +23,7 @@ fi
 
 case "${TARGET}" in
   claude)
-    SOURCE_DIR="${SCRIPT_DIR}/ecc-claude"
+    SOURCE_DIR="${SCRIPT_DIR}/ecc"
     DEST="${DESTINATION:-$(pwd)}"
     echo "[+] Deploying Claude Code boilerplates to: ${DEST}"
     cp -f "${SOURCE_DIR}/CLAUDE.md" "${DEST}/"
@@ -31,7 +31,7 @@ case "${TARGET}" in
     echo "[✓] Claude Code boilerplates installed successfully."
     ;;
   agy)
-    DEST="${DESTINATION:-${HOME}/.gemini/config/plugins/ecc-agy}"
+    DEST="${DESTINATION:-${HOME}/.gemini/config/plugins/aagy}"
     echo "[+] Deploying unified Antigravity plugin (Tier 1) to: ${DEST}"
     if [ -f "${SCRIPT_DIR}/ecc-agy-sync.sh" ]; then
       bash "${SCRIPT_DIR}/ecc-agy-sync.sh" generic "${DEST}"
@@ -40,7 +40,11 @@ case "${TARGET}" in
       cp -f "${SCRIPT_DIR}/plugin.json" "${DEST}/"
       cp -f "${SCRIPT_DIR}/rules/AGENTS.md" "${DEST}/rules/"
     fi
-    echo "[✓] Unified ecc-agy plugin installed successfully."
+    # Mantener espejo en ecc-agy para compatibilidad
+    LEGACY_DEST="${HOME}/.gemini/config/plugins/ecc-agy"
+    mkdir -p "${LEGACY_DEST}"
+    cp -rf "${DEST}/"* "${LEGACY_DEST}/" 2>/dev/null || true
+    echo "[✓] Unified aagy plugin installed successfully."
     ;;
   *)
     echo "Error: Unknown target '${TARGET}'. Use 'claude' or 'agy'." >&2

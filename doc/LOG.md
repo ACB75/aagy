@@ -5,6 +5,25 @@
 
 ---
 
+## 2026-11-20: Cierre Maestro — Migración a Anything Antigravity (aagy) y Paridad con Claude Code
+
+### Hitos y Decisiones Materiales
+
+1. **Rebranding Maestro a Anything Antigravity (`aagy`)**:
+   - Rebranding estructural del ecosistema unificado a **Anything Antigravity (`aagy`)**, manteniendo el historial Git completo (`git log` intacto).
+   - Consolidación del subplugin para Anthropic Claude Code en `aagy/ecc/`, garantizando una arquitectura multi-harness coordinada y sin acoplamientos.
+   - Actualización de identificadores en `plugin.json` (`name: aagy`, `displayName: Anything Antigravity (aagy)`).
+2. **Linter Automático de Paridad de Plugins (`audit_plugin_parity.py`)**:
+   - Analizador de simetría estructural y de capacidades entre el plugin raíz `aagy` y el subplugin `ecc/`.
+   - Verificación de consistencia de manifiestos, coincidencia de nombres e integración en el paso 7.6 de `complete-task-pr.ps1` y `complete-task-pr.sh`.
+   - Wrappers `scripts/bin/ecc-agy/audit-plugin-parity.ps1` y `audit-plugin-parity.sh`.
+3. **Calidad y Documentación**:
+   - Manual operativo [`doc/manual/MANUAL_aagy_ecc_parity_and_migration.md`](manual/MANUAL_aagy_ecc_parity_and_migration.md).
+   - Suite de pruebas `test_audit_plugin_parity.py` con cobertura completa.
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Automatización de Despliegue Tagged y Sondas de Salud en git-flow-helper
 
 ### Hitos y Decisiones Materiales

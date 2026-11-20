@@ -19,6 +19,7 @@
 
 - 📘 **[`GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md`](manual/GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md)**: Manual maestro exhaustivo sobre el funcionamiento de los arneses de IA, runtime de Google Antigravity & Gemini, flujos de ingeniería, espacios de acción/observación y principios de diseño para agentes autónomos.
 - 🔄 **[`MANUAL_sdk_parity_audit.md`](manual/MANUAL_sdk_parity_audit.md)**: Manual operativo del linter de paridad estática entre microservicios y `home-lab-sdk`.
+- 🤝 **[`MANUAL_aagy_ecc_parity_and_migration.md`](manual/MANUAL_aagy_ecc_parity_and_migration.md)**: Manual de arquitectura y paridad multi-harness entre Anything Antigravity (`aagy`) y Claude Code (`ecc`).
 - 🔒 **[`MANUAL_audit_pg_locks.md`](manual/MANUAL_audit_pg_locks.md)**: Manual operativo del analizador estático de bloqueos DDL y concurrencia en PostgreSQL LTS.
 - 🌐 **[`MANUAL_ingress_routes_validator.md`](manual/MANUAL_ingress_routes_validator.md)**: Manual operativo del validador de congruencia entre Ingress Traefik, Split-DNS (CoreDNS) y `/portal`.
 - 🚢 **[`MANUAL_multitier_deployment.md`](manual/MANUAL_multitier_deployment.md)**: Manual de despliegue automatizado por etiquetas de promoción en FRACTAL y NEO vía `git-flow-helper.ps1`.
