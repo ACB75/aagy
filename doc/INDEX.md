@@ -67,6 +67,7 @@
 - 🧠 **[`MANUAL_gemini_deep_ops_multimodal.md`](04-operations/runbooks/MANUAL_gemini_deep_ops_multimodal.md)**: Diagnósticos multimodales bajo demanda con Gemini MCP.
 - 📊 **[`MANUAL_session_token_telemetry.md`](04-operations/runbooks/MANUAL_session_token_telemetry.md)**: Telemetría de tokens en sesión y política de auto-compactación.
 - 🧹 **[`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md)**: Arquitectura multi-runtime en `scripts/` y poda agresiva de reglas.
+- 🩺 **[`MANUAL_aagy_doctor.md`](04-operations/runbooks/MANUAL_aagy_doctor.md)**: Doctors `/aagy-doctor` y `/aagy-ecc-doctor` con catálogo común `DOC-01..14`, manifiesto `.aagy-install.json` y `--fix` con confirmación.
 - 🧬 **[`MANUAL_unified_self_improvement.md`](04-operations/runbooks/MANUAL_unified_self_improvement.md)**: Motor unificado de autodescubrimiento, hook `Stop` pasivo, instintos a doble nivel y promoción con *budget gate*.
 
 ### Guías de Configuración (`doc/04-operations/setup-guides/`)
