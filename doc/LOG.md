@@ -1,7 +1,20 @@
 # Registro Histórico de Decisiones y Cambios Materiales | ECC / `aagy` Ecosystem
 
-> **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/ecc) (`ecc` -> `aagy`)  
+> **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`ecc` -> `aagy`)  
 > **Versión Canónica**: `4.1.0`
+
+---
+
+## 2026-11-20: Cierre Maestro — Migración a `/aagy` (`Anything Antigravity`), Nuevo `README.md`, Sincronización `aagy-ecc` y Reinstalación Limpia (`Tarea 5.1`)
+
+### Hitos y Decisiones Materiales
+
+1. **Nuevo `README.md` Raíz y Sincronización `aagy-ecc/`**:
+   - Regenerado [`README.md`](../README.md) de raíz reflejando la arquitectura definitiva (`aagy` + `aagy-ecc/`, `/doc` v2 con `.governance/docs-map.json`, `scripts/{py,pwsh,sh}/tests/`, motor `self_improve.py`, instalación manual `install.ps1` / `install.sh` y paridad CLI 1-a-1).
+   - Sincronizados [`aagy-ecc/README.md`](../aagy-ecc/README.md) y [`aagy-ecc/CLAUDE.md`](../aagy-ecc/CLAUDE.md) con paridad verificada al 100% mediante [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
+2. **Cutover a `c:\Workspace\projects\aagy` Conservando Historial Git y Reinstalación Limpia del Plugin**:
+   - Construido y sincronizado `c:\Workspace\projects\aagy` conservando el historial Git íntegro y el remoto renombrado `https://github.com/ACB75/aagy.git`.
+   - Reinstalado limpiamente el plugin global en `~/.gemini/config/plugins/aagy` mediante `install.ps1 -Target agy -Profile minimal` y superadas todas las compuertas (`pytest` 154/154, `audit-workspace.ps1 -Clean`, `audit-plugin-parity.ps1`, `map-docs.ps1`, `audit-docs.py`, `lint-markdown.ps1 -CheckOnly`, SonarQube Rating A).
 
 ---
 
