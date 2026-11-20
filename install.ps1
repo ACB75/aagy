@@ -64,6 +64,9 @@ switch ($Target) {
         $phase = if ($Profile -eq "full") { "all" } else { "generic" }
         pwsh -NoProfile -File $syncScript -Phase $phase -Clean
         # Asegurar copia espejo hacia aagy
+        if (-not (Test-Path $Destination)) {
+            New-Item -ItemType Directory -Force -Path $Destination | Out-Null
+        }
         if (Test-Path (Join-Path $env:USERPROFILE ".gemini\config\plugins\ecc-agy")) {
             Copy-Item -Path (Join-Path $env:USERPROFILE ".gemini\config\plugins\ecc-agy\*") -Destination $Destination -Recurse -Force
         }
