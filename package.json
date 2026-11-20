@@ -1,16 +1,17 @@
 {
   "name": "aagy",
   "version": "4.0.0",
-  "description": "Anything Antigravity (aagy) Master Ecosystem: Multi-distribution architecture hosting aagy and ecc",
+  "description": "Anything Antigravity (aagy) Master Ecosystem: Multi-distribution architecture hosting aagy and aagy-ecc",
   "private": true,
   "license": "MIT",
   "scripts": {
-    "install:claude": "pwsh -NoProfile -File ./install.ps1 -Target claude",
+    "install:claude": "pwsh -NoProfile -File ./install.ps1 -Target aagy-ecc",
+    "install:aagy-ecc": "pwsh -NoProfile -File ./install.ps1 -Target aagy-ecc",
     "install:agy": "pwsh -NoProfile -File ./install.ps1 -Target agy",
-    "doctor": "node scripts/doctor.js"
+    "audit": "pwsh -NoProfile -File ./scripts/pwsh/audit-workspace.ps1"
   },
   "workspaces": [
-    "ecc"
+    "aagy-ecc"
   ],
   "engines": {
     "node": ">=18"

@@ -2,7 +2,7 @@
 .SYNOPSIS
     Instala o desinstala los Git hooks nativos (pre-commit, commit-msg) en .git/hooks/.
 .DESCRIPTION
-    Copia scripts/ecc-agy/hooks/* a .git/hooks/, asegurando validación determinista
+    Copia scripts/py/hooks/* a .git/hooks/, asegurando validación determinista
     de mensajes de commit y archivos Markdown staged en cada confirmación.
 .PARAMETER Uninstall
     Elimina los hooks instalados por ecc-agy en .git/hooks/.
@@ -19,7 +19,7 @@ $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = (Resolve-Path "$ScriptDir\..\..").Path
 $GitHooksDir = Join-Path $RepoRoot ".git\hooks"
-$SourceHooksDir = Join-Path $RepoRoot "scripts\ecc-agy\hooks"
+$SourceHooksDir = Join-Path $RepoRoot "scripts\py\hooks"
 
 if (-not (Test-Path $GitHooksDir)) {
     Write-Error "[ERROR] Directorio .git/hooks no encontrado en $RepoRoot. ¿Es este un repositorio Git?"

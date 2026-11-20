@@ -21,7 +21,7 @@ if command -v python3 >/dev/null 2>&1; then
     PYTHON_BIN="python3"
 fi
 
-"$PYTHON_BIN" "$REPO_ROOT/scripts/ecc-agy/format_commit.py" --validate-file "$MSG_FILE" --strict
+"$PYTHON_BIN" "$REPO_ROOT/scripts/py/format_commit.py" --validate-file "$MSG_FILE" --strict
 EXIT_CODE=$?
 
 if [ $EXIT_CODE -ne 0 ]; then

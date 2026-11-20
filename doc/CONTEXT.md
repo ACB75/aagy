@@ -1,6 +1,6 @@
 # Contexto de Dominio y Fronteras del Sistema (`doc/CONTEXT.md`)
 
-> **Rol Documental**: Vocabulario estable, arquitectura Two-Tier y límites del ecosistema `aagy` / `ecc`.  
+> **Rol Documental**: Vocabulario estable, arquitectura Two-Tier y límites del ecosistema `aagy` / `aagy-ecc`.  
 > **Mapa Maestro**: Ver [doc/INDEX.md](INDEX.md) y [`.governance/docs-map.json`](../.governance/docs-map.json).
 
 ---
@@ -8,7 +8,7 @@
 ## 1. Glosario Canónico del Ecosistema
 
 - **Anything Antigravity (`aagy`)**: Plugin y arnés maestro multiplataforma para Google Antigravity y Gemini 3.8, desarrollado desde `AGENTS.md`, `rules/`, `skills/` y `agents/`.
-- **Claude Code Subplugin (`ecc`)**: Distribución coordinada en `ecc/` para Claude Code CLI con paridad funcional validada por [scripts/py/audit_plugin_parity.py](../scripts/py/audit_plugin_parity.py).
+- **Claude Code Subplugin (`aagy-ecc`)**: Distribución coordinada en `aagy-ecc/` para Claude Code CLI con paridad funcional validada por [scripts/py/audit_plugin_parity.py](../scripts/py/audit_plugin_parity.py).
 - **Arquitectura Two-Tier (ADR-0001)**:
   - **Tier 1 (Global Plugin)**: Reglas mínimas (`rules/`) y skills transversales instaladas globalmente mediante `install.ps1` o `install.sh` respetando el presupuesto estricto de contexto.
   - **Tier 2 (Lazy / Por Proyecto)**: Skills especializadas, manuales y plantillas cargadas bajo demanda desde el repositorio.

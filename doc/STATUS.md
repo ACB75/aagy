@@ -24,9 +24,9 @@
 
 ## 2. Presupuesto de Tokens y Contexto (Two-Tier Architecture)
 
-- **Tier 1 (Global Plugin `~/.gemini/config/plugins/aagy` / `ecc-agy`)**:
-  - **Reglas Globales (`rules/`)**: Solo `AGENTS.md` + `pr-automerge-lifecycle.md` (~6.164 tokens agregados frente al límite de 16.000).
-  - **`AGENTS.md` en Raíz**: Puntero estático ligero con marcador KV-cache (`<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->`).
+- **Tier 1 (Global Plugin `~/.gemini/config/plugins/aagy`)**:
+  - **Reglas Globales (`rules/`)**: Archivo canónico único [`rules/AGENTS.md`](../rules/AGENTS.md) compactado a `< 12 KB` (~2.050 tokens frente al límite de 16.000), integrando el ciclo completo de PR y squash-automerge.
+  - **`AGENTS.md` en Raíz**: Puntero estático ultra-ligero (~14 líneas) con marcador KV-cache (`<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->`).
 - **Tier 2 (Lazy / Por Demanda en Repositorio)**:
   - **Skills de Stack**: Cargadas bajo demanda (`0` tokens en reposo) manteniendo descripciones $\le 140$ caracteres.
   - **Subagentes**: Frontmatter `description` $\le 120$ caracteres con principio de mínimo privilegio.
@@ -36,7 +36,7 @@
 ## 3. Estado de Automatización y Gobernanza del Harness
 
 - **Arquitectura Documental `/doc` v2 y Fallback Clásico**: Resuelta por [`scripts/py/docs_map.py`](../scripts/py/docs_map.py) leyendo [`.governance/docs-map.json`](../.governance/docs-map.json) (`schema_version: 2`) con fallback automático para `home-lab` y bloqueo estricto contra *path traversal*. Estándar en [`DOC_STANDARDS.md`](00-governance/DOC_STANDARDS.md).
-- **Flujo Flexible `[IDEAS -> REQ -> PLAN -> TODO]` y Paridad Manual 1-a-1**: Soportado por [`new_lifecycle_task.py`](../scripts/py/new_lifecycle_task.py) (`--phase ALL|IDEAS|REQ|PLAN|TODO|DOCS|REVIEW`), [`MANUAL_WORKFLOW.md`](00-governance/MANUAL_WORKFLOW.md) y wrappers espejo en `scripts/pwsh/`, `scripts/sh/` y proxies en `scripts/bin/ecc-agy/`.
+- **Flujo Flexible `[IDEAS -> REQ -> PLAN -> TODO]` y Paridad Manual 1-a-1**: Soportado por [`new_lifecycle_task.py`](../scripts/py/new_lifecycle_task.py) (`--phase ALL|IDEAS|REQ|PLAN|TODO|DOCS|REVIEW`), [`MANUAL_WORKFLOW.md`](00-governance/MANUAL_WORKFLOW.md) y wrappers espejo en `scripts/pwsh/`, `scripts/sh/` y proxies en `scripts/pwsh/`.
 - **Workflow de Ingeniería 4 Fases**: Estandarizado en [`doc/00-governance/templates/README.md`](00-governance/templates/README.md).
 - **Hard Gate de Presupuesto en Harness**: Implementado en [`scripts/py/workspace_audit.py`](../scripts/py/workspace_audit.py), integrando validación de `.governance/docs-map.json`.
 - **Integración Zero-Overhead Gemini MCP & Deep Ops**: Plantilla con `"disabled": true` y CLI [`scripts/py/gemini_deep_ops.py`](../scripts/py/gemini_deep_ops.py) / [`scripts/py/toggle_gemini_mcp.py`](../scripts/py/toggle_gemini_mcp.py).
@@ -47,6 +47,6 @@
   - Paridad SDK: [`scripts/py/audit_sdk_parity.py`](../scripts/py/audit_sdk_parity.py)
   - Bloqueos DDL PG LTS: [`scripts/py/audit_pg_locks.py`](../scripts/py/audit_pg_locks.py)
   - Ingress / Split-DNS: [`scripts/py/validate_ingress_routes.py`](../scripts/py/validate_ingress_routes.py)
-  - Paridad Multi-Harness `aagy` $\leftrightarrow$ `ecc`: [`scripts/py/audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py)
+  - Paridad Multi-Harness `aagy` $\leftrightarrow$ `aagy-ecc`: [`scripts/py/audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py)
 - **Ciclo Completo de PR y Automerge**: Orquestado en [`scripts/pwsh/complete-task-pr.ps1`](../scripts/pwsh/complete-task-pr.ps1) y [`scripts/sh/complete-task-pr.sh`](../scripts/sh/complete-task-pr.sh) con resolución dinámica de `TODO.md`/`done/`, suites `pytest` multi-runtime y compuerta documental `map_docs.py --check-docs-map`.
-- **Backlog Activo**: En [`doc/06-backlog/TODO.md`](06-backlog/TODO.md) (`Tarea 0.4` y `Tarea 5.1` pendientes tras completarse `Tarea 0.1`, `Tarea 0.2` y `Tarea 0.3`).
+- **Backlog Activo**: En [`doc/06-backlog/TODO.md`](06-backlog/TODO.md) (`Tarea 5.1` pendiente tras completarse `Tarea 0.1`, `Tarea 0.2`, `Tarea 0.3` y `Tarea 0.4`).

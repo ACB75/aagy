@@ -6,9 +6,9 @@
 .PARAMETER Subcommand
     Comando a ejecutar: save, list o export.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/manage-instincts.ps1 list
-    pwsh -File scripts/bin/ecc-agy/manage-instincts.ps1 save --id postgres-lock --trigger postgres --learning "Usar CREATE INDEX CONCURRENTLY"
-    pwsh -File scripts/bin/ecc-agy/manage-instincts.ps1 export
+    pwsh -File scripts/pwsh/manage-instincts.ps1 list
+    pwsh -File scripts/pwsh/manage-instincts.ps1 save --id postgres-lock --trigger postgres --learning "Usar CREATE INDEX CONCURRENTLY"
+    pwsh -File scripts/pwsh/manage-instincts.ps1 export
 #>
 param(
     [Parameter(Position=0)]

@@ -15,7 +15,7 @@
 .PARAMETER DryRun
     Simula la creación sin escribir archivos.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
+    pwsh -File scripts/pwsh/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
 #>
 [CmdletBinding()]
 param(

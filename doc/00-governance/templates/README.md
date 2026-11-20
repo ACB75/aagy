@@ -34,12 +34,12 @@ El ciclo de desarrollo en `aagy` y `home-lab` sitúa la **Fase 3 (Documentación
 1. Instancia desde cualquier punto de entrada (`IDEAS`, `REQ`, `PLAN`, `TODO` o `ALL`):
 
    ```powershell
-   pwsh -NoProfile -File scripts/bin/ecc-agy/new-lifecycle-task.ps1 -TaskId "feat/<proyecto>/<id>" -Phase PLAN
+   pwsh -NoProfile -File scripts/pwsh/new-lifecycle-task.ps1 -TaskId "feat/<proyecto>/<id>" -Phase PLAN
    ```
 
 2. Tras implementar y validar (`pytest`, `lint-markdown`, `map-docs`, `audit-workspace`), ejecuta Pre-Flight Review y squash-automerge:
 
    ```powershell
-   pwsh -NoProfile -File scripts/bin/ecc-agy/complete-task-pr.ps1 -ReviewOnly
-   pwsh -NoProfile -File scripts/bin/ecc-agy/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
+   pwsh -NoProfile -File scripts/pwsh/complete-task-pr.ps1 -ReviewOnly
+   pwsh -NoProfile -File scripts/pwsh/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
    ```

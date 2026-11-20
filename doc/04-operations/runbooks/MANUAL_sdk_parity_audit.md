@@ -1,8 +1,8 @@
 # Manual de Operación: Linter de Paridad Estática de Contratos SDK (`audit_sdk_parity.py`)
 
 > **Ecosistema**: ECC Ecosystem & Home-Lab  
-> **Ubicación Canónica**: `scripts/ecc-agy/audit_sdk_parity.py`  
-> **Wrappers CLI**: `scripts/bin/ecc-agy/audit-sdk-parity.ps1` y `audit-sdk-parity.sh`  
+> **Ubicación Canónica**: `scripts/py/audit_sdk_parity.py`  
+> **Wrappers CLI**: `scripts/pwsh/audit-sdk-parity.ps1` y `audit-sdk-parity.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  
 
 ---
@@ -28,26 +28,26 @@ El **Linter de Paridad Estática de Contratos** previene el *contract drift* med
 
 ```powershell
 # Ejecución estándar sobre la raíz del repositorio
-pwsh -File scripts/bin/ecc-agy/audit-sdk-parity.ps1
+pwsh -File scripts/pwsh/audit-sdk-parity.ps1
 
 # Especificando directorios personalizados
-pwsh -File scripts/bin/ecc-agy/audit-sdk-parity.ps1 -ServicesDir "services" -SdkDir "home-lab-sdk"
+pwsh -File scripts/pwsh/audit-sdk-parity.ps1 -ServicesDir "services" -SdkDir "home-lab-sdk"
 
 # Salida estructurada en JSON para pipelines CI/CD
-pwsh -File scripts/bin/ecc-agy/audit-sdk-parity.ps1 -Json
+pwsh -File scripts/pwsh/audit-sdk-parity.ps1 -Json
 
 # Modo no estricto (advertencia sin código de salida 1)
-pwsh -File scripts/bin/ecc-agy/audit-sdk-parity.ps1 -NoStrict
+pwsh -File scripts/pwsh/audit-sdk-parity.ps1 -NoStrict
 ```
 
 ### Bash / Linux (WSL / Debian 12)
 
 ```bash
 # Ejecución estándar
-scripts/bin/ecc-agy/audit-sdk-parity.sh
+scripts/sh/audit-sdk-parity.sh
 
 # Con salida JSON
-scripts/bin/ecc-agy/audit-sdk-parity.sh --json
+scripts/sh/audit-sdk-parity.sh --json
 ```
 
 ---

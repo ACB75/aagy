@@ -1,8 +1,8 @@
 # Manual de Operación: Analizador de Bloqueos DDL en PostgreSQL LTS (`audit_pg_locks.py`)
 
 > **Ecosistema**: ECC Ecosystem & Home-Lab  
-> **Ubicación Canónica**: `scripts/ecc-agy/audit_pg_locks.py`  
-> **Wrappers CLI**: `scripts/bin/ecc-agy/audit-pg-locks.ps1` y `audit-pg-locks.sh`  
+> **Ubicación Canónica**: `scripts/py/audit_pg_locks.py`  
+> **Wrappers CLI**: `scripts/pwsh/audit-pg-locks.ps1` y `audit-pg-locks.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  
 
 ---
@@ -68,29 +68,29 @@ Adquieren `SHARE` o bloqueos exclusivos de índice:
 
 ```powershell
 # Escanear el repositorio (ignora automáticamente .git, node_modules y skills)
-pwsh -File scripts/bin/ecc-agy/audit-pg-locks.ps1
+pwsh -File scripts/pwsh/audit-pg-locks.ps1
 
 # Auditar un archivo de migración específico
-pwsh -File scripts/bin/ecc-agy/audit-pg-locks.ps1 -File "services/kakebo/migrations/003_add_index.sql"
+pwsh -File scripts/pwsh/audit-pg-locks.ps1 -File "services/kakebo/migrations/003_add_index.sql"
 
 # Auditar un directorio de migraciones
-pwsh -File scripts/bin/ecc-agy/audit-pg-locks.ps1 -Dir "services/kakebo/migrations"
+pwsh -File scripts/pwsh/audit-pg-locks.ps1 -Dir "services/kakebo/migrations"
 
 # Salida estructurada JSON
-pwsh -File scripts/bin/ecc-agy/audit-pg-locks.ps1 -Json
+pwsh -File scripts/pwsh/audit-pg-locks.ps1 -Json
 
 # Modo permisivo (no retornar error 1 ante riesgos MEDIUM)
-pwsh -File scripts/bin/ecc-agy/audit-pg-locks.ps1 -NoStrict
+pwsh -File scripts/pwsh/audit-pg-locks.ps1 -NoStrict
 ```
 
 ### Bash / Linux (WSL / Debian 12)
 
 ```bash
 # Ejecución estándar
-scripts/bin/ecc-agy/audit-pg-locks.sh
+scripts/sh/audit-pg-locks.sh
 
 # Auditar archivo específico con salida JSON
-scripts/bin/ecc-agy/audit-pg-locks.sh --file services/whoiam/migrations/001_init.sql --json
+scripts/sh/audit-pg-locks.sh --file services/whoiam/migrations/001_init.sql --json
 ```
 
 ---

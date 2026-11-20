@@ -78,6 +78,6 @@ Todos los scripts de automatización (`scripts/py/`, `scripts/pwsh/`, `scripts/s
 
 Todo cambio documental debe superar antes del merge:
 
-- `pwsh -NoProfile -File scripts/bin/ecc-agy/lint-markdown.ps1 -CheckOnly` (exit `0`, estándar DavidAnson `.markdownlint.json`).
-- `pwsh -NoProfile -File scripts/bin/ecc-agy/map-docs.ps1` (`0` enlaces relativos rotos y `.governance/docs-map.json` íntegro).
+- `pwsh -NoProfile -File scripts/pwsh/lint-markdown.ps1 -CheckOnly` (exit `0`, estándar DavidAnson `.markdownlint.json`).
+- `pwsh -NoProfile -File scripts/pwsh/map-docs.ps1` (`0` enlaces relativos rotos y `.governance/docs-map.json` íntegro).
 - `python skills/docs-governance/scripts/audit-docs.py --root . --scope spine` y `--scope adr` (integridad estructural y de índices ADR).

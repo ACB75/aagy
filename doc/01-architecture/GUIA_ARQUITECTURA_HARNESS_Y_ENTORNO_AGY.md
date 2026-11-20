@@ -342,7 +342,7 @@ Cada requerimiento o tarea en `TODO.md` se formula obligatoriamente mediante una
 Conforme al **ADR-0006**, el repositorio utiliza desarrollo basado en tronco (*Trunk-Based Development*) sobre la rama canónica `main`:
 
 - Toda intervención se realiza en una rama corta aislada (`feat/*`, `fix/*`, `refactor/*`, `chore/*`).
-- El formato del commit debe ser rigurosamente validado por [`format_commit.py`](file:///c:/Workspace/projects/ecc/scripts/ecc-agy/format_commit.py): `[type]-[projects]: <title>` acompañado de un cuerpo explicativo obligatorio detallando motivación, componentes y pruebas ejecutadas.
+- El formato del commit debe ser rigurosamente validado por [`format_commit.py`](file:///c:/Workspace/projects/ecc/scripts/py/format_commit.py): `[type]-[projects]: <title>` acompañado de un cuerpo explicativo obligatorio detallando motivación, componentes y pruebas ejecutadas.
 - **Regla de Creación Automática de PR**: Inmediatamente tras la confirmación de commit y push por parte del usuario, el arnés genera automáticamente la Pull Request correspondiente mediante `gh pr create --fill`, asegurando que ninguna rama quede huérfana y permitiendo la ejecución aislada del CI (*Fast-Failure*) y reversión atómica de un solo commit (*Fast-Rollback*).
 
 ---

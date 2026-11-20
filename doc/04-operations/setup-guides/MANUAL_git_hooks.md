@@ -27,20 +27,20 @@ Para garantizar que ningún desarrollador o agente introduzca commits mal format
 
 ## 2. Instalación y Desinstalación
 
-Los hooks se distribuyen en `scripts/ecc-agy/hooks/` y se vinculan a `.git/hooks/` mediante scripts idempotentes.
+Los hooks se distribuyen en `scripts/py/hooks/` y se vinculan a `.git/hooks/` mediante scripts idempotentes.
 
 ### 2.1. Instalación
 
 En Windows 11 (`pwsh`):
 
 ```powershell
-pwsh -File scripts/bin/ecc-agy/install-git-hooks.ps1
+pwsh -File scripts/pwsh/install-git-hooks.ps1
 ```
 
 En Linux o WSL (`bash` / `sh`):
 
 ```sh
-./scripts/bin/ecc-agy/install-git-hooks.sh
+./scripts/sh/install-git-hooks.sh
 ```
 
 ### 2.2. Desinstalación
@@ -48,13 +48,13 @@ En Linux o WSL (`bash` / `sh`):
 En caso de requerir la retirada de los hooks:
 
 ```powershell
-pwsh -File scripts/bin/ecc-agy/install-git-hooks.ps1 -Uninstall
+pwsh -File scripts/pwsh/install-git-hooks.ps1 -Uninstall
 ```
 
 O en Linux:
 
 ```sh
-./scripts/bin/ecc-agy/install-git-hooks.sh --uninstall
+./scripts/sh/install-git-hooks.sh --uninstall
 ```
 
 ---

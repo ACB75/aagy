@@ -60,7 +60,7 @@ CHARS_PER_TOKEN: float = 3.8
 
 SKILL_FILE_NAME: str = "SKILL.md"
 README_FILE: str = "README.md"
-PLUGIN_NAME_ECC_AGY: str = "ecc-agy"
+PLUGIN_NAME_ECC_AGY: str = "aagy"
 DESC_KEY: str = "description"
 MODEL_KEY: str = "model"
 

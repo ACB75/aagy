@@ -1,8 +1,8 @@
 # Manual de Operación: Validador de Congruencia Ingress, Split-DNS y Portal (`validate_ingress_routes.py`)
 
 > **Ecosistema**: ECC Ecosystem & Home-Lab  
-> **Ubicación Canónica**: `scripts/ecc-agy/validate_ingress_routes.py`  
-> **Wrappers CLI**: `scripts/bin/ecc-agy/validate-ingress-routes.ps1` y `validate-ingress-routes.sh`  
+> **Ubicación Canónica**: `scripts/py/validate_ingress_routes.py`  
+> **Wrappers CLI**: `scripts/pwsh/validate-ingress-routes.ps1` y `validate-ingress-routes.sh`  
 > **Compuerta CI/CD**: Fase 4 del Engineering Lifecycle (`complete-task-pr.ps1`)  
 
 ---
@@ -31,26 +31,26 @@ El **Validador de Congruencia de Ingress** audita estáticamente esta relación 
 
 ```powershell
 # Comprobación estándar del repositorio
-pwsh -File scripts/bin/ecc-agy/validate-ingress-routes.ps1
+pwsh -File scripts/pwsh/validate-ingress-routes.ps1
 
 # Generar sugerencias exactas de configuración (--fix)
-pwsh -File scripts/bin/ecc-agy/validate-ingress-routes.ps1 -Fix
+pwsh -File scripts/pwsh/validate-ingress-routes.ps1 -Fix
 
 # Salida estructurada JSON
-pwsh -File scripts/bin/ecc-agy/validate-ingress-routes.ps1 -Json
+pwsh -File scripts/pwsh/validate-ingress-routes.ps1 -Json
 
 # Modo permisivo (no retornar error 1 ante discrepancias)
-pwsh -File scripts/bin/ecc-agy/validate-ingress-routes.ps1 -NoStrict
+pwsh -File scripts/pwsh/validate-ingress-routes.ps1 -NoStrict
 ```
 
 ### Bash / Linux (WSL / Debian 12)
 
 ```bash
 # Ejecución estándar
-scripts/bin/ecc-agy/validate-ingress-routes.sh
+scripts/sh/validate-ingress-routes.sh
 
 # Modo fix con sugerencias para Corefile y portal
-scripts/bin/ecc-agy/validate-ingress-routes.sh --fix
+scripts/sh/validate-ingress-routes.sh --fix
 ```
 
 ---

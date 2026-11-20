@@ -117,8 +117,8 @@ def test_ca01_stop_hook_zero_overhead_subsecond_and_non_blocking(tmp_path: Path)
         "cwd": str(repo_root),
         "session_id": "sess-001",
         "commands": [
-            "pwsh -NoProfile -File scripts/bin/ecc-agy/lint-markdown.ps1 -Fix",
-            "pwsh -NoProfile -File scripts/bin/ecc-agy/lint-markdown.ps1 -Fix",
+            "pwsh -NoProfile -File scripts/pwsh/lint-markdown.ps1 -Fix",
+            "pwsh -NoProfile -File scripts/pwsh/lint-markdown.ps1 -Fix",
         ],
         "errors": [
             "MD022/blanks-around-headings: Headings should be surrounded by blank lines",
@@ -287,7 +287,7 @@ def test_five_axis_self_evaluation_and_cli_modes(tmp_path: Path):
         "# Summary\n\nAll 42 tests passed (exit code 0) and lint is clean.\n\n"
         "- Verified with pytest and grep.\n"
         "- Edge cases and error handling covered.\n"
-        "- Run `pwsh -File scripts/bin/ecc-agy/audit-workspace.ps1` next.\n"
+        "- Run `pwsh -File scripts/pwsh/audit-workspace.ps1` next.\n"
         "```python\nprint('ok')\n```\n"
     )
     eval_report = self_improve.evaluate_agent_output(

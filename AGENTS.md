@@ -4,11 +4,10 @@
 
 ## 1. Core Engineering Invariants & Universal Architecture (Deterministic Context-Caching Prefix)
 
-- **Source of Truth**: This repository (`aagy`) authors the canonical rules in [rules/AGENTS.md](file:///c:/Workspace/projects/ecc/rules/AGENTS.md) and [rules/pr-automerge-lifecycle.md](file:///c:/Workspace/projects/ecc/rules/pr-automerge-lifecycle.md).
-- **Two-Tier Architecture**: Global agents and harnesses consume `rules/AGENTS.md` from the installed `aagy` plugin to avoid prompt duplication.
-- **Google 5-Pillars & SRE**: All workflows adhere to Hermetic Builds, Single Ingress, Centralized Persistence, Modern Reactive Web, and Native Lightweight Observability.
+- **Source of Truth**: Canonical rules live in [rules/AGENTS.md](rules/AGENTS.md) (Two-Tier Architecture consumed by the global `aagy` plugin and mirrored in `aagy-ecc`).
+- **Google 5-Pillars & SRE**: Hermetic Builds, Single Ingress, Centralized PostgreSQL LTS, Reactive Web, and Lightweight Observability (`GOMEMLIMIT=80%`).
 
 ## 2. Dynamic Task Lifecycle, Governance & Workflow (Contextual Suffix)
 
-- **Lifecycle & Governance**: For task lifecycle, branch naming (`fix/<id>`, `feat/*`, `refactor/*`), automated PR lifecycle, and SonarQube quality gates, consult [rules/AGENTS.md](file:///c:/Workspace/projects/ecc/rules/AGENTS.md).
-- **Automated Task Integration**: Automated integration to `main` is handled by `complete-task-pr.ps1` with atomic conventional commit messages `[type]-[projects]: <title>`.
+- **Lifecycle & Quality Gates**: Follow Trunk-Based Development (`feat/*`, `fix/*`, `refactor/*`), 4-phase lifecycle (`.governance/docs-map.json`), SonarQube Rating A, and write-time markdownlint (`scripts/pwsh/lint-markdown.ps1`).
+- **Automated PR Integration**: Close tasks via `scripts/pwsh/complete-task-pr.ps1` using `[type]-[projects]: <title>` and mandatory explanatory body.

@@ -2,7 +2,7 @@ import sys
 from pathlib import Path
 import pytest
 
-# Asegurar importación de scripts/ecc-agy/format_commit.py
+# Asegurar importación de scripts/py/format_commit.py
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 

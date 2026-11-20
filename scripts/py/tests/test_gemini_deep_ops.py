@@ -9,7 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-# Añadir ruta para importar scripts/ecc-agy
+# Añadir ruta para importar scripts/py
 SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 
@@ -19,7 +19,7 @@ import toggle_gemini_mcp
 
 def test_template_gemini_mcp_config():
     repo_root = SCRIPTS_DIR.parent.parent
-    template_dir = repo_root / "templates" / "plugins" / "gemini-mcp"
+    template_dir = repo_root / "skills" / "gemini-deep-ops" / "templates" / "gemini-mcp"
     assert template_dir.is_dir()
 
     plugin_json_file = template_dir / "plugin.json"

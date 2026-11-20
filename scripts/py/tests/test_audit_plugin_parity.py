@@ -42,13 +42,13 @@ def mock_repo_structure(tmp_path: Path):
     (skills_dir / "tdd-workflow").mkdir()
     (skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD", encoding="utf-8")
 
-    # Claude Code plugin ecc
-    ecc_dir = tmp_path / "ecc"
+    # Claude Code plugin aagy-ecc
+    ecc_dir = tmp_path / "aagy-ecc"
     ecc_plugin_dir = ecc_dir / ".claude-plugin"
     ecc_plugin_dir.mkdir(parents=True)
     (ecc_plugin_dir / "plugin.json").write_text(json.dumps({
-        "name": "ecc",
-        "version": "2.2.3"
+        "name": "aagy-ecc",
+        "version": "4.0.0"
     }), encoding="utf-8")
 
     ecc_skills_dir = ecc_dir / "skills"
@@ -64,7 +64,7 @@ def test_audit_parity_success(mock_repo_structure: Path):
     assert result.is_valid is True
     assert result.status == "PASS"
     assert result.root_plugin_name == "aagy"
-    assert result.claude_plugin_name == "ecc"
+    assert result.claude_plugin_name == "aagy-ecc"
     assert len(result.discrepancies) == 0
 
 

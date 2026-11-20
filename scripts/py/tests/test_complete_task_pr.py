@@ -48,8 +48,8 @@ def test_todo_contains_completed_items_regex():
 
 def test_scripts_bin_permissions_and_existence():
     """Verifica la existencia y sintaxis básica de los scripts de cierre."""
-    ps1_script = REPO_ROOT / "scripts" / "bin" / "ecc-agy" / "complete-task-pr.ps1"
-    sh_script = REPO_ROOT / "scripts" / "bin" / "ecc-agy" / "complete-task-pr.sh"
+    ps1_script = REPO_ROOT / "scripts" / "pwsh" / "complete-task-pr.ps1"
+    sh_script = REPO_ROOT / "scripts" / "sh" / "complete-task-pr.sh"
 
     assert ps1_script.exists(), "complete-task-pr.ps1 debe existir"
     assert sh_script.exists(), "complete-task-pr.sh debe existir"
@@ -61,7 +61,7 @@ def test_scripts_bin_permissions_and_existence():
 
 def test_preflight_review_mode_dryrun():
     """Verifica que complete-task-pr proteja main o ejecute -ReviewOnly en rama de tarea."""
-    ps1_script = REPO_ROOT / "scripts" / "bin" / "ecc-agy" / "complete-task-pr.ps1"
+    ps1_script = REPO_ROOT / "scripts" / "pwsh" / "complete-task-pr.ps1"
     res = subprocess.run(
         ["pwsh", "-NoProfile", "-File", str(ps1_script), "-ReviewOnly"],
         capture_output=True,
