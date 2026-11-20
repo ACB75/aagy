@@ -1,0 +1,25 @@
+flowchart TD
+    Root["Repositorio Consumidor"] --> CheckMap{".governance/docs-map.json existe?"}
+    CheckMap -- "Sí (schema_version: 2)" --> V2["Esquema /doc v2 Numerado"]
+    CheckMap -- "Sí (v1 parcial)" --> V1["Overrides v1 + Fallback Clásico"]
+    CheckMap -- "No (ej. home-lab clásico)" --> Legacy["Fallback Clásico doc/TODO.md, doc/TODO_DONE/"]
+
+    V2 --> SecGuard["validate_repo_relative_path()\nBloqueo Path Traversal & Absolutas"]
+    V1 --> SecGuard
+    Legacy --> SecGuard
+
+    SecGuard --> Scripts["Scripts Multiplataforma\narchive_todo | sync_ideas | new_lifecycle | generate_postmortem | map_docs | complete-task-pr"]
+
+    subgraph DocV2["Árbol Canónico /doc v2"]
+        direction TB
+        Spine["Raíz: INDEX.md, CONTEXT.md, STATUS.md, LOG.md"]
+        D0["00-governance/ (DOC_STANDARDS, MANUAL_WORKFLOW, references/, templates/)"]
+        D1["01-architecture/ (api-contracts/, dgrms/)"]
+        D2["02-adr/ (README.md + ADR_*)"]
+        D3["03-domain-and-flows/ (business-processes/, domain-models/, sequences/, dgrms/)"]
+        D4["04-operations/ (runbooks/, setup-guides/)"]
+        D5["05-post-mortems/ (PM_*)"]
+        D6["06-backlog/ (IDEAS.md, TODO.md, done/, plans/, quick/)"]
+    end
+
+    V2 --> DocV2

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  id="Definitions_aagy_delivery"
+                  targetNamespace="https://github.com/ACB75/aagy/bpmn">
+  <bpmn:process id="Process_AagyTaskDelivery" name="Flexible Task Delivery Lifecycle" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_Entry" name="Entrada Flexible (IDEAS / REQ / PLAN / TODO)" />
+    <bpmn:task id="Task_ResolveDocsMap" name="Resolver rutas en .governance/docs-map.json (v2 o fallback clásico)" />
+    <bpmn:task id="Task_ImplementTDD" name="Implementar con TDD (RED -> GREEN -> REFACTOR)" />
+    <bpmn:task id="Task_VerifyGates" name="Ejecutar pytest, lint-markdown, map-docs y sonar-audit" />
+    <bpmn:task id="Task_ArchiveAndMerge" name="Archivar TODO a done/ y ejecutar squash-merge PR" />
+    <bpmn:endEvent id="EndEvent_Merged" name="Integrado en main" />
+
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Entry" targetRef="Task_ResolveDocsMap" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_ResolveDocsMap" targetRef="Task_ImplementTDD" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_ImplementTDD" targetRef="Task_VerifyGates" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Task_VerifyGates" targetRef="Task_ArchiveAndMerge" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Task_ArchiveAndMerge" targetRef="EndEvent_Merged" />
+  </bpmn:process>
+</bpmn:definitions>

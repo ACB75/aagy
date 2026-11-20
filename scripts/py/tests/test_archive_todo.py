@@ -1,6 +1,8 @@
 """
 Tests unitarios para el ciclo de vida y archivo de TODOs (archive_todo.py).
 """
+import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -68,3 +70,37 @@ def test_parse_todo_file_and_process_archive(tmp_path):
     assert "Tarea 2.1: Completada" not in remaining_todo
     assert "Tarea 1.1: Pendiente" in remaining_todo
     assert "Tarea 3.1: Otra pendiente" in remaining_todo
+
+
+def test_cli_resolves_v2_docs_map_and_legacy_fallback(tmp_path):
+    """CLI de archive_todo.py resuelve tanto v2 vía docs-map.json como fallback clásico."""
+    script_path = Path(__file__).resolve().parent.parent / "archive_todo.py"
+
+    # 1. Caso v2 con docs-map.json
+    v2_root = tmp_path / "repo_v2"
+    (v2_root / ".governance").mkdir(parents=True)
+    (v2_root / "doc" / "06-backlog").mkdir(parents=True)
+    v2_todo = v2_root / "doc" / "06-backlog" / "TODO.md"
+    v2_done = v2_root / "doc" / "06-backlog" / "done"
+    v2_todo.write_text("# TODO v2\n- [x] **Tarea A**\n- [ ] **Tarea B**\n", encoding="utf-8")
+    (v2_root / ".governance" / "docs-map.json").write_text(
+        json.dumps({"schema_version": 2, "paths": {"todo": "doc/06-backlog/TODO.md", "todo_done": "doc/06-backlog/done"}}),
+        encoding="utf-8",
+    )
+
+    res_v2 = subprocess.run([sys.executable, str(script_path), "--repo-root", str(v2_root)], capture_output=True, text=True)
+    assert res_v2.returncode == 0
+    assert len(list(v2_done.glob("TODO_*.md"))) == 1
+    assert "Tarea A" not in v2_todo.read_text(encoding="utf-8")
+
+    # 2. Caso clásico home-lab sin docs-map.json
+    legacy_root = tmp_path / "repo_legacy"
+    (legacy_root / "doc").mkdir(parents=True)
+    legacy_todo = legacy_root / "doc" / "TODO.md"
+    legacy_done = legacy_root / "doc" / "TODO_DONE"
+    legacy_todo.write_text("# TODO Legacy\n- [x] **Tarea Legacy**\n", encoding="utf-8")
+
+    res_leg = subprocess.run([sys.executable, str(script_path), "--repo-root", str(legacy_root)], capture_output=True, text=True)
+    assert res_leg.returncode == 0
+    assert len(list(legacy_done.glob("TODO_*.md"))) == 1
+

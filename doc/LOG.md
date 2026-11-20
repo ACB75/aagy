@@ -1,7 +1,35 @@
-# Registro Histórico de Decisiones y Cambios Materiales | ECC Ecosystem
+# Registro Histórico de Decisiones y Cambios Materiales | ECC / `aagy` Ecosystem
 
-> **Espina Dorsal de Gobernanza Documental**: Repositorio [`ACB75/ecc`](https://github.com/ACB75/ecc)  
-> **Versión Canónica**: `3.0.0`  
+> **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/ecc) (`ecc` -> `aagy`)  
+> **Versión Canónica**: `4.1.0`
+
+---
+
+## 2026-11-20: Estructura Documental `/doc` v2, `.governance/docs-map.json` y Paridad 1-a-1 Manual
+
+### Hitos y Decisiones Materiales
+
+1. **Nueva Arquitectura `/doc` v2 y Purga de Planes Obsoletos (`ADR-0003`)**:
+   - Raíz de [`doc/`](INDEX.md) saneada a 4 archivos vivos (`INDEX.md`, [`CONTEXT.md`](CONTEXT.md), [`STATUS.md`](STATUS.md), [`LOG.md`](LOG.md)), eliminando la duplicidad de `doc/README.md`.
+   - Creación de jerarquía numerada (`00-governance/` a `06-backlog/`) y convención transversal `<folder>/dgrms/` separando `.mmd`, `.puml` ([`UC_aagy_lifecycle_parity.puml`](03-domain-and-flows/dgrms/UC_aagy_lifecycle_parity.puml)) y `.bpmn` ([`BP_aagy_task_delivery.bpmn`](03-domain-and-flows/dgrms/BP_aagy_task_delivery.bpmn)).
+   - Consolidación de `TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md` en [`00-governance/templates/`](00-governance/templates/README.md), preservación de [`the-security-guide.md`](00-governance/references/the-security-guide.md) y renombre de `STACK_MODERNO_GOOGLE.md` a [`google-modern-stack.md`](00-governance/references/google-modern-stack.md).
+2. **Resolvedor Parametrizado `docs_map.py` y Retrocompatibilidad `home-lab`**:
+   - Implementado [`scripts/py/docs_map.py`](../scripts/py/docs_map.py) con esquema `.governance/docs-map.json` v2, bloqueo estricto contra *path traversal* y *fallback* automático transparente hacia rutas heredadas de `home-lab`.
+   - Parametrizados todos los scripts (`archive_todo.py`, `sync_ideas_todo.py`, `new_lifecycle_task.py`, `generate_postmortem.py`, `map_docs.py`, `workspace_audit.py`, `complete-task-pr.ps1`/`.sh` y wrappers `.ps1`/`.sh`).
+3. **Flujo Flexible y Paridad Manual 1-a-1 (`MANUAL_WORKFLOW.md`)**:
+   - Habilitados los 4 puntos de entrada `[IDEAS -> REQ -> PLAN -> TODO]` en `new_lifecycle_task.py --phase` y completados wrappers Linux faltantes (`sync-ideas-todo.sh`, `generate-postmortem.sh`, `map-docs.sh`).
+   - Documentados estándares en [`DOC_STANDARDS.md`](00-governance/DOC_STANDARDS.md) y matriz completa de terminal en [`MANUAL_WORKFLOW.md`](00-governance/MANUAL_WORKFLOW.md).
+
+---
+
+## 2026-11-20: Optimización Máxima de Tokens, Purga de Artefactos Muertos y Reestructuración `scripts/`
+
+### Hitos y Decisiones Materiales
+
+1. **Poda y Lazy-Loading de Reglas**:
+   - Deduplicado `AGENTS.md` raíz (< 1 KB) como puntero ligero con marcador de Prompt Caching, consolidando `rules/` en `AGENTS.md` + `pr-automerge-lifecycle.md` y migrando 37 reglas de stack a skills *on-demand* (incl. `typescript-patterns`).
+2. **Reorganización Multi-Runtime `scripts/{py,pwsh,sh}/tests/`**:
+   - Separación limpia por runtime con suites dedicadas (`120/120` tests) y proxies retrocompatibles en `scripts/bin/ecc-agy/` y `scripts/ecc-agy/`. Ver [`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md).
 
 ---
 
@@ -18,7 +46,7 @@
    - Verificación de consistencia de manifiestos, coincidencia de nombres e integración en el paso 7.6 de `complete-task-pr.ps1` y `complete-task-pr.sh`.
    - Wrappers `scripts/bin/ecc-agy/audit-plugin-parity.ps1` y `audit-plugin-parity.sh`.
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_aagy_ecc_parity_and_migration.md`](manual/MANUAL_aagy_ecc_parity_and_migration.md).
+   - Manual operativo [`doc/manual/MANUAL_aagy_ecc_parity_and_migration.md`](01-architecture/MANUAL_aagy_ecc_parity_and_migration.md).
    - Suite de pruebas `test_audit_plugin_parity.py` con cobertura completa.
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
@@ -35,8 +63,8 @@
    - Protocolo de rollback automático desatendido en $< 2\text{ minutos}$ hacia el commit/tag anterior ante fallos en sondas.
 2. **Ergonomía y Calidad**:
    - Modo de simulación `-DryRun` para comprobar el plan de ejecución sin mutaciones físicas.
-   - Manual operativo [`doc/manual/MANUAL_multitier_deployment.md`](manual/MANUAL_multitier_deployment.md).
-   - Suite de pruebas [`scripts/ecc-agy/tests/test_git_flow_deploy.py`](../scripts/ecc-agy/tests/test_git_flow_deploy.py) con 3/3 tests pasando (total 111/111 superados al 100%).
+   - Manual operativo [`doc/manual/MANUAL_multitier_deployment.md`](04-operations/runbooks/MANUAL_multitier_deployment.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_git_flow_deploy.py`](../scripts/py/tests/test_git_flow_deploy.py) con 3/3 tests pasando (total 111/111 superados al 100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -54,8 +82,8 @@
    - Wrappers multiplataforma [`scripts/bin/ecc-agy/validate-ingress-routes.ps1`](../scripts/bin/ecc-agy/validate-ingress-routes.ps1) y `validate-ingress-routes.sh` con flags `--fix`, `--json` y `--no-strict`.
    - Integración como compuerta de validación previa en el paso 7.5 de [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y `complete-task-pr.sh`.
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_ingress_routes_validator.md`](manual/MANUAL_ingress_routes_validator.md).
-   - Suite de pruebas [`scripts/ecc-agy/tests/test_validate_ingress_routes.py`](../scripts/ecc-agy/tests/test_validate_ingress_routes.py) con 6/6 tests pasando (total 108/108 superados al 100%).
+   - Manual operativo [`doc/manual/MANUAL_ingress_routes_validator.md`](04-operations/runbooks/MANUAL_ingress_routes_validator.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_validate_ingress_routes.py`](../scripts/py/tests/test_validate_ingress_routes.py) con 6/6 tests pasando (total 108/108 superados al 100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -74,8 +102,8 @@
    - Wrappers multiplataforma [`scripts/bin/ecc-agy/audit-pg-locks.ps1`](../scripts/bin/ecc-agy/audit-pg-locks.ps1) y `audit-pg-locks.sh` con flags `--file`, `--dir`, `--json` y `--no-strict`.
    - Integración en la compuerta de validación previa en el paso 7.4 de [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y `complete-task-pr.sh`.
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_audit_pg_locks.md`](manual/MANUAL_audit_pg_locks.md).
-   - Suite de pruebas [`scripts/ecc-agy/tests/test_audit_pg_locks.py`](../scripts/ecc-agy/tests/test_audit_pg_locks.py) con 8/8 tests pasando (total 102/102 superados al 100%).
+   - Manual operativo [`doc/manual/MANUAL_audit_pg_locks.md`](04-operations/runbooks/MANUAL_audit_pg_locks.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_audit_pg_locks.py`](../scripts/py/tests/test_audit_pg_locks.py) con 8/8 tests pasando (total 102/102 superados al 100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -93,8 +121,8 @@
    - Wrappers multiplataforma [`scripts/bin/ecc-agy/audit-sdk-parity.ps1`](../scripts/bin/ecc-agy/audit-sdk-parity.ps1) y `audit-sdk-parity.sh` con flags `--json` y `--no-strict`.
    - Integración como compuerta de validación previa en el paso 7.3 de [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1).
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_sdk_parity_audit.md`](manual/MANUAL_sdk_parity_audit.md).
-   - Suite de pruebas [`scripts/ecc-agy/tests/test_audit_sdk_parity.py`](../scripts/ecc-agy/tests/test_audit_sdk_parity.py) con 6/6 tests pasando (total 94/94 pasando al 100%).
+   - Manual operativo [`doc/manual/MANUAL_sdk_parity_audit.md`](04-operations/runbooks/MANUAL_sdk_parity_audit.md).
+   - Suite de pruebas [`scripts/ecc-agy/tests/test_audit_sdk_parity.py`](../scripts/py/tests/test_audit_sdk_parity.py) con 6/6 tests pasando (total 94/94 pasando al 100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -104,13 +132,13 @@
 ### Hitos y Decisiones Materiales
 
 1. **Estandarización de Ubicaciones y Nombres Canónicos**:
-   - `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` trasladado canónicamente a [`doc/adr/TEMPLATE_ADR.md`](adr/TEMPLATE_ADR.md).
-   - `doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md` renombrado canónicamente a [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](post-mortem/TEMPLATE_POSTMORTEM.md).
+   - `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` trasladado canónicamente a [`doc/adr/TEMPLATE_ADR.md`](00-governance/templates/TEMPLATE_ADR.md).
+   - `doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md` renombrado canónicamente a [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](00-governance/templates/TEMPLATE_POSTMORTEM.md).
 2. **Refactorización de Referencias en Código y Documentación**:
    - Actualizadas referencias en `scripts/ecc-agy/generate_postmortem.py` y `scripts/bin/ecc-agy/generate-postmortem.ps1` con retrocompatibilidad ante templates existentes.
    - Actualizadas referencias en `README.md`, `doc/INDEX.md`, `doc/README.md`, `.gemini/GEMINI.md`, `rules/common/development-workflow.md` y planes históricos.
 3. **Calidad y Verificación**:
-   - Suite [`scripts/ecc-agy/tests/test_generate_postmortem.py`](../scripts/ecc-agy/tests/test_generate_postmortem.py) con test específico de path por defecto.
+   - Suite [`scripts/ecc-agy/tests/test_generate_postmortem.py`](../scripts/py/tests/test_generate_postmortem.py) con test específico de path por defecto.
    - 88/88 tests pasando, markdownlint 100% compliant, SonarQube Rating A.
 
 ---
@@ -128,8 +156,8 @@
    - `enable-skill.ps1` y `enable-skill.sh` (promoción y flag `-List`).
    - `disable-skill.ps1` y `disable-skill.sh` (retirada limpia de skills temporales).
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_skill_promotion.md`](manual/MANUAL_skill_promotion.md).
-   - Suite [`scripts/ecc-agy/tests/test_skill_promotion.py`](../scripts/ecc-agy/tests/test_skill_promotion.py) con 87/87 tests pasando (100%).
+   - Manual operativo [`doc/manual/MANUAL_skill_promotion.md`](04-operations/setup-guides/MANUAL_skill_promotion.md).
+   - Suite [`scripts/ecc-agy/tests/test_skill_promotion.py`](../scripts/py/tests/test_skill_promotion.py) con 87/87 tests pasando (100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -145,8 +173,8 @@
 2. **Integración en Flujo de CI/PR (`complete-task-pr.ps1`)**:
    - Invocación automática al término de la integración de PR alertando con advertencia si la conversación supera los 45.000 tokens recomendando ejecutar `/compact`.
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_session_token_telemetry.md`](manual/MANUAL_session_token_telemetry.md).
-   - Suite [`scripts/ecc-agy/tests/test_session_token_monitor.py`](../scripts/ecc-agy/tests/test_session_token_monitor.py) con 86/86 tests pasando (100%).
+   - Manual operativo [`doc/manual/MANUAL_session_token_telemetry.md`](04-operations/runbooks/MANUAL_session_token_telemetry.md).
+   - Suite [`scripts/ecc-agy/tests/test_session_token_monitor.py`](../scripts/py/tests/test_session_token_monitor.py) con 86/86 tests pasando (100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -162,8 +190,8 @@
 2. **Instalador Idempotente (`scripts/bin/ecc-agy/`)**:
    - `install-git-hooks.ps1` y `install-git-hooks.sh` con instalación determinista y soporte para desinstalación limpia con `-Uninstall` / `--uninstall`.
 3. **Documentación y Calidad**:
-   - Manual operativo [`doc/manual/MANUAL_git_hooks.md`](manual/MANUAL_git_hooks.md).
-   - Suite [`scripts/ecc-agy/tests/test_git_hooks.py`](../scripts/ecc-agy/tests/test_git_hooks.py) con 83/83 tests pasando (100%).
+   - Manual operativo [`doc/manual/MANUAL_git_hooks.md`](04-operations/setup-guides/MANUAL_git_hooks.md).
+   - Suite [`scripts/ecc-agy/tests/test_git_hooks.py`](../scripts/py/tests/test_git_hooks.py) con 83/83 tests pasando (100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -177,9 +205,9 @@
    - Inclusión de marcador canónico `<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->`.
    - Sincronización exacta con el plugin global `~/.gemini/config/plugins/ecc-agy/rules/AGENTS.md`.
 2. **Documentación Técnica**:
-   - Creado [`doc/manual/MANUAL_gemini_prompt_caching.md`](manual/MANUAL_gemini_prompt_caching.md) detallando el mecanismo de coincidencia de prefijos determinista y directrices para desarrolladores.
+   - Creado [`doc/manual/MANUAL_gemini_prompt_caching.md`](04-operations/setup-guides/MANUAL_gemini_prompt_caching.md) detallando el mecanismo de coincidencia de prefijos determinista y directrices para desarrolladores.
 3. **Calidad y Verificación**:
-   - Test unitario `test_static_prompt_caching_prefix_invariance` incorporado en [`test_workspace_audit.py`](../scripts/ecc-agy/tests/test_workspace_audit.py).
+   - Test unitario `test_static_prompt_caching_prefix_invariance` incorporado en [`test_workspace_audit.py`](../scripts/py/tests/test_workspace_audit.py).
    - 79/79 tests superados (100%), SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -197,7 +225,7 @@
 3. **Motor de Instintos por Proyecto (`instinct_manager.py`)**:
    - CLI [`instinct_manager.py`](../scripts/ecc-agy/instinct_manager.py) y wrappers `manage-instincts.ps1` / `.sh` para capturar y consultar directivas operacionales en `.agents/instincts/*.md` sin inflar `AGENTS.md`.
 4. **Calidad y Tests**:
-   - Suite [`test_agentshield_instincts.py`](../scripts/ecc-agy/tests/test_agentshield_instincts.py) con 78/78 tests pasando (100%).
+   - Suite [`test_agentshield_instincts.py`](../scripts/py/tests/test_agentshield_instincts.py) con 78/78 tests pasando (100%).
    - SonarQube Rating A (0 violaciones, Complejidad Cognitiva $\le 10$).
 
 ---
@@ -213,9 +241,9 @@
 2. **Skill Tier 2 `gemini-deep-ops` y CLI Multimodal**:
    - Creada [`skills/gemini-deep-ops/SKILL.md`](../skills/gemini-deep-ops/SKILL.md) con descripción $\le 140$ caracteres y carga bajo demanda.
    - Implementado motor de diagnóstico [`gemini_deep_ops.py`](../scripts/ecc-agy/gemini_deep_ops.py) y wrappers `.ps1` / `.sh` con análisis heurístico de caídas OOMKilled, bloqueos PostgreSQL y latencia.
-   - Guía operacional en [`doc/manual/MANUAL_gemini_deep_ops_multimodal.md`](manual/MANUAL_gemini_deep_ops_multimodal.md).
+   - Guía operacional en [`doc/manual/MANUAL_gemini_deep_ops_multimodal.md`](04-operations/runbooks/MANUAL_gemini_deep_ops_multimodal.md).
 3. **Calidad y Tests Unitarios**:
-   - Pruebas unitarias en [`test_gemini_deep_ops.py`](../scripts/ecc-agy/tests/test_gemini_deep_ops.py) con 74/74 tests superados (100%).
+   - Pruebas unitarias en [`test_gemini_deep_ops.py`](../scripts/py/tests/test_gemini_deep_ops.py) con 74/74 tests superados (100%).
    - SonarQube Quality Gate Rating A (0 violaciones).
 
 ---
@@ -232,7 +260,7 @@
    - Presupuesto eager en plugins activos: $\le 3.000$ tokens en reposo para Tier 1.
    - Integración automática del plugin global `~/.gemini/config/plugins/ecc-agy` en la auditoría.
 2. **Validación y Tests Unitarios (TDD)**:
-   - Añadidos tests unitarios exhaustivos en [`test_workspace_audit.py`](../scripts/ecc-agy/tests/test_workspace_audit.py) cubriendo archivos sobredimensionados, exceso de tokens de reglas, detección de MCPs pesados activos vs desactivados y desbordamiento eager.
+   - Añadidos tests unitarios exhaustivos en [`test_workspace_audit.py`](../scripts/py/tests/test_workspace_audit.py) cubriendo archivos sobredimensionados, exceso de tokens de reglas, detección de MCPs pesados activos vs desactivados y desbordamiento eager.
    - Cobertura completa con 69/69 tests pasando al 100%.
    - SonarQube Quality Gate Rating A alcanzado (0 violaciones, Complejidad Cognitiva $\le 10$).
 
@@ -243,10 +271,10 @@
 ### Hitos y Decisiones Materiales
 
 1. **Plantillas Estandarizadas de 4 Fases (`doc/templates/`)**:
-   - Fase 1: [`01_TOMA_REQUISITOS_E_IMPACTO.md`](templates/01_TOMA_REQUISITOS_E_IMPACTO.md): Requisitos funcionales, criterios de aceptación (Given/When/Then), matriz de impacto en Home-Lab (paridad `home-lab-sdk`, PostgreSQL LTS lock safety, Ingress único `cluster-lb` y Split-DNS, SRE memory throttling) y política estricta de *Zero-Breaking Changes*.
-   - Fase 2: [`02_PLAN_ACCION_ARQUITECTURA.md`](templates/02_PLAN_ACCION_ARQUITECTURA.md): Inventario DRY de reutilización, sincronización previa del SDK, topología Mermaid, TDD (`RED` -> `GREEN` -> `REFACTOR` -> `VERIFY`) y plan de Fast-Rollback (<2 min: `git revert` y `down-migration.sql`).
-   - Fase 3: [`03_DOCUMENTACION_Y_RELEASE_NOTES.md`](templates/03_DOCUMENTACION_Y_RELEASE_NOTES.md): Generación previa de Notas de la Versión SemVer (`vX.Y.Z`), matriz de promoción multi-tier (`LOCAL` -> `SANDBOX` -> `LIVE`), actualización de espina documental (`STATUS.md`, `LOG.md`, ADRs) y autopsia 5W para incidentes.
-   - Fase 4: [`04_PROPUESTA_COMMITS_PR.md`](templates/04_PROPUESTA_COMMITS_PR.md): Commits atómicos convencionales `[type]-[projects]: <title>`, Pre-Flight Review Notice con diff completo de código + docs, compuertas de calidad SonarQube Rating A y orquestación de PR con squash-automerge.
+   - Fase 1: [`01_TOMA_REQUISITOS_E_IMPACTO.md`](00-governance/templates/01_TOMA_REQUISITOS_E_IMPACTO.md): Requisitos funcionales, criterios de aceptación (Given/When/Then), matriz de impacto en Home-Lab (paridad `home-lab-sdk`, PostgreSQL LTS lock safety, Ingress único `cluster-lb` y Split-DNS, SRE memory throttling) y política estricta de *Zero-Breaking Changes*.
+   - Fase 2: [`02_PLAN_ACCION_ARQUITECTURA.md`](00-governance/templates/02_PLAN_ACCION_ARQUITECTURA.md): Inventario DRY de reutilización, sincronización previa del SDK, topología Mermaid, TDD (`RED` -> `GREEN` -> `REFACTOR` -> `VERIFY`) y plan de Fast-Rollback (<2 min: `git revert` y `down-migration.sql`).
+   - Fase 3: [`03_DOCUMENTACION_Y_RELEASE_NOTES.md`](00-governance/templates/03_DOCUMENTACION_Y_RELEASE_NOTES.md): Generación previa de Notas de la Versión SemVer (`vX.Y.Z`), matriz de promoción multi-tier (`LOCAL` -> `SANDBOX` -> `LIVE`), actualización de espina documental (`STATUS.md`, `LOG.md`, ADRs) y autopsia 5W para incidentes.
+   - Fase 4: [`04_PROPUESTA_COMMITS_PR.md`](00-governance/templates/04_PROPUESTA_COMMITS_PR.md): Commits atómicos convencionales `[type]-[projects]: <title>`, Pre-Flight Review Notice con diff completo de código + docs, compuertas de calidad SonarQube Rating A y orquestación de PR con squash-automerge.
 2. **Skill `engineering-lifecycle` y Subagente `lifecycle-coordinator`**:
    - Creada skill [`skills/engineering-lifecycle/SKILL.md`](../skills/engineering-lifecycle/SKILL.md) e incorporada al catálogo Tier 1 (`generic`).
    - Creado subagente auditor [`agents/lifecycle-coordinator.md`](../agents/lifecycle-coordinator.md).
@@ -275,14 +303,14 @@
 3. **Pipeline Automatizado de Ingesta IDEAS -> TODO y CLI de Mapeo Documental** (PR #12 | Commit `8877291`):
    - Implementación del motor de ingesta [`sync_ideas_todo.py`](../scripts/ecc-agy/sync_ideas_todo.py) con Meta-Prompt de 7 Fases.
    - Creación de la utilidad CLI [`map_docs.py`](../scripts/ecc-agy/map_docs.py) y validación de enlaces relativos ignorando bloques de código.
-   - Creación de plantilla canónica [`doc/IDEAS.md`](IDEAS.md).
+   - Creación de plantilla canónica [`doc/IDEAS.md`](06-backlog/IDEAS.md).
 
 4. **Estandarización de Política de Ramas de Incidencias en el Harness** (PR #13 | Commit `2bef381`):
    - Implementación de [`validate_branch.py`](../scripts/ecc-agy/validate_branch.py) enforcing prefijos `fix/<id>`, `feat/*`, `refactor/*`, `infra/*`, `chore/*`, `docs/*`, `test/*`.
    - Bloqueo sistemático de commits y PRs directas en ramas protegidas (`main`, `master`).
 
 5. **Generador Automatizado de Post-Mortem SRE 5W** (PR #14 | Commit `30b89e5`):
-   - Creación de plantilla SRE [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](post-mortem/TEMPLATE_POSTMORTEM.md) con análisis Who, What, When, Where, Why/How.
+   - Creación de plantilla SRE [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](00-governance/templates/TEMPLATE_POSTMORTEM.md) con análisis Who, What, When, Where, Why/How.
    - Desarrollo del generador [`generate_postmortem.py`](../scripts/ecc-agy/generate_postmortem.py) e integración automática en el cierre de ramas `fix/*`.
 
 6. **Consolidación de Cierre Atómico, Auto-PR y Pre-Flight Review** (PR #15, PR #16 | Commits `ef04125`, `23c40d9`):
@@ -292,6 +320,6 @@
    - Manejo determinista de colecciones bajo `Set-StrictMode -Version Latest`.
 
 7. **Normalización de la Espina Dorsal Documental y Limpieza Final**:
-   - Reorganización de planes de trabajo sueltos hacia [`doc/plan/`](plan/).
+   - Reorganización de planes de trabajo sueltos hacia [`doc/plan/`](06-backlog/plans/REQ_aagy_unified_self_improvement.md).
    - Registro de mapeo documental en [`.governance/docs-map.json`](../.governance/docs-map.json).
    - Creación de estado operativo [`doc/STATUS.md`](STATUS.md) e histórico [`doc/LOG.md`](LOG.md).

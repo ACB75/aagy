@@ -21,6 +21,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Optional, Sequence, Tuple
 
+_SCRIPT_DIR: str = str(Path(__file__).resolve().parent)
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+
+from docs_map import resolve_doc_path
+
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger: logging.Logger = logging.getLogger("archive_todo")
 
@@ -291,10 +297,11 @@ def process_archive(
 
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Archiva tareas completadas (- [x]) de TODO.md hacia /TODO_DONE/TODO_<title>_TS.md"
+        description="Archiva tareas completadas (- [x]) de TODO.md hacia done/TODO_<title>_TS.md"
     )
-    parser.add_argument("--todo", type=Path, default=Path("doc/TODO.md"), help="Ruta a TODO.md")
-    parser.add_argument("--done-dir", type=Path, default=None, help="Directorio destino (TODO_DONE)")
+    parser.add_argument("--repo-root", type=Path, default=Path("."), help="Raíz del repositorio")
+    parser.add_argument("--todo", type=Path, default=None, help="Ruta a TODO.md (opcional, lee docs-map.json)")
+    parser.add_argument("--done-dir", type=Path, default=None, help="Directorio destino (opcional, lee docs-map.json)")
     parser.add_argument("--complete", type=str, default=None, help="Título a archivar")
     parser.add_argument("--all-completed", action="store_true", help="Archiva todas las completadas")
     parser.add_argument("--notes", type=str, default=None, help="Notas adicionales")
@@ -307,9 +314,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not args.complete and not args.all_completed:
         args.all_completed = True
 
+    repo_root = args.repo_root.resolve()
+    if args.todo is None:
+        todo_path = resolve_doc_path(repo_root, "todo")
+        done_dir = args.done_dir if args.done_dir is not None else resolve_doc_path(repo_root, "todo_done")
+    else:
+        todo_path = args.todo
+        done_dir = args.done_dir
+
     return process_archive(
-        todo_path=args.todo,
-        done_dir=args.done_dir,
+        todo_path=todo_path,
+        done_dir=done_dir,
         target_title=args.complete,
         archive_all=args.all_completed,
         notes=args.notes,

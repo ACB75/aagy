@@ -1,4 +1,6 @@
+import json
 import os
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -88,3 +90,40 @@ def test_sync_ideas_end_to_end():
         new_todo = todo_p.read_text(encoding="utf-8")
         assert "Tarea: New Feature" in new_todo
         assert "[Sector: Core]" in new_todo
+
+
+def test_cli_sync_ideas_supports_v2_docs_map_and_legacy_fallback(tmp_path: Path):
+    """CLI de sync_ideas_todo.py resuelve esquema v2 y fallback clásico sin docs-map."""
+    script_path = Path(__file__).resolve().parent.parent / "sync_ideas_todo.py"
+
+    # 1. Repositorio v2 con docs-map.json
+    v2_root = tmp_path / "v2"
+    (v2_root / ".governance").mkdir(parents=True)
+    (v2_root / "doc" / "06-backlog").mkdir(parents=True)
+    (v2_root / "doc" / "06-backlog" / "IDEAS.md").write_text(
+        "## Idea 1: V2 Sync\n- Status: Approved\n- Objective: Test v2\n- Description: Desc v2\n",
+        encoding="utf-8",
+    )
+    (v2_root / "doc" / "06-backlog" / "TODO.md").write_text("# BACKLOG\n", encoding="utf-8")
+    (v2_root / ".governance" / "docs-map.json").write_text(
+        json.dumps({"schema_version": 2, "paths": {"ideas": "doc/06-backlog/IDEAS.md", "todo": "doc/06-backlog/TODO.md"}}),
+        encoding="utf-8",
+    )
+
+    res_v2 = subprocess.run([sys.executable, str(script_path), "--repo-root", str(v2_root)], capture_output=True, text=True)
+    assert res_v2.returncode == 0
+    assert "Tarea: V2 Sync" in (v2_root / "doc" / "06-backlog" / "TODO.md").read_text(encoding="utf-8")
+
+    # 2. Repositorio clásico sin docs-map.json
+    legacy_root = tmp_path / "legacy"
+    (legacy_root / "doc").mkdir(parents=True)
+    (legacy_root / "doc" / "IDEAS.md").write_text(
+        "## Idea 1: Legacy Sync\n- Status: Approved\n- Objective: Test legacy\n- Description: Desc legacy\n",
+        encoding="utf-8",
+    )
+    (legacy_root / "doc" / "TODO.md").write_text("# BACKLOG\n", encoding="utf-8")
+
+    res_leg = subprocess.run([sys.executable, str(script_path), "--repo-root", str(legacy_root)], capture_output=True, text=True)
+    assert res_leg.returncode == 0
+    assert "Tarea: Legacy Sync" in (legacy_root / "doc" / "TODO.md").read_text(encoding="utf-8")
+

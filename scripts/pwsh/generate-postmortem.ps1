@@ -1,9 +1,9 @@
-<#
+﻿<#
 .SYNOPSIS
     Generador automatizado de autopsia Post-Mortem 5W para ramas fix/*.
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/py/generate_postmortem.py.
-    Instancia la plantilla doc/post-mortem/TEMPLATE_POSTMORTEM.md con metadatos reales de Git.
+    Resuelve dinámicamente plantilla y directorio de salida vía .governance/docs-map.json.
 .PARAMETER Branch
     Nombre opcional de la rama del incidente (por defecto la activa).
 .PARAMETER DryRun
@@ -28,9 +28,9 @@ if (-not (Test-Path $PyScript)) {
     exit 1
 }
 
-$cmdArgs = @()
-if ($Branch) { $cmdArgs += "--branch", $Branch }
+$cmdArgs = @("--repo-root", $WorkspaceRoot)
+if ($Branch) { $cmdArgs += @("--branch", $Branch) }
 if ($DryRun) { $cmdArgs += "--dry-run" }
 
-python $PyScript $cmdArgs
+python $PyScript @cmdArgs
 exit $LASTEXITCODE

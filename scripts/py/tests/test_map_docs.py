@@ -1,4 +1,6 @@
+import json
 import os
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -58,3 +60,56 @@ def test_generate_report_formats_cleanly():
     assert broken_count == 1
     assert "missing.md" in report_text
     assert "doc/index.md:5" in report_text
+
+
+def test_backtick_wrapped_link_labels_are_extracted_while_code_examples_ignored():
+    """Detecta enlaces reales [`STATUS.md`](STATUS.md) e ignora `[fake](missing.md)` dentro de code spans."""
+    sample = """# Índice
+- [`STATUS.md`](STATUS.md)
+- `[example](missing.md)`
+- Placeholder template [REQ](REQ_<id_tarea>.md)
+"""
+    links = extract_links_from_markdown(Path("doc/INDEX.md"), sample)
+    targets = [lnk.target_path for lnk in links]
+    assert "STATUS.md" in targets
+    assert "missing.md" not in targets
+    assert "REQ_<id_tarea>.md" not in targets
+
+
+def test_cli_check_docs_map_v2_valid_and_missing(tmp_path: Path):
+    """Verifica `--check-docs-map` contra repositorios con esquema v2 válido y roto."""
+    script_path = Path(__file__).resolve().parent.parent / "map_docs.py"
+    gov_dir = tmp_path / ".governance"
+    gov_dir.mkdir(parents=True)
+    doc_dir = tmp_path / "doc"
+    doc_dir.mkdir()
+    index_md = doc_dir / "INDEX.md"
+    status_md = doc_dir / "STATUS.md"
+    status_md.write_text("# Status", encoding="utf-8")
+    index_md.write_text("- [`STATUS.md`](STATUS.md)\n", encoding="utf-8")
+
+    (gov_dir / "docs-map.json").write_text(
+        json.dumps({"schema_version": 2, "paths": {"doc_root": "doc", "map": "doc/INDEX.md", "status": "doc/STATUS.md"}}),
+        encoding="utf-8",
+    )
+
+    res_ok = subprocess.run(
+        [sys.executable, str(script_path), "--repo-root", str(tmp_path), "--check-docs-map"],
+        capture_output=True,
+        text=True,
+    )
+    assert res_ok.returncode == 0
+
+    # Target inexistente en docs-map.json debe fallar
+    (gov_dir / "docs-map.json").write_text(
+        json.dumps({"schema_version": 2, "paths": {"doc_root": "doc", "status": "doc/MISSING.md"}}),
+        encoding="utf-8",
+    )
+    res_fail = subprocess.run(
+        [sys.executable, str(script_path), "--repo-root", str(tmp_path), "--check-docs-map"],
+        capture_output=True,
+        text=True,
+    )
+    assert res_fail.returncode == 1
+    assert "MISSING.md" in res_fail.stdout
+

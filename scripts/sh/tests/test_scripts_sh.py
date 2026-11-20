@@ -18,16 +18,19 @@ EXPECTED_SH_SCRIPTS = [
     "enable-skill.sh",
     "format-commit.sh",
     "gemini-deep-ops.sh",
+    "generate-postmortem.sh",
     "git-flow-helper.sh",
     "hook-post-write.sh",
     "install-git-hooks.sh",
     "lint-markdown.sh",
     "manage-instincts.sh",
+    "map-docs.sh",
     "new-lifecycle-task.sh",
     "safety-check.sh",
     "security-audit.sh",
     "session-token-monitor.sh",
     "sonar-audit.sh",
+    "sync-ideas-todo.sh",
     "toggle-gemini-mcp.sh",
     "validate-ingress-routes.sh",
 ]
@@ -46,3 +49,8 @@ def test_sh_scripts_have_shebang_and_lf():
         raw = script_path.read_bytes()
         assert len(raw) > 0, f"Script {script_name} must not be empty"
         assert raw.startswith(b"#!/"), f"Script {script_name} must begin with shebang #!/"
+        assert b"\r\n" not in raw, f"Script {script_name} must use strict LF line endings"
+
+    bin_dir = REPO_ROOT / "scripts" / "bin" / "ecc-agy"
+    for proxy_sh in bin_dir.glob("*.sh"):
+        assert b"\r\n" not in proxy_sh.read_bytes(), f"Proxy {proxy_sh.name} must use strict LF"

@@ -68,8 +68,23 @@ elif [[ "$CURRENT_BRANCH" == "main" || "$CURRENT_BRANCH" == "sandbox" || "$CURRE
     exit 1
 fi
 
-# Detectar tareas completadas en doc/TODO.md
-TODO_PATH="$REPO_ROOT/doc/TODO.md"
+# Resolver rutas documentales vía .governance/docs-map.json (con fallback clásico)
+TODO_REL="doc/TODO.md"
+DONE_REL="doc/TODO_DONE"
+DOCS_MAP_SCRIPT="$REPO_ROOT/scripts/py/docs_map.py"
+if [[ -f "$DOCS_MAP_SCRIPT" ]]; then
+    RESOLVED_TODO_REL="$(python3 "$DOCS_MAP_SCRIPT" --repo-root "$REPO_ROOT" --key todo --relative 2>/dev/null || true)"
+    RESOLVED_DONE_REL="$(python3 "$DOCS_MAP_SCRIPT" --repo-root "$REPO_ROOT" --key todo_done --relative 2>/dev/null || true)"
+    if [[ -n "$RESOLVED_TODO_REL" ]]; then
+        TODO_REL="$RESOLVED_TODO_REL"
+    fi
+    if [[ -n "$RESOLVED_DONE_REL" ]]; then
+        DONE_REL="$RESOLVED_DONE_REL"
+    fi
+fi
+
+# Detectar tareas completadas en TODO.md
+TODO_PATH="$REPO_ROOT/$TODO_REL"
 HAS_COMPLETED_TODOS=0
 if [[ -f "$TODO_PATH" ]]; then
     if grep -q -E '^[\s*\-]*\[x\]' "$TODO_PATH" 2>/dev/null; then
@@ -99,7 +114,7 @@ echo "Rama Origen:        $CURRENT_BRANCH"
 echo "Rama Destino:       $TARGET_BRANCH"
 echo "Título de PR/Commit: $TITLE"
 if [[ $HAS_COMPLETED_TODOS -eq 1 ]]; then
-    echo "Tareas a Archivar:  Tareas completadas detectadas en doc/TODO.md (se archivarán automáticamente a doc/TODO_DONE/)"
+    echo "Tareas a Archivar:  Tareas completadas detectadas en $TODO_REL (se archivarán automáticamente a $DONE_REL)"
 fi
 echo ""
 echo "Resumen de Cambios:"
@@ -125,13 +140,18 @@ if [[ -f "$SCRIPT_DIR/lint-markdown.sh" ]]; then
     bash "$SCRIPT_DIR/lint-markdown.sh" --check-only
 fi
 
-TESTS_DIR="$REPO_ROOT/scripts/py/tests"
-if [[ ! -d "$TESTS_DIR" ]]; then
-    TESTS_DIR="$REPO_ROOT/scripts/ecc-agy/tests"
+TEST_TARGETS=()
+for rel_dir in "scripts/py/tests" "scripts/pwsh/tests" "scripts/sh/tests"; do
+    if [[ -d "$REPO_ROOT/$rel_dir" ]]; then
+        TEST_TARGETS+=("$REPO_ROOT/$rel_dir")
+    fi
+done
+if [[ ${#TEST_TARGETS[@]} -eq 0 && -d "$REPO_ROOT/scripts/ecc-agy/tests" ]]; then
+    TEST_TARGETS+=("$REPO_ROOT/scripts/ecc-agy/tests")
 fi
-if [[ -d "$TESTS_DIR" ]]; then
+if [[ ${#TEST_TARGETS[@]} -gt 0 ]]; then
     echo "[+] Ejecutando suite de pruebas unitarias (pytest)..."
-    python -m pytest "$TESTS_DIR" -q
+    python3 -m pytest "${TEST_TARGETS[@]}" -q
 fi
 
 if [[ -f "$SCRIPT_DIR/sonar-audit.sh" ]]; then
@@ -158,13 +178,19 @@ if [[ -f "$SCRIPT_DIR/audit-plugin-parity.sh" ]]; then
     bash "$SCRIPT_DIR/audit-plugin-parity.sh" --check-only
 fi
 
-# Sincronizar y archivar tareas completadas en doc/TODO.md
+MAP_DOCS_SCRIPT="$REPO_ROOT/scripts/py/map_docs.py"
+if [[ -f "$MAP_DOCS_SCRIPT" ]]; then
+    echo "[+] Validando enlaces documentales y .governance/docs-map.json..."
+    python3 "$MAP_DOCS_SCRIPT" --repo-root "$REPO_ROOT" --check-docs-map
+fi
+
+# Sincronizar y archivar tareas completadas en TODO.md
 if [[ $HAS_COMPLETED_TODOS -eq 1 ]]; then
-    echo "[+] Archivando tareas completadas en doc/TODO_DONE/..."
+    echo "[+] Archivando tareas completadas en $DONE_REL..."
     if [[ -f "$SCRIPT_DIR/archive-todo.sh" ]]; then
         bash "$SCRIPT_DIR/archive-todo.sh"
     elif [[ -f "$REPO_ROOT/scripts/py/archive_todo.py" ]]; then
-        python "$REPO_ROOT/scripts/py/archive_todo.py"
+        python3 "$REPO_ROOT/scripts/py/archive_todo.py" --repo-root "$REPO_ROOT"
     fi
 fi
 
@@ -173,7 +199,7 @@ if [[ "$CURRENT_BRANCH" == fix/* ]]; then
     echo "[+] Rama de incidencia detectada ('$CURRENT_BRANCH'). Generando Post-Mortem 5W..."
     PM_SCRIPT="$REPO_ROOT/scripts/py/generate_postmortem.py"
     if [[ -f "$PM_SCRIPT" ]]; then
-        python "$PM_SCRIPT" --branch "$CURRENT_BRANCH"
+        python3 "$PM_SCRIPT" --repo-root "$REPO_ROOT" --branch "$CURRENT_BRANCH"
     fi
 fi
 

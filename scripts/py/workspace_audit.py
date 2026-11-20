@@ -38,6 +38,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
 
+_SCRIPT_DIR: str = str(Path(__file__).resolve().parent)
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+
+from docs_map import DOCS_MAP_REL, validate_docs_map_targets
+
 logger: logging.Logger = logging.getLogger("workspace-audit")
 
 MAX_SKILL_DESC: int = 140
@@ -495,6 +501,13 @@ def _run_delegated_checks(root: Path, skip_sonar: bool, skip_security: bool) -> 
     return delegated_code
 
 
+def _audit_docs_map_integrity(root: Path) -> List[str]:
+    """Valida rutas declaradas en .governance/docs-map.json cuando el archivo existe."""
+    if not (root / DOCS_MAP_REL).is_file():
+        return []
+    return validate_docs_map_targets(root)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
     root = args.root.resolve() if args.root else Path(__file__).resolve().parent.parent.parent
@@ -524,6 +537,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         targets.append(AgentTarget(f"{PLUGIN_NAME_ECC_AGY} distribution", root / PLUGIN_NAME_ECC_AGY, include_rules=True, is_plugin=True))
 
     total_violations = _audit_targets_budget(targets)
+
+    # 2.5 Integridad de docs-map.json si existe
+    docs_map_issues = _audit_docs_map_integrity(root)
+    for dm_issue in docs_map_issues:
+        total_violations += 1
+        logger.warning("  [DOCS-MAP] %s", dm_issue)
 
     # 3. Artefactos muertos
     logger.info("\n=== [3/4] ARTEFACTOS MUERTOS O HUÉRFANOS ===")

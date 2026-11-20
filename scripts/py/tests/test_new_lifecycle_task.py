@@ -1,5 +1,6 @@
-"""Tests para el instanciador del ciclo de vida de ingeniería (4 fases)."""
+"""Tests para el instanciador del ciclo de vida de ingeniería (4 fases y entradas flexibles)."""
 
+import json
 import sys
 from pathlib import Path
 import pytest
@@ -13,6 +14,37 @@ from new_lifecycle_task import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+
+ALL_TEMPLATE_FILENAMES = [
+    "01_TOMA_REQUISITOS_E_IMPACTO.md",
+    "02_PLAN_ACCION_ARQUITECTURA.md",
+    "03_DOCUMENTACION_Y_RELEASE_NOTES.md",
+    "04_PROPUESTA_COMMITS_PR.md",
+]
+
+
+def _seed_v2_repo(tmp_path: Path) -> None:
+    gov_dir = tmp_path / ".governance"
+    gov_dir.mkdir(parents=True, exist_ok=True)
+    tmpl_dir = tmp_path / "doc" / "00-governance" / "templates"
+    tmpl_dir.mkdir(parents=True, exist_ok=True)
+    for filename in ALL_TEMPLATE_FILENAMES:
+        (tmpl_dir / filename).write_text(f"Template {filename} for <id_tarea> (YYYY-MM-DD)", encoding="utf-8")
+    (gov_dir / "docs-map.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "paths": {
+                    "templates": "doc/00-governance/templates",
+                    "plans": "doc/06-backlog/plans",
+                    "ideas": "doc/06-backlog/IDEAS.md",
+                    "todo": "doc/06-backlog/TODO.md",
+                    "quick": "doc/06-backlog/quick",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
 
 
 def test_slugify_task_id():
@@ -124,3 +156,66 @@ def test_scaffold_lifecycle_task_prevents_overwrite_without_force(tmp_path: Path
         force=True,
     )
     assert "New template content" in req_file.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("phase", "expected_prefixes", "absent_prefixes"),
+    [
+        ("REQ", ["REQ", "PLAN", "DOCS", "REVIEW"], []),
+        ("PLAN", ["PLAN", "DOCS", "REVIEW"], ["REQ"]),
+        ("DOCS", ["DOCS", "REVIEW"], ["REQ", "PLAN"]),
+        ("REVIEW", ["REVIEW"], ["REQ", "PLAN", "DOCS"]),
+        ("ALL", ["REQ", "PLAN", "DOCS", "REVIEW"], []),
+    ],
+)
+def test_flexible_phase_template_slices_with_v2_docs_map(
+    tmp_path: Path,
+    phase: str,
+    expected_prefixes: list[str],
+    absent_prefixes: list[str],
+) -> None:
+    """Verifica puntos de entrada REQ, PLAN, DOCS, REVIEW, ALL resolviendo v2 desde docs-map.json."""
+    _seed_v2_repo(tmp_path)
+    plans_dir = tmp_path / "doc" / "06-backlog" / "plans"
+
+    created = scaffold_lifecycle_task(task_id="feat/aagy/test-phase", repo_root=tmp_path, phase=phase)
+    assert len(created) == len(expected_prefixes)
+    for prefix in expected_prefixes:
+        assert (plans_dir / f"{prefix}_aagy_test_phase.md").is_file()
+    for prefix in absent_prefixes:
+        assert not (plans_dir / f"{prefix}_aagy_test_phase.md").exists()
+
+
+def test_flexible_entry_ideas_and_todo_with_v2_docs_map(tmp_path: Path) -> None:
+    """Verifica puntos de entrada IDEAS y TODO bajo esquema v2."""
+    _seed_v2_repo(tmp_path)
+
+    idea_files = scaffold_lifecycle_task(task_id="feat/aagy/fast-sync", repo_root=tmp_path, phase="IDEAS")
+    ideas_path = tmp_path / "doc" / "06-backlog" / "IDEAS.md"
+    assert ideas_path in idea_files
+    assert "feat/aagy/fast-sync" in ideas_path.read_text(encoding="utf-8")
+
+    # Idempotente si ya existe la idea
+    assert scaffold_lifecycle_task(task_id="feat/aagy/fast-sync", repo_root=tmp_path, phase="IDEAS") == []
+
+    todo_files = scaffold_lifecycle_task(task_id="feat/aagy/quick-fix", repo_root=tmp_path, phase="TODO")
+    todo_path = tmp_path / "doc" / "06-backlog" / "TODO.md"
+    quick_path = tmp_path / "doc" / "06-backlog" / "quick" / "QUICK_aagy_quick_fix.md"
+    assert todo_path in todo_files
+    assert quick_path in todo_files
+    assert "**Tarea: feat/aagy/quick-fix**" in todo_path.read_text(encoding="utf-8")
+    assert quick_path.is_file()
+
+
+def test_legacy_fallback_resolution_without_docs_map(tmp_path: Path) -> None:
+    """Sin .governance/docs-map.json usa doc/templates y doc/plan automáticamente."""
+    tmpl_dir = tmp_path / "doc" / "templates"
+    tmpl_dir.mkdir(parents=True)
+    for filename in ALL_TEMPLATE_FILENAMES:
+        (tmpl_dir / filename).write_text("Legacy <id_tarea>", encoding="utf-8")
+
+    created = scaffold_lifecycle_task(task_id="feat/homelab/compat", repo_root=tmp_path, phase="PLAN")
+    assert len(created) == 3
+    assert (tmp_path / "doc" / "plan" / "PLAN_homelab_compat.md").is_file()
+    assert not (tmp_path / "doc" / "plan" / "REQ_homelab_compat.md").exists()
+
