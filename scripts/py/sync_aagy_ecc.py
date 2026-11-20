@@ -45,7 +45,15 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "security_audit.py",
     "workspace_audit.py",
     "docs_map.py",
+    "doctor_core.py",
+    "install_manifest.py",
 )
+
+# Entradas propias de Antigravity que no deben llegar a Claude Code (relativas al directorio espejo).
+# skills/aagy-doctor lanza el doctor de Antigravity; Claude Code usa /aagy-ecc-doctor.
+MIRROR_EXCLUDED: Dict[str, Tuple[str, ...]] = {
+    "skills": ("aagy-doctor",),
+}
 
 MIRRORED_FILES: Tuple[Tuple[str, str], ...] = tuple(
     (f"scripts/py/{name}", f"scripts/py/{name}") for name in MIRRORED_PY_MODULES
@@ -104,7 +112,10 @@ def build_mapping(repo_root: Path) -> Tuple[Dict[str, Path], List[str]]:
     managed_dirs: List[str] = []
     for src_rel, dst_rel in MIRRORED_DIRS:
         managed_dirs.append(dst_rel)
+        excluded = MIRROR_EXCLUDED.get(src_rel, ())
         for rel, src in _list_files(repo_root / src_rel).items():
+            if rel.split("/", 1)[0] in excluded:
+                continue
             mapping[f"{dst_rel}/{rel}"] = src
     for src_rel, dst_rel in MIRRORED_FILES:
         src = repo_root / src_rel

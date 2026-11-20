@@ -30,6 +30,7 @@ case "${TARGET}" in
     PY="$(command -v python3 || command -v python)"
     echo "[+] Syncing aagy-ecc mirror (skills, agents, rules, Python engines)..."
     "${PY}" "${SCRIPT_DIR}/scripts/py/sync_aagy_ecc.py" --repo-root "${SCRIPT_DIR}"
+    "${PY}" "${SCRIPT_DIR}/scripts/py/install_manifest.py" write --dest "${SOURCE_DIR}" --harness claude --profile full --repo-root "${SCRIPT_DIR}" || true
     if [ "${AAGY_NO_PLUGIN:-0}" = "1" ]; then
       echo "[i] AAGY_NO_PLUGIN=1: skipping Claude Code plugin install."
     elif command -v claude >/dev/null 2>&1; then

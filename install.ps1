@@ -61,6 +61,9 @@ switch ($Target) {
         python (Join-Path $ScriptRoot "scripts\py\sync_aagy_ecc.py") --repo-root $ScriptRoot
         if ($LASTEXITCODE -ne 0) { throw "Falló la sincronización de aagy-ecc." }
 
+        # 1b. Manifiesto de instalación para /aagy-ecc-doctor (viaja con el plugin a la caché de Claude Code)
+        python (Join-Path $ScriptRoot "scripts\py\install_manifest.py") write --dest $sourceDir --harness claude --profile full --repo-root $ScriptRoot
+
         # 2. Instalar como plugin de Claude Code (marketplace local + plugin)
         if ($NoPlugin) {
             Write-Host "[i] -NoPlugin: se omite la instalación del plugin en Claude Code." -ForegroundColor Yellow
