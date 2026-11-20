@@ -53,13 +53,13 @@ $PhaseConfig = @{
             "config-gc", "sonarqube-quality-gate", "sync-microservice-sdk",
             "todo-lifecycle", "sre-reliability", "agent-sort",
             "agent-self-evaluation", "strategic-compact",
-            "context-budget", "safety-guard"
+            "context-budget", "safety-guard", "engineering-lifecycle"
         )
         Agents = @(
             "planner.md", "architect.md", "tdd-guide.md", "code-reviewer.md",
             "security-reviewer.md", "build-error-resolver.md", "silent-failure-hunter.md",
             "refactor-cleaner.md", "doc-updater.md", "todo-archiver.md",
-            "sync-aligner.md"
+            "sync-aligner.md", "lifecycle-coordinator.md"
         )
     }
     "infra" = @{

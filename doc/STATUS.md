@@ -16,26 +16,27 @@
 | **Parámetros de Función** | $\le 7$ parámetros (`S107`) | Cumple en todos los módulos | ✅ PASS |
 | **Seguridad Estática** | 0 secretos / 0 inyecciones de comandos | 0 vulnerabilidades detectadas | ✅ PASS |
 | **Estándar Markdown** | DavidAnson `.markdownlint.json` | 100% compliant (`--check-only`) | ✅ PASS |
-| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 61/61 tests superados (1.22s) | ✅ PASS |
+| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 66/66 tests superados (1.77s) | ✅ PASS |
 
 ---
 
 ## 2. Presupuesto de Tokens y Contexto (Two-Tier Architecture)
 
 - **Tier 1 (Always-On Global Plugin `~/.gemini/config/plugins/ecc-agy`)**:
-  - **Skills Activas**: 21 skills nucleares transversales.
-  - **Consumo de Caracteres**: 2.805 caracteres (~701 tokens).
-  - **Optimización Lograda**: Reducción del **98.25%** respecto al estado previo de 40.000 tokens (~86.000 caracteres).
+  - **Skills Activas**: 22 skills nucleares transversales (incluye `engineering-lifecycle`).
+  - **Consumo de Caracteres**: ~2.945 caracteres (~736 tokens).
+  - **Optimización Lograda**: Reducción del **98.2%** respecto al estado previo de 40.000 tokens.
 - **Tier 2 (Repositorio Base `ACB75/ecc`)**:
-  - **Skills Canónicas Disponibles**: 169 skills especializadas (frontmatter `description` normalizado a $\le 140$ caracteres).
-  - **Subagentes Disponibles**: 48 agentes especializados (frontmatter `description` $\le 120$ caracteres).
-  - **Reglas Universales**: `rules/AGENTS.md` (20.187 caracteres).
-  - **Total Repositorio**: ~11.904 tokens (completamente desacoplado del prompt global).
+  - **Skills Canónicas Disponibles**: 170 skills especializadas (frontmatter `description` normalizado a $\le 140$ caracteres).
+  - **Subagentes Disponibles**: 49 agentes especializados (frontmatter `description` $\le 120$ caracteres).
+  - **Reglas Universales**: `rules/AGENTS.md` (20.547 caracteres).
+  - **Total Repositorio**: ~12.064 tokens (completamente desacoplado del prompt global).
 
 ---
 
 ## 3. Estado de Automatización y Gobernanza del Harness
 
+- **Workflow de Ingeniería 4 Fases**: Estandarizado en [`doc/templates/`](templates/README.md) (`1. Requisitos & Impacto` -> `2. Plan de Acción & TDD` -> `3. Documentación & Release Notes` -> `4. Commits & PR`) con enforzamiento de paridad `home-lab-sdk`, PostgreSQL LTS multitenant lock safety, Ingress único y SRE throttling.
 - **Gobernanza de Ramas**: Enforzada mediante [`validate_branch.py`](../scripts/ecc-agy/validate_branch.py) (patrones `fix/<id>`, `feat/*`, `refactor/*`, `infra/*`, `chore/*`, `docs/*`, `test/*`; bloqueo directo en `main`).
 - **Autopsias SRE 5W**: Generación automática obligatoria mediante [`generate_postmortem.py`](../scripts/ecc-agy/generate_postmortem.py) ante cualquier cierre de rama `fix/*`.
 - **Ciclo Completo de PR y Automerge**: Implementado de forma idempotente y multiplataforma en [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y [`complete-task-pr.sh`](../scripts/bin/ecc-agy/complete-task-pr.sh) con Pre-Flight Review, auto-archivo de TODOs, Quality Gates y squash-automerge.
