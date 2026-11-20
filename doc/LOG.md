@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-11-20: Telemetría Proactiva de Presupuesto en Sesión y Política de Compactación
+
+### Hitos y Decisiones Materiales
+
+1. **Monitor de Telemetría de Sesión (`session_token_monitor.py`)**:
+   - Detección automática del transcript activo `transcript.jsonl` en la estructura de Antigravity brain.
+   - Cálculo estandarizado de tokens acumulados (ratio $3.8\text{ chars/token}$) sobre inputs de usuario, respuestas del modelo, thinking y llamadas a herramientas.
+   - Banderas CLI `--threshold <n>`, `--json` y `--alert-only`.
+2. **Integración en Flujo de CI/PR (`complete-task-pr.ps1`)**:
+   - Invocación automática al término de la integración de PR alertando con advertencia si la conversación supera los 45.000 tokens recomendando ejecutar `/compact`.
+3. **Calidad y Documentación**:
+   - Manual operativo [`doc/manual/MANUAL_session_token_telemetry.md`](manual/MANUAL_session_token_telemetry.md).
+   - Suite [`scripts/ecc-agy/tests/test_session_token_monitor.py`](../scripts/ecc-agy/tests/test_session_token_monitor.py) con 86/86 tests pasando (100%).
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Git Hooks Nativos e Instalador Determinista
 
 ### Hitos y Decisiones Materiales

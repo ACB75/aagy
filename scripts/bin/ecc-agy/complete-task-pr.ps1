@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Automatización integral de fin de tarea: Revisión Manual + PR + Auto-resolución de Conflictos + Automerge + Borrado de Rama.
 .DESCRIPTION
@@ -308,6 +308,12 @@ Estrategia Fast-Rollback:
     Write-Host " [OK] CICLO COMPLETO DE PR Y AUTOMERGE FINALIZADO      " -ForegroundColor Green
     Write-Host "=======================================================`n" -ForegroundColor Green
     git log -1 --oneline
+
+    # 13. Telemetría de tokens en sesión y recomendación proactiva de compactación
+    $monitorScript = Join-Path $PSScriptRoot "session-token-monitor.ps1"
+    if (Test-Path $monitorScript) {
+        pwsh -NoProfile -File $monitorScript -Threshold 45000 -AlertOnly
+    }
 
 } finally {
     Pop-Location
