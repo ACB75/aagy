@@ -3,7 +3,7 @@
     Generador automatizado de autopsia Post-Mortem 5W para ramas fix/*.
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/ecc-agy/generate_postmortem.py.
-    Instancia la plantilla doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md con metadatos reales de Git.
+    Instancia la plantilla doc/post-mortem/TEMPLATE_POSTMORTEM.md con metadatos reales de Git.
 .PARAMETER Branch
     Nombre opcional de la rama del incidente (por defecto la activa).
 .PARAMETER DryRun

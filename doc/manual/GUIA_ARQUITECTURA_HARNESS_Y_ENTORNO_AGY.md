@@ -300,7 +300,7 @@ Todo agente operando bajo el ecosistema `ecc` está estrictamente vinculado a lo
 ```mermaid
 flowchart TD
     Req["Requerimiento / Tarea"] --> MetaPrompt["1. Meta-Prompt 7 Fases<br/>(Role, Context, Analysis, Strategy, Execution, Critic, Format)"]
-    MetaPrompt --> PlanReq["2. Plan de Requisitos y Arquitectura<br/>(TEMPLATE_REQUISITOS_ARQUITECTURA.md)"]
+    MetaPrompt --> PlanReq["2. Plan de Requisitos y Arquitectura<br/>(TEMPLATE_ADR.md)"]
     PlanReq --> TDD_RED["3. TDD RED<br/>(Escribir Test Unitario que Falla)"]
     TDD_RED --> TDD_GREEN["4. TDD GREEN<br/>(Implementar Código Mínimo)"]
     TDD_GREEN --> QualityGate["5. Quality Gate A<br/>(Markdownlint + SonarQube + Coverage >=80%)"]

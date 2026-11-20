@@ -16,7 +16,7 @@
 | **Parámetros de Función** | $\le 7$ parámetros (`S107`) | Cumple en todos los módulos | ✅ PASS |
 | **Seguridad Estática** | 0 secretos / 0 inyecciones de comandos | 0 vulnerabilidades detectadas | ✅ PASS |
 | **Estándar Markdown** | DavidAnson `.markdownlint.json` | 100% compliant (`--check-only`) | ✅ PASS |
-| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 87/87 tests superados (2.27s) | ✅ PASS |
+| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 88/88 tests superados (2.29s) | ✅ PASS |
 | **Hard Gate Presupuesto** | Reglas $\le 24$ KB, tokens $\le 16$k, eager $\le 3$k | 100% compliant en ECC Root y Plugin | ✅ PASS |
 | **AgentShield Security** | Escaneo de hooks, MCPs y skills | 100% compliant sin bypass/inyecciones | ✅ PASS |
 
@@ -48,5 +48,6 @@
 - **Alineación de Prompt Caching Gemini 3.8**: Reestructuración binaria de `AGENTS.md` (prefijo estático invariante continuo + sufijo contextual) y marcador canónico `<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->` validado en test de arnés para maximizar hit-ratio de KV-cache y reducir TTFT hasta un 60%.
 - **Gobernanza de Ramas**: Enforzada mediante [`validate_branch.py`](../scripts/ecc-agy/validate_branch.py) (patrones `fix/<id>`, `feat/*`, `refactor/*`, `infra/*`, `chore/*`, `docs/*`, `test/*`; bloqueo directo en `main`).
 - **Autopsias SRE 5W**: Generación automática obligatoria mediante [`generate_postmortem.py`](../scripts/ecc-agy/generate_postmortem.py) ante cualquier cierre de rama `fix/*`.
+- **Estandarización de Plantillas Documentales**: Reubicación de plantillas sueltas hacia sus ubicaciones canónicas por tipo: `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md` a [`doc/adr/TEMPLATE_ADR.md`](adr/TEMPLATE_ADR.md) y `TEMPLATE_POSTMORTEM_5W.md` a [`doc/post-mortem/TEMPLATE_POSTMORTEM.md`](post-mortem/TEMPLATE_POSTMORTEM.md) con cero enlaces rotos.
 - **Ciclo Completo de PR y Automerge**: Implementado de forma idempotente y multiplataforma en [`complete-task-pr.ps1`](../scripts/bin/ecc-agy/complete-task-pr.ps1) y [`complete-task-pr.sh`](../scripts/bin/ecc-agy/complete-task-pr.sh) con Pre-Flight Review, auto-archivo de TODOs, Quality Gates y squash-automerge.
 - **Backlog Activo**: 8 tareas pendientes en [`doc/TODO.md`](TODO.md) (Prioridad 2 completada al 100%, archivada en [`doc/TODO_DONE/`](TODO_DONE/)).

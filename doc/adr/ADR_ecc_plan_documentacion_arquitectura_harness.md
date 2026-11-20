@@ -1,7 +1,7 @@
 # Plan de Requisitos, Arquitectura y Documentación: Ecosistema Multi-Harness y Entorno AGY
 
 > **Documento de Análisis de Requisitos y Diseño Arquitectónico**
-> Basado en la plantilla corporativa `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`.
+> Basado en la plantilla corporativa `doc/adr/TEMPLATE_ADR.md`.
 > **Proyecto**: `ecc` (Everything Claude Code / Antigravity Master Ecosystem)
 > **Fecha**: 2026-11-01 | **Autor**: Antigravity (Advanced Agentic Coding) | **Estado**: Plan Aprobado
 

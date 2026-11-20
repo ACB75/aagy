@@ -83,5 +83,5 @@ En entornos Linux / WSL / macOS (POSIX LF):
 - 🚦 **[`doc/STATUS.md`](doc/STATUS.md)**: Estado actual de salud, SonarQube Rating A y métricas operacionales.
 - 📜 **[`doc/LOG.md`](doc/LOG.md)**: Registro histórico de decisiones materiales y cambios arquitectónicos.
 - 🏛️ **[`doc/adr/`](doc/adr/README.md)**: Registro formal de Decisiones de Arquitectura (ADR-0001, ADR-0002).
-- 🩺 **[`doc/post-mortem/`](doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md)**: Marco de autopsias SRE 5W (*blameless*).
+- 🩺 **[`doc/post-mortem/`](doc/post-mortem/TEMPLATE_POSTMORTEM.md)**: Marco de autopsias SRE 5W (*blameless*).
 - ⚙️ **[`.governance/docs-map.json`](.governance/docs-map.json)**: Contrato canónico de roles de documentación.

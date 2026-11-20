@@ -1,6 +1,6 @@
 # Plan de Requisitos y Arquitectura: Tarea 1.4 - Generador Automatizado de Post-Mortem 5W
 
-> **Documento de Requisitos y Arquitectura (Template `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`)**  
+> **Documento de Requisitos y Arquitectura (Template `doc/adr/TEMPLATE_ADR.md`)**  
 > **Proyecto**: `ecc` (SRE Governance & Incident Lifecycle)  
 > **Tipo de Intervención**: Automatización SRE & Plantilla Canónica Post-Mortem 5W  
 > **Fecha**: 2026-11-07  
@@ -21,7 +21,7 @@
 ### 2.1. Requisitos Funcionales (`RF`)
 
 - **`RF-01 (Plantilla Canónica 5W)`**:
-  - Crear `doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md` con las secciones canónicas:
+  - Crear `doc/post-mortem/TEMPLATE_POSTMORTEM.md` con las secciones canónicas:
     1. Metadatos del Incidente (Rama, Fecha UTC, Severidad SEV-1..SEV-4, SLO afectado).
     2. Resumen Ejecutivo (Blameless).
     3. Análisis de las 5W: Who (servicios/actores), What (anomalía e impacto), When (cronología de detección, diagnóstico y mitigación), Where (entorno LOCAL/SANDBOX/LIVE y rutas), Why/How (Causa raíz y técnica).
@@ -44,7 +44,7 @@
 
 ### 2.3. Criterios de Aceptación (`CA`)
 
-- [x] **`CA-01`**: `TEMPLATE_POSTMORTEM_5W.md` creada y formateada con DavidAnson markdownlint.
+- [x] **`CA-01`**: `TEMPLATE_POSTMORTEM.md` creada y formateada con DavidAnson markdownlint.
 - [x] **`CA-02`**: `generate_postmortem.py` genera archivos `PM_<slug>_<timestamp>.md` con metadatos reales de Git.
 - [x] **`CA-03`**: Integración en `complete-task-pr.ps1` operativa para ramas `fix/*`.
 - [x] **`CA-04`**: Suite de tests unitarios pasando al 100%.
@@ -58,7 +58,7 @@ flowchart TD
     CloseBranch["Cierre de Rama de Tarea"] --> IsFix{"¿Es rama fix/*?"}
     IsFix -- No --> StandardPR["Flujo PR habitual (feat, refactor, infra)"]
     IsFix -- Sí --> ExtractMeta["Extraer metadatos Git: Autor, Diff, Fechas UTC"]
-    ExtractMeta --> InstantiateTemplate["Instanciar doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md"]
+    ExtractMeta --> InstantiateTemplate["Instanciar doc/post-mortem/TEMPLATE_POSTMORTEM.md"]
     InstantiateTemplate --> SavePM["Escribir doc/post-mortem/PM_branch_timestamp.md"]
     SavePM --> CommitStage["Incluir en PR atómica del fix"]
 ```

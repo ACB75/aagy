@@ -60,3 +60,9 @@ def test_generate_postmortem_file_creates_file_in_dir():
         content = created_file.read_text(encoding="utf-8")
         assert "fix/kakebo/jwt-leak" in content
         assert "DevOps" in content
+
+
+def test_default_template_path():
+    from generate_postmortem import DEFAULT_TEMPLATE
+    assert DEFAULT_TEMPLATE == Path("doc/post-mortem/TEMPLATE_POSTMORTEM.md")
+

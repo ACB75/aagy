@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Generador automatizado de Post-Mortem 5W para ramas fix/* en ECC (generate_postmortem.py).
-Extrae metadatos de Git, instancia TEMPLATE_POSTMORTEM_5W.md y guarda en doc/post-mortem/.
+Extrae metadatos de Git, instancia TEMPLATE_POSTMORTEM.md y guarda en doc/post-mortem/.
 Cumple con SonarQube Quality Gate A (S3776 <= 15, S1192 sin duplicados).
 """
 
@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence
 
-DEFAULT_TEMPLATE = Path("doc/post-mortem/TEMPLATE_POSTMORTEM_5W.md")
+DEFAULT_TEMPLATE = Path("doc/post-mortem/TEMPLATE_POSTMORTEM.md")
 DEFAULT_OUTPUT_DIR = Path("doc/post-mortem")
 
 

@@ -1,6 +1,6 @@
 # Plan de Requisitos y Arquitectura: Tarea 1.1 - Desacoplamiento Agnóstico y Saneamiento de Submódulos
 
-> **Documento de Requisitos y Arquitectura (Template `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`)**  
+> **Documento de Requisitos y Arquitectura (Template `doc/adr/TEMPLATE_ADR.md`)**  
 > **Proyecto**: `ecc` -> `aagy` (Universal Plugin Harness)  
 > **Tipo de Intervención**: Refactorización Arquitectónica y Saneamiento Estructural  
 > **Fecha**: 2026-11-07  

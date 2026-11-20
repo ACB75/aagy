@@ -1,6 +1,6 @@
 # Plan de Toma de Requisitos y Arquitectura: Barrido Completo y Optimización de Skills
 
-> **Documento de Requisitos y Arquitectura (Template `doc/TEMPLATE_REQUISITOS_ARQUITECTURA.md`)**  
+> **Documento de Requisitos y Arquitectura (Template `doc/adr/TEMPLATE_ADR.md`)**  
 > **Proyecto**: `ecc` (Ecosistema Maestro ECC-AGY / Home-Lab)  
 > **Tipo de Intervención**: Refactorización Arquitectónica, Barrido y Optimización de Skills y Agentes  
 > **Fecha**: 2026-11-07  

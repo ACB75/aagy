@@ -18,4 +18,4 @@ Toda la documentación técnica y arquitectónica del repositorio se encuentra n
 - 📐 **[`diagrams/`](diagrams/)**: Diagramas Mermaid de arquitectura, gobernanza y flujos.
 - 📘 **[`manual/`](manual/GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md)**: Manuales de arquitectura del arnés y entorno AGY.
 - 📁 **[`plan/`](plan/)**: Planes de requisitos, arquitectura e intervenciones de ingeniería.
-- 🩺 **[`post-mortem/`](post-mortem/TEMPLATE_POSTMORTEM_5W.md)**: Plantillas y autopsias 5W post-incidencias SRE.
+- 🩺 **[`post-mortem/`](post-mortem/TEMPLATE_POSTMORTEM.md)**: Plantillas y autopsias 5W post-incidencias SRE.
