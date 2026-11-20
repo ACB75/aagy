@@ -16,7 +16,7 @@
 | **Parámetros de Función** | $\le 7$ parámetros (`S107`) | Cumple en todos los módulos | ✅ PASS |
 | **Seguridad Estática** | 0 secretos / 0 inyecciones de comandos | 0 vulnerabilidades detectadas | ✅ PASS |
 | **Estándar Markdown** | DavidAnson `.markdownlint.json` | 100% compliant (`--check-only`) | ✅ PASS |
-| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 86/86 tests superados (2.27s) | ✅ PASS |
+| **Tests Unitarios** | Cobertura $\ge 80\%$, exit code 0 | 87/87 tests superados (2.27s) | ✅ PASS |
 | **Hard Gate Presupuesto** | Reglas $\le 24$ KB, tokens $\le 16$k, eager $\le 3$k | 100% compliant en ECC Root y Plugin | ✅ PASS |
 | **AgentShield Security** | Escaneo de hooks, MCPs y skills | 100% compliant sin bypass/inyecciones | ✅ PASS |
 
@@ -42,6 +42,7 @@
 - **Hard Gate de Presupuesto en Harness**: Implementado en [`workspace_audit.py`](../scripts/ecc-agy/workspace_audit.py) con límites bloqueantes para bytes de reglas ($\le 24$ KB), tokens agregados ($\le 16.000$), servidores MCP pesados y personalizaciones eager ($\le 3.000$ tokens en plugins).
 - **Integración Zero-Overhead Gemini MCP & Deep Ops**: Plantilla opcional en `templates/plugins/gemini-mcp/` con `"disabled": true` y CLI determinista `gemini_deep_ops.py` / `toggle_gemini_mcp.py` para diagnósticos multimodales a 0 tokens en reposo.
 - **Hooks Nativos, AgentShield e Instintos**: Manifiesto `hooks.json` nativo (safety guard en `PreToolUse`, auto-lint en `PostToolUse`), módulo AgentShield en `security_audit.py` y motor de instintos `.agents/instincts/` desacoplado de `AGENTS.md`.
+- **Promoción On-Demand de Skills Tier-2 a Tier-1**: CLI `skill_promotion.py` y utilidades `enable-skill.ps1` / `disable-skill.ps1` para activar temporalmente cualquiera de las 171 skills especializadas en el plugin activo registrándola en `.active_promotions.json` con validación $\le 140$c y retirarla al finalizar, protegiendo las 22 skills core de Tier 1.
 - **Telemetría de Tokens en Sesión y Política de Compactación**: CLI `session_token_monitor.py` y wrappers `session-token-monitor.ps1` / `.sh` que auditan `transcript.jsonl` en $< 150\text{ ms}$ e integran recomendación proactiva de `/compact` en `complete-task-pr.ps1` si se superan los 45.000 tokens en sesión.
 - **Git Hooks Nativos e Instalador Determinista**: Implementados hooks locales `pre-commit` (validación de Markdown staged) y `commit-msg` (validación Conventional Commit con `format_commit.py --strict`) junto con instalador multiplataforma `install-git-hooks.ps1` / `.sh` y manual `doc/manual/MANUAL_git_hooks.md`.
 - **Alineación de Prompt Caching Gemini 3.8**: Reestructuración binaria de `AGENTS.md` (prefijo estático invariante continuo + sufijo contextual) y marcador canónico `<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->` validado en test de arnés para maximizar hit-ratio de KV-cache y reducir TTFT hasta un 60%.

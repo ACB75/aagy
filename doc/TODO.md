@@ -37,29 +37,7 @@
 - Tarea 3.1: Alineación de Prompt Caching de Gemini 3.8 y Reordenamiento Estático de System Prompts -> `TODO_DONE/`
 - Tarea 3.2: Git Pre-Commit Hook Nativo y Scripts de Instalación (`install-git-hooks.ps1` / `.sh`) -> `TODO_DONE/`
 - Tarea 3.3: Telemetría Proactiva de Presupuesto en Sesión y Política de Auto-Compact / Compact Estratégico -> `TODO_DONE/`
-
-### Tarea 3.4: CLI de Promoción On-Demand de Skills Tier-2 $\leftrightarrow$ Tier-1 (`enable-skill.ps1` / `disable-skill.ps1`)
-
-- [ ] **Implementar utilidades CLI para activar y desactivar dinámicamente skills especializadas de Tier 2 en el plugin activo**
-  - **01 - ROLE:** Modular Plugin Architect & CLI Ergonomics Engineer.
-  - **02 - CONTEXT:** `[Sector: AI Agent Plugin Management]` `[Data Type: PowerShell & Bash scripts, directory synchronization]` `[Objective: Proporcionar un comando rápido y seguro que permita al desarrollador promover temporalmente una skill de Tier 2 (ej. chrome-devtools, generative_ui, a11y-debugging) a la carpeta activa del plugin (~/.gemini/config/plugins/ecc-agy/skills/) para una tarea concreta, y retirarla al finalizar]` `[Restrictions: No comprometer archivos temporales en el repositorio Git; validar límites <= 140c de frontmatter en la skill promovida]`.
-  - **03 - PHASE 1 (ANALYSIS):**
-    - Contamos con 170 skills en el repositorio pero solo 22 en el plugin activo para mantener el presupuesto siempre activo en ~945 tokens.
-    - Cuando surge una tarea puntual que requiere una skill especializada (ej. depuración de memoria o UI generativa), el desarrollador debe copiar la carpeta manualmente o recargar el plugin completo.
-  - **04 - PHASE 2 (STRATEGY):**
-    - `enable-skill.ps1 -Name <skill>` valida que la skill exista en `skills/`, comprueba su frontmatter y la copia a la carpeta de plugin activo, registrándola en `.active_promotions.json`.
-    - `disable-skill.ps1 -Name <skill>` elimina la copia del plugin activo y restaura el estado limpio.
-  - **05 - PHASE 3 (EXECUTION):**
-    1. Implementar `scripts/bin/ecc-agy/enable-skill.ps1` y `.sh`.
-    2. Implementar `scripts/bin/ecc-agy/disable-skill.ps1` y `.sh`.
-    3. Añadir validación estricta de frontmatter y comprobación de presupuesto con `workspace_audit.py`.
-    4. Crear batería de tests unitarios en `test_skill_promotion.py`.
-  - **06 - PHASE 4 (CRITIC):**
-    - *Auditoría*: Evitar que la promoción de una skill sobrescriba accidentalmente una skill core de Tier 1 o que quede huérfana tras un crash de la sesión.
-  - **07 - PHASE 5 (FORMAT):**
-    - Scripts documentados, con validación de parámetros y mensajes estructurados.
-  - **MODELO & AGENTE ASIGNADO:** **Carbon ($C_6$) / Gemini 3.8 Flash** (~1.100 tokens).
-  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
+- Tarea 3.4: CLI de Promoción On-Demand de Skills Tier-2 $\leftrightarrow$ Tier-1 (`enable-skill.ps1` / `disable-skill.ps1`) -> `TODO_DONE/`
 
 ### Tarea 3.5: Reubicación y Estandarización de Plantillas Documentales (`TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md`)
 

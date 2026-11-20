@@ -5,6 +5,25 @@
 
 ---
 
+## 2026-11-20: Promoción On-Demand de Skills Tier-2 a Tier-1
+
+### Hitos y Decisiones Materiales
+
+1. **Gestor de Promoción On-Demand (`skill_promotion.py`)**:
+   - Copia dinámica de skills especializadas de `skills/<name>` a `~/.gemini/config/plugins/ecc-agy/skills/<name>`.
+   - Validación estricta de frontmatter (`description` $\le 140$ caracteres).
+   - Protección de skills core de Tier 1 frente a sobreescritura o eliminación accidental.
+   - Registro transaccional en `.active_promotions.json`.
+2. **Utilidades de Ergonomía CLI (`scripts/bin/ecc-agy/`)**:
+   - `enable-skill.ps1` y `enable-skill.sh` (promoción y flag `-List`).
+   - `disable-skill.ps1` y `disable-skill.sh` (retirada limpia de skills temporales).
+3. **Calidad y Documentación**:
+   - Manual operativo [`doc/manual/MANUAL_skill_promotion.md`](manual/MANUAL_skill_promotion.md).
+   - Suite [`scripts/ecc-agy/tests/test_skill_promotion.py`](../scripts/ecc-agy/tests/test_skill_promotion.py) con 87/87 tests pasando (100%).
+   - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
+
+---
+
 ## 2026-11-20: Telemetría Proactiva de Presupuesto en Sesión y Política de Compactación
 
 ### Hitos y Decisiones Materiales
