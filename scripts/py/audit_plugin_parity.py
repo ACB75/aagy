@@ -39,6 +39,12 @@ DIR_SKILLS = "skills"
 DIR_AGENTS = "agents"
 DIR_AAGY_ECC = "aagy-ecc"
 PLUGIN_ROOT_REF = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/([A-Za-z0-9_./-]+)")
+DIR_SCRIPTS_PY = Path("scripts", "py")
+DOCTOR_AAGY = DIR_SCRIPTS_PY / "aagy_doctor.py"
+DOCTOR_AAGY_ECC = Path(DIR_AAGY_ECC) / DIR_SCRIPTS_PY / "aagy_ecc_doctor.py"
+DOCTOR_CATALOG = DIR_SCRIPTS_PY / "doctor_core.py"
+DOCTOR_REGISTRY_ID = re.compile(r'^\s*"(DOC-\d{2})"\s*:', re.MULTILINE)
+DOCTOR_CATALOG_ID = re.compile(r'CheckSpec\("(DOC-\d{2})"')
 
 # Configuración de codificación UTF-8
 logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -151,6 +157,30 @@ def _check_mirror(repo_root: Path, discrepancies: List[str]) -> None:
     )
 
 
+def _doctor_ids(path: Path, pattern: "re.Pattern[str]") -> Tuple[str, ...]:
+    return tuple(sorted(set(pattern.findall(path.read_text(encoding="utf-8")))))
+
+
+def _check_doctor_parity(repo_root: Path, discrepancies: List[str]) -> None:
+    """/aagy-doctor y /aagy-ecc-doctor deben implementar exactamente los mismos checks del catálogo (1:1)."""
+    doctors = {"aagy_doctor.py": repo_root / DOCTOR_AAGY, "aagy_ecc_doctor.py": repo_root / DOCTOR_AAGY_ECC}
+    present = {name: path for name, path in doctors.items() if path.is_file()}
+    if not present:
+        return
+    if len(present) != len(doctors):
+        missing = sorted(set(doctors) - set(present))
+        discrepancies.append(f"Falta el doctor hermano {missing}: los dos doctors deben existir a la vez.")
+        return
+    catalog_file = repo_root / DOCTOR_CATALOG
+    catalog = _doctor_ids(catalog_file, DOCTOR_CATALOG_ID) if catalog_file.is_file() else ()
+    ids = {name: _doctor_ids(path, DOCTOR_REGISTRY_ID) for name, path in present.items()}
+    if len(set(ids.values())) != 1:
+        discrepancies.append(f"Los doctors implementan checks distintos: {ids}.")
+    for name, found in ids.items():
+        if catalog and found != catalog:
+            discrepancies.append(f"'{name}' no implementa el catálogo DOC-* de doctor_core.py: {found} != {catalog}.")
+
+
 def _check_claude_plugin(repo_root: Path, root_version: str, discrepancies: List[str]) -> Tuple[str, int, int]:
     """Valida el subplugin aagy-ecc para Claude Code."""
     claude_dir = repo_root / DIR_AAGY_ECC
@@ -190,6 +220,7 @@ def audit_parity(repo_root: Path) -> ParityAuditResult:
     root_data = _load_json_file(repo_root / FILE_PLUGIN_JSON) or {}
     root_version = str(root_data.get("version", "")).strip()
     claude_name, claude_skills_count, claude_agents_count = _check_claude_plugin(repo_root, root_version, discrepancies)
+    _check_doctor_parity(repo_root, discrepancies)
 
     root_skills_count = _count_dirs(repo_root / DIR_SKILLS)
     root_agents_count = _count_md(repo_root / DIR_AGENTS)
