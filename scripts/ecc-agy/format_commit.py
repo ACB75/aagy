@@ -3,7 +3,7 @@
 scripts/ecc-agy/format_commit.py - Validador y Generador de Mensajes de Commit Estandarizados
 
 Soporta formatos Conventional Commits flexibles y ergonómicos:
-  1. Formato extendido de monorepo: [type]+[projects]: <title>  (ej. feat+[doc]: update todo.md)
+  1. Formato extendido de monorepo: [type]-[projects]: <title>  (ej. feat-[doc]: update todo.md)
   2. Formato con guión: type-project: <title>                  (ej. feat-doc: update todo.md)
   3. Formato convencional estándar: type(project): <title>     (ej. feat(doc): update todo.md)
   4. Formato convencional simple: type: <title>                (ej. feat: update todo.md)
@@ -66,7 +66,7 @@ def parse_commit_header(first_line: str) -> Tuple[Optional[str], List[str], str]
     if not line:
         return None, [], ""
 
-    # 1. Formato monorepo extendido: type+[projects]: title  (ej. feat+[doc]: ...)
+    # 1. Formato monorepo extendido: [type]-[projects]: title  (ej. feat-[doc]: ...)
     m1 = re.match(r"^\[?([a-zA-Z0-9_-]+)\]?[-+]\[([a-zA-Z0-9_,-]+)\]:\s*(.+)$", line)
     if m1:
         t = m1.group(1).lower()
@@ -200,7 +200,7 @@ def _handle_validation_output(result: CommitValidationResult, is_json: bool) -> 
         return 0 if result.is_valid else 1
 
     if result.is_valid:
-        projs_str = f"+[{','.join(result.projects)}]" if result.projects else ""
+        projs_str = f"-[{','.join(result.projects)}]" if result.projects else ""
         logger.info("[OK] Mensaje de commit VALIDO: %s%s: %s", result.commit_type, projs_str, result.title)
         if result.body_length > 0:
             logger.info("     Cuerpo explicativo: %d caracteres.", result.body_length)
@@ -226,7 +226,7 @@ def _extract_msg_to_validate(args: argparse.Namespace) -> Optional[str]:
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Validador y Generador de Commits Conventional flexibles (soporta type-project: <title>, type+[projects]: <title>)."
+        description="Validador y Generador de Commits Conventional flexibles (soporta type-project: <title>, [type]-[projects]: <title>)."
     )
     parser.add_argument("--validate", "-v", type=str, help="Cadena de texto del mensaje de commit a validar.")
     parser.add_argument("--validate-file", "-f", type=Path, help="Archivo con el mensaje de commit a validar.")

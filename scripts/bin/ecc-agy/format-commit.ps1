@@ -1,6 +1,6 @@
-<#
+﻿<#
 .SYNOPSIS
-    Valida y formatea mensajes de commit bajo el estándar [type]+[projects]: <title> con cuerpo obligatorio.
+    Valida y formatea mensajes de commit bajo el estándar [type]-[projects]: <title> con cuerpo obligatorio.
 .DESCRIPTION
     Invoca scripts/ecc-agy/format_commit.py asegurando el cumplimiento de la regla en Windows 11.
 .PARAMETER Validate
