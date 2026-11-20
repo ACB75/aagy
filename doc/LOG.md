@@ -5,6 +5,26 @@
 
 ---
 
+## 2026-11-20: Formalización del Workflow de Ingeniería de 4 Fases y Acoplamiento Home-Lab
+
+### Hitos y Decisiones Materiales
+
+1. **Plantillas Estandarizadas de 4 Fases (`doc/templates/`)**:
+   - Fase 1: [`01_TOMA_REQUISITOS_E_IMPACTO.md`](templates/01_TOMA_REQUISITOS_E_IMPACTO.md): Requisitos funcionales, criterios de aceptación (Given/When/Then), matriz de impacto en Home-Lab (paridad `home-lab-sdk`, PostgreSQL LTS lock safety, Ingress único `cluster-lb` y Split-DNS, SRE memory throttling) y política estricta de *Zero-Breaking Changes*.
+   - Fase 2: [`02_PLAN_ACCION_ARQUITECTURA.md`](templates/02_PLAN_ACCION_ARQUITECTURA.md): Inventario DRY de reutilización, sincronización previa del SDK, topología Mermaid, TDD (`RED` -> `GREEN` -> `REFACTOR` -> `VERIFY`) y plan de Fast-Rollback (<2 min: `git revert` y `down-migration.sql`).
+   - Fase 3: [`03_DOCUMENTACION_Y_RELEASE_NOTES.md`](templates/03_DOCUMENTACION_Y_RELEASE_NOTES.md): Generación previa de Notas de la Versión SemVer (`vX.Y.Z`), matriz de promoción multi-tier (`LOCAL` -> `SANDBOX` -> `LIVE`), actualización de espina documental (`STATUS.md`, `LOG.md`, ADRs) y autopsia 5W para incidentes.
+   - Fase 4: [`04_PROPUESTA_COMMITS_PR.md`](templates/04_PROPUESTA_COMMITS_PR.md): Commits atómicos convencionales `[type]-[projects]: <title>`, Pre-Flight Review Notice con diff completo de código + docs, compuertas de calidad SonarQube Rating A y orquestación de PR con squash-automerge.
+2. **Skill `engineering-lifecycle` y Subagente `lifecycle-coordinator`**:
+   - Creada skill [`skills/engineering-lifecycle/SKILL.md`](../skills/engineering-lifecycle/SKILL.md) e incorporada al catálogo Tier 1 (`generic`).
+   - Creado subagente auditor [`agents/lifecycle-coordinator.md`](../agents/lifecycle-coordinator.md).
+3. **Herramienta CLI de Scaffolding de Tareas (`new-lifecycle-task`)**:
+   - Desarrollado [`scripts/ecc-agy/new_lifecycle_task.py`](../scripts/ecc-agy/new_lifecycle_task.py) y wrappers [`new-lifecycle-task.ps1`](../scripts/bin/ecc-agy/new-lifecycle-task.ps1) / `new-lifecycle-task.sh`.
+   - Incorporada suite de tests unitarios (`test_new_lifecycle_task.py`) alcanzando 66/66 tests passing (100%).
+4. **Actualización de Reglas de Gobernanza (`rules/AGENTS.md`)**:
+   - Incorporado el workflow de 4 fases como regla obligatoria en la sección 1 de `rules/AGENTS.md` y `AGENTS.md`.
+
+---
+
 ## 2026-11-08: Consolidación Final, Harness de Gobernanza y Optimización Two-Tier
 
 ### Hitos y Decisiones Materiales
