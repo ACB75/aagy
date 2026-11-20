@@ -1,26 +1,31 @@
 ﻿<#
 .SYNOPSIS
-    Instancia los artefactos de las 4 fases del Engineering Lifecycle para una tarea.
+    Instancia los artefactos del Engineering Lifecycle desde cualquier punto de entrada (IDEAS, REQ, PLAN, TODO, ALL).
 .DESCRIPTION
-    Genera REQ_<slug>.md, PLAN_<slug>.md, DOCS_<slug>.md y REVIEW_<slug>.md a partir
-    de las plantillas de doc/templates/ hacia doc/plan/.
+    Genera artefactos del flujo flexible [IDEAS -> REQUISITOS -> PLAN -> TODO] resolviendo rutas
+    dinámicamente vía .governance/docs-map.json (con fallback clásico).
 .PARAMETER TaskId
     Identificador o rama de la tarea (ej. 'feat/kakebo/export-csv').
+.PARAMETER Phase
+    Punto de entrada del ciclo de vida: ALL (defecto), IDEAS, REQ, PLAN, TODO, DOCS, REVIEW.
 .PARAMETER OutputDir
-    Directorio de salida (por defecto 'doc/plan').
+    Directorio de salida opcional (si se omite, lee .governance/docs-map.json).
 .PARAMETER Force
     Sobrescribe archivos si ya existen.
 .PARAMETER DryRun
     Simula la creación sin escribir archivos.
 .EXAMPLE
-    pwsh -File scripts/bin/ecc-agy/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv"
+    pwsh -File scripts/bin/ecc-agy/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
 #>
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
     [string]$TaskId,
 
-    [string]$OutputDir = "doc/plan",
+    [ValidateSet("ALL", "IDEAS", "REQ", "PLAN", "TODO", "DOCS", "REVIEW")]
+    [string]$Phase = "ALL",
+
+    [string]$OutputDir = "",
 
     [switch]$Force,
 
@@ -42,9 +47,12 @@ $cmdArgs = @(
     $PyScript,
     "--task-id", $TaskId,
     "--repo-root", $RepoRoot,
-    "--output-dir", $OutputDir
+    "--phase", $Phase
 )
 
+if (-not [string]::IsNullOrWhiteSpace($OutputDir)) {
+    $cmdArgs += @("--output-dir", $OutputDir)
+}
 if ($Force) { $cmdArgs += "--force" }
 if ($DryRun) { $cmdArgs += "--dry-run" }
 

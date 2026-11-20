@@ -12,6 +12,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence
 
+_SCRIPT_DIR = str(Path(__file__).resolve().parent)
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+
+from docs_map import resolve_doc_path
+
 SECTION_HEADER = "## Idea "
 STATUS_APPROVED = "Approved"
 
@@ -146,6 +152,7 @@ def sync_ideas(ideas_path: Path, todo_path: Path, dry_run: bool = False) -> int:
             synced_count += 1
 
     if synced_count > 0 and not dry_run:
+        todo_path.parent.mkdir(parents=True, exist_ok=True)
         todo_path.write_text(updated_todo, encoding="utf-8")
 
     return synced_count
@@ -154,8 +161,9 @@ def sync_ideas(ideas_path: Path, todo_path: Path, dry_run: bool = False) -> int:
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     """Parsea argumentos de línea de comandos."""
     parser = argparse.ArgumentParser(description="Ingesta automatizada de IDEAS.md a TODO.md con meta-prompt 7-fases.")
-    parser.add_argument("--ideas", type=Path, default=Path("doc/IDEAS.md"), help="Ruta al archivo IDEAS.md.")
-    parser.add_argument("--todo", type=Path, default=Path("doc/TODO.md"), help="Ruta al archivo TODO.md.")
+    parser.add_argument("--repo-root", type=Path, default=Path("."), help="Raíz del repositorio.")
+    parser.add_argument("--ideas", type=Path, default=None, help="Ruta al archivo IDEAS.md (opcional, lee docs-map.json).")
+    parser.add_argument("--todo", type=Path, default=None, help="Ruta al archivo TODO.md (opcional, lee docs-map.json).")
     parser.add_argument("--dry-run", action="store_true", help="Simula la sincronización sin escribir en disco.")
     parser.add_argument("--check", action="store_true", help="Comprueba si existen ideas pendientes de sincronizar.")
     return parser.parse_args(argv)
@@ -164,7 +172,11 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
 def main(argv: Optional[Sequence[str]] = None) -> int:
     """Punto de entrada principal del CLI."""
     args = parse_args(argv)
-    synced = sync_ideas(args.ideas, args.todo, dry_run=(args.dry_run or args.check))
+    repo_root = args.repo_root.resolve()
+    ideas_path = args.ideas if args.ideas is not None else resolve_doc_path(repo_root, "ideas")
+    todo_path = args.todo if args.todo is not None else resolve_doc_path(repo_root, "todo")
+
+    synced = sync_ideas(ideas_path, todo_path, dry_run=(args.dry_run or args.check))
     if args.check:
         if synced > 0:
             print(f"[WARN] Existen {synced} ideas aprobadas pendientes de sincronizar en TODO.md.")
@@ -172,7 +184,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print("[OK] Todas las ideas aprobadas están sincronizadas en TODO.md.")
         return 0
 
-    print(f"[OK] {synced} tareas sincronizadas con éxito en {args.todo}.")
+    print(f"[OK] {synced} tareas sincronizadas con éxito en {todo_path}.")
     return 0
 
 

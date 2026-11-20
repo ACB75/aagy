@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# new-lifecycle-task.sh - Instancia las 4 fases del Engineering Lifecycle
+# new-lifecycle-task.sh - Instancia artefactos del Engineering Lifecycle
+# Soporta --phase ALL|IDEAS|REQ|PLAN|TODO|DOCS|REVIEW y docs-map.json
 # Entorno: Debian 12 / Linux / WSL (POSIX LF)
 # ==============================================================================
 set -euo pipefail

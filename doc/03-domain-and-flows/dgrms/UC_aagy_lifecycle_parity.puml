@@ -1,0 +1,30 @@
+@startuml UC_aagy_lifecycle_parity
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Desarrollador (Terminal CLI)" as Dev
+actor "Agente Autónomo (AGY / Claude)" as Agent
+
+rectangle "Ecosistema aagy / ecc (docs-map.json)" {
+  usecase "Registrar Idea\n(--phase IDEAS)" as UC1
+  usecase "Ingerir IDEAS -> TODO\n(sync-ideas-todo)" as UC2
+  usecase "Instanciar Ciclo Flexible\n(REQ / PLAN / TODO)" as UC3
+  usecase "Ejecutar Quality Gates\n(pytest, lint, map-docs, sonar)" as UC4
+  usecase "Generar Post-Mortem 5W\n(ramas fix/*)" as UC5
+  usecase "Cerrar PR y Archivar TODO\n(complete-task-pr)" as UC6
+}
+
+Dev --> UC1
+Dev --> UC2
+Dev --> UC3
+Dev --> UC4
+Dev --> UC5
+Dev --> UC6
+
+Agent --> UC1
+Agent --> UC2
+Agent --> UC3
+Agent --> UC4
+Agent --> UC5
+Agent --> UC6
+@enduml

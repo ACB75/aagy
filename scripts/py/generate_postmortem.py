@@ -14,6 +14,12 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Optional, Sequence
 
+_SCRIPT_DIR = str(Path(__file__).resolve().parent)
+if _SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPT_DIR)
+
+from docs_map import resolve_doc_path
+
 DEFAULT_TEMPLATE = Path("doc/post-mortem/TEMPLATE_POSTMORTEM.md")
 DEFAULT_OUTPUT_DIR = Path("doc/post-mortem")
 
@@ -119,9 +125,10 @@ def generate_postmortem_file(
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     """Parsea argumentos de línea de comandos."""
     parser = argparse.ArgumentParser(description="Generador automatizado de Post-Mortem 5W.")
+    parser.add_argument("--repo-root", type=Path, default=Path("."), help="Raíz del repositorio.")
     parser.add_argument("--branch", type=str, default="", help="Nombre de la rama del incidente.")
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Directorio de destino.")
-    parser.add_argument("--template", type=Path, default=DEFAULT_TEMPLATE, help="Ruta a la plantilla 5W.")
+    parser.add_argument("--output-dir", type=Path, default=None, help="Directorio de destino (opcional, lee docs-map.json).")
+    parser.add_argument("--template", type=Path, default=None, help="Ruta a plantilla 5W (opcional, lee docs-map.json).")
     parser.add_argument("--dry-run", action="store_true", help="Muestra el contenido sin escribir en disco.")
     return parser.parse_args(argv)
 
@@ -135,14 +142,18 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         print(f"[INFO] La rama '{meta.branch_name}' no es de tipo 'fix/*'. Omitiendo generación de post-mortem.")
         return 0
 
+    repo_root = args.repo_root.resolve()
+    output_dir = args.output_dir if args.output_dir is not None else resolve_doc_path(repo_root, "postmortems")
+    template_path = args.template if args.template is not None else resolve_doc_path(repo_root, "postmortem_template")
+
     if args.dry_run:
-        template_text = args.template.read_text(encoding="utf-8") if args.template.is_file() else ""
+        template_text = template_path.read_text(encoding="utf-8") if template_path.is_file() else ""
         print(format_postmortem_markdown(meta, template_text))
         return 0
 
     created = generate_postmortem_file(
-        output_dir=args.output_dir,
-        template_path=args.template,
+        output_dir=output_dir,
+        template_path=template_path,
         branch_name=meta.branch_name,
         author=meta.author,
         diff_stat=meta.diff_summary,

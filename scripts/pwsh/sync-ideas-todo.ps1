@@ -1,9 +1,9 @@
-<#
+﻿<#
 .SYNOPSIS
     Ingesta y sincronización automatizada de IDEAS.md hacia TODO.md.
 .DESCRIPTION
     Script rutinario para Windows 11 (pwsh) que delega en scripts/py/sync_ideas_todo.py.
-    Aplica la metodología canónica de 7 fases a cada propuesta aprobada.
+    Resuelve rutas vía .governance/docs-map.json y aplica metodología de 7 fases.
 .PARAMETER Check
     Comprueba si existen ideas aprobadas pendientes de sincronizar sin modificar TODO.md.
 .PARAMETER DryRun
@@ -28,9 +28,9 @@ if (-not (Test-Path $PyScript)) {
     exit 1
 }
 
-$cmdArgs = @()
+$cmdArgs = @("--repo-root", $WorkspaceRoot)
 if ($Check) { $cmdArgs += "--check" }
 if ($DryRun) { $cmdArgs += "--dry-run" }
 
-python $PyScript $cmdArgs
+python $PyScript @cmdArgs
 exit $LASTEXITCODE

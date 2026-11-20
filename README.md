@@ -48,7 +48,7 @@ flowchart TD
 
 | Distribución | Harness | Propósito | Estado de Acoplamiento |
 | :--- | :--- | :--- | :--- |
-| **[`ecc-claude`](ecc-claude/)** | Claude Code | Boilerplates nativos de Claude Code (`CLAUDE.md`, `.claude/`, hooks y comandos slash). | Totalmente agnóstico, estándar oficial de ECC. |
+| **[`ecc`](ecc/)** | Claude Code | Boilerplates nativos de Claude Code (`CLAUDE.md`, `.claude/`, hooks y comandos slash). | Totalmente agnóstico, estándar oficial de ECC. |
 | **`ecc-agy` (Root)** | Google Antigravity & Gemini | Plugin universal (`aagy` / `ecc-agy`) con arquitectura en dos niveles (Two-Tier): Tier 1 Global Plugin con 21 skills nucleares (~701 tokens, reducción 98.25%) y Tier 2 con 169 skills y 48 subagentes canónicos en repositorio. | **Unificado y Agnóstico**: Apto para $N$ proyectos, clientes y monorepos con compuertas estrictas de calidad y gobernanza. |
 
 ---
@@ -77,11 +77,14 @@ En entornos Linux / WSL / macOS (POSIX LF):
 
 ---
 
-## 4. Documentación y Gobernanza
+## 4. Documentación y Gobernanza (`/doc` v2)
 
-- 📑 **[`doc/INDEX.md`](doc/INDEX.md)**: Índice maestro de manuales, diagramas Mermaid, ADRs y gobernanza.
+- 📑 **[`doc/INDEX.md`](doc/INDEX.md)**: Índice maestro de manuales, diagramas, ADRs y gobernanza.
+- 🧭 **[`doc/CONTEXT.md`](doc/CONTEXT.md)**: Vocabulario estable de dominio y límites de sistema.
 - 🚦 **[`doc/STATUS.md`](doc/STATUS.md)**: Estado actual de salud, SonarQube Rating A y métricas operacionales.
 - 📜 **[`doc/LOG.md`](doc/LOG.md)**: Registro histórico de decisiones materiales y cambios arquitectónicos.
-- 🏛️ **[`doc/adr/`](doc/adr/README.md)**: Registro formal de Decisiones de Arquitectura (ADR-0001, ADR-0002).
-- 🩺 **[`doc/post-mortem/`](doc/post-mortem/TEMPLATE_POSTMORTEM.md)**: Marco de autopsias SRE 5W (*blameless*).
-- ⚙️ **[`.governance/docs-map.json`](.governance/docs-map.json)**: Contrato canónico de roles de documentación.
+- 📏 **[`doc/00-governance/DOC_STANDARDS.md`](doc/00-governance/DOC_STANDARDS.md)**: Estándar `/doc` v2, `<folder>/dgrms/` y reglas de calidad.
+- 🛠️ **[`doc/00-governance/MANUAL_WORKFLOW.md`](doc/00-governance/MANUAL_WORKFLOW.md)**: Guía de paridad manual 1-a-1 CLI $\leftrightarrow$ Plugin (`IDEAS` $\rightarrow$ `REQ` $\rightarrow$ `PLAN` $\rightarrow$ `TODO`).
+- 🏛️ **[`doc/02-adr/README.md`](doc/02-adr/README.md)**: Registro formal de Decisiones de Arquitectura (`ADR-0001`..`ADR-0003`).
+- 🩺 **[`doc/05-post-mortems/`](doc/05-post-mortems/PM_fix_scripts_install_dir_creation_20261120_203232.md)**: Marco de autopsias SRE 5W (*blameless*).
+- ⚙️ **[`.governance/docs-map.json`](.governance/docs-map.json)**: Contrato canónico v2 de rutas documentales con fallback retrocompatible.

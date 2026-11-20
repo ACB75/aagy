@@ -118,6 +118,24 @@ def load_custom_roles(root: Path, report: Report) -> tuple[dict[object, object],
     return loaded, True
 
 
+def _validate_custom_paths_map(root: Path, paths_obj: object, report: Report) -> None:
+    if not isinstance(paths_obj, dict):
+        report.fail(f"Invalid documentation 'paths' section: {diagnostic(paths_obj)}")
+        return
+    for key, val in paths_obj.items():
+        if not isinstance(key, str) or not isinstance(val, str) or not val.strip():
+            report.fail(f"Invalid documentation path entry: {diagnostic(key)} -> {diagnostic(val)}")
+            continue
+        if Path(val).is_absolute():
+            report.fail(f"Documentation path mapping must be repository-relative: {diagnostic(key)} -> {diagnostic(val)}")
+            continue
+        if resolved_within_root(root, root / val) is None:
+            report.fail(f"Documentation path mapping escapes project root: {diagnostic(key)} -> {diagnostic(val)}")
+            continue
+        if not (root / val).exists():
+            report.fail(f"Mapped documentation path does not exist: {diagnostic(key)} -> {diagnostic(val)}")
+
+
 def apply_custom_roles(
     root: Path,
     roles: dict[str, str],
@@ -125,6 +143,13 @@ def apply_custom_roles(
     report: Report,
 ) -> None:
     for role, value in custom.items():
+        if role == "schema_version":
+            if not isinstance(value, int) or value not in (1, 2):
+                report.fail(f"Invalid documentation schema_version: {diagnostic(value)}")
+            continue
+        if role == "paths":
+            _validate_custom_paths_map(root, value, report)
+            continue
         if role not in roles or not isinstance(value, str) or not value.strip():
             report.fail(
                 f"Invalid documentation role mapping: {diagnostic(role)} -> {diagnostic(value)}"

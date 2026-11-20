@@ -87,8 +87,23 @@ try {
         }
     }
 
-    # Detectar tareas completadas en doc/TODO.md
-    $todoPath = Join-Path $RepoRoot "doc\TODO.md"
+    # Resolver rutas documentales desde .governance/docs-map.json (con fallback clásico)
+    $todoRel = "doc/TODO.md"
+    $doneRel = "doc/TODO_DONE"
+    $docsMapScript = Join-Path $RepoRoot "scripts\py\docs_map.py"
+    if (Test-Path $docsMapScript) {
+        $resolvedTodoRel = (python $docsMapScript --repo-root $RepoRoot --key todo --relative 2>$null)
+        if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($resolvedTodoRel)) {
+            $todoRel = $resolvedTodoRel.Trim()
+        }
+        $resolvedDoneRel = (python $docsMapScript --repo-root $RepoRoot --key todo_done --relative 2>$null)
+        if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($resolvedDoneRel)) {
+            $doneRel = $resolvedDoneRel.Trim()
+        }
+    }
+
+    # Detectar tareas completadas en TODO.md
+    $todoPath = Join-Path $RepoRoot $todoRel
     $hasCompletedTodos = $false
     if (Test-Path $todoPath) {
         $todoContent = Get-Content -Raw -Path $todoPath -ErrorAction SilentlyContinue
@@ -123,7 +138,7 @@ Estrategia Fast-Rollback:
     Write-Host "Rama Destino:       " -NoNewline; Write-Host $TargetBranch -ForegroundColor Yellow
     Write-Host "Título de PR/Commit:" -NoNewline; Write-Host " $Title" -ForegroundColor Green
     if ($hasCompletedTodos) {
-        Write-Host "Tareas a Archivar:  " -NoNewline; Write-Host "Tareas completadas detectadas en doc/TODO.md (se archivarán automáticamente a doc/TODO_DONE/)" -ForegroundColor Magenta
+        Write-Host "Tareas a Archivar:  " -NoNewline; Write-Host "Tareas completadas detectadas en $todoRel (se archivarán automáticamente a $doneRel)" -ForegroundColor Magenta
     }
     Write-Host "`nResumen de Cambios:" -ForegroundColor Cyan
     if ($statusLines) {
@@ -153,14 +168,14 @@ Estrategia Fast-Rollback:
         }
     }
 
-    # 6. Sincronizar y archivar tareas completadas en doc/TODO.md si existen
+    # 6. Sincronizar y archivar tareas completadas en TODO.md si existen
     if ($hasCompletedTodos) {
-        Write-Host "[+] Archivando tareas completadas en doc/TODO_DONE/..." -ForegroundColor Cyan
+        Write-Host "[+] Archivando tareas completadas en $doneRel..." -ForegroundColor Cyan
         $archiveScript = Join-Path $PSScriptRoot "archive-todo.ps1"
         if (Test-Path $archiveScript) {
-            pwsh -NoProfile -File $archiveScript
+            pwsh -NoProfile -File $archiveScript -TodoPath $todoRel -DoneDir $doneRel
             if ($LASTEXITCODE -ne 0) {
-                throw "Error al archivar tareas completadas de doc/TODO.md."
+                throw "Error al archivar tareas completadas de $todoRel."
             }
         }
     }
@@ -170,7 +185,7 @@ Estrategia Fast-Rollback:
         Write-Host "[+] Rama de incidencia detectada ('$currentBranch'). Generando Post-Mortem 5W..." -ForegroundColor Cyan
         $pmScript = Join-Path $RepoRoot "scripts\py\generate_postmortem.py"
         if (Test-Path $pmScript) {
-            python $pmScript --branch $currentBranch
+            python $pmScript --repo-root $RepoRoot --branch $currentBranch
         }
     }
 
@@ -184,14 +199,23 @@ Estrategia Fast-Rollback:
         }
     }
 
-    # 7.1. Tests unitarios
-    $testsDir = Join-Path $RepoRoot "scripts\py\tests"
-    if (-not (Test-Path $testsDir)) {
-        $testsDir = Join-Path $RepoRoot "scripts\ecc-agy\tests"
+    # 7.1. Tests unitarios (py / pwsh / sh)
+    $testTargets = @()
+    foreach ($relDir in @("scripts\py\tests", "scripts\pwsh\tests", "scripts\sh\tests")) {
+        $candidate = Join-Path $RepoRoot $relDir
+        if (Test-Path $candidate) {
+            $testTargets += $candidate
+        }
     }
-    if (Test-Path $testsDir) {
+    if ($testTargets.Count -eq 0) {
+        $fallbackTests = Join-Path $RepoRoot "scripts\ecc-agy\tests"
+        if (Test-Path $fallbackTests) {
+            $testTargets += $fallbackTests
+        }
+    }
+    if ($testTargets.Count -gt 0) {
         Write-Host "[+] Ejecutando suite de pruebas unitarias (pytest)..." -ForegroundColor Cyan
-        python -m pytest $testsDir -q
+        python -m pytest @testTargets -q
         if ($LASTEXITCODE -ne 0) {
             throw "La suite de pruebas unitarias falló. No se puede proceder con el merge."
         }
@@ -243,6 +267,16 @@ Estrategia Fast-Rollback:
         pwsh -NoProfile -File $pluginParityScript
         if ($LASTEXITCODE -ne 0) {
             throw "La auditoría de paridad multi-harness detectó divergencias entre aagy y ecc. Corrija los manifiestos antes de continuar."
+        }
+    }
+
+    # 7.7. Validación de Enlaces Documentales y docs-map.json
+    $mapDocsScript = Join-Path $RepoRoot "scripts\py\map_docs.py"
+    if (Test-Path $mapDocsScript) {
+        Write-Host "[+] Validando enlaces documentales y .governance/docs-map.json..." -ForegroundColor Cyan
+        python $mapDocsScript --repo-root $RepoRoot --check-docs-map
+        if ($LASTEXITCODE -ne 0) {
+            throw "La validación documental (map_docs.py) detectó enlaces rotos o referencias inválidas."
         }
     }
 

@@ -1,8 +1,30 @@
 {
+  "schema_version": 2,
   "constitution": "AGENTS.md",
   "map": "doc/INDEX.md",
+  "context": "doc/CONTEXT.md",
   "status": "doc/STATUS.md",
   "history": "doc/LOG.md",
-  "adr_dir": "doc/adr",
-  "adr_index": "doc/adr/README.md"
+  "adr_dir": "doc/02-adr",
+  "adr_index": "doc/02-adr/README.md",
+  "paths": {
+    "doc_root": "doc",
+    "governance": "doc/00-governance",
+    "references": "doc/00-governance/references",
+    "templates": "doc/00-governance/templates",
+    "adr_dir": "doc/02-adr",
+    "adr_index": "doc/02-adr/README.md",
+    "adr_template": "doc/00-governance/templates/TEMPLATE_ADR.md",
+    "architecture": "doc/01-architecture",
+    "domain_and_flows": "doc/03-domain-and-flows",
+    "operations": "doc/04-operations",
+    "postmortems": "doc/05-post-mortems",
+    "postmortem_template": "doc/00-governance/templates/TEMPLATE_POSTMORTEM.md",
+    "backlog": "doc/06-backlog",
+    "ideas": "doc/06-backlog/IDEAS.md",
+    "todo": "doc/06-backlog/TODO.md",
+    "todo_done": "doc/06-backlog/done",
+    "plans": "doc/06-backlog/plans",
+    "quick": "doc/06-backlog/quick"
+  }
 }
