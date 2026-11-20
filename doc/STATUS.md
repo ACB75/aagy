@@ -49,4 +49,4 @@
   - Ingress / Split-DNS: [`scripts/py/validate_ingress_routes.py`](../scripts/py/validate_ingress_routes.py)
   - Paridad Multi-Harness `aagy` $\leftrightarrow$ `aagy-ecc`: [`scripts/py/audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py)
 - **Ciclo Completo de PR y Automerge**: Orquestado en [`scripts/pwsh/complete-task-pr.ps1`](../scripts/pwsh/complete-task-pr.ps1) y [`scripts/sh/complete-task-pr.sh`](../scripts/sh/complete-task-pr.sh) con resolución dinámica de `TODO.md`/`done/`, suites `pytest` multi-runtime y compuerta documental `map_docs.py --check-docs-map`.
-- **Backlog Activo**: En [`doc/06-backlog/TODO.md`](06-backlog/TODO.md) (`Tarea 5.1` pendiente tras completarse `Tarea 0.1`, `Tarea 0.2`, `Tarea 0.3` y `Tarea 0.4`).
+- **Backlog Activo**: En [`doc/06-backlog/TODO.md`](06-backlog/TODO.md) (`0` tareas pendientes; `Tarea 0.1`, `Tarea 0.2`, `Tarea 0.3`, `Tarea 0.4` y `Tarea 5.1` completadas y archivadas en `doc/06-backlog/done/`).

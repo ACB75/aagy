@@ -1,43 +1,43 @@
-# ECC-Claude (`ecc-claude`)
+# Anything Antigravity for Claude Code (`aagy-ecc`)
 
-> **Distribución Oficial de Boilerplates de Everything Claude Code (ECC) para Claude Code**  
-> Parte del ecosistema multiproyecto [`ecc`](../README.md).
+> **Distribución Hermana de Anything Antigravity (`aagy`) para Anthropic Claude Code**  
+> Parte del ecosistema maestro [`aagy`](../README.md).
 
 ---
 
 ## 1. Visión General
 
-`ecc-claude` contiene los artefactos, plantillas de configuración y boilerplates extraídos directamente del repositorio canónico de **Everything Claude Code (ECC)** optimizados para su uso nativo con Anthropic Claude Code.
+`aagy-ecc` provee los artefactos, reglas, comandos slash y hooks para **Anthropic Claude Code**, manteniendo paridad estructural y funcional con el plugin raíz **Anything Antigravity (`aagy`)** verificada automáticamente mediante [`scripts/py/audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
 
 ---
 
 ## 2. Artefactos Incluidos
 
-- **`CLAUDE.md`**: El archivo maestro de instrucciones de contexto, defensa de prompts y estándares operativos para Claude Code.
-- **`.claude/`**: Directorio de configuración nativo con:
-  - `commands/`: Comandos slash (`/plan`, `/review`, `/test`, etc.).
-  - `rules/`: Reglas de arquitectura, pruebas y calidad.
-  - `enterprise/`, `identity.json`, `workflows/`: Configuraciones de equipo y flujo.
-- **`.claude-plugin/`**: Manifiestos de marketplace y plugins para Claude Code.
-- **`hooks/`**: Sistema de hooks de ciclo de vida (persistencia de memoria, pre/post ejecución).
-- **`commands/`**: Catálogo de comandos slash ampliados.
-- **`scaffolds/`**: Estructuras de inicio rápido para proyectos.
+- **[`CLAUDE.md`](CLAUDE.md)**: Instrucciones maestras de contexto, defensa de prompts, invariantes de ingeniería (Google 5-Pillars, SRE, SonarQube Quality Gate A) y ciclo de vida de 4 fases.
+- **`.claude/`**: Configuración nativa con comandos slash (`commands/`), reglas (`rules/`), flujos (`workflows/`) y controles empresariales (`enterprise/`).
+- **[`.claude-plugin/plugin.json`](.claude-plugin/plugin.json)**: Manifiesto oficial del plugin `aagy-ecc` (`v4.0.0`).
+- **`hooks/`**: Hooks deterministas de ciclo de vida y persistencia.
+- **`commands/`**: Catálogo de comandos slash operativos (`/tdd`, `/plan`, `/e2e`, `/code-review`, `/evolve`, `/promote`, `/instinct-status`).
+- **`scaffolds/`**: Plantillas de inicio rápido para proyectos.
 
 ---
 
-## 3. Modo de Uso
+## 3. Instalación y Uso
 
-### Opción A: Copia Directa a tu Proyecto Claude Code
+### Opción A: Instalador Maestro Multiplataforma
 
-Copia los archivos a la raíz de cualquier repositorio donde utilices Claude Code:
-
-```bash
-cp CLAUDE.md /ruta/a/tu/proyecto/
-cp -r .claude /ruta/a/tu/proyecto/
+```powershell
+# Windows 11 (PowerShell 7+)
+pwsh -NoProfile -File ../install.ps1 -Target aagy-ecc -Destination C:\Ruta\A\Tu\Proyecto
 ```
 
-### Opción B: Instalación como Plugin de Claude Code
+```bash
+# Linux / WSL / macOS
+../install.sh aagy-ecc /ruta/a/tu/proyecto
+```
+
+### Opción B: Instalación como Plugin en Claude Code CLI
 
 ```bash
-claude plugin install ./ecc-claude
+claude plugin install ./aagy-ecc
 ```
