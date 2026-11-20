@@ -35,7 +35,7 @@ pwsh -NoProfile -File scripts/ps1/audit-plugin-parity.ps1
 pwsh -NoProfile -File scripts/ps1/map-docs.ps1
 
 # Unified self-discovery and dual-level instinct manager
-python scripts/py/self_improve.py --discover --scope both
+python scripts/py/self_improve.py --discover --scope all
 ```
 
 ## 3. Architecture & Documentation Spine (`/doc` v2)
