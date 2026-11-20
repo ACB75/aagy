@@ -51,7 +51,7 @@ param(
     [switch]$CaptureStop,
     [string]$Evaluate = "",
     [string]$Task = "",
-    [ValidateSet('project', 'global', 'all')]
+    [ValidateSet('project', 'global', 'all', 'both')]
     [string]$Scope = 'all',
     [ValidateSet('script', 'skill', 'agent', 'rule', 'hook')]
     [string]$Tier = "",

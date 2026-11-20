@@ -16,7 +16,7 @@
 | **Parámetros de Función** | $\le 7$ parámetros (`S107`) | Cumple en todos los módulos | ✅ PASS |
 | **Seguridad Estática** | 0 secretos / 0 inyecciones de comandos | 0 vulnerabilidades detectadas | ✅ PASS |
 | **Estándar Markdown** | DavidAnson `.markdownlint.json` | 100% compliant (`--check-only`) | ✅ PASS |
-| **Tests Multi-Runtime** | Cobertura $\ge 80\%$, exit code 0 | 146+ tests pasando (`py` / `pwsh` / `sh`) | ✅ PASS |
+| **Tests Multi-Runtime** | Cobertura $\ge 80\%$, exit code 0 | 154+ tests pasando (`py` / `ps1` / `sh`) | ✅ PASS |
 | **Integridad `/doc` v2** | Cero enlaces rotos y `docs-map.json` válido | 0 incidencias en `map_docs.py` y `audit-docs.py` | ✅ PASS |
 | **Hard Gate Presupuesto** | Reglas $\le 24$ KB, tokens $\le 16$k, eager $\le 3$k | 100% compliant en Root y Plugin | ✅ PASS |
 

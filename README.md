@@ -98,7 +98,7 @@ pwsh -NoProfile -File scripts/ps1/map-docs.ps1
 pwsh -NoProfile -File scripts/ps1/lint-markdown.ps1 -CheckOnly
 
 # Motor unificado de autodescubrimiento, instintos a doble nivel y automejora con budget gate
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover -Scope both
+pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover -Scope all
 ```
 
 ---
