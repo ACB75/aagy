@@ -26,30 +26,7 @@
 
 - Tarea 2.1: Hard Gate de Presupuesto de Rules, Customizations y MCPs en `workspace_audit.py` -> `TODO_DONE/`
 - Tarea 2.2: Integración Zero-Overhead de `gemini-mcp` (`disabled: true`) y Skill `gemini-deep-ops` -> `TODO_DONE/`
-
-### Tarea 2.3: Hooks Nativos (`hooks.json`), Auditoría AgentShield e Instintos AGY (`home-lab`)
-
-- [ ] **Adoptar hooks deterministas, escaneo de seguridad del harness e instintos por proyecto desde `affaan-m/ECC`**
-  - **01 - ROLE:** AI Security & Agent Reliability Engineer (experto en *AgentShield*, hooks deterministas de ciclo de vida y sistemas de aprendizaje continuo por proyecto).
-  - **02 - CONTEXT:** `[Sector: Agent Security & Continuous Learning]` `[Data Type: Antigravity hooks.json, Python/PowerShell Security Scanner, .agents/instincts/]` `[Objective: Trasladar controles clave de AGENTS.md a hooks.json deterministas (0 tokens), incorporar auditoría AgentShield sobre configuraciones del harness y adaptar continuous-learning-v2 a .agents/ en home-lab]` `[Restrictions: hooks.json debe ubicarse en la raíz del plugin nativo; mantener presupuesto de Tier 1 intacto]`.
-  - **03 - PHASE 1 (ANALYSIS):**
-    - Hoy el cumplimiento de `lint-markdown.ps1` o bloqueos de `safety-guard` depende de la atención del modelo sobre `AGENTS.md`.
-    - `ecc` contiene `skills/continuous-learning-v2/` orientado a rutas `~/.claude/`, y falta un escáner tipo *AgentShield* que audite `mcp_config.json`, `hooks.json` y `skills/` contra secretos o *prompt injection*.
-  - **04 - PHASE 2 (STRATEGY):**
-    - *Enfoque A*: Añadir solo `hooks.json` mínimo en `ecc-agy` para validaciones post-edición y pre-comando.
-    - *Enfoque B*: Integrar módulo *AgentShield* en `workspace_audit.py` para auditar permisos, secretos y scripts de hooks/MCPs.
-    - *Enfoque C (Integral)*: Implementar `hooks.json` en la raíz del plugin + módulo AgentShield en `workspace_audit.py` + adaptador de instintos hacia `.agents/instincts/` en `home-lab`.
-  - **05 - PHASE 3 (EXECUTION):**
-    1. Diseñar y validar `hooks.json` en la raíz del plugin `ecc-agy` (sin exceder latencia ni romper flujos Windows `pwsh`).
-    2. Añadir chequeos *AgentShield* (secretos en `mcp_config.json`, comandos inseguros en `hooks.json`, patrones sospechosos en `skills/`) dentro de `workspace_audit.py` + tests.
-    3. Adaptar la captura de instintos de `continuous-learning-v2` para persistir aprendizajes específicos del clúster en `home-lab/.agents/instincts/` sin inflar `AGENTS.md`.
-    4. Ejecutar suite completa de auditoría, `pytest` y `lint-markdown.ps1`.
-  - **06 - PHASE 4 (CRITIC):**
-    - *Auditoría*: Evitar hooks bloqueantes lentos que degraden cada edición de archivo; limitar los hooks síncronos a operaciones sub-segundo o rutas específicas.
-  - **07 - PHASE 5 (FORMAT):**
-    - `hooks.json` válido, extensión auditada de `workspace_audit.py` con tests en verde y documentación en `doc/`.
-  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens) para el modelo de amenazas de hooks y AgentShield; **Carbon ($C_6$)** para la implementación de código.
-  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
+- Tarea 2.3: Hooks Nativos (`hooks.json`), Auditoría AgentShield e Instintos AGY -> `TODO_DONE/`
 
 ---
 
@@ -250,9 +227,42 @@
 
 ---
 
-## 5. Gobernanza de Modelos, Tokens y Política de Auto-Compact
+## 5. Prioridad 5: Cierre Maestro — Regeneración Limpia de Documentación y Rebranding a `/aagy` (`Anything Antigravity`)
 
-### 5.1. Matriz de Asignación de Modelos por Tarea (Token Optimization)
+### Tarea 5.1: Purga y Regeneración Limpia de Documentación + Recreación de `/ecc` como `/aagy` (`Anything Antigravity`)
+
+- [ ] **Ejecutar el cierre maestro del backlog: regenerar toda la documentación desde cero sin deuda histórica y recrear el repositorio `/ecc` como `/aagy` (*Anything Antigravity*)**
+  - **01 - ROLE:** Principal Release & Repository Migration Architect (experto en rebranding estructural de monorepos, gobernanza documental zero-drift, migración segura de git remotes/workspaces y publicación limpia de plugins Antigravity).
+  - **02 - CONTEXT:** `[Sector: Repository Lifecycle & Brand Migration]` `[Data Type: Markdown docs/manuals/ADRs, Git repo /ecc -> /aagy (preservando historial), plugin aagy + plugin Claude Code ecc sincronizado]` `[Objective: (1) Eliminar toda la documentación actual obsoleta y generar una suite documental 100% limpia y alineada con el estado final tras completar las prioridades 2-4; (2) Migrar el repositorio actual /ecc a /aagy ("Anything Antigravity") preservando el historial Git, aplicando full rename a aagy (incluido ~/.gemini/config/plugins/aagy) y manteniendo dentro de /aagy el plugin para Claude Code llamado ecc siempre sincronizado con aagy para paridad multiagente]` `[Restrictions: Ejecutar EXCLUSIVAMENTE como última tarea del TODO.md tras completar y verificar todas las prioridades anteriores; conservar el historial Git completo; prohibido ejecutar rm/delete destructivo sin verificación previa en /aagy y confirmación explícita del usuario; mantener 0 enlaces rotos y 100% cumplimiento de markdownlint + budget hard gate + paridad aagy<->ecc]`.
+  - **03 - PHASE 1 (ANALYSIS):**
+    - Tras múltiples iteraciones desde `affaan-m/ECC`, el repositorio `/ecc` arrastra documentación histórica fragmentada (`doc/`, `README.md`, referencias mixtas a `ecc` / `ecc-claude`) y el directorio/nombre raíz `/ecc` ya no refleja la identidad nativa de *Anything Antigravity* (`/aagy`).
+    - Hacer esta migración antes de terminar las Tareas 2.3–4.4 generaría retrabajo y rompería rutas activas; por ello ambas acciones (regeneración documental limpia + recreación `/ecc` -> `/aagy`) conforman **una única tarea atómica de cierre**.
+  - **04 - PHASE 2 (STRATEGY):**
+    - *Enfoque A (In-Place Rename)*: Renombrar carpeta y editar archivos en sitio, arriesgando arrastrar basura documental o romper rutas activas.
+    - *Enfoque B (History-Preserving Cutover & Dual-Plugin Parity - Recomendado)*:
+      1. Verificar que todas las tareas previas (`2.3` a `4.4`) estén archivadas en `TODO_DONE/` y en verde (`audit-workspace.ps1` + `pytest`).
+      2. Clonar/migrar `c:\Workspace\projects\ecc` hacia `c:\Workspace\projects\aagy` (*Anything Antigravity*) **conservando el historial Git completo**, aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, rutas y `~/.gemini/config/plugins/aagy`).
+      3. Estructurar y sincronizar dentro de `/aagy` el plugin para Claude Code llamado **`ecc`** (con chequeo de paridad automatizado `aagy` $\leftrightarrow$ `ecc` para operar de forma idéntica en multiagentes).
+      4. Purgar la documentación histórica heredada y generar desde cero la documentación limpia (`README.md`, `doc/INDEX.md`, `doc/STATUS.md`, `doc/LOG.md`, `doc/adr/`, `doc/manual/`, `doc/diagrams/`) reflejando exclusivamente la arquitectura final `aagy` + `ecc`.
+      5. Validar integridad completa en `/aagy` (`pytest`, `audit-workspace.ps1`, `lint-markdown.ps1`, smoke-test de ambos plugins) y, solo tras confirmación explícita del usuario, eliminar el antiguo directorio `/ecc`.
+  - **05 - PHASE 3 (EXECUTION):**
+    1. Gate previo: confirmar backlog previo (`2.3`–`4.4`) completado al 100%.
+    2. Crear `/aagy` preservando el historial Git (`git log` íntegro) y ejecutar *full rename* de identidad a `aagy` / *Anything Antigravity*.
+    3. Consolidar dentro de `/aagy` el plugin de Claude Code **`ecc`** y su mecanismo/script de sincronización y paridad continua con `aagy`.
+    4. Purgar documentación heredada y generar desde cero el árbol `doc/` limpio, pasando `lint-markdown.ps1` y `audit-workspace.ps1` con código de salida `0`.
+    5. Actualizar el plugin instalado a `~/.gemini/config/plugins/aagy`, obtener confirmación final del usuario y retirar `/ecc`.
+  - **06 - PHASE 4 (CRITIC):**
+    - *Auditoría*: Riesgo crítico de pérdida irreversible si se borra `/ecc` antes de validar el 100% de tests, git remote y enlaces en `home-lab` o `~/.gemini/`. Mitigación: cutover en dos pasos con verificación integral en `/aagy` y confirmación explícita antes de borrar `/ecc`.
+  - **07 - PHASE 5 (FORMAT):**
+    - Repositorio `/aagy` inicializado, tests y `audit-workspace.ps1` en verde (exit `0`), documentación limpia regenerada y cero referencias rotas.
+  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~8.000 tokens) para la auditoría de cutover y arquitectura documental; **Carbon ($C_6$)** para generación limpia y validación.
+  - **COMPACT TRIGGER:** Al completar el cutover final en `/aagy`.
+
+---
+
+## 6. Gobernanza de Modelos, Tokens y Política de Auto-Compact
+
+### 6.1. Matriz de Asignación de Modelos por Tarea (Token Optimization)
 
 | Tarea | Agente Elemental | Modelo Gemini 3.8 | Presupuesto Tokens / Turno | Justificación de Eficiencia |
 | :--- | :--- | :--- | :--- | :--- |
@@ -267,10 +277,11 @@
 | **4.2 Analizador Bloqueos PG** | **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (semántica) + `flash` (parser) | ~10.000 tokens| El análisis de transacciones, deadlocks y bloqueos LTS requiere Pro Thinking. |
 | **4.3 Validador Ingress / Portal**| **Carbon ($C_6$)** | `flash` | ~1.200 tokens | Cruce de configuraciones estáticas YAML, Go y CoreDNS. |
 | **4.4 Despliegue Tagged CD** | **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (rollback) + `flash` (script) | ~6.000 tokens | Garantía de rollback $< 2$ min y probes de resiliencia SRE. |
+| **5.1 Clean Docs & Repo `/aagy`**| **Argon ($Ar_{18}$)** $\rightarrow$ **Carbon ($C_6$)** | `pro` (cutover) + `flash` (docs) | ~8.000 tokens | Auditoría de migración sin pérdida y regeneración documental limpia. |
 
 ---
 
-### 5.2. Política de Compactación & Disparadores de Auto-Compact
+### 6.2. Política de Compactación & Disparadores de Auto-Compact
 
 Para preservar la atención del modelo y minimizar el consumo de tokens en sesiones largas:
 
