@@ -10,28 +10,7 @@
 
 ## 0. Máxima Prioridad: Optimización de Tokens, Purga General, Unificación y Estructura `/doc` v2
 
-### Tarea 0.2: Purga y Regeneración Limpia de `/doc` v2, Parametrización `docs-map.json` y Paridad 1-a-1 Manual
-
 ### Tarea 0.3: Optimización y Unificación del Sistema de Autodescubrimiento y Automejora
-
-- [ ] **Unificar y optimizar `auto-evolve`, `instinct_manager`, `agent-self-evaluation` y skills de aprendizaje continuo en un motor único para `aagy`**
-  - **01 - ROLE:** Autonomous Agent Reliability & Self-Improvement Systems Architect.
-  - **02 - CONTEXT:** `[Sector: Agent Self-Discovery & Continuous Learning]` `[Data Type: auto-evolve, instinct_manager.py, hooks.json, skills de evaluación/aprendizaje]` `[Objective: Unificar las piezas sueltas de autodescubrimiento y automejora en un flujo determinista y acotado en presupuesto para aagy]` `[Restrictions: Toma de requisitos dedicada previa a la implementación; cero inflación de AGENTS.md/rules/; promoción segura con smoke-test y gate de presupuesto]`.
-  - **03 - PHASE 1 (ANALYSIS):**
-    - Existen piezas desconectadas (`auto-evolve.ps1` orientado a `home-lab`, `instinct_manager.py`, skills legacy `continuous-learning-v2` / `eval-harness` / `agent-self-evaluation`).
-    - Ver requisitos aprobados en [`REQ_aagy_unified_self_improvement.md`](plans/REQ_aagy_unified_self_improvement.md).
-  - **04 - PHASE 2 (STRATEGY):**
-    - Definir requisitos formales primero y consolidar un único motor agnóstico conectado al ciclo de vida y presupuesto.
-  - **05 - PHASE 3 (EXECUTION):**
-    1. Completar toma de requisitos (`REQ_`).
-    2. Unificar módulos y eliminar redundancias.
-    3. Validar con `pytest` y `audit-workspace.ps1` (exit `0`).
-  - **06 - PHASE 4 (CRITIC):**
-    - *Auditoría*: Evitar auto-generación de reglas/skills que desborden el presupuesto de tokens.
-  - **07 - PHASE 5 (FORMAT):**
-    - Motor unificado, documentado y cubierto por tests.
-  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens); **Carbon ($C_6$)** para implementación.
-  - **COMPACT TRIGGER:** Tras squash-automerge de PR en `main`.
 
 ### Tarea 0.4: Limpieza de `scripts/*.js` / `lib/`, `AGENTS.md` Raíz, Scripts Raíz y Paridad `aagy-ecc`
 
@@ -59,7 +38,27 @@
 
 ## 5. Prioridad 5: Cierre Maestro — Rebranding y Migración de `/ecc` a `/aagy` (`Anything Antigravity`)
 
-### Tarea 5.1: Migración de `/ecc` a `/aagy` (*Anything Antigravity*) y Sincronización del Plugin `aagy-ecc`
+### Tarea 5.1: Migración de `/ecc` a `/aagy` (*Anything Antigravity*), Nuevo `README.md`, Reinstalación del Plugin y Sincronización `aagy-ecc`
+
+- [ ] **Ejecutar el cierre maestro: migrar `/ecc` a `/aagy` (*Anything Antigravity*) conservando historial Git, generar el nuevo `README.md` del repo, sincronizar `aagy/aagy-ecc/` y reinstalar el plugin limpio**
+  - **01 - ROLE:** Principal Release & Repository Migration Architect.
+  - **02 - CONTEXT:** `[Sector: Repository Lifecycle & Brand Migration]` `[Data Type: Git repo /ecc -> /aagy (historial íntegro), README.md raíz, plugin ~/.gemini/config/plugins/aagy, aagy/aagy-ecc/]` `[Objective: (1) Migrar /ecc a /aagy conservando historial Git y renombrando el remoto (gh repo rename aagy); (2) Mantener aagy/aagy-ecc/ actualizado, operativo y sincronizado con aagy; (3) Generar un nuevo README.md en la raíz de /aagy reflejando la arquitectura final (aagy + aagy-ecc, /doc v2, scripts/{py,pwsh,sh}, instalación manual y paridad CLI); (4) Reinstalar limpiamente el plugin mediante install.ps1/.sh verificando smoke-test y retirando /ecc tras confirmación explícita]` `[Restrictions: Ejecutar como última tarea tras completar 0.2, 0.3 y 0.4; conservar historial Git; 0 referencias rotas; budget hard gate y pytest en verde]`.
+  - **03 - PHASE 1 (ANALYSIS):**
+    - Ver requisitos aprobados en [`REQ_aagy_clean_docs_and_repo_migration.md`](plans/REQ_aagy_clean_docs_and_repo_migration.md).
+  - **04 - PHASE 2 (STRATEGY):**
+    - Cutover preservando historial $\rightarrow$ sincronización `aagy` $\leftrightarrow$ `aagy-ecc` $\rightarrow$ nuevo `README.md` $\rightarrow$ reinstalación limpia (`install.ps1` / `.sh`) $\rightarrow$ verificación integral y retirada de `/ecc` con confirmación.
+  - **05 - PHASE 3 (EXECUTION):**
+    1. Confirmar `0.2`, `0.3` y `0.4` completadas y en verde.
+    2. Migrar `/ecc` $\rightarrow$ `/aagy` preservando historial Git y renombrar remoto (`gh repo rename aagy`).
+    3. Sincronizar `aagy/aagy-ecc/` y generar el nuevo `README.md` de raíz.
+    4. Reinstalar el plugin limpio (`./install.ps1`) en `~/.gemini/config/plugins/aagy` (y `aagy-ecc`), validando `pytest`, `audit-workspace.ps1` y `lint-markdown.ps1` (exit `0`).
+    5. Solicitar confirmación final al usuario para retirar `/ecc`.
+  - **06 - PHASE 4 (CRITIC):**
+    - *Auditoría*: No eliminar `/ecc` hasta verificar el plugin reinstalado y el 100% de tests en verde en `/aagy`.
+  - **07 - PHASE 5 (FORMAT):**
+    - `/aagy` operativo, `README.md` nuevo, plugin reinstalado y tests en verde.
+  - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens); **Carbon ($C_6$)** para `README.md`, reinstalación y tests.
+  - **COMPACT TRIGGER:** Al completar el cutover final en `/aagy`.
 
 ---
 

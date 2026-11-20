@@ -62,6 +62,8 @@ bash scripts/bin/ecc-agy/sync-ideas-todo.sh
 | **Seguridad y AgentShield** | `scripts/bin/ecc-agy/security-audit.ps1` | `scripts/bin/ecc-agy/security-audit.sh` | [`security_audit.py`](../../scripts/py/security_audit.py) |
 | **Validar formato de commit** | `scripts/bin/ecc-agy/format-commit.ps1` | `scripts/bin/ecc-agy/format-commit.sh` | [`format_commit.py`](../../scripts/py/format_commit.py) |
 | **Paridad `aagy` $\leftrightarrow$ `ecc`** | `scripts/bin/ecc-agy/audit-plugin-parity.ps1` | `scripts/bin/ecc-agy/audit-plugin-parity.sh` | [`audit_plugin_parity.py`](../../scripts/py/audit_plugin_parity.py) |
+| **Autodescubrimiento y automejora** | `scripts/bin/ecc-agy/auto-evolve.ps1` | `scripts/bin/ecc-agy/auto-evolve.sh` | [`self_improve.py`](../../scripts/py/self_improve.py) |
+| **Gestión de instintos doble nivel** | `scripts/bin/ecc-agy/manage-instincts.ps1` | `scripts/bin/ecc-agy/manage-instincts.sh` | [`instinct_manager.py`](../../scripts/py/instinct_manager.py) |
 | **Revisión previa e integración PR** | `scripts/bin/ecc-agy/complete-task-pr.ps1` | `scripts/bin/ecc-agy/complete-task-pr.sh` | *(Orquestador TBD + `gh` CLI)* |
 | **Promoción Multi-Tier / CD** | `scripts/bin/ecc-agy/git-flow-helper.ps1` | `scripts/bin/ecc-agy/git-flow-helper.sh` | *(Tags `vX.Y.Z-sandbox` / `vX.Y.Z`)* |
 

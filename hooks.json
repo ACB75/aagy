@@ -36,5 +36,19 @@
         ]
       }
     ]
+  },
+  "aagy-self-improve": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python scripts/py/self_improve.py --capture-stop",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }

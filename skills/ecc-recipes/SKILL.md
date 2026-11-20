@@ -76,7 +76,7 @@ derived live — the table below is the *classification rule*, not a frozen list
 | `gan-*` | generator and evaluator loop | `gan-build` (code) or `gan-design` (UI); self-looping |
 | `*-build` / `*-review` / `*-test` | per-language CI triad | `<lang>-test` (TDD) then `<lang>-build` (fix) then `<lang>-review` |
 | `hookify-*` | behavior-hook management | `hookify` then `hookify-list` then `hookify-configure` |
-| `learn` / `instinct-*` / `evolve` / `promote` / `prune` | continuous-learning | `learn` then `instinct-status` then `evolve` then `promote` |
+| `learn` / `instinct-*` / `evolve` / `promote` / `prune` | agent-self-evaluation | `learn` then `instinct-status` then `evolve` then `promote` |
 | singletons | `santa-loop`, `plan`, `plan-prd`, `pr`, `code-review`, `checkpoint`, etc. | standalone or glue between groups |
 
 Any command not matching a prefix rule → list it under **singletons** with its

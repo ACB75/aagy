@@ -21,6 +21,7 @@ EXPECTED_PWSH_SCRIPTS = [
     "generate-postmortem.ps1",
     "git-flow-helper.ps1",
     "hook-post-write.ps1",
+    "hook-stop-capture.ps1",
     "install-git-hooks.ps1",
     "lint-markdown.ps1",
     "manage-instincts.ps1",
@@ -54,3 +55,9 @@ def test_pwsh_scripts_valid_structure():
             or "$ErrorActionPreference" in content
             or ".SYNOPSIS" in content
         ), f"Script {script_name} must contain PowerShell structure or documentation"
+
+
+def test_auto_evolve_ps1_is_agnostic():
+    content = (PWSH_DIR / "auto-evolve.ps1").read_text(encoding="utf-8")
+    assert "home-lab" not in content.lower()
+    assert "self_improve.py" in content

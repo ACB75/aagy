@@ -5,6 +5,23 @@
 
 ---
 
+## 2026-11-20: Motor Unificado de Autodescubrimiento, Instintos a Doble Nivel y Automejora con Budget Gate (`Tarea 0.3`)
+
+### Hitos y Decisiones Materiales
+
+1. **Motor Unificado y Agnóstico (`scripts/py/self_improve.py` + `instinct_manager.py`)**:
+   - Unificación de `auto-evolve.ps1`/`.sh`, `instinct_manager.py` y `agent-self-evaluation` en [`scripts/py/self_improve.py`](../scripts/py/self_improve.py) eliminando todo acoplamiento hardcodeado a `home-lab` (`RF-05`).
+   - Captura híbrida zero-overhead (`RF-01`): hook pasivo `Stop` en [`hooks.json`](../hooks.json) (`< 500 ms`, timeout `5s`, `0` tokens en prompt, retorno `{}` con aislamiento de fallos) y CLI manual (`--discover`, `--review`, `--promote`, `--capture-stop`, `--evaluate`).
+   - Persistencia a doble nivel (`RF-02`): `<repo>/.agents/instincts/` (nivel proyecto) y `$PLUGIN_DATA/instincts/` (resuelto vía `AGY_PLUGIN_DATA`, `CLAUDE_PLUGIN_DATA` o `~/.gemini/config/plugins/aagy/.data`).
+2. **Sanitización AgentShield, Redacción de Secretos y Promoción por 4 Compuertas (`RF-03` & `RF-04`)**:
+   - Redacción automática de credenciales (`Bearer`, `API_KEY`, `password`, GitHub/AWS/Google keys $\rightarrow$ `[REDACTED]`) y bloqueo de vectores de *prompt injection* antes de persistir o promover.
+   - Promoción controlada por 4 compuertas (AgentShield, Hard Gate de presupuesto de [`workspace_audit.py`](../scripts/py/workspace_audit.py), *smoke-test* en directorio efímero y confirmación explícita `--confirm`).
+3. **Consolidación de Skills Redundantes y Documentación**:
+   - Consolidadas `continuous-learning`, `continuous-learning-v2` y `eval-harness` dentro de [`skills/agent-self-evaluation/SKILL.md`](../skills/agent-self-evaluation/SKILL.md) (descripción $\le 140$ caracteres) y [`eval-driven-development.md`](../skills/agent-self-evaluation/references/eval-driven-development.md).
+   - Manual operativo en [`MANUAL_unified_self_improvement.md`](04-operations/runbooks/MANUAL_unified_self_improvement.md) y suite [`test_self_improve.py`](../scripts/py/tests/test_self_improve.py) (154/154 tests pasando, SonarQube Rating A).
+
+---
+
 ## 2026-11-20: Estructura Documental `/doc` v2, `.governance/docs-map.json` y Paridad 1-a-1 Manual
 
 ### Hitos y Decisiones Materiales

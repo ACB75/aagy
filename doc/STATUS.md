@@ -40,7 +40,7 @@
 - **Workflow de Ingeniería 4 Fases**: Estandarizado en [`doc/00-governance/templates/README.md`](00-governance/templates/README.md).
 - **Hard Gate de Presupuesto en Harness**: Implementado en [`scripts/py/workspace_audit.py`](../scripts/py/workspace_audit.py), integrando validación de `.governance/docs-map.json`.
 - **Integración Zero-Overhead Gemini MCP & Deep Ops**: Plantilla con `"disabled": true` y CLI [`scripts/py/gemini_deep_ops.py`](../scripts/py/gemini_deep_ops.py) / [`scripts/py/toggle_gemini_mcp.py`](../scripts/py/toggle_gemini_mcp.py).
-- **Hooks Nativos, AgentShield e Instintos**: Manifiesto [`hooks.json`](../hooks.json), auditoría [`scripts/py/security_audit.py`](../scripts/py/security_audit.py) e instintos [`scripts/py/instinct_manager.py`](../scripts/py/instinct_manager.py).
+- **Hooks Nativos, AgentShield, Instintos a Doble Nivel y Automejora Unificada**: Manifiesto [`hooks.json`](../hooks.json) (con hook pasivo `Stop` `< 500 ms` y `0` tokens), motor [`scripts/py/self_improve.py`](../scripts/py/self_improve.py), auditoría [`scripts/py/security_audit.py`](../scripts/py/security_audit.py), instintos proyecto + `PLUGIN_DATA` en [`scripts/py/instinct_manager.py`](../scripts/py/instinct_manager.py) y manual [`MANUAL_unified_self_improvement.md`](04-operations/runbooks/MANUAL_unified_self_improvement.md).
 - **Validadores de Gobernanza Git y Home-Lab**:
   - Ramas canónicas: [`scripts/py/validate_branch.py`](../scripts/py/validate_branch.py)
   - Autopsias 5W: [`scripts/py/generate_postmortem.py`](../scripts/py/generate_postmortem.py)
@@ -49,4 +49,4 @@
   - Ingress / Split-DNS: [`scripts/py/validate_ingress_routes.py`](../scripts/py/validate_ingress_routes.py)
   - Paridad Multi-Harness `aagy` $\leftrightarrow$ `ecc`: [`scripts/py/audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py)
 - **Ciclo Completo de PR y Automerge**: Orquestado en [`scripts/pwsh/complete-task-pr.ps1`](../scripts/pwsh/complete-task-pr.ps1) y [`scripts/sh/complete-task-pr.sh`](../scripts/sh/complete-task-pr.sh) con resolución dinámica de `TODO.md`/`done/`, suites `pytest` multi-runtime y compuerta documental `map_docs.py --check-docs-map`.
-- **Backlog Activo**: En [`doc/06-backlog/TODO.md`](06-backlog/TODO.md) (`Tarea 0.3` y `Tarea 0.4` pendientes tras completarse `Tarea 0.1` y `Tarea 0.2`).
+- **Backlog Activo**: En [`doc/06-backlog/TODO.md`](06-backlog/TODO.md) (`Tarea 0.4` y `Tarea 5.1` pendientes tras completarse `Tarea 0.1`, `Tarea 0.2` y `Tarea 0.3`).
