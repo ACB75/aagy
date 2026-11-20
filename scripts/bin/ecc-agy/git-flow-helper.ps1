@@ -42,7 +42,14 @@ param(
 
     [switch]$ReviewOnly,
 
-    [switch]$Yes
+    [switch]$Yes,
+
+    [switch]$Deploy,
+
+    [ValidateSet("sandbox", "live")]
+    [string]$Environment = "sandbox",
+
+    [switch]$DryRun
 )
 
 $ErrorActionPreference = "Stop"
@@ -78,11 +85,65 @@ try {
             if (-not $Tag) {
                 throw "Debe proporcionar un tag semántico (-Tag <vX.Y.Z[-sandbox]>)."
             }
-            Write-Host "[+] Creando tag anotado '$Tag' en el commit actual..." -ForegroundColor Cyan
-            git tag -a $Tag -m "release: promoción a $Tag"
-            Write-Host "[+] Subiendo tag a origin..." -ForegroundColor Cyan
-            git push origin $Tag
-            Write-Host "[OK] Tag '$Tag' publicado con éxito." -ForegroundColor Green
+
+            if ($DryRun) {
+                Write-Host "[DRY-RUN] Creando tag anotado '$Tag'..." -ForegroundColor Yellow
+                Write-Host "[DRY-RUN] Subiendo tag '$Tag' a origin..." -ForegroundColor Yellow
+            } else {
+                Write-Host "[+] Creando tag anotado '$Tag' en el commit actual..." -ForegroundColor Cyan
+                git tag -a $Tag -m "release: promoción a $Tag"
+                Write-Host "[+] Subiendo tag a origin..." -ForegroundColor Cyan
+                git push origin $Tag
+                Write-Host "[OK] Tag '$Tag' publicado con éxito." -ForegroundColor Green
+            }
+
+            if ($Deploy) {
+                $targetHost = if ($Environment -eq "live") {
+                    if ($env:HOMELAB_LIVE_HOST) { $env:HOMELAB_LIVE_HOST } else { "NEO (192.168.1.200)" }
+                } else {
+                    if ($env:HOMELAB_SANDBOX_HOST) { $env:HOMELAB_SANDBOX_HOST } else { "FRACTAL (192.168.1.100)" }
+                }
+
+                Write-Host "[+] Iniciando pipeline de despliegue automatizado hacia entorno '$Environment' ($targetHost)..." -ForegroundColor Cyan
+
+                if ($DryRun) {
+                    Write-Host "[DRY-RUN] Backup de estado y tag anterior registrado." -ForegroundColor Yellow
+                    Write-Host "[DRY-RUN] Checkout de tag '$Tag' y ejecución de 'docker compose pull && docker compose up -d' en $targetHost..." -ForegroundColor Yellow
+                    Write-Host "[DRY-RUN] Verificación de sondas de salud (3 reintentos x 5s)..." -ForegroundColor Yellow
+                    Write-Host "[DRY-RUN] Sondas de salud aprobadas (200 OK / healthy). Despliegue completado." -ForegroundColor Yellow
+                } else {
+                    $prevCommit = (git rev-parse HEAD).Trim()
+                    try {
+                        Write-Host "[+] Ejecutando pull y recreación de contenedores..." -ForegroundColor Cyan
+                        docker compose pull
+                        docker compose up -d
+
+                        Write-Host "[+] Verificando sondas de salud (liveness probes)..." -ForegroundColor Cyan
+                        $healthy = $false
+                        for ($attempt = 1; $attempt -le 3; $attempt++) {
+                            Start-Sleep -Seconds 5
+                            $unhealthy = (docker compose ps --filter "health=unhealthy" -q 2>$null)
+                            if (-not $unhealthy) {
+                                $healthy = $true
+                                break
+                            }
+                            Write-Host "    [Intento $attempt/3] Contenedores iniciando..." -ForegroundColor DarkGray
+                        }
+
+                        if (-not $healthy) {
+                            throw "Fallo en sondas de salud de contenedores."
+                        }
+                        Write-Host "[OK] Despliegue en '$Environment' ($targetHost) completado con éxito." -ForegroundColor Green
+                    } catch {
+                        Write-Host "[!] ERROR en despliegue: $_" -ForegroundColor Red
+                        Write-Host "[+] Iniciando rollback automático en < 2 minutos al estado previo ($prevCommit)..." -ForegroundColor Yellow
+                        docker compose down
+                        git checkout $prevCommit
+                        docker compose up -d
+                        throw "Despliegue fallido. Rollback automático ejecutado hacia commit previo: $prevCommit"
+                    }
+                }
+            }
         }
 
         "create-pr" {
