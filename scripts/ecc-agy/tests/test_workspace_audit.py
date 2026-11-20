@@ -9,6 +9,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from workspace_audit import (
     audit_agents,
+    audit_mcps,
+    audit_rules,
     audit_skills,
     check_agent,
     clean_targets,
@@ -17,6 +19,10 @@ from workspace_audit import (
     scan_dead_artifacts,
     scan_hygiene,
     AgentTarget,
+    audit_target_budget,
+    MAX_RULE_FILE_BYTES,
+    MAX_RULES_TOTAL_TOKENS,
+    MAX_EAGER_CUSTOMIZATION_TOKENS,
 )
 
 
@@ -139,3 +145,93 @@ def test_scan_dead_artifacts(tmp_path):
     report = scan_dead_artifacts([target])
     assert len(report.orphan_skill_dirs) == 1
     assert report.total_issues >= 1
+
+
+def test_audit_rules_file_size_limit_and_budget(tmp_path):
+    rules_dir = tmp_path / "rules"
+    rules_dir.mkdir()
+
+    # Regla normal <= 24 KB
+    r1 = rules_dir / "valid_rule.md"
+    r1.write_text("Valid content", encoding="utf-8")
+
+    chars, tokens, violations = audit_rules(tmp_path, include_rules=True)
+    assert len(violations) == 0
+    assert chars == len("Valid content")
+
+    # Regla que excede 24.000 bytes
+    r_big = rules_dir / "oversized_rule.md"
+    r_big.write_text("x" * (MAX_RULE_FILE_BYTES + 500), encoding="utf-8")
+
+    chars, tokens, violations = audit_rules(tmp_path, include_rules=True)
+    assert any("oversized_rule.md" in v and "max limit of 24 KB" in v for v in violations)
+
+    # Limpiar regla pesada y simular exceso agregado (> 16.000 tokens ~ 60.800 chars en varios archivos)
+    r_big.unlink()
+    for i in range(4):
+        # Cada archivo ~20.000 chars (< 24 KB), total ~80.000 chars > 16.000 tokens
+        rf = rules_dir / f"chunk_{i}.md"
+        rf.write_text("y" * 20000, encoding="utf-8")
+
+    chars, tokens, violations = audit_rules(tmp_path, include_rules=True)
+    assert any("Aggregated rules exceed safe budget" in v for v in violations)
+
+
+def test_audit_mcps_heavy_server_and_budget(tmp_path):
+    # Caso 1: Sin mcp_config.json
+    total, active, tokens, violations = audit_mcps(tmp_path)
+    assert total == 0
+    assert active == 0
+    assert tokens == 0
+    assert len(violations) == 0
+
+    # Caso 2: gemini-mcp activo por defecto (sin "disabled": true)
+    mcp_file = tmp_path / "mcp_config.json"
+    mcp_file.write_text(
+        '{"mcpServers": {"gemini-mcp": {"command": "npx", "args": ["gemini-mcp"]}}}',
+        encoding="utf-8",
+    )
+    total, active, tokens, violations = audit_mcps(tmp_path)
+    assert total == 1
+    assert active == 1
+    assert tokens > 0
+    assert any("gemini-mcp" in v and "Must set '\"disabled\": true'" in v for v in violations)
+
+    # Caso 3: gemini-mcp con "disabled": true (0 tokens en reposo, 0 violaciones)
+    mcp_file.write_text(
+        '{"mcpServers": {"gemini-mcp": {"command": "npx", "args": ["gemini-mcp"], "disabled": true}}}',
+        encoding="utf-8",
+    )
+    total, active, tokens, violations = audit_mcps(tmp_path)
+    assert total == 1
+    assert active == 0
+    assert tokens == 0
+    assert len(violations) == 0
+
+    # Caso 4: JSON malformado
+    mcp_file.write_text('{ invalid json', encoding="utf-8")
+    total, active, tokens, violations = audit_mcps(tmp_path)
+    assert any("Invalid JSON" in v for v in violations)
+
+
+def test_audit_target_budget_eager_customization_overflow(tmp_path):
+    # Crear un plugin con muchas skills y agentes que superen 3.000 tokens eager
+    plugin_dir = tmp_path / "my-plugin"
+    plugin_dir.mkdir()
+    (plugin_dir / "plugin.json").write_text('{"name": "test-plugin"}', encoding="utf-8")
+
+    skills_dir = plugin_dir / "skills"
+    skills_dir.mkdir()
+    # 100 skills de 130 chars = 13.000 chars => ~3.421 tokens (> 3.000)
+    for i in range(100):
+        s = skills_dir / f"skill-{i}"
+        s.mkdir()
+        (s / "SKILL.md").write_text(
+            f'---\nname: skill-{i}\ndescription: "{"z" * 130}"\n---\nBody',
+            encoding="utf-8",
+        )
+
+    target = AgentTarget("test-plugin", plugin_dir, is_plugin=True)
+    report = audit_target_budget(target)
+    assert any("Eager customizations in plugin" in v and "exceed budget" in v for v in report.violations)
+
