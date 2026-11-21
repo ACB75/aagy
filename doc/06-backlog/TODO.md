@@ -12,10 +12,6 @@
 
 ## Épica: Flujo GitHub Issues y Projects v2
 
-- [ ] **Soporte -Issue en new-lifecycle-task para rama gh-<N> y auto-asignacion (GH #60)**
-  <!-- aagy-task: id=gh-60 epic=flujo-github-issues-y-projects-v2 -->
-  GitHub Issue: <https://github.com/ACB75/aagy/issues/60> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
-
 - [ ] **Inyectar Closes #N, labels, assignee, milestone y projects en complete-task-pr (GH #61)**
   <!-- aagy-task: id=gh-61 epic=flujo-github-issues-y-projects-v2 -->
   GitHub Issue: <https://github.com/ACB75/aagy/issues/61> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0

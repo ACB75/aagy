@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # new-lifecycle-task.sh - Instancia artefactos del Engineering Lifecycle
-# Soporta --phase ALL|IDEAS|REQ|PLAN|TODO|DOCS|REVIEW y docs-map.json
+# Soporta --phase ALL|IDEAS|REQ|PLAN|TODO|DOCS|REVIEW, --issue <N> y docs-map.json
 # Entorno: Debian 12 / Linux / WSL (POSIX LF)
 # ==============================================================================
 set -euo pipefail
@@ -15,4 +15,18 @@ if [[ ! -f "$PY_SCRIPT" ]]; then
     exit 1
 fi
 
-python3 "$PY_SCRIPT" --repo-root "$REPO_ROOT" "$@"
+ARGS=()
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -Issue) ARGS+=("--issue" "${2:?Falta valor para -Issue}"); shift 2 ;;
+        -TaskId) ARGS+=("--task-id" "${2:?Falta valor para -TaskId}"); shift 2 ;;
+        -Phase) ARGS+=("--phase" "${2:?Falta valor para -Phase}"); shift 2 ;;
+        -OutputDir) ARGS+=("--output-dir" "${2:?Falta valor para -OutputDir}"); shift 2 ;;
+        -Force) ARGS+=("--force"); shift ;;
+        -DryRun) ARGS+=("--dry-run"); shift ;;
+        *) ARGS+=("$1"); shift ;;
+    esac
+done
+
+PY_BIN="$(command -v python3 || command -v python)"
+"$PY_BIN" "$PY_SCRIPT" --repo-root "$REPO_ROOT" "${ARGS[@]}"

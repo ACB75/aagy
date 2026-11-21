@@ -1,7 +1,8 @@
 """Generador e instanciador de artefactos del ciclo de vida de ingeniería (4 fases).
 
-Soporta rutas parametrizadas vía `.governance/docs-map.json` (con fallback a `doc/` clásico)
-y puntos de entrada flexibles: `[IDEAS -> REQUISITOS -> PLAN -> TODO]` (`--phase`).
+Soporta rutas parametrizadas vía `.governance/docs-map.json` (con fallback a `doc/` clásico),
+puntos de entrada flexibles: `[IDEAS -> REQUISITOS -> PLAN -> TODO]` (`--phase`)
+y vinculación directa con GitHub Issues (`--issue <N>` / `-Issue <N>`).
 """
 
 from __future__ import annotations
@@ -9,16 +10,19 @@ from __future__ import annotations
 import argparse
 from dataclasses import dataclass
 from datetime import datetime, timezone
+import json
 from pathlib import Path
 import re
+import subprocess
 import sys
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 _SCRIPT_DIR = str(Path(__file__).resolve().parent)
 if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
-from docs_map import DocsMap, load_docs_map
+from docs_map import DocsMap, load_docs_map  # noqa: E402
+from validate_branch import validate_branch_name  # noqa: E402
 
 # Constantes SonarQube S1192
 MSG_OK = "[PASS]"
@@ -26,8 +30,11 @@ MSG_WARN = "[WARN]"
 MSG_DRY_RUN = "[DRY-RUN]"
 DEFAULT_TEMPLATES_DIR = "doc/templates"
 DEFAULT_OUTPUT_DIR = "doc/plan"
+ACTIVE_ISSUE_REL = ".governance/active-issue.json"
+ENCODING_UTF8 = "utf-8"
 
 VALID_PHASES: Tuple[str, ...] = ("ALL", "IDEAS", "REQ", "PLAN", "TODO", "DOCS", "REVIEW")
+BRANCH_TYPES: Tuple[str, ...] = ("feat", "fix", "refactor", "infra", "chore", "docs", "test")
 
 PHASE_TEMPLATES: List[Tuple[str, str]] = [
     ("REQ", "01_TOMA_REQUISITOS_E_IMPACTO.md"),
@@ -43,6 +50,8 @@ PHASE_SLICES: Dict[str, Tuple[str, ...]] = {
     "DOCS": ("DOCS", "REVIEW"),
     "REVIEW": ("REVIEW",),
 }
+
+_ISSUE_TITLE_RE = re.compile(r"^\[(?P<type>[a-z]+)\]-\[(?P<projects>[^\]]+)\]:\s*(?P<desc>.+)$", re.IGNORECASE)
 
 
 @dataclass(frozen=True)
@@ -65,6 +74,163 @@ def slugify_task_id(task_id: str) -> str:
     return slug.replace("-", "_") if slug else "task"
 
 
+def _infer_type_and_project(labels: Sequence[str]) -> Tuple[str, str]:
+    lowered = {lbl.lower() for lbl in labels}
+    b_type = "feat"
+    if "bug" in lowered or "fix" in lowered:
+        b_type = "fix"
+    elif "area:infra" in lowered or "infra" in lowered:
+        b_type = "infra"
+    elif "documentation" in lowered or "area:docs" in lowered:
+        b_type = "docs"
+
+    project = "aagy"
+    for lbl in sorted(lowered):
+        if lbl.startswith("area:"):
+            candidate = re.sub(r"[^a-z0-9-]+", "", lbl.split(":", 1)[1])
+            if candidate:
+                project = candidate
+                break
+    return b_type, project
+
+
+def parse_issue_metadata(
+    issue_number: int,
+    title: str,
+    labels: Sequence[str],
+    url: str = "",
+) -> Dict[str, Any]:
+    """Construye metadatos y rama canónica <type>/<project>/gh-<N>-<slug> desde una GitHub Issue."""
+    if issue_number <= 0:
+        raise ValueError(f"Número de issue inválido: {issue_number}")
+
+    b_type, project = _infer_type_and_project(labels)
+    desc = title.strip()
+    match = _ISSUE_TITLE_RE.match(desc)
+    if match:
+        raw_type = match.group("type").lower()
+        if raw_type in BRANCH_TYPES:
+            b_type = raw_type
+        first_proj = match.group("projects").split(",")[0].strip().lower()
+        clean_proj = re.sub(r"[^a-z0-9._-]+", "", first_proj)
+        if clean_proj:
+            project = clean_proj
+        desc = match.group("desc").strip()
+
+    raw_slug = re.sub(r"[^a-z0-9]+", "-", desc.lower()).strip("-")
+    short_slug = raw_slug[:36].strip("-") or "issue"
+    branch = f"{b_type}/{project}/gh-{issue_number}-{short_slug}"
+    is_valid, err = validate_branch_name(branch)
+    if not is_valid:
+        raise ValueError(f"Rama generada inválida '{branch}': {err}")
+
+    return {
+        "issue": issue_number,
+        "title": title.strip(),
+        "branch": branch,
+        "type": b_type,
+        "project": project,
+        "labels": list(labels),
+        "url": url,
+    }
+
+
+def fetch_github_issue(issue_number: int, repo_root: Path) -> Dict[str, Any]:
+    """Consulta una issue con `gh issue view` y devuelve sus metadatos normalizados."""
+    proc = subprocess.run(
+        ["gh", "issue", "view", str(issue_number), "--json", "number,title,labels,url"],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        encoding=ENCODING_UTF8,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"No se pudo leer la issue #{issue_number} con gh: {(proc.stderr or proc.stdout).strip()}")
+    data = json.loads(proc.stdout)
+    raw_labels = data.get("labels") or []
+    labels = [
+        str(item.get("name") if isinstance(item, dict) else item)
+        for item in raw_labels
+        if item
+    ]
+    return parse_issue_metadata(
+        issue_number=int(data.get("number") or issue_number),
+        title=str(data.get("title") or f"Issue {issue_number}"),
+        labels=labels,
+        url=str(data.get("url") or ""),
+    )
+
+
+def _checkout_issue_branch(repo_root: Path, branch: str) -> None:
+    if not (repo_root / ".git").exists():
+        return
+    curr = subprocess.run(
+        ["git", "branch", "--show-current"],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        encoding=ENCODING_UTF8,
+        check=False,
+    )
+    if curr.returncode == 0 and curr.stdout.strip() == branch:
+        return
+    chk = subprocess.run(
+        ["git", "checkout", "-b", branch],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        encoding=ENCODING_UTF8,
+        check=False,
+    )
+    if chk.returncode != 0:
+        subprocess.run(
+            ["git", "checkout", branch],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            encoding=ENCODING_UTF8,
+            check=False,
+        )
+
+
+def bind_github_issue(
+    issue_number: int,
+    repo_root: Path,
+    dry_run: bool = False,
+    explicit_task_id: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Lee la issue, auto-asigna @me, crea la rama gh-<N> y registra .governance/active-issue.json."""
+    meta = fetch_github_issue(issue_number, repo_root)
+    if explicit_task_id and explicit_task_id.strip():
+        custom_branch = explicit_task_id.strip()
+        is_valid, err = validate_branch_name(custom_branch)
+        if not is_valid:
+            raise ValueError(f"Rama explícita inválida '{custom_branch}': {err}")
+        meta["branch"] = custom_branch
+
+    branch = str(meta["branch"])
+    ref_path = repo_root / ACTIVE_ISSUE_REL
+    if dry_run:
+        print(f"{MSG_DRY_RUN} Asignaría @me a issue #{issue_number} y crearía rama '{branch}'")
+        print(f"{MSG_DRY_RUN} Registraría referencia en: {ref_path}")
+        return meta
+
+    subprocess.run(
+        ["gh", "issue", "edit", str(issue_number), "--add-assignee", "@me"],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        encoding=ENCODING_UTF8,
+        check=False,
+    )
+    _checkout_issue_branch(repo_root, branch)
+    ref_path.parent.mkdir(parents=True, exist_ok=True)
+    ref_path.write_text(json.dumps(meta, indent=2, ensure_ascii=False) + "\n", encoding=ENCODING_UTF8)
+    print(f"{MSG_OK} Issue #{issue_number} vinculada a rama '{branch}' ({ref_path})")
+    return meta
+
+
 def render_template_content(content: str, task_id: str, date_str: str) -> str:
     """Sustituye marcadores de posición en el contenido de la plantilla."""
     rendered = content.replace("<id_tarea>", task_id)
@@ -74,7 +240,7 @@ def render_template_content(content: str, task_id: str, date_str: str) -> str:
 def _scaffold_idea_entry(task_id: str, slug: str, dmap: DocsMap, dry_run: bool) -> List[Path]:
     """Registra una nueva entrada estructurada en IDEAS.md desde el punto de entrada IDEAS."""
     ideas_path = dmap.resolve("ideas")
-    existing = ideas_path.read_text(encoding="utf-8") if ideas_path.is_file() else "# Catálogo de Propuestas e Ideas de Ingeniería (`IDEAS.md`)\n"
+    existing = ideas_path.read_text(encoding=ENCODING_UTF8) if ideas_path.is_file() else "# Catálogo de Propuestas e Ideas de Ingeniería (`IDEAS.md`)\n"
     idea_header = f"## Idea {slug}: {task_id}"
 
     if idea_header in existing:
@@ -95,7 +261,7 @@ def _scaffold_idea_entry(task_id: str, slug: str, dmap: DocsMap, dry_run: bool) 
     else:
         ideas_path.parent.mkdir(parents=True, exist_ok=True)
         updated = existing.rstrip() + "\n" + block
-        ideas_path.write_text(updated, encoding="utf-8")
+        ideas_path.write_text(updated, encoding=ENCODING_UTF8)
         print(f"{MSG_OK} Idea registrada en: {ideas_path}")
 
     return [ideas_path]
@@ -111,7 +277,7 @@ def _scaffold_todo_quick_entry(
     quick_path = quick_dir / f"QUICK_{ctx.slug}.md"
     created: List[Path] = []
 
-    existing_todo = todo_path.read_text(encoding="utf-8") if todo_path.is_file() else "# PROTOCOLO DE EJECUCIÓN Y BACKLOG MAESTRO\n"
+    existing_todo = todo_path.read_text(encoding=ENCODING_UTF8) if todo_path.is_file() else "# PROTOCOLO DE EJECUCIÓN Y BACKLOG MAESTRO\n"
     task_marker = f"**Tarea: {ctx.task_id}**"
     if task_marker not in existing_todo:
         task_block = (
@@ -128,7 +294,7 @@ def _scaffold_todo_quick_entry(
             print(f"{MSG_DRY_RUN} Añadiría tarea en: {todo_path}")
         else:
             todo_path.parent.mkdir(parents=True, exist_ok=True)
-            todo_path.write_text(existing_todo.rstrip() + "\n" + task_block, encoding="utf-8")
+            todo_path.write_text(existing_todo.rstrip() + "\n" + task_block, encoding=ENCODING_UTF8)
             print(f"{MSG_OK} Tarea añadida a: {todo_path}")
         created.append(todo_path)
 
@@ -145,7 +311,7 @@ def _scaffold_todo_quick_entry(
             print(f"{MSG_DRY_RUN} Generaría: {quick_path}")
         else:
             quick_dir.mkdir(parents=True, exist_ok=True)
-            quick_path.write_text(quick_body, encoding="utf-8")
+            quick_path.write_text(quick_body, encoding=ENCODING_UTF8)
             print(f"{MSG_OK} Creado: {quick_path}")
         created.append(quick_path)
 
@@ -177,13 +343,13 @@ def _scaffold_phase_templates(ctx: ScaffoldContext, phase_key: str) -> List[Path
             print(f"{MSG_WARN} Archivo ya existente (omitido): {target_path}")
             continue
 
-        content = tmpl_path.read_text(encoding="utf-8")
+        content = tmpl_path.read_text(encoding=ENCODING_UTF8)
         rendered = render_template_content(content, ctx.task_id, ctx.date_str)
 
         if ctx.dry_run:
             print(f"{MSG_DRY_RUN} Generaría: {target_path} (de {tmpl_filename})")
         else:
-            target_path.write_text(rendered, encoding="utf-8")
+            target_path.write_text(rendered, encoding=ENCODING_UTF8)
             print(f"{MSG_OK} Creado: {target_path}")
 
         created_files.append(target_path)
@@ -231,12 +397,12 @@ def scaffold_lifecycle_task(
     return _scaffold_phase_templates(ctx, phase_key)
 
 
-def main() -> int:
-    """Punto de entrada CLI para la instanciación de tareas del ciclo de vida."""
+def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Instancia artefactos del Engineering Lifecycle desde cualquier punto de entrada (IDEAS, REQ, PLAN, TODO, ALL)."
     )
-    parser.add_argument("--task-id", required=True, help="ID o rama de la tarea (ej. feat/kakebo/export-csv)")
+    parser.add_argument("--task-id", default=None, help="ID o rama de la tarea (ej. feat/kakebo/export-csv)")
+    parser.add_argument("--issue", type=int, default=None, help="Número de GitHub Issue para auto-asignar y crear rama gh-<N>")
     parser.add_argument("--repo-root", default=".", help="Ruta a la raíz del repositorio")
     parser.add_argument("--templates-dir", default=None, help="Ruta a plantillas (opcional, lee docs-map.json)")
     parser.add_argument("--output-dir", default=None, help="Ruta destino para planes (opcional, lee docs-map.json)")
@@ -248,13 +414,32 @@ def main() -> int:
     )
     parser.add_argument("--force", action="store_true", help="Sobrescribir archivos existentes")
     parser.add_argument("--dry-run", action="store_true", help="Simular sin modificar archivos")
+    return parser
 
-    args = parser.parse_args()
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    """Punto de entrada CLI para la instanciación de tareas del ciclo de vida."""
+    parser = build_parser()
+    args = parser.parse_args(argv)
     root = Path(args.repo_root).resolve()
 
+    if not args.task_id and not args.issue:
+        print("[ERROR] Debe especificar --task-id o --issue <N>.", file=sys.stderr)
+        return 1
+
     try:
+        effective_task_id = args.task_id
+        if args.issue is not None:
+            meta = bind_github_issue(
+                issue_number=args.issue,
+                repo_root=root,
+                dry_run=args.dry_run,
+                explicit_task_id=args.task_id,
+            )
+            effective_task_id = str(meta["branch"])
+
         created = scaffold_lifecycle_task(
-            task_id=args.task_id,
+            task_id=str(effective_task_id),
             repo_root=root,
             templates_rel=args.templates_dir,
             output_rel=args.output_dir,

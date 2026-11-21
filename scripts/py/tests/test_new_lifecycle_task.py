@@ -8,10 +8,14 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from new_lifecycle_task import (
+    bind_github_issue,
+    main,
+    parse_issue_metadata,
     render_template_content,
     scaffold_lifecycle_task,
     slugify_task_id,
 )
+from validate_branch import validate_branch_name
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
@@ -218,4 +222,70 @@ def test_legacy_fallback_resolution_without_docs_map(tmp_path: Path) -> None:
     assert len(created) == 3
     assert (tmp_path / "doc" / "plan" / "PLAN_homelab_compat.md").is_file()
     assert not (tmp_path / "doc" / "plan" / "REQ_homelab_compat.md").exists()
+
+
+def test_parse_issue_metadata_extracts_canonical_branch() -> None:
+    meta = parse_issue_metadata(
+        issue_number=60,
+        title="[feat]-[scripts]: soporte -Issue en new-lifecycle-task para crear rama gh-<N> y asignar",
+        labels=["enhancement", "harness:both", "area:scripts"],
+        url="https://github.com/ACB75/aagy/issues/60",
+    )
+    assert meta["issue"] == 60
+    assert meta["type"] == "feat"
+    assert meta["project"] == "scripts"
+    assert meta["branch"].startswith("feat/scripts/gh-60-")
+    valid, _ = validate_branch_name(meta["branch"])
+    assert valid is True
+
+    # Infiere fix y proyecto desde labels cuando el título no lleva prefijo [type]-[proj]
+    bug_meta = parse_issue_metadata(
+        issue_number=99,
+        title="Fallo de timeout en hook PreToolUse",
+        labels=["bug", "area:infra"],
+    )
+    assert bug_meta["type"] == "fix"
+    assert bug_meta["project"] == "infra"
+    assert bug_meta["branch"].startswith("fix/infra/gh-99-")
+    assert validate_branch_name(bug_meta["branch"])[0] is True
+
+
+def test_bind_github_issue_and_cli_integration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _seed_v2_repo(tmp_path)
+    (tmp_path / ".git").mkdir()
+    calls: list[list[str]] = []
+
+    class DummyProc:
+        def __init__(self, returncode: int = 0, stdout: str = "", stderr: str = "") -> None:
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = stderr
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["gh", "issue", "view"]:
+            payload = {
+                "number": 60,
+                "title": "[feat]-[scripts]: soporte -Issue en new-lifecycle-task",
+                "labels": [{"name": "enhancement"}, {"name": "area:scripts"}],
+                "url": "https://github.com/ACB75/aagy/issues/60",
+            }
+            return DummyProc(0, json.dumps(payload))
+        if cmd[:3] == ["git", "branch", "--show-current"]:
+            return DummyProc(0, "main\n")
+        return DummyProc(0, "")
+
+    monkeypatch.setattr("new_lifecycle_task.subprocess.run", fake_run)
+
+    exit_code = main(["--issue", "60", "--repo-root", str(tmp_path), "--phase", "REQ"])
+    assert exit_code == 0
+
+    active_file = tmp_path / ".governance" / "active-issue.json"
+    assert active_file.is_file()
+    saved = json.loads(active_file.read_text(encoding="utf-8"))
+    assert saved["issue"] == 60
+    assert saved["branch"] == "feat/scripts/gh-60-soporte-issue-en-new-lifecycle-task"
+    assert any(c[:4] == ["gh", "issue", "edit", "60"] and "@me" in c for c in calls)
+    assert any(c[:3] == ["git", "checkout", "-b"] and saved["branch"] in c for c in calls)
+
 
