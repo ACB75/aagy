@@ -196,6 +196,8 @@ def test_compare_trees_normalizes_crlf(tmp_path: Path):
     (b / core.MANIFEST_FILE).write_text("{}", encoding="utf-8")
     (b / "__pycache__").mkdir()
     (b / "__pycache__" / "m.pyc").write_bytes(b"\0")
+    (a / ".agents" / "instincts").mkdir(parents=True)
+    (a / ".agents" / "instincts" / "observations.jsonl").write_text("{}\n", encoding="utf-8")
     diff = core.compare_trees(core.list_tree(a), core.list_tree(b))
     assert diff.missing == ("only-a.md",)
     assert diff.changed == ("x/changed.md",)
