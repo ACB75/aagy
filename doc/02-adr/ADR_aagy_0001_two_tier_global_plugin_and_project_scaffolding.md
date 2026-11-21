@@ -1,7 +1,7 @@
 # ADR-0001: Arquitectura en dos niveles: Plugin Global (`aagy`) y Scaffolding por Proyecto (`.agents/`)
 
 **Date**: 2026-10-24
-**Status**: accepted
+**Status**: superseded (Nivel 2) por [ADR-0004](ADR_aagy_0004_stack_profiles_declared_by_consumer_repo.md)
 **Deciders**: Master, Antigravity (AAGY)
 
 ## Context

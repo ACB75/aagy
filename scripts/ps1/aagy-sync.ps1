@@ -9,23 +9,28 @@
 .PARAMETER Phase
     Fase preconfigurada según la arquitectura en dos niveles:
       - generic    (Nivel 1 Global: ~22 Skills y 12 agentes universales de ingeniería)
-      - infra      (Nivel 2 Proyecto: Docker, K8s, Homelab, Redes, Seguridad)
-      - kakebo     (Nivel 2 Proyecto: Java 25 / Spring Boot 4, Angular 21 / TypeScript, Postgres)
-      - cluster    (Nivel 2 Proyecto: Go, Docker, K8s, Latencia, Postgres)
-      - token-hill (Nivel 2 Proyecto: Python CLI, Testing, Benchmarking)
+      - network-infra (Perfil de stack: Docker, K8s, Homelab, Redes, Seguridad)
+      - java-spring   (Perfil de stack: Java 25 / Spring Boot 4, Postgres)
+      - angular       (Perfil de stack: Angular 21 / TypeScript, E2E)
+      - go            (Perfil de stack: Go, Docker, K8s, Latencia, Postgres)
+      - python        (Perfil de stack: Python CLI, Testing, Benchmarking)
       - all        (Catálogo completo optimizado)
       - status     (Muestra el estado actual del plugin o proyecto destino)
-.PARAMETER TargetProject
-    Ruta opcional a un proyecto (ej. C:\Workspace\projects\home-lab\app\kakebo). Si se omite, actualiza el plugin global aagy.
+.PARAMETER Repo
+    Ruta a un repositorio consumidor. Instala en <Repo>\.agents\ los perfiles declarados por el propio repo
+    en <Repo>\.governance\aagy-profiles.json (delegando en scripts/py/repo_profiles.py). Sin -Repo se
+    actualiza el plugin global aagy. El plugin nunca conoce nombres de proyectos consumidores.
 .PARAMETER Clean
     Si se especifica, limpia previamente las carpetas skills/ y agents/ del destino antes de sincronizar.
 .EXAMPLE
     pwsh -File scripts/ps1/aagy-sync.ps1 -Phase generic -Clean
+.EXAMPLE
+    pwsh -File scripts/ps1/aagy-sync.ps1 -Repo C:\Ruta\A\MiRepo
 #>
 param(
-    [ValidateSet("generic", "infra", "kakebo", "cluster", "token-hill", "all", "status")]
+    [ValidateSet("generic", "network-infra", "java-spring", "angular", "go", "python", "all", "status")]
     [string]$Phase = "status",
-    [string]$TargetProject = "",
+    [string]$Repo = "",
     [switch]$Clean
 )
 
@@ -59,31 +64,37 @@ $PhaseConfig = @{
             "sync-aligner.md", "lifecycle-coordinator.md"
         )
     }
-    "infra" = @{
+    "network-infra" = @{
         Skills = @(
             "docker-patterns", "deployment-patterns", "kubernetes-patterns",
             "homelab-network-readiness", "homelab-network-setup", "homelab-pihole-dns",
             "homelab-vlan-segmentation", "homelab-wireguard-vpn", "network-config-validation",
-            "network-interface-health", "netmiko-ssh-automation", "security-scan", "safety-guard"
+            "network-interface-health", "security-scan", "safety-guard"
         )
         Agents = @(
             "homelab-architect.md", "network-architect.md", "network-config-reviewer.md",
             "network-troubleshooter.md"
         )
     }
-    "kakebo" = @{
+    "java-spring" = @{
         Skills = @(
             "springboot-patterns", "springboot-security", "springboot-tdd",
-            "springboot-verification", "java-coding-standards", "angular-developer",
-            "e2e-testing", "postgres-patterns", "database-migrations", "api-design",
-            "sonarqube-quality-gate"
+            "springboot-verification", "java-coding-standards", "postgres-patterns",
+            "database-migrations", "api-design", "sonarqube-quality-gate"
         )
         Agents = @(
-            "java-reviewer.md", "java-build-resolver.md", "typescript-reviewer.md",
-            "database-reviewer.md", "e2e-runner.md"
+            "java-reviewer.md", "java-build-resolver.md", "database-reviewer.md"
         )
     }
-    "cluster" = @{
+    "angular" = @{
+        Skills = @(
+            "angular-developer", "e2e-testing", "sonarqube-quality-gate"
+        )
+        Agents = @(
+            "typescript-reviewer.md", "e2e-runner.md"
+        )
+    }
+    "go" = @{
         Skills = @(
             "golang-patterns", "golang-testing", "docker-patterns",
             "kubernetes-patterns", "postgres-patterns", "latency-critical-systems",
@@ -95,7 +106,7 @@ $PhaseConfig = @{
             "database-reviewer.md"
         )
     }
-    "token-hill" = @{
+    "python" = @{
         Skills = @(
             "python-patterns", "python-testing", "benchmark-optimization-loop",
             "sonarqube-quality-gate"
@@ -121,8 +132,18 @@ function Write-InstallManifest {
     & $py.Source $manifestScript write --dest $GlobalPluginDir --harness agy --profile $InstalledPhase --repo-root $RepoRoot
 }
 
+if ($Repo) {
+    $repoProfiles = Join-Path $RepoRoot "scripts\py\repo_profiles.py"
+    $py = Get-Command python -ErrorAction SilentlyContinue
+    if (-not $py) { $py = Get-Command python3 -ErrorAction SilentlyContinue }
+    if (-not $py) { throw "Python es necesario para -Repo." }
+    $action = if ($Phase -eq "status") { "status" } else { "install" }
+    & $py.Source $repoProfiles $action --repo $Repo
+    exit $LASTEXITCODE
+}
+
 if ($Phase -eq "status") {
-    $targetInfo = if ($TargetProject) { "$TargetProject\.agents" } else { $GlobalPluginDir }
+    $targetInfo = $GlobalPluginDir
     Write-Host "=== Estado de Anything Antigravity (aagy) ($targetInfo) ===" -ForegroundColor Cyan
     if (Test-Path "$targetInfo\skills") {
         $skills = @(Get-ChildItem "$targetInfo\skills" -Directory | Select-Object -ExpandProperty Name)
@@ -139,7 +160,7 @@ if ($Phase -eq "status") {
     exit 0
 }
 
-$destRoot = if ($TargetProject) { Join-Path $TargetProject ".agents" } else { $GlobalPluginDir }
+$destRoot = $GlobalPluginDir
 if ($Clean) {
     Write-Host "[+] Limpiando directorio destino: $destRoot" -ForegroundColor Cyan
     if (Test-Path "$destRoot\skills") { Remove-Item -Path "$destRoot\skills" -Recurse -Force }
@@ -149,21 +170,19 @@ if ($Clean) {
 New-Item -ItemType Directory -Force -Path "$destRoot\skills" | Out-Null
 New-Item -ItemType Directory -Force -Path "$destRoot\agents" | Out-Null
 
-if (-not $TargetProject) {
-    New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\rules" | Out-Null
-    $rulesSrc = Join-Path $RepoRoot "rules"
-    if (Test-Path $rulesSrc) {
-        Copy-Item -Path (Join-Path $rulesSrc "*.md") -Destination "$GlobalPluginDir\rules\" -Force
-        Write-Host "[+] Reglas globales sincronizadas -> $GlobalPluginDir\rules\" -ForegroundColor Cyan
-    }
-    $pluginJsonSrc = Join-Path $RepoRoot "plugin.json"
-    if (Test-Path $pluginJsonSrc) {
-        Copy-Item -Path $pluginJsonSrc -Destination "$GlobalPluginDir\plugin.json" -Force
-    }
-    $hooksJsonSrc = Join-Path $RepoRoot "hooks.json"
-    if (Test-Path $hooksJsonSrc) {
-        Copy-Item -Path $hooksJsonSrc -Destination "$GlobalPluginDir\hooks.json" -Force
-    }
+New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\rules" | Out-Null
+$rulesSrc = Join-Path $RepoRoot "rules"
+if (Test-Path $rulesSrc) {
+    Copy-Item -Path (Join-Path $rulesSrc "*.md") -Destination "$GlobalPluginDir\rules\" -Force
+    Write-Host "[+] Reglas globales sincronizadas -> $GlobalPluginDir\rules\" -ForegroundColor Cyan
+}
+$pluginJsonSrc = Join-Path $RepoRoot "plugin.json"
+if (Test-Path $pluginJsonSrc) {
+    Copy-Item -Path $pluginJsonSrc -Destination "$GlobalPluginDir\plugin.json" -Force
+}
+$hooksJsonSrc = Join-Path $RepoRoot "hooks.json"
+if (Test-Path $hooksJsonSrc) {
+    Copy-Item -Path $hooksJsonSrc -Destination "$GlobalPluginDir\hooks.json" -Force
 }
 
 if ($Phase -eq "all") {
@@ -171,7 +190,7 @@ if ($Phase -eq "all") {
     Copy-Item -Path (Join-Path $SkillsSource "*") -Destination (Join-Path $destRoot "skills") -Recurse -Force
     Copy-Item -Path (Join-Path $AgentsSource "*.md") -Destination (Join-Path $destRoot "agents") -Force
     Write-Host "[OK] Catálogo completo optimizado sincronizado en $destRoot." -ForegroundColor Green
-    if (-not $TargetProject) { Write-InstallManifest -InstalledPhase $Phase }
+    Write-InstallManifest -InstalledPhase $Phase
     exit 0
 }
 
@@ -196,4 +215,4 @@ foreach ($a in $cfg.Agents) {
 }
 
 Write-Host "[OK] Sincronización finalizada para fase '$Phase' en $destRoot." -ForegroundColor Green
-if (-not $TargetProject) { Write-InstallManifest -InstalledPhase $Phase }
+Write-InstallManifest -InstalledPhase $Phase

@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# aagy-sync.sh - Sincronizador de Anything Antigravity (aagy) para Linux (ADR-0001)
+# aagy-sync.sh - Sincronizador de Anything Antigravity (aagy) para Linux (ADR-0001, perfiles de stack)
 # ==============================================================================
 set -euo pipefail
 
 PHASE="${1:-status}"
+if [ "$PHASE" = "--repo" ]; then
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  py="$(command -v python3 || command -v python)"
+  exec "$py" "$SCRIPT_DIR/../py/repo_profiles.py" install --repo "${2:?Falta la ruta del repositorio}"
+fi
 TARGET_DIR="${2:-$HOME/.gemini/config/plugins/aagy}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
@@ -34,19 +39,23 @@ case "$PHASE" in
     SKILLS=(tdd-workflow search-first verification-loop security-review coding-standards git-workflow conventional-commit-review architecture-decision-records error-handling docs-governance workspace-health-audit config-gc sonarqube-quality-gate sync-microservice-sdk todo-lifecycle sre-reliability agent-sort agent-self-evaluation strategic-compact context-budget safety-guard engineering-lifecycle aagy-doctor)
     AGENTS=(planner.md architect.md tdd-guide.md code-reviewer.md security-reviewer.md build-error-resolver.md silent-failure-hunter.md refactor-cleaner.md doc-updater.md todo-archiver.md sync-aligner.md lifecycle-coordinator.md)
     ;;
-  infra)
-    SKILLS=(docker-patterns deployment-patterns kubernetes-patterns homelab-network-readiness homelab-network-setup homelab-pihole-dns homelab-vlan-segmentation homelab-wireguard-vpn network-config-validation network-interface-health netmiko-ssh-automation security-scan safety-guard)
+  network-infra)
+    SKILLS=(docker-patterns deployment-patterns kubernetes-patterns homelab-network-readiness homelab-network-setup homelab-pihole-dns homelab-vlan-segmentation homelab-wireguard-vpn network-config-validation network-interface-health security-scan safety-guard)
     AGENTS=(homelab-architect.md network-architect.md network-config-reviewer.md network-troubleshooter.md)
     ;;
-  kakebo)
-    SKILLS=(springboot-patterns springboot-security springboot-tdd springboot-verification java-coding-standards angular-developer e2e-testing postgres-patterns database-migrations api-design sonarqube-quality-gate)
-    AGENTS=(java-reviewer.md java-build-resolver.md typescript-reviewer.md database-reviewer.md e2e-runner.md)
+  java-spring)
+    SKILLS=(springboot-patterns springboot-security springboot-tdd springboot-verification java-coding-standards postgres-patterns database-migrations api-design sonarqube-quality-gate)
+    AGENTS=(java-reviewer.md java-build-resolver.md database-reviewer.md)
     ;;
-  cluster)
+  angular)
+    SKILLS=(angular-developer e2e-testing sonarqube-quality-gate)
+    AGENTS=(typescript-reviewer.md e2e-runner.md)
+    ;;
+  go)
     SKILLS=(golang-patterns golang-testing docker-patterns kubernetes-patterns postgres-patterns latency-critical-systems data-throughput-accelerator benchmark-optimization-loop sonarqube-quality-gate)
     AGENTS=(go-reviewer.md go-build-resolver.md performance-optimizer.md database-reviewer.md)
     ;;
-  token-hill)
+  python)
     SKILLS=(python-patterns python-testing benchmark-optimization-loop sonarqube-quality-gate)
     AGENTS=(python-reviewer.md performance-optimizer.md)
     ;;
@@ -58,8 +67,13 @@ case "$PHASE" in
     write_install_manifest "$PHASE"
     exit 0
     ;;
+  infra|kakebo|cluster|token-hill)
+    echo "[!] La fase '$PHASE' se retiró: usa los perfiles de stack (network-infra, java-spring, angular, go, python)." >&2
+    exit 1
+    ;;
   *)
-    echo "Uso: $0 {status|generic|infra|kakebo|cluster|token-hill|all} [target_dir]"
+    echo "Uso: $0 {status|generic|network-infra|java-spring|angular|go|python|all} [target_dir]"
+    echo "     $0 --repo <ruta_repo>   # instala en <repo>/.agents/ los perfiles de <repo>/.governance/aagy-profiles.json"
     exit 1
     ;;
 esac

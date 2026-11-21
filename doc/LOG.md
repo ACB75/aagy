@@ -5,6 +5,16 @@
 
 ---
 
+## 2026-11-21: Perfiles de Stack Declarados por el Repositorio Consumidor (ADR-0004)
+
+### Hitos y Decisiones Materiales
+
+1. **Plugin desacoplado de `home-lab`**: `aagy-sync.{ps1,sh}` sustituye las fases `infra`/`kakebo`/`cluster`/`token-hill` por perfiles de stack (`network-infra`, `java-spring`, `angular`, `go`, `python`) y retira `-TargetProject`; se elimina `netmiko-ssh-automation` (no existía en `skills/`).
+2. **Modo repositorio**: `aagy-sync -Repo <repo>` / `--repo` delega en [`repo_profiles.py`](../scripts/py/repo_profiles.py), que lee `<repo>/.governance/aagy-profiles.json`, instala la unión de perfiles (sin `generic`) en `<repo>/.agents/`, registra un lock y mantiene un bloque gestionado en `.agents/.gitignore` para no versionar copias.
+3. **ADR**: [ADR-0004](02-adr/ADR_aagy_0004_stack_profiles_declared_by_consumer_repo.md) reemplaza el Nivel 2 de ADR-0001. Pruebas en [`test_repo_profiles.py`](../scripts/py/tests/test_repo_profiles.py).
+
+---
+
 ## 2026-11-21: Comandos de Diagnóstico `/aagy-doctor` y `/aagy-ecc-doctor`
 
 ### Hitos y Decisiones Materiales
