@@ -12,10 +12,6 @@
 
 ## Épica: Flujo GitHub Issues y Projects v2
 
-- [ ] **Sincronizador backlog.py <-> GitHub Issues para Claude y Antigravity (GH #63)**
-  <!-- aagy-task: id=gh-63 epic=flujo-github-issues-y-projects-v2 -->
-  GitHub Issue: <https://github.com/ACB75/aagy/issues/63> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
-
 - [ ] **Soporte de sub-issues y adjuntar artefactos de lifecycle en GitHub Issues (GH #64)**
   <!-- aagy-task: id=gh-64 epic=flujo-github-issues-y-projects-v2 -->
   GitHub Issue: <https://github.com/ACB75/aagy/issues/64> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0

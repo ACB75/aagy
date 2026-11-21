@@ -391,3 +391,84 @@ def test_lock_breaks_when_stale(repo: Path):
     os.utime(lock, (old, old))
     assert op_claim(ctx, "logs", "claude", None, False, False)["owner"] == "claude"
     assert not lock.exists()
+
+
+# ----------------------------------------------------------------- GitHub Issues sync (GH #63)
+
+
+def test_parse_backlog_extracts_issue_number():
+    sample = (
+        "# Backlog\n\n## 1. Backlog Activo\n\n"
+        "- [ ] **Tarea con meta issue**\n"
+        "  <!-- aagy-task: id=t1 issue=42 -->\n\n"
+        "- [ ] **Tarea con id gh-63 (GH #63)**\n"
+        "  <!-- aagy-task: id=gh-63 epic=flujo -->\n"
+    )
+    parsed = parse_backlog(sample)
+    by_id = {t.task_id: t for t in parsed.tasks}
+    assert by_id["t1"].issue == 42
+    assert by_id["gh-63"].issue == 63
+
+
+def test_gh_sync_creates_closes_and_imports_issues(repo: Path, monkeypatch: pytest.MonkeyPatch):
+    ctx = ctx_for(repo)
+    gh_calls = []
+
+    def fake_run_gh(cwd: Path, *args: str):
+        gh_calls.append(args)
+        if args[:2] == ("issue", "list"):
+            return json.dumps(
+                [
+                    {"number": 70, "title": "[feat]-[aagy]: issue remota abierta", "state": "OPEN", "url": "https://github.com/ACB75/aagy/issues/70"},
+                    {"number": 50, "title": "Tarea vieja", "state": "OPEN", "url": "https://github.com/ACB75/aagy/issues/50"},
+                ]
+            )
+        if args[:2] == ("issue", "create"):
+            return "https://github.com/ACB75/aagy/issues/88"
+        if args[:2] == ("issue", "close"):
+            return ""
+        return ""
+
+    monkeypatch.setattr(backlog, "run_gh", fake_run_gh)
+
+    # Vincular tarea-vieja ([x]) con issue 50 para verificar close_done
+    todo_text = ctx.repo.todo_path.read_text(encoding="utf-8").replace(
+        "- [x] **Tarea vieja**",
+        "- [x] **Tarea vieja**\n  <!-- aagy-task: id=tarea-vieja issue=50 -->",
+    )
+    ctx.repo.todo_path.write_text(todo_text, encoding="utf-8")
+
+    result = backlog.op_gh_sync(
+        ctx,
+        create_missing=True,
+        close_done=True,
+        import_open=True,
+    )
+    assert 88 in result["created"]
+    assert 50 in result["closed"]
+    assert "gh-70" in result["imported"]
+
+    updated_parsed = parse_backlog(ctx.repo.todo_path.read_text(encoding="utf-8"))
+    by_id = {t.task_id: t for t in updated_parsed.tasks}
+    assert "gh-70" in by_id
+    assert by_id["gh-70"].issue == 70
+    assert by_id["logs"].issue == 88
+
+
+def test_cli_claim_and_done_with_gh_flag(repo: Path, monkeypatch: pytest.MonkeyPatch):
+    gh_calls = []
+
+    def fake_run_gh(cwd: Path, *args: str):
+        gh_calls.append(args)
+        return ""
+
+    monkeypatch.setattr(backlog, "run_gh", fake_run_gh)
+    ctx = ctx_for(repo)
+    backlog.op_add(ctx, "Tarea GH 63", None, "gh-63", None)
+
+    assert main(["--repo", str(repo), "claim", "gh-63", "--agent", "agy", "--gh"]) == 0
+    assert any(c[:2] == ("issue", "edit") and "63" in c for c in gh_calls)
+
+    assert main(["--repo", str(repo), "done", "gh-63", "--agent", "agy", "--no-archive", "--gh"]) == 0
+    assert any(c[:2] == ("issue", "close") and "63" in c for c in gh_calls)
+
