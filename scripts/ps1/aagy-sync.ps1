@@ -185,15 +185,15 @@ New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\.data\instincts" | O
 New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\scripts\ps1" | Out-Null
 New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\scripts\sh" | Out-Null
 New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\scripts\py" | Out-Null
-foreach ($ps in @("safety-check.ps1", "hook-post-write.ps1", "lint-markdown.ps1", "auto-evolve.ps1", "manage-instincts.ps1", "backlog.ps1")) {
+foreach ($ps in @("safety-check.ps1", "hook-post-write.ps1", "lint-markdown.ps1", "auto-evolve.ps1", "manage-instincts.ps1", "backlog.ps1", "new-lifecycle-task.ps1", "complete-task-pr.ps1", "archive-todo.ps1", "format-commit.ps1")) {
     $srcPs = Join-Path $RepoRoot "scripts\ps1\$ps"
     if (Test-Path $srcPs) { Copy-Item -Path $srcPs -Destination "$GlobalPluginDir\scripts\ps1\$ps" -Force }
 }
-foreach ($sh in @("safety-check.sh", "hook-post-write.sh", "lint-markdown.sh", "auto-evolve.sh", "manage-instincts.sh", "backlog.sh")) {
+foreach ($sh in @("safety-check.sh", "hook-post-write.sh", "lint-markdown.sh", "auto-evolve.sh", "manage-instincts.sh", "backlog.sh", "new-lifecycle-task.sh", "complete-task-pr.sh", "archive-todo.sh", "format-commit.sh")) {
     $srcSh = Join-Path $RepoRoot "scripts\sh\$sh"
     if (Test-Path $srcSh) { Copy-Item -Path $srcSh -Destination "$GlobalPluginDir\scripts\sh\$sh" -Force }
 }
-foreach ($py in @("self_improve.py", "instinct_manager.py", "security_audit.py", "workspace_audit.py", "docs_map.py", "backlog.py", "archive_todo.py", "validate_branch.py", "aagy_doctor.py", "doctor_core.py", "install_manifest.py")) {
+foreach ($py in @("self_improve.py", "instinct_manager.py", "security_audit.py", "workspace_audit.py", "docs_map.py", "backlog.py", "archive_todo.py", "new_lifecycle_task.py", "sync_ideas_todo.py", "format_commit.py", "validate_branch.py", "aagy_doctor.py", "doctor_core.py", "install_manifest.py")) {
     $srcPy = Join-Path $RepoRoot "scripts\py\$py"
     if (Test-Path $srcPy) { Copy-Item -Path $srcPy -Destination "$GlobalPluginDir\scripts\py\$py" -Force }
 }

@@ -105,13 +105,13 @@ if [ -f "$REPO_ROOT/hooks.json" ]; then
 fi
 
 mkdir -p "$TARGET_DIR/.data/instincts" "$TARGET_DIR/scripts/ps1" "$TARGET_DIR/scripts/sh" "$TARGET_DIR/scripts/py"
-for ps in safety-check.ps1 hook-post-write.ps1 lint-markdown.ps1 auto-evolve.ps1 manage-instincts.ps1 backlog.ps1; do
+for ps in safety-check.ps1 hook-post-write.ps1 lint-markdown.ps1 auto-evolve.ps1 manage-instincts.ps1 backlog.ps1 new-lifecycle-task.ps1 complete-task-pr.ps1 archive-todo.ps1 format-commit.ps1; do
   [ -f "$REPO_ROOT/scripts/ps1/$ps" ] && cp "$REPO_ROOT/scripts/ps1/$ps" "$TARGET_DIR/scripts/ps1/$ps"
 done
-for sh in safety-check.sh hook-post-write.sh lint-markdown.sh auto-evolve.sh manage-instincts.sh backlog.sh; do
+for sh in safety-check.sh hook-post-write.sh lint-markdown.sh auto-evolve.sh manage-instincts.sh backlog.sh new-lifecycle-task.sh complete-task-pr.sh archive-todo.sh format-commit.sh; do
   [ -f "$REPO_ROOT/scripts/sh/$sh" ] && cp "$REPO_ROOT/scripts/sh/$sh" "$TARGET_DIR/scripts/sh/$sh"
 done
-for pyf in self_improve.py instinct_manager.py security_audit.py workspace_audit.py docs_map.py backlog.py archive_todo.py validate_branch.py aagy_doctor.py doctor_core.py install_manifest.py; do
+for pyf in self_improve.py instinct_manager.py security_audit.py workspace_audit.py docs_map.py backlog.py archive_todo.py new_lifecycle_task.py sync_ideas_todo.py format_commit.py validate_branch.py aagy_doctor.py doctor_core.py install_manifest.py; do
   [ -f "$REPO_ROOT/scripts/py/$pyf" ] && cp "$REPO_ROOT/scripts/py/$pyf" "$TARGET_DIR/scripts/py/$pyf"
 done
 

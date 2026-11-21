@@ -66,6 +66,7 @@ MIRRORED_FILES: Tuple[Tuple[str, str], ...] = tuple(
     (f"scripts/py/{name}", f"scripts/py/{name}") for name in MIRRORED_PY_MODULES
 ) + (
     ("rules/AGENTS.md", "rules/AGENTS.md"),
+    ("CLAUDE.md", "project-template/CLAUDE.md"),
 )
 
 CORE_PROFILE = "generic"
