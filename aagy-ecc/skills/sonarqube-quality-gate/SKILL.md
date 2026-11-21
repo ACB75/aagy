@@ -1,6 +1,6 @@
 ---
 name: sonarqube-quality-gate
-description: "Enforce SonarQube Quality Gate (S3776, S1192, S107, S112, S1452) via scripts/ps1/sonar-audit.ps1. Not for style formatting."
+description: "Enforce SonarQube Rating A (S3776, S1192, S107, S112) via sonar-audit."
 metadata:
   origin: AAGY
 ---

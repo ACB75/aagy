@@ -1,6 +1,6 @@
 ---
 name: aagy-doctor
-description: "Diagnose the aagy install for Antigravity/Gemini: plugin, rules, skills, hooks and repo (checks DOC-01..14). Runs scripts/py/aagy_doctor.py."
+description: "Diagnose global aagy plugin health (DOC-01..14) via aagy_doctor.py."
 metadata:
   origin: AAGY
 ---
