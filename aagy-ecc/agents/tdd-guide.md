@@ -1,12 +1,7 @@
 ---
 name: tdd-guide
 description: "TDD specialist enforcing tests-first (RED-GREEN-REFACTOR), auto-execution of new artifacts, and 80%+ coverage."
-tools:
-  - view_file
-  - write_to_file
-  - replace_file_content
-  - run_command
-  - grep_search
+tools: Read, Write, Edit, Bash, Grep
 model: inherit
 ---
 
