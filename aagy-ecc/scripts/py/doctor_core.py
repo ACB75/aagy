@@ -53,7 +53,8 @@ CHARS_PER_TOKEN = 3.8
 SKILL_FILE = "SKILL.md"
 ENCODING = "utf-8"
 
-IGNORED_TREE_NAMES = frozenset({"__pycache__", ".pytest_cache", ".DS_Store", "Thumbs.db", MANIFEST_FILE})
+# .agents/ guarda instintos y observaciones locales de self-improve: dato del workspace, no del plugin.
+IGNORED_TREE_NAMES = frozenset({"__pycache__", ".pytest_cache", ".DS_Store", "Thumbs.db", ".agents", MANIFEST_FILE})
 IGNORED_TREE_SUFFIXES = (".pyc", ".pyo")
 FRONTMATTER_REGEX = re.compile(r"^---\s*\r?\n(.*?)\r?\n---", re.DOTALL)
 
