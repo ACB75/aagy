@@ -16,6 +16,16 @@
 
 ---
 
+## 2026-11-21: Convención de Ramas Aplicada También en Claude Code
+
+### Hitos y Decisiones Materiales
+
+1. **Causa**: Claude Code creaba ramas con su propio esquema (`claude/project-thread-*`) porque el repo no tenía `CLAUDE.md` (solo `AGENTS.md`, que lee Antigravity) y el índice del hook `SessionStart` reducía la regla *Mandatory Branch Naming* a su etiqueta. `complete-task-pr` rechazaba esas ramas y el CI de los PR #50 y #52 fallaba.
+2. **Reglas**: nuevo [`CLAUDE.md`](../CLAUDE.md) que importa `AGENTS.md` y explica cómo publicar desde una rama asignada por el entorno (`git push -u origin HEAD:<tipo>/<proyecto>/<nombre>`). `AGENTS.md`, la plantilla de proyecto de `aagy-ecc` y la skill `git-workflow` (que usaba `feature/*`) recogen el formato `<tipo>/<proyecto>/<nombre>`. El índice de `SessionStart` mantiene completo el texto de la regla de ramas.
+3. **Guardarraíl simétrico**: [`validate_branch.py`](../scripts/py/validate_branch.py) añade `--git-command`, que detecta las ramas que crea, renombra o publica un comando (`checkout -b`, `switch -c`, `branch`, `branch -m`, `push`; ignora borrados y tags). Lo usan el hook PreToolUse de `aagy` (`safety-check.ps1`) y el de `aagy-ecc` (`safety_check.py`, con `validate_branch.py` espejado), que deniegan nombres fuera de convención.
+
+---
+
 ## 2026-11-21: aagy-ecc 4.2.0 en Paquetes por Perfil para Reducir Tokens
 
 ### Hitos y Decisiones Materiales

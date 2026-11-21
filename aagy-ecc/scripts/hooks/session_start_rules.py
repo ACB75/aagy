@@ -26,6 +26,14 @@ RULES_REL = Path("rules") / "AGENTS.md"
 FULL_TEXT_BUDGET = 2500
 _BULLET_LABEL = re.compile(r"^- \*\*(.+?)\*\*(\s*\([^)]*\))?")
 HEADER = "Reglas globales Tier 1 de aagy (rules/AGENTS.md)"
+# Invariantes que se inyectan con su texto completo aunque se condense el resto:
+# sin el formato concreto, Claude Code crea ramas con su propio esquema (claude/*, worktree-*).
+FULL_TEXT_LABELS = ("Mandatory Branch Naming",)
+BRANCH_NOTE = (
+    "Ramas: crea y publica solo <tipo>/<proyecto>/<nombre> (validate_branch.py), aunque el entorno "
+    "te asigne otra rama (p. ej. claude/* en Claude Code web): renombra con git branch -m o publica "
+    "con git push -u origin HEAD:<tipo>/<proyecto>/<nombre> y abre el PR desde esa rama."
+)
 
 
 def plugin_root() -> Path:
@@ -41,9 +49,12 @@ def condense(text: str, rules_file: Path) -> str:
             lines.append(line)
             continue
         match = _BULLET_LABEL.match(line)
-        if match:
+        if match and match.group(1) in FULL_TEXT_LABELS:
+            lines.append(line)
+        elif match:
             lines.append(f"- {match.group(1)}{match.group(2) or ''}")
     lines.append("")
+    lines.append(BRANCH_NOTE)
     lines.append(
         f"Índice resumido. Texto completo: {rules_file}. Léelo con Read antes de commits, PRs, "
         "cambios de contrato o tareas del ciclo de vida, y siempre que una de estas reglas aplique."

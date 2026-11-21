@@ -53,6 +53,7 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "archive_todo.py",
     "sync_ideas_todo.py",
     "new_lifecycle_task.py",
+    "validate_branch.py",
 )
 
 # Entradas propias de Antigravity que no deben llegar a Claude Code (relativas al directorio espejo).
