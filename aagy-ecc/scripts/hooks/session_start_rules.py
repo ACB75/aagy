@@ -62,28 +62,57 @@ def condense(text: str, rules_file: Path) -> str:
     return "\n".join(lines)
 
 
-def build_response(rules_file: Optional[Path] = None) -> Dict[str, Any]:
-    """Devuelve el JSON de SessionStart con las reglas (o su índice), o {} si no hay reglas legibles."""
+def backlog_brief(cwd: Optional[str]) -> str:
+    """Resumen del backlog compartido con Antigravity (scripts/py/backlog.py), o "" si no hay."""
+    py_dir = str(plugin_root() / "scripts" / "py")
+    try:
+        if py_dir not in sys.path:
+            sys.path.insert(0, py_dir)
+        import backlog  # noqa: PLC0415 - módulo del plugin, cargado solo si existe
+
+        start = Path(cwd) if cwd else Path.cwd()
+        ctx = backlog.Context(repo=backlog.locate_repo(start), cwd=start)
+        return "\n".join(backlog.brief_lines(ctx))
+    except Exception:  # noqa: BLE001 - un hook de arranque nunca debe romper la sesión
+        return ""
+
+
+def build_response(rules_file: Optional[Path] = None, extra: str = "") -> Dict[str, Any]:
+    """Devuelve el JSON de SessionStart con las reglas (o su índice) y el backlog, o {} si no hay nada."""
     target = rules_file or (plugin_root() / RULES_REL)
     try:
         text = target.read_text(encoding="utf-8").strip()
     except OSError:
+        text = ""
+    parts: List[str] = []
+    if text:
+        body = text if len(text) <= FULL_TEXT_BUDGET else condense(text, target)
+        parts.append(f"{HEADER}:\n\n{body}")
+    if extra:
+        parts.append(extra)
+    if not parts:
         return {}
-    if not text:
-        return {}
-    body = text if len(text) <= FULL_TEXT_BUDGET else condense(text, target)
     return {
         "hookSpecificOutput": {
             "hookEventName": "SessionStart",
-            "additionalContext": f"{HEADER}:\n\n{body}",
+            "additionalContext": "\n\n".join(parts),
         }
     }
 
 
+def read_hook_input() -> Dict[str, Any]:
+    if sys.stdin.isatty():
+        return {}
+    try:
+        data = json.loads(sys.stdin.read() or "{}")
+    except ValueError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
 def main() -> int:
-    if not sys.stdin.isatty():
-        sys.stdin.read()
-    response = build_response()
+    payload = read_hook_input()
+    response = build_response(extra=backlog_brief(payload.get("cwd")))
     if response:
         print(json.dumps(response))  # ASCII: independiente de la codificación de stdout
     return 0

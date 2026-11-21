@@ -117,3 +117,6 @@ aagy-ecc/.aagy-install.json
 
 # Local runtime observations / project-level instincts
 .agents/
+
+# Backlog compartido sin git (backlog.py)
+.aagy-backlog/

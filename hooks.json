@@ -50,5 +50,19 @@
         ]
       }
     ]
+  },
+  "aagy-shared-backlog": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python scripts/py/backlog.py --quiet checkpoint --agent agy --auto",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   }
 }

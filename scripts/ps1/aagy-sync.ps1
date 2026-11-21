@@ -50,7 +50,7 @@ $PhaseConfig = @{
             "tdd-workflow", "search-first", "verification-loop",
             "security-review", "git-workflow", "conventional-commit-review",
             "docs-governance", "sonarqube-quality-gate", "todo-lifecycle",
-            "safety-guard", "engineering-lifecycle", "aagy-doctor"
+            "safety-guard", "engineering-lifecycle", "shared-backlog", "aagy-doctor"
         )
         Agents = @(
             "planner.md", "architect.md", "tdd-guide.md", "code-reviewer.md",

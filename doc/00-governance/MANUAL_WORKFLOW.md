@@ -54,6 +54,7 @@ bash scripts/sh/sync-ideas-todo.sh
 | **Instanciar ciclo de vida** | `scripts/ps1/new-lifecycle-task.ps1` | `scripts/sh/new-lifecycle-task.sh` | [`new_lifecycle_task.py`](../../scripts/py/new_lifecycle_task.py) |
 | **Ingerir `IDEAS.md` $\rightarrow$ `TODO.md`** | `scripts/ps1/sync-ideas-todo.ps1` | `scripts/sh/sync-ideas-todo.sh` | [`sync_ideas_todo.py`](../../scripts/py/sync_ideas_todo.py) |
 | **Archivar TODOs `[x]` $\rightarrow$ `done/`** | `scripts/ps1/archive-todo.ps1` | `scripts/sh/archive-todo.sh` | [`archive_todo.py`](../../scripts/py/archive_todo.py) |
+| **Backlog compartido Claude $\leftrightarrow$ Antigravity** | `scripts/ps1/backlog.ps1` | `scripts/sh/backlog.sh` | [`backlog.py`](../../scripts/py/backlog.py) |
 | **Generar Post-Mortem 5W (`fix/*`)** | `scripts/ps1/generate-postmortem.ps1` | `scripts/sh/generate-postmortem.sh` | [`generate_postmortem.py`](../../scripts/py/generate_postmortem.py) |
 | **Auditar enlaces y `docs-map.json`** | `scripts/ps1/map-docs.ps1` | `scripts/sh/map-docs.sh` | [`map_docs.py`](../../scripts/py/map_docs.py) |
 | **Lint/Fix Markdown (DavidAnson)** | `scripts/ps1/lint-markdown.ps1` | `scripts/sh/lint-markdown.sh` | *(Invoca `npx markdownlint-cli`)* |

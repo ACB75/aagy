@@ -85,6 +85,7 @@ KEY_SCOPE: str = "scope"
 KEY_OCCURRENCES: str = "occurrences"
 KEY_CONFIDENCE: str = "confidence"
 KEY_SOURCES: str = "sources"
+KEY_COMMAND: str = "command"
 
 
 @dataclass(frozen=True)
@@ -296,7 +297,7 @@ def _collect_from_block(block: Dict[str, Any], commands: List[str], errors: List
     kind = block.get("type")
     if kind == "tool_use" and block.get("name") in SHELL_TOOL_NAMES:
         tool_input = block.get("input")
-        cmd = _first_line(str(tool_input.get("command") or "")) if isinstance(tool_input, dict) else ""
+        cmd = _first_line(str(tool_input.get(KEY_COMMAND) or "")) if isinstance(tool_input, dict) else ""
         if cmd:
             commands.append(cmd)
     elif kind == "tool_result" and block.get("is_error") is True:
@@ -530,8 +531,8 @@ def _render_draft_artifact(
                             "matcher": "*",
                             "hooks": [
                                 {
-                                    "type": "command",
-                                    "command": "python scripts/py/self_improve.py --capture-stop",
+                                    "type": KEY_COMMAND,
+                                    KEY_COMMAND: "python scripts/py/self_improve.py --capture-stop",
                                     "timeout": 5,
                                 }
                             ],
