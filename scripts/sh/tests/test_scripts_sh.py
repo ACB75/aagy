@@ -9,6 +9,7 @@ SH_DIR = REPO_ROOT / "scripts" / "sh"
 EXPECTED_SH_SCRIPTS = [
     "archive-todo.sh",
     "audit-pg-locks.sh",
+    "backlog.sh",
     "audit-plugin-parity.sh",
     "sync-aagy-ecc.sh",
     "audit-sdk-parity.sh",

@@ -45,6 +45,7 @@
   - **[`ADR-0001`](02-adr/ADR_aagy_0001_two_tier_global_plugin_and_project_scaffolding.md)**: Arquitectura Two-Tier (Plugin Global + Scaffolding por Proyecto).
   - **[`ADR-0002`](02-adr/ADR_aagy_0002_multi_harness_architecture_and_agent_runtime_design.md)**: Arquitectura Multi-Harness (`aagy` vs `aagy`).
   - **[`ADR-0003`](02-adr/ADR_aagy_0003_doc_structure_v2_and_manual_parity.md)**: Arquitectura documental `/doc` v2, `.governance/docs-map.json` parametrizado y paridad CLI manual.
+  - **[`ADR-0005`](02-adr/ADR_aagy_0005_shared_backlog_multi_harness.md)**: Backlog compartido entre Claude Code y Antigravity (`backlog.py`, relevos y épicas).
 
 ---
 
@@ -90,5 +91,6 @@
 - 💡 **[`doc/06-backlog/IDEAS.md`](06-backlog/IDEAS.md)**: Registro estructurado de ideas candidatas (`Draft` / `Approved`).
 - 📋 **[`doc/06-backlog/TODO.md`](06-backlog/TODO.md)**: Backlog activo y asignación de modelos/compactación.
 - 🗂️ **[`doc/06-backlog/plans/`](06-backlog/plans/REQ_aagy_unified_self_improvement.md)**: Requisitos y planes en curso (`REQ_doc_structure_v2_and_manual_parity.md`, `REQ_aagy_unified_self_improvement.md`, `REQ_aagy_clean_docs_and_repo_migration.md`).
-- ⚡ **[`doc/06-backlog/quick/README.md`](06-backlog/quick/README.md)**: Notas ligeras para entradas directas vía `--phase TODO`.
+- ⚡ **[`doc/06-backlog/quick/README.md`](06-backlog/quick/README.md)**: Notas ligeras para entradas directas vía `--phase TODO` y notas de relevo `HANDOFF_<id>.md`.
+- 🤝 **[`MANUAL_shared_backlog.md`](04-operations/runbooks/MANUAL_shared_backlog.md)**: Backlog compartido entre Claude Code y Antigravity (`backlog.py`).
 - 🗄️ **[`doc/06-backlog/done/`](06-backlog/done/TODO_Ejecutar_optimizacion_maxima_de_tokens_purgar_archivos_no_us_20261120_215458.md)**: Histórico inmutable de tareas completadas y archivadas.

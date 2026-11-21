@@ -36,7 +36,7 @@ case "$PHASE" in
     exit 0
     ;;
   generic)
-    SKILLS=(tdd-workflow search-first verification-loop security-review coding-standards git-workflow conventional-commit-review architecture-decision-records error-handling docs-governance workspace-health-audit config-gc sonarqube-quality-gate sync-microservice-sdk todo-lifecycle sre-reliability agent-sort agent-self-evaluation strategic-compact context-budget safety-guard engineering-lifecycle aagy-doctor)
+    SKILLS=(tdd-workflow search-first verification-loop security-review coding-standards git-workflow conventional-commit-review architecture-decision-records error-handling docs-governance workspace-health-audit config-gc sonarqube-quality-gate sync-microservice-sdk todo-lifecycle sre-reliability agent-sort agent-self-evaluation strategic-compact context-budget safety-guard engineering-lifecycle shared-backlog aagy-doctor)
     AGENTS=(planner.md architect.md tdd-guide.md code-reviewer.md security-reviewer.md build-error-resolver.md silent-failure-hunter.md refactor-cleaner.md doc-updater.md todo-archiver.md sync-aligner.md lifecycle-coordinator.md)
     ;;
   network-infra)

@@ -9,6 +9,7 @@ PS1_DIR = REPO_ROOT / "scripts" / "ps1"
 EXPECTED_PS1_SCRIPTS = [
     "archive-todo.ps1",
     "audit-pg-locks.ps1",
+    "backlog.ps1",
     "audit-plugin-parity.ps1",
     "sync-aagy-ecc.ps1",
     "audit-sdk-parity.ps1",

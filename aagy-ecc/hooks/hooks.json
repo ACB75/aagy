@@ -1,5 +1,5 @@
 {
-  "description": "Hooks de aagy-ecc: mismos guardarrailes que el plugin aagy (reglas Tier 1, safety gate, linter Markdown y captura Stop de self-improve).",
+  "description": "Hooks de aagy-ecc: mismos guardarrailes que el plugin aagy (reglas Tier 1, safety gate, linter Markdown y captura Stop de self-improve) y backlog compartido con Antigravity (checkpoint en Stop y PreCompact, relevo en SessionEnd).",
   "hooks": {
     "SessionStart": [
       {
@@ -44,6 +44,33 @@
             "type": "command",
             "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/self_improve.py\" --capture-stop",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/backlog.py\" --quiet checkpoint --agent claude --auto",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/backlog.py\" --quiet checkpoint --agent claude --auto",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/backlog.py\" --quiet handoff --agent claude --auto",
+            "timeout": 10
           }
         ]
       }

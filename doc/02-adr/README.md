@@ -13,6 +13,7 @@
 | [**0002**](ADR_aagy_0002_multi_harness_architecture_and_agent_runtime_design.md) | Arquitectura Multi-Harness y Diseño de Runtimes de Agentes Autónomos (`aagy-ecc` vs `aagy`) | `accepted` | 2026-11-01 |
 | [**0003**](ADR_aagy_0003_doc_structure_v2_and_manual_parity.md) | Arquitectura Documental `/doc` v2, `.governance/docs-map.json` Parametrizado y Paridad Manual | `accepted` | 2026-11-20 |
 | [**0004**](ADR_aagy_0004_stack_profiles_declared_by_consumer_repo.md) | Perfiles de Stack Declarados por el Repositorio Consumidor (Plugin Desacoplado) | `accepted` | 2026-11-21 |
+| [**0005**](ADR_aagy_0005_shared_backlog_multi_harness.md) | Backlog Compartido entre Claude Code y Antigravity | `accepted` | 2026-11-21 |
 
 ---
 

@@ -163,7 +163,7 @@ After presenting, offer:
 - "Go deeper with one role" — re-engage a single persona for more detail
 - "Resolve a tension" — use `council` if a specific tradeoff needs a verdict
 - "Plan the work" — use `/plan` for an implementation plan, or the `epic-*` commands
-  (`/epic-decompose`) for issue-backed breakdown
+  (`/epic-decompose`) to split it into shared-backlog tasks that Claude Code or Antigravity can claim
 
 ## Persistence Rule
 
@@ -200,4 +200,4 @@ Run `dev-team` to shape a proposal, then `council` if a specific decision within
 - `team-builder` — pick-your-own agent team when the preset four roles don't fit
 - `architect` (agent) — deep single-role architecture design
 - `/plan-prd` (command) — product requirements document before the team session
-- `/epic-decompose` (command) — break the outcome into issue-backed work
+- `/epic-decompose` (command) — break the outcome into shared-backlog tasks (`shared-backlog` skill)

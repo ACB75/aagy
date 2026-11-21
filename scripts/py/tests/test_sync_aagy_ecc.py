@@ -224,3 +224,23 @@ def test_session_start_real_rules_fit_budget():
     import session_start_rules
     context = session_start_rules.build_response()["hookSpecificOutput"]["additionalContext"]
     assert len(context) < 3000
+
+
+def test_session_start_appends_shared_backlog(tmp_path: Path):
+    import subprocess
+    import session_start_rules
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    (tmp_path / ".governance").mkdir()
+    (tmp_path / ".governance" / "docs-map.json").write_text('{"schema_version": 2}', encoding="utf-8")
+    todo = tmp_path / "doc" / "06-backlog" / "TODO.md"
+    todo.parent.mkdir(parents=True)
+    todo.write_text("# B\n\n## 1. Backlog Activo\n\n- [ ] **Tarea pendiente**\n", encoding="utf-8")
+    brief = session_start_rules.backlog_brief(str(tmp_path))
+    assert "Backlog compartido" in brief and "1 pendientes" in brief
+    context = session_start_rules.build_response(tmp_path / "nope.md", extra=brief)
+    assert "Backlog compartido" in context["hookSpecificOutput"]["additionalContext"]
+
+
+def test_session_start_backlog_brief_empty_outside_backlog(tmp_path: Path):
+    import session_start_rules
+    assert session_start_rules.backlog_brief(str(tmp_path)) == ""

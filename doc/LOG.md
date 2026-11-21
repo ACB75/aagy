@@ -1,7 +1,18 @@
 # Registro Histórico de Decisiones y Cambios Materiales | AAGY / `aagy` Ecosystem
 
 > **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión Canónica**: `4.2.0`
+> **Versión Canónica**: `4.3.0`
+
+---
+
+## 2026-11-21: 4.3.0 Backlog Compartido entre Claude Code y Antigravity (ADR-0005)
+
+### Hitos y Decisiones Materiales
+
+1. **Backlog común**: [`backlog.py`](../scripts/py/backlog.py) (+ `backlog.ps1`/`backlog.sh`) gestiona `TODO.md` para los dos agentes: `claim` exclusivo con caducidad de 4 h, `checkpoint`, `handoff` con nota `quick/HANDOFF_<id>.md`, `review`/`block`/`release`/`done` y épicas (`epic add|sync|close`). El estado vivo está en `.git/aagy-backlog/state.json`, común a todos los worktrees; `claim --worktree` permite trabajar a la vez en tareas distintas.
+2. **Claude Code**: comandos `/aagy-todo`, `/epic-decompose`, `/epic-claim`, `/epic-sync`, `/epic-close`; hooks de checkpoint en `Stop`/`PreCompact`, relevo en `SessionEnd` y resumen del backlog en `SessionStart`. `aagy-ecc` incluye ahora `backlog.py`, `archive_todo.py`, `sync_ideas_todo.py` y `new_lifecycle_task.py`.
+3. **Antigravity**: skill `shared-backlog` (perfil `generic`, también en el núcleo de `aagy-ecc`) y checkpoint en el hook `Stop`.
+4. **Gobernanza**: regla nueva en `rules/AGENTS.md` §2.3; `dev-team` y `story-lifecycle` apuntan al backlog compartido en lugar de GitHub Issues. Requisitos y plan en `doc/06-backlog/plans/`, decisión en [ADR-0005](02-adr/ADR_aagy_0005_shared_backlog_multi_harness.md), manual en [`MANUAL_shared_backlog.md`](04-operations/runbooks/MANUAL_shared_backlog.md).
 
 ---
 

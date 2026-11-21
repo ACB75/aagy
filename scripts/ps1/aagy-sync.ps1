@@ -55,6 +55,7 @@ $PhaseConfig = @{
             "todo-lifecycle", "sre-reliability", "agent-sort",
             "agent-self-evaluation", "strategic-compact",
             "context-budget", "safety-guard", "engineering-lifecycle",
+            "shared-backlog",
             "aagy-doctor"
         )
         Agents = @(

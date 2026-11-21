@@ -13,7 +13,7 @@ A self-contained, file-based delivery loop: **Epic → Stories → Sprint → Im
 No external PM tool required. All ledger state lives in the repo under `.stories/`. This is
 **opt-in, project-local planning**, not a synchronized project-management authority and
 never canonical AAGY execution state — see [Authority](#authority) and
-[Boundary with GitHub-backed coordination](#boundary-with-github-backed-coordination).
+[Boundary with shared-backlog coordination](#boundary-with-shared-backlog-coordination).
 
 ## When to Activate
 
@@ -26,7 +26,7 @@ never canonical AAGY execution state — see [Authority](#authority) and
 
 | Condition | Use Instead |
 | --- | --- |
-| Work is coordinated through GitHub issues | the `epic-*` commands (`/epic-decompose`, `/epic-claim`, `/epic-sync`, …) |
+| Work is shared between agents (Claude Code / Antigravity) | the `shared-backlog` skill and the `epic-*` commands (`/epic-decompose`, `/epic-claim`, `/epic-sync`, `/epic-close`) |
 | Team already uses Jira, Linear, or Taiga | `project-flow-ops` or the matching MCP integration |
 | One-off task with no breakdown needed | just do it |
 | Architecture design first | the `architect` agent, then return here |
@@ -43,18 +43,20 @@ completion or integration on its own.
 `.stories/` follows the checkout. Another branch shows that branch's ledger, and stories
 created on an unmerged branch are not visible elsewhere until that branch is merged.
 
-## Boundary with GitHub-backed coordination
+## Boundary with shared-backlog coordination
 
-AAGY's `epic-*` commands own **issue-backed** coordination: GitHub issues are the
-authority, labels and issue bodies carry state, and multiple agents can claim work.
+AAGY's `epic-*` commands and the `shared-backlog` skill own **multi-agent** coordination:
+`TODO.md` plus the live state of `scripts/py/backlog.py` are the authority, and Claude
+Code and Antigravity claim, check-point and hand off work there.
 `.stories/` is deliberately smaller: a local, single-repo planning ledger with no
 synchronization. Never run both systems as parallel authorities for the same work.
 
-Handoff path: if an initiative outgrows `.stories/` (multiple contributors, external
-visibility, dependency tracking across repos), export it once — create GitHub issues
-from the epic and its remaining stories (manually or via `project-flow-ops`), note
-`Exported to: <issue-url>` in the epic file, set the epic's status to `done`, and stop
-updating `.stories/` for that initiative.
+Handoff path: if an initiative outgrows `.stories/` (several agents, or work that must
+survive the session), export it once — create a shared-backlog epic with
+`/epic-decompose` (or `backlog.py epic add` + `backlog.py add --epic`), note
+`Exported to: TODO.md epic <id>` in the epic file, set the epic's status to `done`, and
+stop updating `.stories/` for that initiative. For external visibility, GitHub issues
+via `project-flow-ops` remain an option.
 
 ## Directory Layout
 
@@ -371,7 +373,7 @@ Show sprint assignment when relevant.
 - Editing status in epic or sprint tables directly — they are derived from story files
 - Marking a story `done` before its merge to main is confirmed
 - Treating `.stories/` status as evidence of completion — it only mirrors the real result
-- Running `.stories/` alongside issue-backed `epic-*` coordination for the same work
+- Running `.stories/` alongside shared-backlog `epic-*` coordination for the same work
 - Skipping acceptance criteria — they drive the tests, which define done
 
 ## Related Skills
@@ -381,5 +383,5 @@ Show sprint assignment when relevant.
 - `tdd-workflow` — the test-first lane used inside `implement`
 - `verification-loop` — the verification gate used before a story reaches `review`
 - `council` — use when stories surface a genuine design tradeoff before implementation
-- `project-flow-ops` / `epic-*` commands — issue-backed coordination; use for the handoff
-  described above instead of syncing `.stories/`
+- `shared-backlog` / `epic-*` commands — multi-agent coordination on `TODO.md`; use for
+  the handoff described above instead of syncing `.stories/`
