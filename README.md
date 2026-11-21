@@ -56,8 +56,9 @@ pwsh -NoProfile -File install.ps1 -Target agy -Profile full
 #    (-Destination opcional: copia además la plantilla CLAUDE.md + .claude/ al proyecto)
 pwsh -NoProfile -File install.ps1 -Target aagy-ecc -Destination C:\Ruta\A\MiProyecto
 
-# 4. Sincronizar perfil de dominio específico (infra, kakebo, cluster, token-hill)
-pwsh -NoProfile -File scripts/ps1/aagy-sync.ps1 -Phase kakebo -TargetProject C:\Ruta\A\MiProyecto
+# 4. Instalar en un repo consumidor los perfiles de stack que declara en .governance/aagy-profiles.json
+#    (network-infra, java-spring, angular, go, python; ADR-0004)
+pwsh -NoProfile -File scripts/ps1/aagy-sync.ps1 -Repo C:\Ruta\A\MiRepo
 ```
 
 ### Linux / WSL / macOS (POSIX LF `\n`)
@@ -68,6 +69,9 @@ pwsh -NoProfile -File scripts/ps1/aagy-sync.ps1 -Phase kakebo -TargetProject C:\
 
 # 2. Sincronizar e instalar aagy-ecc (Claude Code); el destino opcional recibe la plantilla de proyecto
 ./install.sh aagy-ecc /ruta/a/mi-proyecto
+
+# 3. Instalar en un repo consumidor sus perfiles de stack (ADR-0004)
+bash scripts/sh/aagy-sync.sh --repo /ruta/a/mi-repo
 ```
 
 ---
