@@ -326,3 +326,38 @@ def test_five_axis_self_evaluation_and_cli_modes(tmp_path: Path):
     assert code == 0
     payload = json.loads(out_buf.getvalue())
     assert any(c["candidate_id"] == "repeat-verify" for c in payload["candidates"])
+
+
+def _transcript_line(role: str, block: dict) -> str:
+    return json.dumps({"type": role, "message": {"role": role, "content": [block]}})
+
+
+def test_stop_hook_reads_claude_code_transcript(tmp_path: Path):
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    plugin_data = tmp_path / "plugin_data"
+    cmd_block = {"type": "tool_use", "name": "Bash", "input": {"command": "pytest -q scripts/py/tests"}}
+    err_block = {"type": "tool_result", "is_error": True, "content": [{"type": "text", "text": "ModuleNotFoundError: x\ntrace"}]}
+    other_block = {"type": "tool_use", "name": "Read", "input": {"file_path": "a.py"}}
+    lines = ["{corrupt", _transcript_line("assistant", other_block)]
+    lines += [_transcript_line("assistant", cmd_block), _transcript_line("user", err_block)] * 2
+    transcript = tmp_path / "session.jsonl"
+    transcript.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+    commands, errors = self_improve.extract_transcript_signals(str(transcript))
+    assert commands == ["pytest -q scripts/py/tests"] * 2
+    assert errors == ["ModuleNotFoundError: x"] * 2
+
+    payload = {"cwd": str(repo_root), "transcript_path": str(transcript), "hook_event_name": "Stop"}
+    assert self_improve.capture_stop_event(payload, repo_root, plugin_data) == {}
+    candidates = self_improve.discover_candidates(repo_root, plugin_data_dir=plugin_data)
+    domains = {c.domain for c in candidates}
+    assert {"workflow", "debugging"} <= domains
+
+
+def test_stop_hook_missing_transcript_is_noop(tmp_path: Path):
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    payload = {"transcript_path": str(tmp_path / "missing.jsonl")}
+    assert self_improve.capture_stop_event(payload, repo_root, tmp_path / "pd") == {}
+    assert not (repo_root / ".agents" / "instincts" / "observations.jsonl").exists()
