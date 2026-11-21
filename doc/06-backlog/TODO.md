@@ -12,10 +12,6 @@
 
 ## Épica: Flujo GitHub Issues y Projects v2
 
-- [ ] **Workflows GitHub Actions de auto-sincronizacion Team Planning <-> aagy (GH #62)**
-  <!-- aagy-task: id=gh-62 epic=flujo-github-issues-y-projects-v2 -->
-  GitHub Issue: <https://github.com/ACB75/aagy/issues/62> | Labels: enhancement, harness:both, area:infra | Milestone: v4.2.0
-
 - [ ] **Sincronizador backlog.py <-> GitHub Issues para Claude y Antigravity (GH #63)**
   <!-- aagy-task: id=gh-63 epic=flujo-github-issues-y-projects-v2 -->
   GitHub Issue: <https://github.com/ACB75/aagy/issues/63> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0

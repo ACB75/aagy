@@ -31,3 +31,31 @@ def test_pull_request_template_has_development_and_parity_checklist() -> None:
     assert "aagy <-> aagy-ecc" in text
     assert "sync_aagy_ecc.py --check" in text
     assert "audit-plugin-parity.ps1" in text
+
+
+def test_project_auto_sync_workflow_exists_and_handles_projects_and_labels() -> None:
+    """Verifica el workflow .github/workflows/project-auto-sync.yml (GH #62)."""
+    wf_path = GITHUB_DIR / "workflows" / "project-auto-sync.yml"
+    assert wf_path.is_file(), f"Falta workflow de sincronización: {wf_path}"
+    text = wf_path.read_text(encoding="utf-8")
+
+    # 1. Eventos soportados: issues y pull_request
+    assert "issues:" in text
+    assert "pull_request:" in text
+
+    # 2. Sincronización con Projects Team Planning (#1) y aagy (#2)
+    assert "Team Planning" in text
+    assert "gh project item-add 1" in text
+    assert "gh project item-add 2" in text
+
+    # 3. Auto-etiquetado por prefijo [type]-[projects]
+    assert "harness:both" in text
+    assert "area:scripts" in text
+    assert "area:infra" in text
+    assert "enhancement" in text
+    assert "bug" in text
+
+    # 4. Sincronización de estado al abrir / fusionar PR
+    assert "In Progress" in text
+    assert "Done" in text
+

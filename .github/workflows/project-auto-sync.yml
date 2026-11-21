@@ -1,0 +1,89 @@
+name: GitHub Projects v2 & PR Auto-Sync
+
+on:
+  issues:
+    types: [opened, reopened, edited, closed]
+  pull_request:
+    types: [opened, reopened, edited, ready_for_review, closed]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  auto-label-pr:
+    name: Auto-Label PR by [type]-[projects] Prefix
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+      PR_TITLE: ${{ github.event.pull_request.title }}
+    steps:
+      - name: Infer and Apply Labels from [type]-[projects]
+        run: |
+          set -euo pipefail
+          LABELS=()
+          LOWER_TITLE="$(echo "$PR_TITLE" | tr '[:upper:]' '[:lower:]')"
+
+          if [[ "$LOWER_TITLE" =~ ^\[feat\]- ]]; then
+            LABELS+=("enhancement")
+          elif [[ "$LOWER_TITLE" =~ ^\[fix\]- ]]; then
+            LABELS+=("bug")
+          elif [[ "$LOWER_TITLE" =~ ^\[docs\]- ]]; then
+            LABELS+=("documentation" "area:docs")
+          elif [[ "$LOWER_TITLE" =~ ^\[infra\]- ]]; then
+            LABELS+=("area:infra")
+          fi
+
+          if [[ "$LOWER_TITLE" =~ -\[[^\]]*(scripts|py|ps1|sh)[^\]]*\]: ]]; then
+            LABELS+=("area:scripts")
+          fi
+          if [[ "$LOWER_TITLE" =~ -\[[^\]]*(infra|github|ci)[^\]]*\]: ]]; then
+            LABELS+=("area:infra")
+          fi
+          if [[ "$LOWER_TITLE" =~ -\[[^\]]*(docs|doc)[^\]]*\]: ]]; then
+            LABELS+=("area:docs")
+          fi
+          if [[ "$LOWER_TITLE" =~ -\[[^\]]*(aagy|aagy-ecc|scripts|github)[^\]]*\]: ]]; then
+            LABELS+=("harness:both")
+          fi
+
+          for lbl in "${LABELS[@]}"; do
+            gh pr edit "$PR_NUMBER" --repo "${{ github.repository }}" --add-label "$lbl" 2>/dev/null || true
+          done
+
+  sync-projects-v2:
+    name: Sync Team Planning (#1) and aagy (#2) Projects
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_PROJECT_TOKEN || secrets.GITHUB_TOKEN }}
+      OWNER: ${{ github.repository_owner }}
+      EVENT_NAME: ${{ github.event_name }}
+      EVENT_ACTION: ${{ github.event.action }}
+      ITEM_URL: ${{ github.event.issue.html_url || github.event.pull_request.html_url }}
+      PR_MERGED: ${{ github.event.pull_request.merged }}
+    steps:
+      - name: Add Issue/PR to Projects Team Planning (#1) and aagy (#2) & Sync Status
+        run: |
+          set -euo pipefail
+          if [[ -z "$ITEM_URL" ]]; then
+            echo "[SKIP] No item URL detected."
+            exit 0
+          fi
+
+          TARGET_STATUS="Todo"
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            if [[ "$EVENT_ACTION" == "closed" && "$PR_MERGED" == "true" ]]; then
+              TARGET_STATUS="Done"
+            elif [[ "$EVENT_ACTION" != "closed" ]]; then
+              TARGET_STATUS="In Progress"
+            fi
+          elif [[ "$EVENT_NAME" == "issues" && "$EVENT_ACTION" == "closed" ]]; then
+            TARGET_STATUS="Done"
+          fi
+
+          echo "[INFO] Sincronizando '$ITEM_URL' con Projects Team Planning (#1) y aagy (#2) -> Estado: $TARGET_STATUS"
+          gh project item-add 1 --owner "$OWNER" --url "$ITEM_URL" 2>/dev/null || echo "[WARN] No se pudo añadir a Team Planning (#1); verifique secret GH_PROJECT_TOKEN con scope project."
+          gh project item-add 2 --owner "$OWNER" --url "$ITEM_URL" 2>/dev/null || echo "[WARN] No se pudo añadir a aagy (#2); verifique secret GH_PROJECT_TOKEN con scope project."
