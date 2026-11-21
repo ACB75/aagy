@@ -36,7 +36,7 @@ main (trunk / LOCAL - always deployable)
 
 **Conventions (ADR-0006):**
 
-- **Branch Naming**: `<type>/<project>/<short-description>` where type is `feat`, `fix`, `infra`, `docs`, `chore`.
+- **Branch Naming**: `<type>/<project>/<short-description>` where type is `feat`, `fix`, `refactor`, `infra`, `chore`, `docs` or `test` (`scripts/py/validate_branch.py`). Never push a branch named by the environment (`claude/*`, `worktree-*`): rename it or push `HEAD:<type>/<project>/<name>`.
 - **Merge Strategy**: Fast-Forward or Squash and Merge only (linear history, zero merge bubbles).
 - **Environment Promotion**:
   - `LOCAL` (FRACTAL Dev): continuous from trunk `main`.
@@ -51,9 +51,9 @@ Best for continuous deployment and small-to-medium teams.
 ```
 main (protected, always deployable)
   │
-  ├── feature/user-auth      → PR → merge to main
-  ├── feature/payment-flow   → PR → merge to main
-  └── fix/login-bug          → PR → merge to main
+  ├── feat/app/user-auth     → PR → merge to main
+  ├── feat/app/payment-flow  → PR → merge to main
+  └── fix/app/login-bug      → PR → merge to main
 ```
 
 **Rules:**
@@ -183,7 +183,7 @@ Enable with: `git config commit.template .gitmessage`
 ```bash
 # Creates a merge commit
 git checkout main
-git merge feature/user-auth
+git merge feat/app/user-auth
 
 # Result:
 # *   merge commit
@@ -204,7 +204,7 @@ git merge feature/user-auth
 
 ```bash
 # Rewrites feature commits onto target branch
-git checkout feature/user-auth
+git checkout feat/app/user-auth
 git rebase main
 
 # Result:
@@ -223,7 +223,7 @@ git rebase main
 
 ```bash
 # Update feature branch with latest main (before PR)
-git checkout feature/user-auth
+git checkout feat/app/user-auth
 git fetch origin
 git rebase origin/main
 
@@ -231,7 +231,7 @@ git rebase origin/main
 # Tests should still pass
 
 # Force push (only if you're the only contributor)
-git push --force-with-lease origin feature/user-auth
+git push --force-with-lease origin feat/app/user-auth
 ```
 
 ### When NOT to Rebase
@@ -323,7 +323,7 @@ Closes #123
 ```bash
 # Check for conflicts before merge
 git checkout main
-git merge feature/user-auth --no-commit --no-ff
+git merge feat/app/user-auth --no-commit --no-ff
 
 # If conflicts, Git will show:
 # CONFLICT (content): Merge conflict in src/auth/login.ts
@@ -341,7 +341,7 @@ git status
 # content from main
 # =======
 # content from feature branch
-# >>>>>>> feature/user-auth
+# >>>>>>> feat/app/user-auth
 
 # Option 1: Manual resolution
 # Edit file, remove markers, keep correct content
@@ -363,7 +363,7 @@ git commit
 ```bash
 # 1. Keep feature branches small and short-lived
 # 2. Rebase frequently onto main
-git checkout feature/user-auth
+git checkout feat/app/user-auth
 git fetch origin
 git rebase origin/main
 
@@ -377,25 +377,23 @@ git rebase origin/main
 ### Naming Conventions
 
 ```
-# Feature branches
-feature/user-authentication
-feature/JIRA-123-payment-integration
+# Canonical format (validated by scripts/py/validate_branch.py):
+# <type>/<project>/<name>  type = feat | fix | refactor | infra | chore | docs | test
 
-# Bug fixes
-fix/login-redirect-loop
-fix/456-null-pointer-exception
+# Features
+feat/app/user-authentication
+feat/payments/jira-123-integration
 
-# Hotfixes (production issues)
-hotfix/critical-security-patch
-hotfix/database-connection-leak
+# Bug fixes and incidents (fix/* generates a 5W post-mortem)
+fix/app/login-redirect-loop
+fix/api/456-null-pointer-exception
 
-# Releases
-release/1.2.0
-release/2024-01-hotfix
+# Other tasks
+refactor/api/extract-auth-service
+infra/cluster/traefik-v3
+docs/aagy/adr-0012
 
-# Experiments/POCs
-experiment/new-caching-strategy
-poc/graphql-migration
+# Releases and environments use tags, not branches: vX.Y.Z-sandbox, vX.Y.Z
 ```
 
 ### Branch Cleanup
@@ -408,11 +406,11 @@ git branch --merged main | grep -v "^\*\|main" | xargs -n 1 git branch -d
 git fetch -p
 
 # Delete local branch
-git branch -d feature/user-auth  # Safe delete (only if merged)
-git branch -D feature/user-auth  # Force delete
+git branch -d feat/app/user-auth  # Safe delete (only if merged)
+git branch -D feat/app/user-auth  # Force delete
 
 # Delete remote branch
-git push origin --delete feature/user-auth
+git push origin --delete feat/app/user-auth
 ```
 
 ### Stash Workflow
@@ -584,14 +582,14 @@ git checkout main
 git pull origin main
 
 # 2. Create feature branch
-git checkout -b feature/user-auth
+git checkout -b feat/app/user-auth
 
 # 3. Make changes and commit
 git add .
 git commit -m "feat(auth): implement OAuth2 login"
 
 # 4. Push to remote
-git push -u origin feature/user-auth
+git push -u origin feat/app/user-auth
 
 # 5. Create Pull Request on GitHub/GitLab
 ```
@@ -604,7 +602,7 @@ git add .
 git commit -m "feat(auth): add error handling"
 
 # 2. Push updates
-git push origin feature/user-auth
+git push origin feat/app/user-auth
 ```
 
 ### Syncing Fork with Upstream
@@ -729,7 +727,7 @@ git add node_modules/
 
 | Task | Command |
 |------|---------|
-| Create branch | `git checkout -b feature/name` |
+| Create branch | `git switch -c <type>/<project>/<name>` |
 | Switch branch | `git checkout branch-name` |
 | Delete branch | `git branch -d branch-name` |
 | Merge branch | `git merge branch-name` |

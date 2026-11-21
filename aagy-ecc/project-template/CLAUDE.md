@@ -43,4 +43,4 @@ python scripts/py/self_improve.py --discover --scope all
 - **Canonical Rules**: `rules/AGENTS.md` (`< 12 KB`).
 - **Skills & Subagents**: `skills/` (`description` $\le 140$ chars) and `agents/` (`description` $\le 120$ chars).
 - **Documentation Spine**: `doc/INDEX.md`, `doc/CONTEXT.md`, `doc/STATUS.md`, `doc/LOG.md`, and `.governance/docs-map.json`.
-- **Git & PR Lifecycle**: Short-lived trunk-based branches (`feat/*`, `fix/*`, `refactor/*`, `chore/*`), commits formatted as `[type]-[projects]: <title>` with mandatory explanatory body, and automated PR squash-merge via `scripts/ps1/complete-task-pr.ps1` / `scripts/sh/complete-task-pr.sh`.
+- **Git & PR Lifecycle**: Short-lived trunk-based branches named `<type>/<project>/<name>` (`feat`, `fix`, `refactor`, `infra`, `chore`, `docs`, `test`; validated by `scripts/py/validate_branch.py`). Never push or open a PR from a branch the environment named (`claude/*`, `worktree-*`): rename it or push `HEAD:<type>/<project>/<name>`. Commits formatted as `[type]-[projects]: <title>` with mandatory explanatory body, and automated PR squash-merge via `scripts/ps1/complete-task-pr.ps1` / `scripts/sh/complete-task-pr.sh`.

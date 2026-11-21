@@ -3,6 +3,8 @@
     Hook de seguridad determinista ejecutado antes de run_command (PreToolUse).
 .DESCRIPTION
     Intercepta comandos de riesgo catastrófico (rm -rf /, DROP DATABASE, mkfs)
+    y los comandos git que crean o publican ramas fuera de la convención
+    <tipo>/<proyecto>/<nombre> (scripts/py/validate_branch.py --git-command),
     siguiendo el contrato JSON stdin/stdout de Antigravity PreToolUse.
 #>
 param(
@@ -40,6 +42,27 @@ if ($CommandLine) {
                 reason   = "[SAFETY-GUARD] Comando bloqueado por regla de seguridad: $CommandLine"
             } | ConvertTo-Json -Compress
             exit 0
+        }
+    }
+
+    # Guardarraíl de ramas: mismo validador que el hook de aagy-ecc (fail-open si no hay Python)
+    if ($CommandLine -match '(^|[\s;&|])git(\.exe)?\s') {
+        $validator = Join-Path (Split-Path $PSScriptRoot -Parent) "py/validate_branch.py"
+        $python = Get-Command python -ErrorAction SilentlyContinue
+        if (-not $python) { $python = Get-Command python3 -ErrorAction SilentlyContinue }
+        if ($python -and (Test-Path $validator)) {
+            try {
+                $branchReason = & $python.Source $validator --git-command $CommandLine 2>$null
+                if ($LASTEXITCODE -eq 1 -and $branchReason) {
+                    @{
+                        decision = "deny"
+                        reason   = (($branchReason | Out-String).Trim())
+                    } | ConvertTo-Json -Compress
+                    exit 0
+                }
+            } catch {
+                # fail-open
+            }
         }
     }
 }

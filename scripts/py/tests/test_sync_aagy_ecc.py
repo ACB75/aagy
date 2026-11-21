@@ -224,3 +224,32 @@ def test_session_start_real_rules_fit_budget():
     import session_start_rules
     context = session_start_rules.build_response()["hookSpecificOutput"]["additionalContext"]
     assert len(context) < 3000
+
+
+@pytest.mark.parametrize("command", [
+    "git checkout -b claude/project-thread-x",
+    "git switch -c worktree-abc",
+    "git push -u origin claude/project-thread-x",
+    "git branch -m feature/login",
+])
+def test_safety_check_denies_non_canonical_branches(command: str):
+    out = safety_check.build_response(command)
+    assert out["hookSpecificOutput"]["permissionDecision"] == "deny"
+    assert "[BRANCH-GUARD]" in out["hookSpecificOutput"]["permissionDecisionReason"]
+
+
+@pytest.mark.parametrize("command", [
+    "git switch -c fix/aagy-ecc/branch-naming",
+    "git push -u origin HEAD:feat/aagy/doctor",
+    "git push origin --delete claude/project-thread-x",
+    "git branch -D claude/project-thread-x",
+])
+def test_safety_check_allows_canonical_branches(command: str):
+    assert safety_check.build_response(command) == {}
+
+
+def test_session_start_keeps_branch_rule_in_full():
+    import session_start_rules
+    context = session_start_rules.build_response()["hookSpecificOutput"]["additionalContext"]
+    assert "`fix/<id>` or `fix/<project>/<id>`" in context
+    assert "git push -u origin HEAD:<tipo>/<proyecto>/<nombre>" in context
