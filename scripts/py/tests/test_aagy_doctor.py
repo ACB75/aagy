@@ -278,7 +278,7 @@ def test_read_only_without_fix(tmp_path: Path, repo: Path, plugin: Path, capsys)
     assert before == {p: p.stat().st_mtime_ns for p in plugin.rglob("*")}
 
 
-@pytest.mark.skipif(shutil.which("bash") is None, reason="necesita bash")
+@pytest.mark.skipif(sys.platform == "win32" or shutil.which("bash") is None, reason="necesita bash POSIX")
 def test_real_generic_install_from_this_repo(tmp_path: Path):
     """Integración: aagy-sync.sh instala la fase generic del repo real y el doctor la valida."""
     dest = tmp_path / "home" / ".gemini" / "config" / "plugins" / "aagy"

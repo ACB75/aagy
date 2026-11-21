@@ -246,6 +246,19 @@ def test_misc_helpers(tmp_path: Path):
     assert core.load_json_dict(tmp_path / "lista.json") is None
 
 
+def test_required_interpreter_windows_store(monkeypatch):
+    store_py = r"C:\Users\x\AppData\Local\Microsoft\WindowsApps\python.exe"
+    monkeypatch.setattr(core, "which", lambda name: store_py if name == "python" else None)
+
+    monkeypatch.setattr(core, "interpreter_version", lambda _path: None)
+    ok_stub, msg_stub = core.required_interpreter(("python",), (3, 10, 0), "Python")
+    assert not ok_stub and "no está en el PATH" in msg_stub
+
+    monkeypatch.setattr(core, "interpreter_version", lambda _path: (3, 13, 14))
+    ok_real, msg_real = core.required_interpreter(("python",), (3, 10, 0), "Python")
+    assert ok_real and "3.13.14" in msg_real
+
+
 def test_find_repo_root(tmp_path: Path):
     (tmp_path / "aagy-ecc").mkdir()
     (tmp_path / "plugin.json").write_text('{"name": "aagy"}', encoding="utf-8")

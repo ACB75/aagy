@@ -397,7 +397,7 @@ def check_interpreters(ctx: EccContext) -> core.CheckResult:
     notes = [f"bash: {bash or 'no encontrado'}", f"markdownlint {'disponible' if core.which('markdownlint') else 'no instalado (opcional)'}"]
     if not bash:
         return core.result("DOC-10", core.STATUS_FAIL, "Los hooks necesitan bash (en Windows, Git Bash en el PATH).", *notes)
-    if first and core.is_windows_store_alias(first):
+    if first and core.is_windows_store_stub(first):
         return core.result("DOC-10", core.STATUS_FAIL, f"'{first}' es el alias de la Microsoft Store, no un Python real.", *notes)
     ok, message = core.required_interpreter(("python", "python3"), MIN_PYTHON, "Python")
     if not ok:
@@ -433,7 +433,7 @@ def check_hook_smoke(ctx: EccContext) -> core.CheckResult:
     if not ctx.installed:
         return core.result("DOC-11", core.STATUS_SKIP, MSG_NO_PLUGIN)
     python = hook_python()
-    if python is None or core.is_windows_store_alias(python):
+    if python is None or core.is_windows_store_stub(python):
         return core.result("DOC-11", core.STATUS_SKIP, "Sin un Python real en el PATH para ejecutar los hooks.")
     with tempfile.TemporaryDirectory(prefix="aagy-ecc-doctor-") as tmp:
         problems = _smoke_problems(python, ctx.install_path / DIR_SCRIPTS / "hooks", Path(tmp))
