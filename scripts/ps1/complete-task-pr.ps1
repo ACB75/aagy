@@ -16,6 +16,8 @@
     Cuerpo explicativo del commit y la Pull Request.
 .PARAMETER TargetBranch
     Rama destino (por defecto 'main').
+.PARAMETER Issue
+    Número de GitHub Issue vinculada (por defecto se autodetecta desde la rama gh-<N> o .governance/active-issue.json).
 .PARAMETER ReviewOnly
     Solo muestra el informe de revisión manual sin ejecutar mutaciones en git.
 .PARAMETER Yes
@@ -25,13 +27,14 @@
 .EXAMPLE
     pwsh -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly
 .EXAMPLE
-    pwsh -File scripts/ps1/complete-task-pr.ps1 -Title "feat-[cluster]: migrar servicios" -Yes
+    pwsh -File scripts/ps1/complete-task-pr.ps1 -Title "feat-[cluster]: migrar servicios" -Issue 61 -Yes
 #>
 [CmdletBinding()]
 param(
     [string]$Title,
     [string]$Body,
     [string]$TargetBranch = "main",
+    [int]$Issue = 0,
     [switch]$ReviewOnly,
     [switch]$Yes,
     [switch]$Help
@@ -141,6 +144,29 @@ Estrategia Fast-Rollback:
 "@
     }
 
+    # Autodetección de GitHub Issue desde -Issue, nombre de rama gh-<N> o .governance/active-issue.json
+    if ($Issue -le 0) {
+        if ($currentBranch -match "(?i)(?:^|/|-)(?:gh|issue)-(?<num>\d+)(?:-|$)") {
+            $Issue = [int]$Matches['num']
+        } else {
+            $activeIssueFile = Join-Path $RepoRoot ".governance\active-issue.json"
+            if (Test-Path $activeIssueFile) {
+                try {
+                    $activeIssueObj = Get-Content -Raw -Path $activeIssueFile | ConvertFrom-Json
+                    if ($activeIssueObj.issue -and (-not $activeIssueObj.branch -or $activeIssueObj.branch -eq $currentBranch)) {
+                        $Issue = [int]$activeIssueObj.issue
+                    }
+                } catch {
+                    $Issue = 0
+                }
+            }
+        }
+    }
+
+    if ($Issue -gt 0 -and $Body -notmatch "(?i)\b(closes|fixes|resolves)\s+#$Issue\b") {
+        $Body = "$($Body.TrimEnd())`n`n## 2. Development`n- Closes #$Issue"
+    }
+
     # 4. AVISO DE REVISIÓN MANUAL PREVIA
     Write-Host "`n=======================================================" -ForegroundColor Cyan
     Write-Host "       AVISO DE REVISIÓN MANUAL PREVIA A EJECUCIÓN     " -ForegroundColor Cyan
@@ -148,6 +174,9 @@ Estrategia Fast-Rollback:
     Write-Host "Rama Origen:        " -NoNewline; Write-Host $currentBranch -ForegroundColor Yellow
     Write-Host "Rama Destino:       " -NoNewline; Write-Host $TargetBranch -ForegroundColor Yellow
     Write-Host "Título de PR/Commit:" -NoNewline; Write-Host " $Title" -ForegroundColor Green
+    if ($Issue -gt 0) {
+        Write-Host "Issue Vinculada:    " -NoNewline; Write-Host "#$Issue" -ForegroundColor Green
+    }
     if ($hasCompletedTodos) {
         Write-Host "Tareas a Archivar:  " -NoNewline; Write-Host "Tareas completadas detectadas en $todoRel (se archivarán automáticamente a $doneRel)" -ForegroundColor Magenta
     }
@@ -325,7 +354,44 @@ Estrategia Fast-Rollback:
         Write-Host "[INFO] Pull Request existente detectada: #$prNumber ($($existingPrJson[0].url))" -ForegroundColor Green
     } else {
         Write-Host "[+] Creando nueva Pull Request hacia '$TargetBranch'..." -ForegroundColor Cyan
-        $prCreateOut = (gh pr create --base $TargetBranch --head $currentBranch --title $Title --body $Body 2>&1)
+        $prBaseArgs = @("pr", "create", "--base", $TargetBranch, "--head", $currentBranch, "--title", $Title, "--body", $Body, "--assignee", "@me")
+        $prMetaArgs = @()
+        $prProjectArgs = @()
+
+        if ($Issue -gt 0) {
+            try {
+                $issueJsonRaw = (gh issue view $Issue --json labels,milestone,projectItems 2>$null)
+                if ($LASTEXITCODE -eq 0 -and $issueJsonRaw) {
+                    $issueMeta = $issueJsonRaw | ConvertFrom-Json
+                    if ($issueMeta.labels) {
+                        foreach ($lbl in $issueMeta.labels) {
+                            if ($lbl.name) { $prMetaArgs += @("--label", [string]$lbl.name) }
+                        }
+                    }
+                    if ($issueMeta.milestone -and $issueMeta.milestone.title) {
+                        $prMetaArgs += @("--milestone", [string]$issueMeta.milestone.title)
+                    }
+                    if ($issueMeta.projectItems) {
+                        foreach ($pItem in $issueMeta.projectItems) {
+                            if ($pItem.title) { $prProjectArgs += @("--project", [string]$pItem.title) }
+                        }
+                    }
+                }
+            } catch {
+                $prMetaArgs = @()
+                $prProjectArgs = @()
+            }
+        }
+
+        $prFullArgs = $prBaseArgs + $prMetaArgs + $prProjectArgs
+        $prCreateOut = (& gh @prFullArgs 2>&1)
+        if ($LASTEXITCODE -ne 0 -and $prProjectArgs.Count -gt 0) {
+            $prNoProjArgs = $prBaseArgs + $prMetaArgs
+            $prCreateOut = (& gh @prNoProjArgs 2>&1)
+        }
+        if ($LASTEXITCODE -ne 0) {
+            $prCreateOut = (gh pr create --base $TargetBranch --head $currentBranch --title $Title --body $Body 2>&1)
+        }
         Write-Host $prCreateOut -ForegroundColor Green
         # Re-obtener número de PR
         $existingPrJson = @(gh pr list --head $currentBranch --base $TargetBranch --json number,url 2>$null | ConvertFrom-Json)
@@ -368,10 +434,19 @@ Estrategia Fast-Rollback:
     # 11. Automerge (Squash and Merge) y borrado de rama remota
     if ($prNumber) {
         Write-Host "[+] Ejecutando squash-automerge en Pull Request #$prNumber..." -ForegroundColor Green
+        for ($retry = 0; $retry -lt 4; $retry++) {
+            $mState = (gh pr view $prNumber --json mergeable --jq ".mergeable" 2>$null)
+            if ($mState -and $mState.Trim() -ne "UNKNOWN") { break }
+            Start-Sleep -Seconds 1
+        }
         gh pr merge $prNumber --squash --delete-branch --admin 2>$null
         if ($LASTEXITCODE -ne 0) {
             # Reintentar sin --admin si no hay privilegios de bypass
             gh pr merge $prNumber --squash --delete-branch
+        }
+        $activeIssueCleanup = Join-Path $RepoRoot ".governance\active-issue.json"
+        if (Test-Path $activeIssueCleanup) {
+            Remove-Item -Force $activeIssueCleanup -ErrorAction SilentlyContinue
         }
         Write-Host "[OK] Pull Request #$prNumber fusionada con éxito en '$TargetBranch'." -ForegroundColor Green
     } else {

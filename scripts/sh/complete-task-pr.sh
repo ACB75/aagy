@@ -13,6 +13,7 @@ cd "$REPO_ROOT"
 TITLE=""
 BODY=""
 TARGET_BRANCH="main"
+ISSUE_NUM=0
 REVIEW_ONLY=0
 CONFIRM_YES=0
 SHOW_HELP=0
@@ -35,6 +36,10 @@ while [[ $# -gt 0 ]]; do
             TARGET_BRANCH="$2"
             shift 2
             ;;
+        --issue|-Issue)
+            ISSUE_NUM="$2"
+            shift 2
+            ;;
         --title|-Title)
             TITLE="$2"
             shift 2
@@ -50,7 +55,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ $SHOW_HELP -eq 1 ]]; then
-    echo "Uso: $(basename "$0") [--review-only] [--yes] [--title '...'] [--body '...'] [--target-branch main]"
+    echo "Uso: $(basename "$0") [--review-only] [--yes] [--issue <N>] [--title '...'] [--body '...'] [--target-branch main]"
     exit 0
 fi
 
@@ -115,12 +120,33 @@ if [[ -z "$BODY" ]]; then
 - Fusión automática a $TARGET_BRANCH tras validación de Quality Gate."
 fi
 
+# Autodetección de GitHub Issue desde --issue, nombre de rama gh-<N> o .governance/active-issue.json
+if [[ "$ISSUE_NUM" -le 0 ]]; then
+    if [[ "$CURRENT_BRANCH" =~ (gh|issue)-([0-9]+)(-|$) ]]; then
+        ISSUE_NUM="${BASH_REMATCH[2]}"
+    elif [[ -f "$REPO_ROOT/.governance/active-issue.json" ]]; then
+        ISSUE_NUM="$(python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); print(int(d.get("issue") or 0))' "$REPO_ROOT/.governance/active-issue.json" 2>/dev/null || echo 0)"
+    fi
+fi
+
+if [[ "$ISSUE_NUM" -gt 0 ]]; then
+    if ! echo "$BODY" | grep -qiE "\b(closes|fixes|resolves)\s+#${ISSUE_NUM}\b"; then
+        BODY="${BODY}
+
+## 2. Development
+- Closes #${ISSUE_NUM}"
+    fi
+fi
+
 echo "======================================================="
 echo "       AVISO DE REVISIÓN MANUAL PREVIA A EJECUCIÓN     "
 echo "======================================================="
 echo "Rama Origen:        $CURRENT_BRANCH"
 echo "Rama Destino:       $TARGET_BRANCH"
 echo "Título de PR/Commit: $TITLE"
+if [[ "$ISSUE_NUM" -gt 0 ]]; then
+    echo "Issue Vinculada:    #${ISSUE_NUM}"
+fi
 if [[ $HAS_COMPLETED_TODOS -eq 1 ]]; then
     echo "Tareas a Archivar:  Tareas completadas detectadas en $TODO_REL (se archivarán automáticamente a $DONE_REL)"
 fi
@@ -223,7 +249,24 @@ git push -u origin HEAD
 PR_NUMBER="$(gh pr list --head "$CURRENT_BRANCH" --base "$TARGET_BRANCH" --json number --jq '.[0].number' 2>/dev/null || true)"
 if [[ -z "$PR_NUMBER" ]]; then
     echo "[+] Creando nueva Pull Request hacia '$TARGET_BRANCH'..."
-    gh pr create --base "$TARGET_BRANCH" --head "$CURRENT_BRANCH" --title "$TITLE" --body "$BODY"
+    PR_META_ARGS=(--assignee "@me")
+    PR_PROJECT_ARGS=()
+    if [[ "$ISSUE_NUM" -gt 0 ]]; then
+        while IFS= read -r lbl; do
+            [[ -n "$lbl" ]] && PR_META_ARGS+=(--label "$lbl")
+        done < <(gh issue view "$ISSUE_NUM" --json labels --jq '.labels[].name' 2>/dev/null || true)
+        MILESTONE_TITLE="$(gh issue view "$ISSUE_NUM" --json milestone --jq '.milestone.title // empty' 2>/dev/null || true)"
+        [[ -n "$MILESTONE_TITLE" ]] && PR_META_ARGS+=(--milestone "$MILESTONE_TITLE")
+        while IFS= read -r proj; do
+            [[ -n "$proj" ]] && PR_PROJECT_ARGS+=(--project "$proj")
+        done < <(gh issue view "$ISSUE_NUM" --json projectItems --jq '.projectItems[].title' 2>/dev/null || true)
+    fi
+
+    if ! gh pr create --base "$TARGET_BRANCH" --head "$CURRENT_BRANCH" --title "$TITLE" --body "$BODY" "${PR_META_ARGS[@]}" "${PR_PROJECT_ARGS[@]}"; then
+        if ! gh pr create --base "$TARGET_BRANCH" --head "$CURRENT_BRANCH" --title "$TITLE" --body "$BODY" "${PR_META_ARGS[@]}"; then
+            gh pr create --base "$TARGET_BRANCH" --head "$CURRENT_BRANCH" --title "$TITLE" --body "$BODY"
+        fi
+    fi
     PR_NUMBER="$(gh pr list --head "$CURRENT_BRANCH" --base "$TARGET_BRANCH" --json number --jq '.[0].number')"
 fi
 
