@@ -32,6 +32,7 @@ DEFAULT_TEMPLATES_DIR = "doc/templates"
 DEFAULT_OUTPUT_DIR = "doc/plan"
 ACTIVE_ISSUE_REL = ".governance/active-issue.json"
 ENCODING_UTF8 = "utf-8"
+K_SUB_ISSUE = "sub_issue"
 
 VALID_PHASES: Tuple[str, ...] = ("ALL", "IDEAS", "REQ", "PLAN", "TODO", "DOCS", "REVIEW")
 BRANCH_TYPES: Tuple[str, ...] = ("feat", "fix", "refactor", "infra", "chore", "docs", "test")
@@ -231,6 +232,160 @@ def bind_github_issue(
     return meta
 
 
+def _fetch_issue_node_id(issue_number: int, repo_root: Path) -> Optional[str]:
+    proc = subprocess.run(
+        ["gh", "issue", "view", str(issue_number), "--json", "id"],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        encoding=ENCODING_UTF8,
+        check=False,
+    )
+    if proc.returncode != 0 or not proc.stdout.strip():
+        return None
+    try:
+        data = json.loads(proc.stdout)
+        return str(data.get("id") or "") or None
+    except ValueError:
+        return None
+
+
+def create_sub_issue(
+    parent_issue: int,
+    title: str,
+    body: str,
+    repo_root: Path,
+    labels: Sequence[str] = ("enhancement", "harness:both"),
+    dry_run: bool = False,
+) -> Dict[str, Any]:
+    """Crea una sub-issue en GitHub y la enlaza a la issue padre mediante GraphQL addSubIssue."""
+    if parent_issue <= 0:
+        raise ValueError(f"Número de issue padre inválido: {parent_issue}")
+    if dry_run:
+        return {"parent_issue": parent_issue, K_SUB_ISSUE: 0, "url": "", "linked": False}
+
+    label_arg = ",".join(labels) if labels else "enhancement,harness:both"
+    full_body = f"Parent Issue: #{parent_issue}\n\n{body.strip()}".strip()
+    create_proc = subprocess.run(
+        ["gh", "issue", "create", "--title", title.strip(), "--body", full_body, "--label", label_arg],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        encoding=ENCODING_UTF8,
+        check=False,
+    )
+    if create_proc.returncode != 0:
+        raise RuntimeError(f"Error creando sub-issue: {(create_proc.stderr or create_proc.stdout).strip()}")
+
+    url = create_proc.stdout.strip().splitlines()[-1].strip()
+    match = re.search(r"/issues/(\d+)", url)
+    if not match:
+        raise RuntimeError(f"No se pudo extraer el número de sub-issue desde '{url}'")
+    sub_num = int(match.group(1))
+
+    parent_id = _fetch_issue_node_id(parent_issue, repo_root)
+    child_id = _fetch_issue_node_id(sub_num, repo_root)
+    linked = False
+    if parent_id and child_id:
+        mutation = (
+            "mutation($parentId:ID!,$childId:ID!){"
+            "addSubIssue(input:{issueId:$parentId,subIssueId:$childId}){"
+            "issue{number}subIssue{number}}}"
+        )
+        gql_proc = subprocess.run(
+            [
+                "gh",
+                "api",
+                "graphql",
+                "-H",
+                "GraphQL-Features: sub_issues",
+                "-f",
+                f"query={mutation}",
+                "-f",
+                f"parentId={parent_id}",
+                "-f",
+                f"childId={child_id}",
+            ],
+            cwd=str(repo_root),
+            capture_output=True,
+            text=True,
+            encoding=ENCODING_UTF8,
+            check=False,
+        )
+        linked = gql_proc.returncode == 0
+    return {"parent_issue": parent_issue, K_SUB_ISSUE: sub_num, "url": url, "linked": linked}
+
+
+def _extract_criteria_and_mermaid(artifacts: Sequence[Path]) -> Tuple[List[str], List[str]]:
+    criteria: List[str] = []
+    mermaids: List[str] = []
+    mermaid_re = re.compile(r"```mermaid\s+.*?```", re.DOTALL)
+    for path in artifacts:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding=ENCODING_UTF8)
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped.startswith(("- [ ]", "- [x]", "* [ ]", "* [x]")) and len(criteria) < 12:
+                criteria.append(stripped)
+        for block in mermaid_re.findall(text):
+            if len(mermaids) < 3:
+                mermaids.append(block.strip())
+    return criteria, mermaids
+
+
+def format_lifecycle_artifacts_comment(
+    task_id: str,
+    artifacts: Sequence[Path],
+    repo_root: Path,
+) -> str:
+    """Construye un comentario Markdown con enlaces a REQ/PLAN, criterios de aceptación y diagramas Mermaid."""
+    lines = [
+        f"## Artefactos del Ciclo de Vida (`{task_id}`)",
+        "",
+        "### Documentos Generados",
+        "",
+    ]
+    for path in artifacts:
+        try:
+            rel = path.resolve().relative_to(repo_root.resolve()).as_posix()
+        except ValueError:
+            rel = path.name
+        lines.append(f"- `{rel}`")
+
+    criteria, mermaids = _extract_criteria_and_mermaid(artifacts)
+    if criteria:
+        lines.extend(["", "### Criterios de Aceptación y Checklist", ""] + criteria)
+    if mermaids:
+        lines.extend(["", "### Diagramas de Arquitectura (Mermaid)", ""] + mermaids)
+    return "\n".join(lines) + "\n"
+
+
+def attach_lifecycle_artifacts(
+    issue_number: int,
+    task_id: str,
+    artifacts: Sequence[Path],
+    repo_root: Path,
+    dry_run: bool = False,
+) -> str:
+    """Publica el resumen de artefactos del lifecycle (REQ, PLAN, Mermaid, criterios) en la GitHub Issue."""
+    comment = format_lifecycle_artifacts_comment(task_id, artifacts, repo_root)
+    if dry_run:
+        print(f"{MSG_DRY_RUN} Adjuntaría resumen de {len(artifacts)} artefactos en issue #{issue_number}")
+        return comment
+
+    subprocess.run(
+        ["gh", "issue", "comment", str(issue_number), "--body", comment],
+        cwd=str(repo_root),
+        capture_output=True,
+        text=True,
+        encoding=ENCODING_UTF8,
+        check=False,
+    )
+    print(f"{MSG_OK} Artefactos adjuntados en GitHub Issue #{issue_number}")
+    return comment
+
+
 def render_template_content(content: str, task_id: str, date_str: str) -> str:
     """Sustituye marcadores de posición en el contenido de la plantilla."""
     rendered = content.replace("<id_tarea>", task_id)
@@ -403,6 +558,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--task-id", default=None, help="ID o rama de la tarea (ej. feat/kakebo/export-csv)")
     parser.add_argument("--issue", type=int, default=None, help="Número de GitHub Issue para auto-asignar y crear rama gh-<N>")
+    parser.add_argument("--parent-issue", type=int, default=None, help="Crea una sub-issue nativa bajo la issue padre #<N>")
+    parser.add_argument("--attach-issue", action="store_true", help="Adjunta resumen de artefactos REQ/PLAN/Mermaid a la issue")
     parser.add_argument("--repo-root", default=".", help="Ruta a la raíz del repositorio")
     parser.add_argument("--templates-dir", default=None, help="Ruta a plantillas (opcional, lee docs-map.json)")
     parser.add_argument("--output-dir", default=None, help="Ruta destino para planes (opcional, lee docs-map.json)")
@@ -423,15 +580,27 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parser.parse_args(argv)
     root = Path(args.repo_root).resolve()
 
-    if not args.task_id and not args.issue:
-        print("[ERROR] Debe especificar --task-id o --issue <N>.", file=sys.stderr)
+    if not args.task_id and not args.issue and not args.parent_issue:
+        print("[ERROR] Debe especificar --task-id, --issue <N> o --parent-issue <N>.", file=sys.stderr)
         return 1
 
     try:
+        target_issue = args.issue
+        if args.parent_issue is not None and target_issue is None:
+            sub_title = args.task_id or f"[feat]-[aagy]: sub-issue de #{args.parent_issue}"
+            sub_res = create_sub_issue(
+                parent_issue=args.parent_issue,
+                title=sub_title,
+                body=f"Sub-issue generada desde `new_lifecycle_task.py` para `#{args.parent_issue}`.",
+                repo_root=root,
+                dry_run=args.dry_run,
+            )
+            target_issue = int(sub_res[K_SUB_ISSUE]) if sub_res.get(K_SUB_ISSUE) else None
+
         effective_task_id = args.task_id
-        if args.issue is not None:
+        if target_issue is not None:
             meta = bind_github_issue(
-                issue_number=args.issue,
+                issue_number=target_issue,
                 repo_root=root,
                 dry_run=args.dry_run,
                 explicit_task_id=args.task_id,
@@ -447,6 +616,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             dry_run=args.dry_run,
             phase=args.phase,
         )
+        if args.attach_issue and target_issue is not None and created:
+            attach_lifecycle_artifacts(
+                issue_number=target_issue,
+                task_id=str(effective_task_id),
+                artifacts=created,
+                repo_root=root,
+                dry_run=args.dry_run,
+            )
         print(f"\n[OK] Ciclo de vida ({args.phase}) instanciado con éxito ({len(created)} artefactos).")
         return 0
     except Exception as exc:

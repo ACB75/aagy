@@ -8,7 +8,10 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from new_lifecycle_task import (
+    attach_lifecycle_artifacts,
     bind_github_issue,
+    create_sub_issue,
+    format_lifecycle_artifacts_comment,
     main,
     parse_issue_metadata,
     render_template_content,
@@ -287,5 +290,90 @@ def test_bind_github_issue_and_cli_integration(tmp_path: Path, monkeypatch: pyte
     assert saved["branch"] == "feat/scripts/gh-60-soporte-issue-en-new-lifecycle-task"
     assert any(c[:4] == ["gh", "issue", "edit", "60"] and "@me" in c for c in calls)
     assert any(c[:3] == ["git", "checkout", "-b"] and saved["branch"] in c for c in calls)
+
+
+def test_create_sub_issue_links_via_graphql(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: list[list[str]] = []
+
+    class DummyProc:
+        def __init__(self, returncode: int = 0, stdout: str = "", stderr: str = "") -> None:
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = stderr
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        if cmd[:3] == ["gh", "issue", "create"]:
+            return DummyProc(0, "https://github.com/ACB75/aagy/issues/75\n")
+        if cmd[:3] == ["gh", "issue", "view"] and "64" in cmd:
+            return DummyProc(0, json.dumps({"id": "I_parent_64", "number": 64}))
+        if cmd[:3] == ["gh", "issue", "view"] and "75" in cmd:
+            return DummyProc(0, json.dumps({"id": "I_child_75", "number": 75}))
+        if cmd[:3] == ["gh", "api", "graphql"]:
+            return DummyProc(0, json.dumps({"data": {"addSubIssue": {"issue": {"number": 64}, "subIssue": {"number": 75}}}}))
+        return DummyProc(0, "")
+
+    monkeypatch.setattr("new_lifecycle_task.subprocess.run", fake_run)
+
+    res = create_sub_issue(
+        parent_issue=64,
+        title="[feat]-[scripts]: sub-tarea de artefactos",
+        body="Detalle de sub-issue.",
+        repo_root=tmp_path,
+    )
+    assert res["parent_issue"] == 64
+    assert res["sub_issue"] == 75
+    assert res["linked"] is True
+    assert any(c[:3] == ["gh", "api", "graphql"] and any("addSubIssue" in arg for arg in c) for c in calls)
+
+
+def test_format_and_attach_lifecycle_artifacts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _seed_v2_repo(tmp_path)
+    plans_dir = tmp_path / "doc" / "06-backlog" / "plans"
+    plans_dir.mkdir(parents=True, exist_ok=True)
+    req_path = plans_dir / "REQ_scripts_gh_64.md"
+    plan_path = plans_dir / "PLAN_scripts_gh_64.md"
+    req_path.write_text(
+        "# REQ\n\n## Criterios de Aceptación\n\n- [ ] Soportar addSubIssue\n- [ ] Adjuntar Mermaid\n",
+        encoding="utf-8",
+    )
+    plan_path.write_text(
+        "# PLAN\n\n```mermaid\nflowchart LR\n  A[\"Issue #64\"] --> B[\"Sub-Issue\"]\n```\n",
+        encoding="utf-8",
+    )
+
+    comment = format_lifecycle_artifacts_comment(
+        task_id="feat/scripts/gh-64",
+        artifacts=[req_path, plan_path],
+        repo_root=tmp_path,
+    )
+    assert "REQ_scripts_gh_64.md" in comment
+    assert "PLAN_scripts_gh_64.md" in comment
+    assert "- [ ] Soportar addSubIssue" in comment
+    assert "```mermaid" in comment
+
+    calls: list[list[str]] = []
+
+    class DummyProc:
+        def __init__(self, returncode: int = 0, stdout: str = "", stderr: str = "") -> None:
+            self.returncode = returncode
+            self.stdout = stdout
+            self.stderr = stderr
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        return DummyProc(0, "")
+
+    monkeypatch.setattr("new_lifecycle_task.subprocess.run", fake_run)
+
+    posted = attach_lifecycle_artifacts(
+        issue_number=64,
+        task_id="feat/scripts/gh-64",
+        artifacts=[req_path, plan_path],
+        repo_root=tmp_path,
+    )
+    assert "REQ_scripts_gh_64.md" in posted
+    assert any(c[:4] == ["gh", "issue", "comment", "64"] for c in calls)
+
 
 

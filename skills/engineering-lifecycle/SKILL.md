@@ -71,10 +71,13 @@ Initialize templates or register quick/idea entries from any entry phase (`ALL`,
 
 ```powershell
 pwsh -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
+pwsh -File scripts/ps1/new-lifecycle-task.ps1 -Issue 64 -Phase REQ -AttachIssue
+pwsh -File scripts/ps1/new-lifecycle-task.ps1 -ParentIssue 64 -TaskId "[feat]-[scripts]: sub-issue" -AttachIssue
 ```
 
 Or in Linux / WSL:
 
 ```bash
 bash scripts/sh/new-lifecycle-task.sh --task-id "feat/kakebo/export-csv" --phase PLAN
+bash scripts/sh/new-lifecycle-task.sh --issue 64 --phase REQ --attach-issue
 ```

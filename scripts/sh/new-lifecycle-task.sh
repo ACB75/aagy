@@ -19,6 +19,8 @@ ARGS=()
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -Issue) ARGS+=("--issue" "${2:?Falta valor para -Issue}"); shift 2 ;;
+        -ParentIssue) ARGS+=("--parent-issue" "${2:?Falta valor para -ParentIssue}"); shift 2 ;;
+        -AttachIssue) ARGS+=("--attach-issue"); shift ;;
         -TaskId) ARGS+=("--task-id" "${2:?Falta valor para -TaskId}"); shift 2 ;;
         -Phase) ARGS+=("--phase" "${2:?Falta valor para -Phase}"); shift 2 ;;
         -OutputDir) ARGS+=("--output-dir" "${2:?Falta valor para -OutputDir}"); shift 2 ;;
