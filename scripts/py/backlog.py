@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import re
 import subprocess
@@ -32,6 +33,8 @@ if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
 from docs_map import DOCS_MAP_REL, resolve_doc_path  # noqa: E402
+
+logger = logging.getLogger("backlog")
 
 AGENTS: Tuple[str, ...] = ("claude", "agy", "human")
 ST_TODO = "todo"
@@ -53,6 +56,10 @@ WORKTREE_SUFFIX = ".wt"
 ENV_AGENT = "AAGY_AGENT"
 ENV_TTL = "AAGY_BACKLOG_TTL_HOURS"
 ENCODING = "utf-8"
+K_UPDATED = "updated"
+K_WORKTREE = "worktree"
+GIT_REV_PARSE = "rev-parse"
+OPT_FORCE = "--force"
 
 ID_REGEX = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 ID_MAX = 64
@@ -244,11 +251,11 @@ class Repo:
 
 def locate_repo(start: Path) -> Repo:
     start = start.resolve()
-    top = run_git(start, "rev-parse", "--show-toplevel")
+    top = run_git(start, GIT_REV_PARSE, "--show-toplevel")
     if top is None:
         return Repo(root=start, state_dir=start / ".aagy-backlog", is_git=False)
     root = Path(top).resolve()
-    common = run_git(root, "rev-parse", "--git-common-dir") or ".git"
+    common = run_git(root, GIT_REV_PARSE, "--git-common-dir") or ".git"
     common_path = Path(common)
     if not common_path.is_absolute():
         common_path = (root / common_path).resolve()
@@ -294,10 +301,7 @@ def state_lock(repo: Repo) -> Iterator[None]:
     try:
         yield
     finally:
-        try:
-            lock.unlink()
-        except OSError:
-            pass
+        _remove_quietly(lock)
 
 
 def _break_stale_lock(lock: Path) -> None:
@@ -306,10 +310,15 @@ def _break_stale_lock(lock: Path) -> None:
     except OSError:
         return
     if age > LOCK_STALE_SECONDS:
-        try:
-            lock.unlink()
-        except OSError:
-            pass
+        _remove_quietly(lock)
+
+
+def _remove_quietly(path: Path) -> None:
+    """Borra un fichero; si ya no existe o no se puede, lo registra y sigue (otro proceso pudo borrarlo)."""
+    try:
+        path.unlink()
+    except OSError as exc:
+        logger.debug("No se pudo borrar %s: %s", path, exc)
 
 
 # --------------------------------------------------------------------------- reglas de estado
@@ -326,7 +335,7 @@ def entry_for(state: Dict[str, Any], task_id: str) -> Dict[str, Any]:
 def is_stale(entry: Dict[str, Any], now: Optional[datetime] = None) -> bool:
     if entry.get("status") not in ACTIVE_STATES:
         return False
-    updated = parse_iso(entry.get("updated"))
+    updated = parse_iso(entry.get(K_UPDATED))
     if updated is None:
         return True
     return (now or utc_now()) - updated > timedelta(hours=ttl_hours())
@@ -351,7 +360,7 @@ def is_available(task: Task, state: Dict[str, Any], agent: str) -> bool:
 
 def record(entry: Dict[str, Any], agent: str, action: str, note: Optional[str] = None) -> None:
     now = iso(utc_now())
-    entry["updated"] = now
+    entry[K_UPDATED] = now
     history = entry.setdefault("history", [])
     item = {"at": now, "agent": agent, "action": action}
     if note:
@@ -370,7 +379,7 @@ def apply_snapshot(entry: Dict[str, Any], cwd: Path) -> None:
 
 
 def git_snapshot(cwd: Path) -> Dict[str, Any]:
-    branch = run_git(cwd, "rev-parse", "--abbrev-ref", "HEAD")
+    branch = run_git(cwd, GIT_REV_PARSE, "--abbrev-ref", "HEAD")
     head = run_git(cwd, "log", "-1", "--format=%h %s")
     porcelain = run_git(cwd, "status", "--porcelain") or ""
     dirty = [line[3:] for line in porcelain.splitlines() if len(line) > 3][:30]
@@ -453,8 +462,8 @@ def op_list(ctx: Context, epic: Optional[str], agent: Optional[str], include_don
                 "label": _status_label(task, state),
                 "owner": entry.get("owner"),
                 "branch": entry.get("branch"),
-                "worktree": entry.get("worktree"),
-                "updated": entry.get("updated"),
+                K_WORKTREE: entry.get(K_WORKTREE),
+                K_UPDATED: entry.get(K_UPDATED),
                 "note": entry.get("note"),
                 "stale": is_stale(entry),
             }
@@ -507,8 +516,8 @@ def _ensure_worktree(repo: Repo, task_id: str, branch: str) -> Path:
     if path.exists():
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
-    exists = run_git(repo.root, "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}") is not None
-    args = ["worktree", "add", str(path), branch] if exists else ["worktree", "add", "-b", branch, str(path)]
+    exists = run_git(repo.root, GIT_REV_PARSE, "--verify", "--quiet", f"refs/heads/{branch}") is not None
+    args = [K_WORKTREE, "add", str(path), branch] if exists else [K_WORKTREE, "add", "-b", branch, str(path)]
     if run_git(repo.root, *args) is None:
         raise BacklogError(f"No se pudo crear el worktree {path} en la rama {branch}.")
     return path
@@ -527,13 +536,13 @@ def op_claim(
         if not force and not is_available(task, state, agent):
             owner = entry.get("owner", "?")
             raise BacklogError(
-                f"La tarea '{task.task_id}' la tiene {owner} ({status}, actualizada {entry.get('updated')}). "
+                f"La tarea '{task.task_id}' la tiene {owner} ({status}, actualizada {entry.get(K_UPDATED)}). "
                 f"Caduca a las {ttl_hours():g} h sin actualizar."
             )
         previous = entry.get("owner")
         target_branch = branch or entry.get("branch") or default_branch(ctx.repo, task.task_id)
         if worktree:
-            entry["worktree"] = str(_ensure_worktree(ctx.repo, task.task_id, target_branch))
+            entry[K_WORKTREE] = str(_ensure_worktree(ctx.repo, task.task_id, target_branch))
         entry.update({"status": ST_IN_PROGRESS, "owner": agent, "branch": target_branch})
         note = f"relevo desde {previous}" if previous and previous != agent else None
         record(entry, agent, "claim", note)
@@ -559,11 +568,11 @@ def op_checkpoint(ctx: Context, agent: str, task_id: Optional[str], note: Option
         ids = _owned(state, agent, validate_id(task_id) if task_id else None)
         for tid in ids:
             entry = state["tasks"][tid]
-            cwd = Path(entry["worktree"]) if entry.get("worktree") and Path(entry["worktree"]).is_dir() else ctx.cwd
+            cwd = Path(entry[K_WORKTREE]) if entry.get(K_WORKTREE) and Path(entry[K_WORKTREE]).is_dir() else ctx.cwd
             apply_snapshot(entry, cwd)
             if note:
                 entry["note"] = note
-            entry["updated"] = iso(utc_now())
+            entry[K_UPDATED] = iso(utc_now())
         if ids:
             save_state(ctx.repo, state)
         return ids
@@ -583,12 +592,12 @@ def write_handoff_file(ctx: Context, task: Task, entry: Dict[str, Any], agent: s
         f"# Relevo: {task.title}",
         "",
         f"- **Tarea**: `{task.task_id}`" + (f" (épica `{task.epic}`)" if task.epic else ""),
-        f"- **De**: `{agent}` | **Fecha**: `{entry.get('updated')}`",
+        f"- **De**: `{agent}` | **Fecha**: `{entry.get(K_UPDATED)}`",
         f"- **Rama de la tarea**: `{entry.get('branch', '-')}` (rama activa al salir: `{entry.get('current_branch', '-')}`)",
         f"- **Último commit**: `{entry.get('head', '-')}`",
     ]
-    if entry.get("worktree"):
-        lines.append(f"- **Worktree**: `{entry['worktree']}`")
+    if entry.get(K_WORKTREE):
+        lines.append(f"- **Worktree**: `{entry[K_WORKTREE]}`")
     lines += ["", "## Estado y siguiente paso", "", note, ""]
     if dirty:
         lines += ["## Ficheros sin commit", ""] + [f"- `{item}`" for item in dirty] + [""]
@@ -615,13 +624,13 @@ def op_handoff(
         for tid in ids:
             task = backlog.find(tid)
             entry = state["tasks"][tid]
-            cwd = Path(entry["worktree"]) if entry.get("worktree") and Path(entry["worktree"]).is_dir() else ctx.cwd
+            cwd = Path(entry[K_WORKTREE]) if entry.get(K_WORKTREE) and Path(entry[K_WORKTREE]).is_dir() else ctx.cwd
             apply_snapshot(entry, cwd)
             text = note or _auto_note(entry)
             entry.update({"status": ST_HANDOFF, "note": text})
             if to:
                 entry["handoff_to"] = to
-            record(entry, agent, "handoff", text)
+            record(entry, agent, ST_HANDOFF, text)
             results.append((tid, write_handoff_file(ctx, task, entry, agent, text)))
         if ids:
             save_state(ctx.repo, state)
@@ -677,10 +686,10 @@ def op_done(ctx: Context, task_id: str, agent: str, note: Optional[str], archive
 
 def _cleanup_worktree(ctx: Context, task_id: str) -> List[str]:
     entry = load_state(ctx.repo)["tasks"].get(task_id) or {}
-    path = entry.get("worktree")
+    path = entry.get(K_WORKTREE)
     if not path or not Path(path).is_dir():
         return []
-    if run_git(ctx.repo.root, "worktree", "remove", path) is None:
+    if run_git(ctx.repo.root, K_WORKTREE, "remove", path) is None:
         return [f"El worktree {path} tiene cambios sin commit; no se ha borrado."]
     return [f"Worktree {path} eliminado."]
 
@@ -820,12 +829,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("id")
     p.add_argument("--branch")
     p.add_argument("--worktree", action="store_true", help="Crea un git worktree propio (modo simultáneo).")
-    p.add_argument("--force", action="store_true")
+    p.add_argument(OPT_FORCE, action="store_true")
     p = with_agent(sub.add_parser("checkpoint", help="Guarda rama, commit, ficheros y nota de la tarea en curso."))
     p.add_argument("--id")
     p.add_argument("--note")
     p.add_argument("--auto", action="store_true", help="No falla si no hay backlog o tarea (hooks).")
-    p = with_agent(sub.add_parser("handoff", help="Deja la tarea lista para que la continúe otro agente."))
+    p = with_agent(sub.add_parser(ST_HANDOFF, help="Deja la tarea lista para que la continúe otro agente."))
     p.add_argument("id", nargs="?")
     p.add_argument("--note")
     p.add_argument("--to", choices=AGENTS)
@@ -834,12 +843,12 @@ def build_parser() -> argparse.ArgumentParser:
         p = with_agent(sub.add_parser(name, help=help_text))
         p.add_argument("id")
         p.add_argument("--note", "--reason", dest="note")
-        p.add_argument("--force", action="store_true")
+        p.add_argument(OPT_FORCE, action="store_true")
     p = with_agent(sub.add_parser("done", help="Termina, marca [x] y archiva."))
     p.add_argument("id")
     p.add_argument("--note")
     p.add_argument("--no-archive", action="store_true")
-    p.add_argument("--force", action="store_true")
+    p.add_argument(OPT_FORCE, action="store_true")
     p = sub.add_parser("add", help="Añade una tarea a TODO.md.")
     p.add_argument("title")
     p.add_argument("--epic")
@@ -934,7 +943,7 @@ def _dispatch_agent(args: argparse.Namespace, ctx: Context) -> Tuple[Any, List[s
     if cmd == "checkpoint":
         ids = op_checkpoint(ctx, agent, args.id, args.note)
         return ids, [f"Checkpoint: {', '.join(ids)}" if ids else "Sin tareas en curso."]
-    if cmd == "handoff":
+    if cmd == ST_HANDOFF:
         results = op_handoff(ctx, agent, args.id, args.note, args.to)
         lines = [f"Relevo listo: {tid} -> {path}" for tid, path in results] or ["Sin tareas en curso."]
         return [{"id": tid, "file": str(path)} for tid, path in results], lines
@@ -950,8 +959,8 @@ def _claim_lines(entry: Dict[str, Any]) -> List[str]:
     lines = [f"Reclamada: {entry['id']} ({entry['title']}) en la rama {entry['branch']}."]
     if entry.get("previous_owner") and entry["previous_owner"] != entry.get("owner"):
         lines.append(f"Viene de {entry['previous_owner']}. Nota: {entry.get('note') or '-'}")
-    if entry.get("worktree"):
-        lines.append(f"Trabaja en el worktree: {entry['worktree']}")
+    if entry.get(K_WORKTREE):
+        lines.append(f"Trabaja en el worktree: {entry[K_WORKTREE]}")
     elif entry.get("branch"):
         lines.append(f"Cambia a la rama con: git switch {entry['branch']} (o git switch -c si no existe).")
     return lines
