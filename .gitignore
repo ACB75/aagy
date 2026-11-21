@@ -114,3 +114,6 @@ assets/images/security/badrudi-exploit.mp4
 
 # Manifiesto de instalación local de aagy-ecc (lo genera install.ps1 / install.sh)
 aagy-ecc/.aagy-install.json
+
+# Local runtime observations / project-level instincts
+.agents/
