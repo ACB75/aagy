@@ -103,4 +103,4 @@ flowchart LR
     Parity --> Commit["Commit Atómico & PR\n(complete-task-pr.ps1)"]
 ```
 
-Si se detectan endpoints en microservicios sin cliente en `home-lab-sdk/`, la integración se detiene de inmediato requiriendo sincronizar el SDK con `sdk-synchronizer` antes de volver a ejecutar.
+Si se detectan endpoints en microservicios sin cliente en `home-lab-sdk/`, la integración se detiene de inmediato requiriendo sincronizar el SDK con el agente de sincronización de SDK que declare el repositorio consumidor antes de volver a ejecutar.

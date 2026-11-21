@@ -1,7 +1,7 @@
 # Estado de Salud y Métricas Operacionales | AAGY / `aagy` Ecosystem
 
 > **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión**: `4.1.0` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-20  
+> **Versión**: `4.2.0` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-20  
 > **Estado Operativo Global**: 🟢 **SALUDABLE (VERDE)**
 
 ---
