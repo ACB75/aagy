@@ -36,23 +36,23 @@ case "$PHASE" in
     exit 0
     ;;
   generic)
-    SKILLS=(tdd-workflow search-first verification-loop security-review coding-standards git-workflow conventional-commit-review architecture-decision-records error-handling docs-governance workspace-health-audit config-gc sonarqube-quality-gate sync-microservice-sdk todo-lifecycle sre-reliability agent-sort agent-self-evaluation strategic-compact context-budget safety-guard engineering-lifecycle shared-backlog aagy-doctor)
+    SKILLS=(tdd-workflow search-first verification-loop security-review git-workflow conventional-commit-review docs-governance sonarqube-quality-gate todo-lifecycle safety-guard engineering-lifecycle shared-backlog aagy-doctor)
     AGENTS=(planner.md architect.md tdd-guide.md code-reviewer.md security-reviewer.md build-error-resolver.md silent-failure-hunter.md refactor-cleaner.md doc-updater.md todo-archiver.md sync-aligner.md lifecycle-coordinator.md)
     ;;
   network-infra)
-    SKILLS=(docker-patterns deployment-patterns kubernetes-patterns homelab-network-readiness homelab-network-setup homelab-pihole-dns homelab-vlan-segmentation homelab-wireguard-vpn network-config-validation network-interface-health security-scan safety-guard)
+    SKILLS=(docker-patterns deployment-patterns kubernetes-patterns homelab-network-readiness homelab-network-setup homelab-pihole-dns homelab-vlan-segmentation homelab-wireguard-vpn network-config-validation network-interface-health security-scan safety-guard sre-reliability)
     AGENTS=(homelab-architect.md network-architect.md network-config-reviewer.md network-troubleshooter.md)
     ;;
   java-spring)
-    SKILLS=(springboot-patterns springboot-security springboot-tdd springboot-verification java-coding-standards postgres-patterns database-migrations api-design sonarqube-quality-gate)
+    SKILLS=(springboot-patterns springboot-security springboot-tdd springboot-verification java-coding-standards postgres-patterns database-migrations api-design sonarqube-quality-gate sync-microservice-sdk)
     AGENTS=(java-reviewer.md java-build-resolver.md database-reviewer.md)
     ;;
   angular)
-    SKILLS=(angular-developer e2e-testing sonarqube-quality-gate)
+    SKILLS=(angular-developer e2e-testing sonarqube-quality-gate sync-microservice-sdk)
     AGENTS=(typescript-reviewer.md e2e-runner.md)
     ;;
   go)
-    SKILLS=(golang-patterns golang-testing docker-patterns kubernetes-patterns postgres-patterns latency-critical-systems data-throughput-accelerator benchmark-optimization-loop sonarqube-quality-gate)
+    SKILLS=(golang-patterns golang-testing docker-patterns kubernetes-patterns postgres-patterns latency-critical-systems data-throughput-accelerator benchmark-optimization-loop sonarqube-quality-gate sync-microservice-sdk sre-reliability)
     AGENTS=(go-reviewer.md go-build-resolver.md performance-optimizer.md database-reviewer.md)
     ;;
   python)

@@ -1,6 +1,6 @@
 ---
 name: shared-backlog
-description: "Shared TODO between Claude Code and Antigravity: claim tasks, checkpoint, hand off when tokens run out, epics. Runs backlog.py."
+description: "Share TODO.md across Claude Code and Antigravity via scripts/py/backlog.py."
 metadata:
   origin: AAGY
 ---

@@ -1,6 +1,6 @@
 ---
 name: conventional-commit-review
-description: "Draft and review git commits following [type]-[projects]: <title> format with mandatory explanatory body comments."
+description: "Draft and review [type]-[projects]: <title> commits with body comments."
 metadata:
   origin: AAGY
 ---

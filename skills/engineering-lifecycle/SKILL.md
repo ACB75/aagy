@@ -1,6 +1,6 @@
 ---
 name: engineering-lifecycle
-description: "Orchestrate 4-phase lifecycle (requirements, plan, docs, commits) with Home-Lab retrocompatibility, SDK parity and safety gates."
+description: "Run 4-phase lifecycle (reqs, plan, docs, PR) with SDK and safety gates."
 ---
 
 # Engineering Lifecycle Workflow (Home-Lab & AAGY)

@@ -1,6 +1,6 @@
 ---
 name: docs-governance
-description: "Audit documentation spine, role mappings (.governance/docs-map.json), ADR indexes, and broken Markdown links."
+description: "Audit doc spine, .governance/docs-map.json mappings, ADRs, and links."
 ---
 
 # Documentation Governance Router

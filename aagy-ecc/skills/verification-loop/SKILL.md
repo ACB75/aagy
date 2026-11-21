@@ -1,6 +1,6 @@
 ---
 name: verification-loop
-description: "Multi-phase verification gate (artifact smoke-test, build, types, lint, tests, security, diff). Run before completion."
+description: "Run smoke-test, build, types, lint, tests, and security checks before done."
 ---
 
 # Verification Loop Skill

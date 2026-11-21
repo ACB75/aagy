@@ -1,13 +1,7 @@
 ---
 name: sync-aligner
 description: "Workspace maintenance subagent running sync-clean-align.ps1, updating docs, and ensuring zero drift."
-tools:
-  - view_file
-  - write_to_file
-  - replace_file_content
-  - run_command
-  - grep_search
-  - find_by_name
+tools: Read, Write, Edit, Bash, Grep, Glob
 model: flash
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: safety-guard
-description: "Pre-execution safety gate for destructive commands (rm, drop, firewall/route flushes, volume purges)."
+description: "Block destructive rm, drop, firewall flush, or purge commands."
 metadata:
   origin: AAGY
 ---

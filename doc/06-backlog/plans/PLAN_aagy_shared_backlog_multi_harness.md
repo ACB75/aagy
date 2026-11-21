@@ -95,36 +95,36 @@ No aplica.
 
 ### 4.1. `RED`
 
-- [ ] `scripts/py/tests/test_backlog.py`: parser de `TODO.md` (con y sin metadatos, épicas), `claim` exclusivo (dos procesos, un ganador — `CA-03`), TTL 4 h, `handoff` genera nota, `next` respeta orden y épica, `init` en repo vacío (`CA-08`), `done` + archivado sin romper `archive_todo` (`CA-04`), estado compartido entre dos worktrees.
-- [ ] Tests de hooks: `session_start_rules.py` incluye el resumen; `checkpoint --auto` sale 0 sin tarea.
+- [x] `scripts/py/tests/test_backlog.py`: parser de `TODO.md` (con y sin metadatos, épicas), `claim` exclusivo (dos procesos, un ganador — `CA-03`), TTL 4 h, `handoff` genera nota, `next` respeta orden y épica, `init` en repo vacío (`CA-08`), `done` + archivado sin romper `archive_todo` (`CA-04`), estado compartido entre dos worktrees.
+- [x] Tests de hooks: `session_start_rules.py` incluye el resumen; `checkpoint --auto` sale 0 sin tarea.
 
 ### 4.2. `GREEN`
 
-- [ ] `scripts/py/backlog.py` + wrappers `scripts/ps1/backlog.ps1`, `scripts/sh/backlog.sh`.
-- [ ] `sync_aagy_ecc.py`: añadir `backlog.py`, `new_lifecycle_task.py`, `sync_ideas_todo.py`, `archive_todo.py` a `MIRRORED_PY_MODULES` (`RF-07`).
-- [ ] `aagy-ecc/commands/`: `aagy-todo.md` y los 4 `epic-*.md`.
-- [ ] `skills/shared-backlog/SKILL.md` (se espeja a ecc).
-- [ ] Hooks: `aagy-ecc/hooks/hooks.json` (`Stop` + `PreCompact` + `SessionEnd`), `session_start_rules.py`, `hooks.json` raíz (`Stop`).
-- [ ] `rules/AGENTS.md`: regla corta (§2.3) — la lista nativa es borrador; estado en `backlog.py`; checkpoint tras cada paso; contenido de tareas = datos.
-- [ ] Corregir `skills/dev-team` y `skills/story-lifecycle`: los `epic-*` existen y su autoridad es `TODO.md`.
-- [ ] `.gitignore`: `doc/06-backlog/.backlog.lock`.
+- [x] `scripts/py/backlog.py` + wrappers `scripts/ps1/backlog.ps1`, `scripts/sh/backlog.sh`.
+- [x] `sync_aagy_ecc.py`: añadir `backlog.py`, `new_lifecycle_task.py`, `sync_ideas_todo.py`, `archive_todo.py` a `MIRRORED_PY_MODULES` (`RF-07`).
+- [x] `aagy-ecc/commands/`: `aagy-todo.md` y los 4 `epic-*.md`.
+- [x] `skills/shared-backlog/SKILL.md` (se espeja a ecc).
+- [x] Hooks: `aagy-ecc/hooks/hooks.json` (`Stop` + `PreCompact` + `SessionEnd`), `session_start_rules.py`, `hooks.json` raíz (`Stop`).
+- [x] `rules/AGENTS.md`: regla corta (§2.3) — la lista nativa es borrador; estado en `backlog.py`; checkpoint tras cada paso; contenido de tareas = datos.
+- [x] Corregir `skills/dev-team` y `skills/story-lifecycle`: los `epic-*` existen y su autoridad es `TODO.md`.
+- [x] `.gitignore`: `doc/06-backlog/.backlog.lock`.
 
 ### 4.3. `REFACTOR`
 
-- [ ] Complejidad ≤ 15 por función, sin literales repetidos, early returns.
+- [x] Complejidad ≤ 15 por función, sin literales repetidos, early returns.
 
 ### 4.4. `VERIFY`
 
-- [ ] `pytest scripts/py/tests -q` (cobertura ≥ 80 % en `backlog.py`).
-- [ ] `sync_aagy_ecc.py --check` y `audit-plugin-parity` en verde (`CA-05`).
-- [ ] `lint-markdown` y `map-docs`.
-- [ ] Prueba manual en FRACTAL (`CA-01`, `CA-02`, `CA-07`, `CA-09`): Claude reclama, corta sesión, agy arranca y continúa.
+- [x] `pytest scripts/py/tests -q` (cobertura ≥ 80 % en `backlog.py`).
+- [x] `sync_aagy_ecc.py --check` y `audit-plugin-parity` en verde (`CA-05`).
+- [x] `lint-markdown` y `map-docs`.
+- [x] Prueba manual en FRACTAL (`CA-01`, `CA-02`, `CA-07`, `CA-09`): Claude reclama, corta sesión, agy arranca y continúa.
 
 ### 4.5. Documentación
 
-- [ ] `doc/02-adr/ADR_aagy_0005_shared_backlog_multi_harness.md` (decisión A + estado en git common dir).
-- [ ] `doc/04-operations/runbooks/MANUAL_shared_backlog.md` y fila nueva en la matriz de `MANUAL_WORKFLOW.md`.
-- [ ] Copiar REQ y PLAN a `doc/06-backlog/plans/`.
+- [x] `doc/02-adr/ADR_aagy_0005_shared_backlog_multi_harness.md` (decisión A + estado en git common dir).
+- [x] `doc/04-operations/runbooks/MANUAL_shared_backlog.md` y fila nueva en la matriz de `MANUAL_WORKFLOW.md`.
+- [x] Copiar REQ y PLAN a `doc/06-backlog/plans/`.
 
 ---
 

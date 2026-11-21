@@ -16,6 +16,14 @@
 
 ---
 
+## 2026-11-21: aagy-ecc 4.2.1 Corrige las Herramientas de Cuatro Subagentes
+
+### Hitos y Decisiones Materiales
+
+1. **Herramientas de Claude Code**: `lifecycle-coordinator`, `sync-aligner`, `tdd-guide` y `todo-archiver` declaraban herramientas con nombres de Antigravity (`read_file`, `run_command`, `view_file`…) que Claude Code no reconoce, así que se quedaban sin herramientas; ahora usan `Read`, `Write`, `Edit`, `Bash`, `Grep` y `Glob` en `agents/` y en la copia de `aagy-ecc/agents/`.
+
+---
+
 ## 2026-11-21: Convención de Ramas Aplicada También en Claude Code
 
 ### Hitos y Decisiones Materiales
