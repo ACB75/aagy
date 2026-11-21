@@ -65,6 +65,10 @@ switch ($Target) {
         python (Join-Path $ScriptRoot "scripts\py\install_manifest.py") write --dest $sourceDir --harness claude --profile full --repo-root $ScriptRoot
 
         # 2. Instalar como plugin de Claude Code (marketplace local + plugin)
+        $runtimeAgentsDir = Join-Path $sourceDir ".agents"
+        if (Test-Path $runtimeAgentsDir) {
+            Remove-Item -Path $runtimeAgentsDir -Recurse -Force -ErrorAction SilentlyContinue
+        }
         if ($NoPlugin) {
             Write-Host "[i] -NoPlugin: se omite la instalación del plugin en Claude Code." -ForegroundColor Yellow
         } elseif (Get-Command claude -ErrorAction SilentlyContinue) {
