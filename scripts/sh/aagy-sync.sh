@@ -36,7 +36,7 @@ case "$PHASE" in
     exit 0
     ;;
   generic)
-    SKILLS=(tdd-workflow search-first verification-loop security-review git-workflow conventional-commit-review docs-governance sonarqube-quality-gate todo-lifecycle safety-guard engineering-lifecycle shared-backlog aagy-doctor)
+    SKILLS=(tdd-workflow search-first verification-loop security-review git-workflow conventional-commit-review docs-governance sonarqube-quality-gate todo-lifecycle safety-guard engineering-lifecycle shared-backlog agent-self-evaluation aagy-doctor)
     AGENTS=(planner.md architect.md tdd-guide.md code-reviewer.md security-reviewer.md build-error-resolver.md silent-failure-hunter.md refactor-cleaner.md doc-updater.md todo-archiver.md sync-aligner.md lifecycle-coordinator.md)
     ;;
   network-infra)
@@ -103,6 +103,17 @@ fi
 if [ -f "$REPO_ROOT/hooks.json" ]; then
   cp "$REPO_ROOT/hooks.json" "$TARGET_DIR/hooks.json"
 fi
+
+mkdir -p "$TARGET_DIR/.data/instincts" "$TARGET_DIR/scripts/ps1" "$TARGET_DIR/scripts/sh" "$TARGET_DIR/scripts/py"
+for ps in safety-check.ps1 hook-post-write.ps1 lint-markdown.ps1 auto-evolve.ps1 manage-instincts.ps1 backlog.ps1; do
+  [ -f "$REPO_ROOT/scripts/ps1/$ps" ] && cp "$REPO_ROOT/scripts/ps1/$ps" "$TARGET_DIR/scripts/ps1/$ps"
+done
+for sh in safety-check.sh hook-post-write.sh lint-markdown.sh auto-evolve.sh manage-instincts.sh backlog.sh; do
+  [ -f "$REPO_ROOT/scripts/sh/$sh" ] && cp "$REPO_ROOT/scripts/sh/$sh" "$TARGET_DIR/scripts/sh/$sh"
+done
+for pyf in self_improve.py instinct_manager.py security_audit.py workspace_audit.py docs_map.py backlog.py archive_todo.py validate_branch.py aagy_doctor.py doctor_core.py install_manifest.py; do
+  [ -f "$REPO_ROOT/scripts/py/$pyf" ] && cp "$REPO_ROOT/scripts/py/$pyf" "$TARGET_DIR/scripts/py/$pyf"
+done
 
 echo "[OK] Sincronización completada exitosamente."
 write_install_manifest "$PHASE"

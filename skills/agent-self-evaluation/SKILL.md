@@ -1,6 +1,6 @@
 ---
 name: agent-self-evaluation
-description: "Unified 5-axis self-evaluation, instinct discovery, and budget-gated self-improvement via Stop hook and CLI. Not for raw rule edits."
+description: "Run auto-discovery (--discover), 5-axis self-eval, and self-improvement."
 origin: AAGY
 ---
 
