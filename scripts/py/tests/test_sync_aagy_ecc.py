@@ -142,3 +142,85 @@ def test_session_start_missing_rules_is_noop(tmp_path: Path):
 def test_session_start_real_plugin_rules_present():
     import session_start_rules
     assert session_start_rules.build_response() != {}
+
+
+_PROFILES_SH = """case "$PHASE" in
+  generic)
+    SKILLS=(tdd-workflow)
+    AGENTS=(planner.md)
+    ;;
+  go)
+    SKILLS=(golang-patterns tdd-workflow)
+    AGENTS=(go-reviewer.md)
+    ;;
+esac
+"""
+
+
+@pytest.fixture
+def profiled_repo(repo: Path) -> Path:
+    for name in ("golang-patterns", "healthcare"):
+        (repo / "skills" / name).mkdir()
+        (repo / "skills" / name / "SKILL.md").write_text(f"# {name}\n", encoding="utf-8")
+    (repo / "agents" / "go-reviewer.md").write_text("# go\n", encoding="utf-8")
+    (repo / "scripts" / "sh").mkdir(parents=True)
+    (repo / "scripts" / "sh" / "aagy-sync.sh").write_text(_PROFILES_SH, encoding="utf-8")
+    manifest_dir = repo / "aagy-ecc" / ".claude-plugin"
+    manifest_dir.mkdir(parents=True)
+    (manifest_dir / "plugin.json").write_text(json.dumps({"name": "aagy-ecc", "version": "9.9.9", "license": "MIT"}),
+                                              encoding="utf-8")
+    (manifest_dir / "marketplace.json").write_text(json.dumps({"name": "aagy-ecc", "plugins": [
+        {"name": "aagy-ecc", "source": "./"}, {"name": "aagy-ecc-old", "source": "./packs/old"}]}), encoding="utf-8")
+    return repo
+
+
+def test_plan_packs_core_is_generic_and_rest_goes_to_packs(profiled_repo: Path):
+    from sync_aagy_ecc import plan_packs
+    packs = plan_packs(profiled_repo)
+    assert packs[""] == ({"tdd-workflow"}, {"planner.md"})
+    assert packs["go"] == ({"golang-patterns"}, {"go-reviewer.md"})
+    assert packs["extras"] == ({"healthcare"}, set())
+
+
+def test_plan_packs_without_profiles_keeps_everything_in_core(repo: Path):
+    from sync_aagy_ecc import plan_packs
+    assert plan_packs(repo) == {"": ({"tdd-workflow"}, {"planner.md"})}
+
+
+def test_sync_writes_packs_manifests_and_marketplace(profiled_repo: Path):
+    sync(profiled_repo)
+    ecc = profiled_repo / "aagy-ecc"
+    assert (ecc / "skills" / "tdd-workflow" / "SKILL.md").is_file()
+    assert not (ecc / "skills" / "golang-patterns").exists()
+    assert (ecc / "packs" / "go" / "skills" / "golang-patterns" / "SKILL.md").is_file()
+    assert (ecc / "packs" / "extras" / "skills" / "healthcare" / "SKILL.md").is_file()
+    go_manifest = json.loads((ecc / "packs" / "go" / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))
+    assert go_manifest["name"] == "aagy-ecc-go" and go_manifest["version"] == "9.9.9"
+    market = json.loads((ecc / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+    assert [p["name"] for p in market["plugins"]] == ["aagy-ecc", "aagy-ecc-go", "aagy-ecc-extras"]
+    assert compare(profiled_repo).in_sync
+
+
+def test_real_marketplace_lists_every_pack():
+    market = json.loads((_REPO_ROOT / "aagy-ecc" / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+    sources = {p["source"] for p in market["plugins"]}
+    for pack in (_REPO_ROOT / "aagy-ecc" / "packs").iterdir():
+        assert f"./packs/{pack.name}" in sources
+        assert (pack / ".claude-plugin" / "plugin.json").is_file()
+
+
+def test_session_start_condenses_long_rules(tmp_path: Path):
+    import session_start_rules
+    rules = tmp_path / "AGENTS.md"
+    filler = "x" * 3000
+    rules.write_text(f"# Reglas\n## 1. Core\n- **Workflow** (`tdd` skill): {filler}\n  1. *detalle*: {filler}\n",
+                     encoding="utf-8")
+    context = session_start_rules.build_response(rules)["hookSpecificOutput"]["additionalContext"]
+    assert "## 1. Core" in context and "- Workflow (`tdd` skill)" in context
+    assert filler not in context and str(rules) in context
+
+
+def test_session_start_real_rules_fit_budget():
+    import session_start_rules
+    context = session_start_rules.build_response()["hookSpecificOutput"]["additionalContext"]
+    assert len(context) < 3000

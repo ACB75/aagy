@@ -12,7 +12,7 @@
       "name": "aagy-ecc",
       "source": "./",
       "description": "Skills, subagentes, reglas y hooks de aagy para Claude Code, con paridad verificada por audit_plugin_parity.py.",
-      "version": "4.1.0",
+      "version": "4.2.0",
       "author": {
         "name": "ACB75",
         "url": "https://github.com/ACB75"
@@ -20,6 +20,96 @@
       "homepage": "https://github.com/ACB75/aagy",
       "repository": "https://github.com/ACB75/aagy",
       "license": "MIT",
+      "category": "workflow",
+      "strict": false
+    },
+    {
+      "name": "aagy-ecc-network-infra",
+      "version": "4.2.0",
+      "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'network-infra'. Requiere aagy-ecc.",
+      "author": {
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
+      },
+      "homepage": "https://github.com/ACB75/aagy",
+      "repository": "https://github.com/ACB75/aagy",
+      "license": "MIT",
+      "source": "./packs/network-infra",
+      "category": "workflow",
+      "strict": false
+    },
+    {
+      "name": "aagy-ecc-java-spring",
+      "version": "4.2.0",
+      "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'java-spring'. Requiere aagy-ecc.",
+      "author": {
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
+      },
+      "homepage": "https://github.com/ACB75/aagy",
+      "repository": "https://github.com/ACB75/aagy",
+      "license": "MIT",
+      "source": "./packs/java-spring",
+      "category": "workflow",
+      "strict": false
+    },
+    {
+      "name": "aagy-ecc-angular",
+      "version": "4.2.0",
+      "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'angular'. Requiere aagy-ecc.",
+      "author": {
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
+      },
+      "homepage": "https://github.com/ACB75/aagy",
+      "repository": "https://github.com/ACB75/aagy",
+      "license": "MIT",
+      "source": "./packs/angular",
+      "category": "workflow",
+      "strict": false
+    },
+    {
+      "name": "aagy-ecc-go",
+      "version": "4.2.0",
+      "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'go'. Requiere aagy-ecc.",
+      "author": {
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
+      },
+      "homepage": "https://github.com/ACB75/aagy",
+      "repository": "https://github.com/ACB75/aagy",
+      "license": "MIT",
+      "source": "./packs/go",
+      "category": "workflow",
+      "strict": false
+    },
+    {
+      "name": "aagy-ecc-python",
+      "version": "4.2.0",
+      "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'python'. Requiere aagy-ecc.",
+      "author": {
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
+      },
+      "homepage": "https://github.com/ACB75/aagy",
+      "repository": "https://github.com/ACB75/aagy",
+      "license": "MIT",
+      "source": "./packs/python",
+      "category": "workflow",
+      "strict": false
+    },
+    {
+      "name": "aagy-ecc-extras",
+      "version": "4.2.0",
+      "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'extras'. Requiere aagy-ecc.",
+      "author": {
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
+      },
+      "homepage": "https://github.com/ACB75/aagy",
+      "repository": "https://github.com/ACB75/aagy",
+      "license": "MIT",
+      "source": "./packs/extras",
       "category": "workflow",
       "strict": false
     }

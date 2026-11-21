@@ -1,7 +1,18 @@
 # Registro Histórico de Decisiones y Cambios Materiales | AAGY / `aagy` Ecosystem
 
 > **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión Canónica**: `4.1.0`
+> **Versión Canónica**: `4.2.0`
+
+---
+
+## 2026-11-21: aagy-ecc 4.2.0 en Paquetes por Perfil para Reducir Tokens
+
+### Hitos y Decisiones Materiales
+
+1. **Núcleo ligero**: [`sync_aagy_ecc.py`](../scripts/py/sync_aagy_ecc.py) solo copia al plugin `aagy-ecc` el perfil `generic` (22 skills, 12 agentes); cada perfil de stack se publica como plugin opcional `aagy-ecc-<perfil>` en `aagy-ecc/packs/` y lo que no está en ningún perfil va a `aagy-ecc-extras`. Antes el núcleo cargaba 169 skills, 49 agentes y 47 comandos en cada sesión (~8-10k tokens).
+2. **Comandos repartidos**: los comandos que dependen de skills o agentes de un paquete viajan con él; se elimina el alias `/prp-pr` y `/code-review` pasa a `extras` (Claude Code ya trae uno).
+3. **Reglas Tier 1**: el hook `SessionStart` inyecta un índice de `rules/AGENTS.md` (~2,3 KB en vez de 10 KB, que Claude Code recortaba) con la ruta del texto completo, y ya no se dispara en `resume`.
+4. **Desacople**: se elimina `agents/sdk-synchronizer.md` (específico de `home-lab`, que mantiene su propia copia) y `lifecycle-coordinator` deja de nombrar `home-lab`.
 
 ---
 
