@@ -87,3 +87,87 @@ def test_preflight_review_mode_dryrun():
         assert res.returncode == 0
         assert "AVISO DE" in res.stdout
         assert "Modo -ReviewOnly" in res.stdout
+
+
+def test_complete_task_pr_supports_issue_and_metadata_flags():
+    """Verifica que complete-task-pr (.ps1 y .sh) soporte -Issue/--issue, Closes #N y metadatos de gh pr create."""
+    ps1_content = (REPO_ROOT / "scripts" / "ps1" / "complete-task-pr.ps1").read_text(encoding="utf-8")
+    sh_content = (REPO_ROOT / "scripts" / "sh" / "complete-task-pr.sh").read_text(encoding="utf-8")
+
+    for content, name in ((ps1_content, "complete-task-pr.ps1"), (sh_content, "complete-task-pr.sh")):
+        assert "Closes #" in content, f"{name} debe inyectar Closes #<N>"
+        assert "--assignee" in content, f"{name} debe configurar --assignee en gh pr create"
+        assert "--label" in content, f"{name} debe configurar --label en gh pr create"
+        assert "--milestone" in content, f"{name} debe configurar --milestone en gh pr create"
+        assert "--project" in content, f"{name} debe configurar --project en gh pr create"
+
+
+def test_complete_task_pr_review_only_injects_closes_issue():
+    """Verifica que -ReviewOnly con -Issue inyecte Closes #<N> sin duplicarlo si ya existe."""
+    ps1_script = REPO_ROOT / "scripts" / "ps1" / "complete-task-pr.ps1"
+    current_branch = subprocess.run(
+        ["git", "branch", "--show-current"],
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    if current_branch in ("main", "master", ""):
+        return
+
+    res = subprocess.run(
+        [
+            "pwsh",
+            "-NoProfile",
+            "-File",
+            str(ps1_script),
+            "-ReviewOnly",
+            "-Issue",
+            "61",
+            "-Body",
+            "Motivación:\n- Prueba unitaria.",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert res.returncode == 0
+    assert "Closes #61" in res.stdout
+
+    # Si ya incluye Closes #61 no debe duplicarlo
+    res_existing = subprocess.run(
+        [
+            "pwsh",
+            "-NoProfile",
+            "-File",
+            str(ps1_script),
+            "-ReviewOnly",
+            "-Issue",
+            "61",
+            "-Body",
+            "Motivación:\n- Prueba.\n\nCloses #61",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert res_existing.returncode == 0
+    assert res_existing.stdout.count("Closes #61") == 1
+
+    # Si la rama contiene gh-<N>, debe autodetectarlo sin pasar -Issue
+    branch_match = re.search(r"(?:^|/|-)(?:gh|issue)-(\d+)(?:-|$)", current_branch, re.IGNORECASE)
+    if branch_match:
+        expected_issue = branch_match.group(1)
+        res_auto = subprocess.run(
+            [
+                "pwsh",
+                "-NoProfile",
+                "-File",
+                str(ps1_script),
+                "-ReviewOnly",
+                "-Body",
+                "Motivación:\n- Autodetección desde rama.",
+            ],
+            capture_output=True,
+            text=True,
+        )
+        assert res_auto.returncode == 0
+        assert f"Closes #{expected_issue}" in res_auto.stdout
+
+
