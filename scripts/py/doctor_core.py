@@ -489,7 +489,7 @@ def interpreter_version(binary: str, flag: str = "--version") -> Optional[Tuple[
 def required_interpreter(names: Sequence[str], minimum: Tuple[int, int, int], label: str) -> Tuple[bool, str]:
     for name in names:
         found = which(name)
-        if not found or is_windows_store_alias(found):
+        if not found or is_windows_store_stub(found):
             continue
         version = interpreter_version(found)
         if version and version >= minimum:
@@ -499,8 +499,13 @@ def required_interpreter(names: Sequence[str], minimum: Tuple[int, int, int], la
 
 
 def is_windows_store_alias(path: str) -> bool:
-    """El alias de Python de la Microsoft Store no es un intérprete real."""
+    """True si la ruta apunta a WindowsApps (posible alias de la Microsoft Store)."""
     return "windowsapps" in path.replace("\\", "/").lower()
+
+
+def is_windows_store_stub(path: str) -> bool:
+    """True si apunta a WindowsApps y no responde como un intérprete real."""
+    return is_windows_store_alias(path) and interpreter_version(path) is None
 
 
 def writable_dir(path: Path) -> bool:
