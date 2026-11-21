@@ -152,7 +152,7 @@ def format_archive_document(
     doc_lines.append("- **Gobernanza**: Quality Gate A / markdownlint OK")
     doc_lines.append("")
 
-    return "\n".join(doc_lines)
+    return re.sub(r"\n{3,}", "\n\n", "\n".join(doc_lines))
 
 
 def _extract_task_body(lines: Sequence[str], start_idx: int, indent_level: int) -> Tuple[List[str], int]:

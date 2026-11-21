@@ -12,10 +12,6 @@
 
 ## Épica: Flujo GitHub Issues y Projects v2
 
-- [ ] **Plantillas de GitHub Issues y PR para flujo multi-harness (GH #59)**
-  <!-- aagy-task: id=gh-59 epic=flujo-github-issues-y-projects-v2 -->
-  GitHub Issue: <https://github.com/ACB75/aagy/issues/59> | Labels: enhancement, harness:both, area:infra | Milestone: v4.2.0
-
 - [ ] **Soporte -Issue en new-lifecycle-task para rama gh-<N> y auto-asignacion (GH #60)**
   <!-- aagy-task: id=gh-60 epic=flujo-github-issues-y-projects-v2 -->
   GitHub Issue: <https://github.com/ACB75/aagy/issues/60> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
