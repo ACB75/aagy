@@ -28,6 +28,10 @@ param(
 
     [int]$Issue = 0,
 
+    [int]$ParentIssue = 0,
+
+    [switch]$AttachIssue,
+
     [ValidateSet("ALL", "IDEAS", "REQ", "PLAN", "TODO", "DOCS", "REVIEW")]
     [string]$Phase = "ALL",
 
@@ -41,8 +45,8 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
-if ([string]::IsNullOrWhiteSpace($TaskId) -and $Issue -le 0) {
-    throw "Debe especificar -TaskId o -Issue <N>."
+if ([string]::IsNullOrWhiteSpace($TaskId) -and $Issue -le 0 -and $ParentIssue -le 0) {
+    throw "Debe especificar -TaskId, -Issue <N> o -ParentIssue <N>."
 }
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -64,6 +68,12 @@ if (-not [string]::IsNullOrWhiteSpace($TaskId)) {
 }
 if ($Issue -gt 0) {
     $cmdArgs += @("--issue", "$Issue")
+}
+if ($ParentIssue -gt 0) {
+    $cmdArgs += @("--parent-issue", "$ParentIssue")
+}
+if ($AttachIssue) {
+    $cmdArgs += "--attach-issue"
 }
 if (-not [string]::IsNullOrWhiteSpace($OutputDir)) {
     $cmdArgs += @("--output-dir", $OutputDir)

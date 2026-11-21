@@ -10,8 +10,4 @@
 
 ## 1. Backlog Activo
 
-## Épica: Flujo GitHub Issues y Projects v2
-
-- [ ] **Soporte de sub-issues y adjuntar artefactos de lifecycle en GitHub Issues (GH #64)**
-  <!-- aagy-task: id=gh-64 epic=flujo-github-issues-y-projects-v2 -->
-  GitHub Issue: <https://github.com/ACB75/aagy/issues/64> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
+## Épica: Flujo GitHub Issues y Projects v2 (cerrada 2026-11-21 por agy)
