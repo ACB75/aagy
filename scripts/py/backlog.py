@@ -60,6 +60,7 @@ K_UPDATED = "updated"
 K_WORKTREE = "worktree"
 GIT_REV_PARSE = "rev-parse"
 OPT_FORCE = "--force"
+CMD_GH_SYNC = "gh-sync"
 
 ID_REGEX = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 ID_MAX = 64
@@ -69,6 +70,8 @@ SECTION_HEADER = re.compile(r"^#{1,2}\s+")
 META_COMMENT = re.compile(r"<!--\s*aagy-task:(?P<body>[^>]*)-->")
 META_PAIR = re.compile(r"([a-z_]+)=([^\s]+)")
 TITLE_PREFIX = re.compile(r"^(?:\*\*)?(?:Tarea\s*:\s*)?", re.IGNORECASE)
+GH_ID_RE = re.compile(r"^gh-(\d+)(?:-|$)")
+GH_REF_RE = re.compile(r"(?:GH\s*#|issues/)(\d+)", re.IGNORECASE)
 
 
 class BacklogError(Exception):
@@ -137,6 +140,16 @@ def run_git(cwd: Path, *args: str) -> Optional[str]:
     return proc.stdout.strip()
 
 
+def run_gh(cwd: Path, *args: str) -> Optional[str]:
+    try:
+        proc = subprocess.run(["gh", *args], cwd=str(cwd), capture_output=True, text=True, check=False, timeout=15)
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0:
+        return None
+    return proc.stdout.strip()
+
+
 # --------------------------------------------------------------------------- modelo
 
 
@@ -147,6 +160,7 @@ class Task:
     epic: Optional[str]
     done_mark: bool
     line_no: int
+    issue: Optional[int] = None
 
 
 @dataclass(frozen=True)
@@ -190,6 +204,17 @@ def _meta_from(lines: Sequence[str], start: int) -> Dict[str, str]:
     return meta
 
 
+def _extract_issue(meta: Dict[str, str], task_id: str, title: str) -> Optional[int]:
+    raw = meta.get("issue", "")
+    if raw.isdigit():
+        return int(raw)
+    m_id = GH_ID_RE.match(task_id)
+    if m_id:
+        return int(m_id.group(1))
+    m_ref = GH_REF_RE.search(title)
+    return int(m_ref.group(1)) if m_ref else None
+
+
 def parse_backlog(text: str) -> Backlog:
     lines = text.splitlines()
     tasks: List[Task] = []
@@ -222,6 +247,7 @@ def parse_backlog(text: str) -> Backlog:
                 epic=meta.get("epic") or current_epic,
                 done_mark=task_match.group("mark").lower() == "x",
                 line_no=idx,
+                issue=_extract_issue(meta, task_id, title),
             )
         )
     return Backlog(tasks=tuple(tasks), epics=tuple(epics))
@@ -458,6 +484,7 @@ def op_list(ctx: Context, epic: Optional[str], agent: Optional[str], include_don
                 "id": task.task_id,
                 "title": task.title,
                 "epic": task.epic,
+                "issue": task.issue,
                 "status": status,
                 "label": _status_label(task, state),
                 "owner": entry.get("owner"),
@@ -705,22 +732,35 @@ def _insert_after_section(text: str, block: str) -> str:
     return text.rstrip() + "\n\n" + block.rstrip() + "\n"
 
 
-def task_block(title: str, task_id: str, epic: Optional[str], detail: Optional[str]) -> str:
-    meta = f"id={task_id}" + (f" epic={epic}" if epic else "")
+def task_block(
+    title: str,
+    task_id: str,
+    epic: Optional[str],
+    detail: Optional[str],
+    issue: Optional[int] = None,
+) -> str:
+    meta = f"id={task_id}" + (f" epic={epic}" if epic else "") + (f" issue={issue}" if issue else "")
     lines = [f"- [ ] **{title}**", f"  <!-- aagy-task: {meta} -->"]
     if detail:
         lines.extend(f"  {line}" if line.strip() else "" for line in detail.splitlines())
     return "\n".join(lines)
 
 
-def op_add(ctx: Context, title: str, epic: Optional[str], task_id: Optional[str], detail: Optional[str]) -> str:
+def op_add(
+    ctx: Context,
+    title: str,
+    epic: Optional[str],
+    task_id: Optional[str],
+    detail: Optional[str],
+    issue: Optional[int] = None,
+) -> str:
     path = ctx.repo.todo_path
     text = path.read_text(encoding=ENCODING) if path.exists() else "# Backlog\n\n## 1. Backlog Activo\n"
     backlog = parse_backlog(text)
     new_id = validate_id(task_id) if task_id else slugify(title)
     if any(t.task_id == new_id for t in backlog.tasks):
         raise BacklogError(f"Ya existe una tarea con id '{new_id}'.")
-    block = task_block(title.strip(), new_id, epic, detail)
+    block = task_block(title.strip(), new_id, epic, detail, issue=issue)
     if epic:
         text = _insert_in_epic(text, backlog, validate_id(epic), block)
     else:
@@ -728,6 +768,155 @@ def op_add(ctx: Context, title: str, epic: Optional[str], task_id: Optional[str]
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(text, encoding=ENCODING)
     return new_id
+
+
+def link_task_issue(todo_path: Path, task: Task, issue_number: int) -> None:
+    """Enlaza una tarea existente de TODO.md con un número de GitHub Issue (#N)."""
+    lines = todo_path.read_text(encoding=ENCODING).splitlines()
+    idx = task.line_no + 1
+    while idx < len(lines):
+        line = lines[idx]
+        if not line.startswith((" ", "\t")) and line.strip():
+            break
+        match = META_COMMENT.search(line)
+        if match:
+            body = match.group("body").strip()
+            updated = re.sub(r"\bissue=\d+", f"issue={issue_number}", body)
+            if f"issue={issue_number}" not in updated:
+                updated = f"{updated} issue={issue_number}"
+            lines[idx] = f"  <!-- aagy-task: {updated} -->"
+            todo_path.write_text("\n".join(lines) + "\n", encoding=ENCODING)
+            return
+        idx += 1
+    meta = f"id={task.task_id}" + (f" epic={task.epic}" if task.epic else "") + f" issue={issue_number}"
+    lines.insert(task.line_no + 1, f"  <!-- aagy-task: {meta} -->")
+    todo_path.write_text("\n".join(lines) + "\n", encoding=ENCODING)
+
+
+def sync_gh_claim(cwd: Path, issue_number: Optional[int], agent: str, branch: str) -> bool:
+    """Actualiza la GitHub Issue vinculada al hacer claim en el backlog compartido."""
+    if not issue_number:
+        return False
+    num_str = str(issue_number)
+    run_gh(cwd, "issue", "edit", num_str, "--add-assignee", "@me")
+    run_gh(
+        cwd,
+        "issue",
+        "comment",
+        num_str,
+        "--body",
+        f"Reclamada en backlog compartido (`TODO.md`) por `{agent}` en rama `{branch}`.",
+    )
+    return True
+
+
+def sync_gh_done(cwd: Path, issue_number: Optional[int], agent: str, note: Optional[str]) -> bool:
+    """Cierra y comenta la GitHub Issue vinculada al completar una tarea del backlog compartido."""
+    if not issue_number:
+        return False
+    comment = f"Completada en backlog compartido (`TODO.md`) por `{agent}`."
+    if note:
+        comment += f" Nota: {note}"
+    run_gh(cwd, "issue", "close", str(issue_number), "--comment", comment)
+    return True
+
+
+def _fetch_gh_issues(cwd: Path) -> List[Dict[str, Any]]:
+    raw = run_gh(cwd, "issue", "list", "--state", "all", "--limit", "100", "--json", "number,title,state,url")
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw)
+    except ValueError:
+        return []
+    return data if isinstance(data, list) else []
+
+
+def _create_gh_issue_for_task(ctx: Context, task: Task) -> Optional[int]:
+    body = f"Tarea sincronizada desde `{ctx.repo.todo_path.name}` (id: `{task.task_id}`)."
+    out = run_gh(ctx.cwd, "issue", "create", "--title", task.title, "--body", body, "--label", "enhancement,harness:both")
+    if not out:
+        return None
+    match = re.search(r"/issues/(\d+)", out)
+    if not match:
+        return None
+    issue_num = int(match.group(1))
+    link_task_issue(ctx.repo.todo_path, task, issue_num)
+    return issue_num
+
+
+def _sync_close_done(ctx: Context, by_num: Dict[int, Dict[str, Any]]) -> List[int]:
+    closed: List[int] = []
+    state = load_state(ctx.repo)
+    for task in ctx.backlog().tasks:
+        if not task.issue:
+            continue
+        remote = by_num.get(task.issue)
+        status = effective_status(task, state)
+        if status == ST_DONE and (not remote or str(remote.get("state", "")).upper() == "OPEN"):
+            run_gh(ctx.cwd, "issue", "close", str(task.issue), "--comment", "Cerrada automáticamente desde TODO.md.")
+            closed.append(task.issue)
+        elif remote and str(remote.get("state", "")).upper() == "CLOSED" and not task.done_mark:
+            mark_done_in_todo(ctx.repo.todo_path, task)
+            closed.append(task.issue)
+    return closed
+
+
+def _sync_create_missing(ctx: Context) -> List[int]:
+    created: List[int] = []
+    while True:
+        unlinked = next((t for t in ctx.backlog().tasks if not t.done_mark and not t.issue), None)
+        if unlinked is None:
+            break
+        issue_num = _create_gh_issue_for_task(ctx, unlinked)
+        if issue_num is None:
+            break
+        created.append(issue_num)
+    return created
+
+
+def _sync_import_open(
+    ctx: Context,
+    gh_issues: Sequence[Dict[str, Any]],
+    epic: Optional[str],
+) -> List[str]:
+    imported: List[str] = []
+    existing_issues = {t.issue for t in ctx.backlog().tasks if t.issue}
+    existing_ids = {t.task_id for t in ctx.backlog().tasks}
+    for item in gh_issues:
+        if str(item.get("state", "")).upper() != "OPEN":
+            continue
+        num = int(item.get("number") or 0)
+        if num <= 0 or num in existing_issues:
+            continue
+        tid = f"gh-{num}"
+        if tid in existing_ids:
+            continue
+        title = str(item.get("title") or f"GitHub Issue #{num}").strip()
+        url = str(item.get("url") or "").strip()
+        detail = f"GitHub Issue: <{url}>" if url else None
+        op_add(ctx, title, epic, tid, detail, issue=num)
+        imported.append(tid)
+        existing_issues.add(num)
+        existing_ids.add(tid)
+    return imported
+
+
+def op_gh_sync(
+    ctx: Context,
+    create_missing: bool = False,
+    close_done: bool = False,
+    import_open: bool = False,
+    epic: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Sincroniza bidireccionalmente tareas de TODO.md con GitHub Issues (#N)."""
+    gh_issues = _fetch_gh_issues(ctx.cwd)
+    by_num = {int(item["number"]): item for item in gh_issues if item.get("number")}
+    closed = _sync_close_done(ctx, by_num) if close_done else []
+    created = _sync_create_missing(ctx) if create_missing else []
+    imported = _sync_import_open(ctx, gh_issues, epic) if import_open else []
+    linked = [t.issue for t in ctx.backlog().tasks if t.issue]
+    return {"linked": linked, "created": created, "closed": closed, "imported": imported}
 
 
 def _insert_in_epic(text: str, backlog: Backlog, epic_id: str, block: str) -> str:
@@ -829,6 +1018,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("id")
     p.add_argument("--branch")
     p.add_argument("--worktree", action="store_true", help="Crea un git worktree propio (modo simultáneo).")
+    p.add_argument("--gh", action="store_true", help="Sincroniza asignación/comentario con la GitHub Issue vinculada.")
     p.add_argument(OPT_FORCE, action="store_true")
     p = with_agent(sub.add_parser("checkpoint", help="Guarda rama, commit, ficheros y nota de la tarea en curso."))
     p.add_argument("--id")
@@ -848,12 +1038,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("id")
     p.add_argument("--note")
     p.add_argument("--no-archive", action="store_true")
+    p.add_argument("--gh", action="store_true", help="Cierra y comenta la GitHub Issue vinculada.")
     p.add_argument(OPT_FORCE, action="store_true")
     p = sub.add_parser("add", help="Añade una tarea a TODO.md.")
     p.add_argument("title")
     p.add_argument("--epic")
     p.add_argument("--id")
+    p.add_argument("--issue", type=int, default=None, help="Número de GitHub Issue vinculada.")
     p.add_argument("--detail", help="Texto (p. ej. 7 fases) bajo la tarea.")
+    p = sub.add_parser(CMD_GH_SYNC, help="Sincroniza TODO.md con GitHub Issues (#N).")
+    p.add_argument("--create-missing", action="store_true", help="Crea GitHub Issues para tareas pendientes sin issue.")
+    p.add_argument("--close-done", action="store_true", help="Cierra issues completadas y marca [x] issues cerradas.")
+    p.add_argument("--import-open", action="store_true", help="Importa GitHub Issues abiertas hacia TODO.md.")
+    p.add_argument("--epic", default=None, help="Épica destino al importar issues abiertas.")
 
     epic = sub.add_parser("epic", help="Épicas: add, sync, close.")
     esub = epic.add_subparsers(dest="epic_cmd", required=True)
@@ -896,7 +1093,7 @@ def _dispatch_simple(args: argparse.Namespace, ctx: Context) -> Tuple[Any, List[
         created = op_init(ctx)
         return created, created
     if cmd == "add":
-        new_id = op_add(ctx, args.title, args.epic, args.id, args.detail)
+        new_id = op_add(ctx, args.title, args.epic, args.id, args.detail, issue=getattr(args, "issue", None))
         return {"id": new_id}, [f"Tarea añadida: {new_id}"]
     if cmd == "list":
         if args.brief:
@@ -905,6 +1102,13 @@ def _dispatch_simple(args: argparse.Namespace, ctx: Context) -> Tuple[Any, List[
         agent = validate_agent(args.agent) if args.mine else None
         rows = op_list(ctx, args.epic, agent, args.all)
         return rows, _render_rows(rows)
+    if cmd == CMD_GH_SYNC:
+        res = op_gh_sync(ctx, args.create_missing, args.close_done, args.import_open, args.epic)
+        msg = (
+            f"GH Sync: vinculadas={len(res['linked'])}, creadas={len(res['created'])}, "
+            f"cerradas={len(res['closed'])}, importadas={len(res['imported'])}"
+        )
+        return res, [msg]
     if cmd == "epic":
         return _dispatch_epic(args, ctx)
     raise KeyError(cmd)
@@ -938,7 +1142,10 @@ def _dispatch_agent(args: argparse.Namespace, ctx: Context) -> Tuple[Any, List[s
             return entry, _claim_lines(entry)
         return {"id": task.task_id, "title": task.title}, [f"Siguiente: {task.task_id}: {task.title}"]
     if cmd == "claim":
+        task = ctx.backlog().find(validate_id(args.id))
         entry = op_claim(ctx, args.id, agent, args.branch, args.worktree, args.force)
+        if getattr(args, "gh", False) and task.issue:
+            sync_gh_claim(ctx.cwd, task.issue, agent, str(entry.get("branch", "")))
         return entry, _claim_lines(entry)
     if cmd == "checkpoint":
         ids = op_checkpoint(ctx, agent, args.id, args.note)
@@ -948,7 +1155,10 @@ def _dispatch_agent(args: argparse.Namespace, ctx: Context) -> Tuple[Any, List[s
         lines = [f"Relevo listo: {tid} -> {path}" for tid, path in results] or ["Sin tareas en curso."]
         return [{"id": tid, "file": str(path)} for tid, path in results], lines
     if cmd == "done":
+        task = ctx.backlog().find(validate_id(args.id))
         messages = op_done(ctx, args.id, agent, args.note, not args.no_archive, args.force)
+        if getattr(args, "gh", False) and task.issue:
+            sync_gh_done(ctx.cwd, task.issue, agent, args.note)
         return messages, [f"Tarea {args.id} terminada."] + messages
     status = {"release": ST_TODO, "review": ST_REVIEW, "block": ST_BLOCKED}[cmd]
     op_transition(ctx, args.id, agent, status, args.note, args.force)
@@ -974,7 +1184,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     try:
         if auto and not ctx.repo.todo_path.is_file():
             return 0
-        if args.cmd in ("init", "add", "list", "epic"):
+        if args.cmd in ("init", "add", "list", CMD_GH_SYNC, "epic"):
             payload, lines = _dispatch_simple(args, ctx)
         else:
             payload, lines = _dispatch_agent(args, ctx)

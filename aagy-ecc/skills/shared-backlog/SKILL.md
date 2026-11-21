@@ -52,12 +52,13 @@ Dentro del repo aagy puedes usar `python scripts/py/backlog.py` o los wrappers
 | Crear backlog en un repo nuevo | `backlog.py init` |
 | Ver pendiente y en curso | `backlog.py list` (`--brief`, `--epic <id>`, `--mine`, `--all`, `--json`) |
 | Siguiente tarea libre (relevos primero) | `backlog.py next --agent agy [--epic <id>] [--claim]` |
-| Reclamar | `backlog.py claim <id> --agent agy [--branch fix/x/y] [--worktree]` |
+| Reclamar | `backlog.py claim <id> --agent agy [--branch fix/x/y] [--worktree] [--gh]` |
 | Guardar progreso | `backlog.py checkpoint --agent agy --note "..."` |
 | Relevo | `backlog.py handoff [<id>] --agent agy --note "..." [--to claude]` |
 | Revisión, bloqueo o liberar | `backlog.py review <id>`, `block <id> --note ...`, `release <id>` (con `--agent agy`) |
-| Terminar y archivar | `backlog.py done <id> --agent agy --note "verificado con ..."` |
-| Añadir tarea | `backlog.py add "<título>" [--epic <id>] [--detail "<7 fases>"]` |
+| Terminar y archivar | `backlog.py done <id> --agent agy --note "verificado con ..." [--gh]` |
+| Añadir tarea | `backlog.py add "<título>" [--epic <id>] [--issue <N>] [--detail "<7 fases>"]` |
+| Sincronizar GitHub Issues | `backlog.py gh-sync [--create-missing] [--close-done] [--import-open] [--epic <id>]` |
 
 ## Modo simultáneo y modo relevo
 

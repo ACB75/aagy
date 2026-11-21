@@ -13,10 +13,11 @@ el mismo estado (`.git/aagy-backlog/state.json`, común a todos los worktrees).
 ```text
 /aagy-todo                       # qué hay en curso, en relevo y pendiente
 /aagy-todo next                  # coger la siguiente tarea libre (los relevos primero)
-/aagy-todo claim <id> [--worktree] [--branch fix/<proyecto>/<id>]
+/aagy-todo claim <id> [--worktree] [--branch fix/<proyecto>/<id>] [--gh]
 /aagy-todo checkpoint "<hecho / siguiente>"
 /aagy-todo handoff "<nota>"      # dejarla para que la continúe agy
-/aagy-todo done <id> "<cómo se verificó>"
+/aagy-todo done <id> "<cómo se verificó>" [--gh]
+/aagy-todo gh-sync [--create-missing] [--close-done] [--import-open]
 /aagy-todo init                  # crear el backlog en un repo que no lo tiene
 ```
 
