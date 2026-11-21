@@ -355,6 +355,14 @@ def capture_stop_event(
         commands, errors = _payload_signals(data)
         _ingest_repeated_items(commands, "cmd", "workflow", target_root, plugin_data_dir)
         _ingest_repeated_items(errors, "err", "debugging", target_root, plugin_data_dir)
+        candidates = discover_candidates(target_root, scope=SCOPE_ALL, plugin_data_dir=plugin_data_dir)
+        if candidates:
+            snap_dir = resolve_plugin_data_dir(plugin_data_dir) / DIR_INSTINCTS
+            snap_dir.mkdir(parents=True, exist_ok=True)
+            (snap_dir / "discovered_candidates.json").write_text(
+                json.dumps({"candidates": [c.to_dict() for c in candidates]}, indent=2),
+                encoding="utf-8",
+            )
     except Exception as exc:
         logger.debug("Aislamiento de fallo en hook Stop: %s", exc)
 

@@ -9,3 +9,29 @@
 ---
 
 ## 1. Backlog Activo
+
+## Épica: Flujo GitHub Issues y Projects v2
+
+- [ ] **Plantillas de GitHub Issues y PR para flujo multi-harness (GH #59)**
+  <!-- aagy-task: id=gh-59 epic=flujo-github-issues-y-projects-v2 -->
+  GitHub Issue: <https://github.com/ACB75/aagy/issues/59> | Labels: enhancement, harness:both, area:infra | Milestone: v4.2.0
+
+- [ ] **Soporte -Issue en new-lifecycle-task para rama gh-<N> y auto-asignacion (GH #60)**
+  <!-- aagy-task: id=gh-60 epic=flujo-github-issues-y-projects-v2 -->
+  GitHub Issue: <https://github.com/ACB75/aagy/issues/60> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
+
+- [ ] **Inyectar Closes #N, labels, assignee, milestone y projects en complete-task-pr (GH #61)**
+  <!-- aagy-task: id=gh-61 epic=flujo-github-issues-y-projects-v2 -->
+  GitHub Issue: <https://github.com/ACB75/aagy/issues/61> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
+
+- [ ] **Workflows GitHub Actions de auto-sincronizacion Team Planning <-> aagy (GH #62)**
+  <!-- aagy-task: id=gh-62 epic=flujo-github-issues-y-projects-v2 -->
+  GitHub Issue: <https://github.com/ACB75/aagy/issues/62> | Labels: enhancement, harness:both, area:infra | Milestone: v4.2.0
+
+- [ ] **Sincronizador backlog.py <-> GitHub Issues para Claude y Antigravity (GH #63)**
+  <!-- aagy-task: id=gh-63 epic=flujo-github-issues-y-projects-v2 -->
+  GitHub Issue: <https://github.com/ACB75/aagy/issues/63> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
+
+- [ ] **Soporte de sub-issues y adjuntar artefactos de lifecycle en GitHub Issues (GH #64)**
+  <!-- aagy-task: id=gh-64 epic=flujo-github-issues-y-projects-v2 -->
+  GitHub Issue: <https://github.com/ACB75/aagy/issues/64> | Labels: enhancement, harness:both, area:scripts | Milestone: v4.2.0
