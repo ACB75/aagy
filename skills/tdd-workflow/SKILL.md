@@ -1,6 +1,6 @@
 ---
 name: tdd-workflow
-description: "TDD workflow (RED -> GREEN -> REFACTOR) enforcing 80%+ test coverage. Not for trivial doc/config edits."
+description: "Enforce RED-GREEN-REFACTOR TDD and 80%+ coverage; skip trivial doc edits."
 ---
 
 # Test-Driven Development Workflow

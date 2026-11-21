@@ -8,7 +8,7 @@
     o hacia un proyecto específico (.agents/) (Nivel 2: Específico de Dominio).
 .PARAMETER Phase
     Fase preconfigurada según la arquitectura en dos niveles:
-      - generic    (Nivel 1 Global: ~22 Skills y 12 agentes universales de ingeniería)
+      - generic    (Nivel 1 Global: 12 core skills y 12 agentes universales de ingeniería)
       - network-infra (Perfil de stack: Docker, K8s, Homelab, Redes, Seguridad)
       - java-spring   (Perfil de stack: Java 25 / Spring Boot 4, Postgres)
       - angular       (Perfil de stack: Angular 21 / TypeScript, E2E)
@@ -48,14 +48,9 @@ $PhaseConfig = @{
     "generic" = @{
         Skills = @(
             "tdd-workflow", "search-first", "verification-loop",
-            "security-review", "coding-standards", "git-workflow",
-            "conventional-commit-review", "architecture-decision-records",
-            "error-handling", "docs-governance", "workspace-health-audit",
-            "config-gc", "sonarqube-quality-gate", "sync-microservice-sdk",
-            "todo-lifecycle", "sre-reliability", "agent-sort",
-            "agent-self-evaluation", "strategic-compact",
-            "context-budget", "safety-guard", "engineering-lifecycle",
-            "aagy-doctor"
+            "security-review", "git-workflow", "conventional-commit-review",
+            "docs-governance", "sonarqube-quality-gate", "todo-lifecycle",
+            "safety-guard", "engineering-lifecycle", "aagy-doctor"
         )
         Agents = @(
             "planner.md", "architect.md", "tdd-guide.md", "code-reviewer.md",
@@ -69,7 +64,7 @@ $PhaseConfig = @{
             "docker-patterns", "deployment-patterns", "kubernetes-patterns",
             "homelab-network-readiness", "homelab-network-setup", "homelab-pihole-dns",
             "homelab-vlan-segmentation", "homelab-wireguard-vpn", "network-config-validation",
-            "network-interface-health", "security-scan", "safety-guard"
+            "network-interface-health", "security-scan", "safety-guard", "sre-reliability"
         )
         Agents = @(
             "homelab-architect.md", "network-architect.md", "network-config-reviewer.md",
@@ -80,7 +75,7 @@ $PhaseConfig = @{
         Skills = @(
             "springboot-patterns", "springboot-security", "springboot-tdd",
             "springboot-verification", "java-coding-standards", "postgres-patterns",
-            "database-migrations", "api-design", "sonarqube-quality-gate"
+            "database-migrations", "api-design", "sonarqube-quality-gate", "sync-microservice-sdk"
         )
         Agents = @(
             "java-reviewer.md", "java-build-resolver.md", "database-reviewer.md"
@@ -88,7 +83,7 @@ $PhaseConfig = @{
     }
     "angular" = @{
         Skills = @(
-            "angular-developer", "e2e-testing", "sonarqube-quality-gate"
+            "angular-developer", "e2e-testing", "sonarqube-quality-gate", "sync-microservice-sdk"
         )
         Agents = @(
             "typescript-reviewer.md", "e2e-runner.md"
@@ -99,7 +94,7 @@ $PhaseConfig = @{
             "golang-patterns", "golang-testing", "docker-patterns",
             "kubernetes-patterns", "postgres-patterns", "latency-critical-systems",
             "data-throughput-accelerator", "benchmark-optimization-loop",
-            "sonarqube-quality-gate"
+            "sonarqube-quality-gate", "sync-microservice-sdk", "sre-reliability"
         )
         Agents = @(
             "go-reviewer.md", "go-build-resolver.md", "performance-optimizer.md",
