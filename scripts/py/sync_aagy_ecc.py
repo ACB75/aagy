@@ -49,6 +49,7 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "docs_map.py",
     "doctor_core.py",
     "install_manifest.py",
+    "validate_branch.py",
 )
 
 # Entradas propias de Antigravity que no deben llegar a Claude Code (relativas al directorio espejo).
