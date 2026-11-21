@@ -265,6 +265,75 @@ def _ingest_repeated_items(
             )
 
 
+TRANSCRIPT_TAIL_BYTES: int = 2 * 1024 * 1024
+TRANSCRIPT_TEXT_MAX: int = 200
+SHELL_TOOL_NAMES: Tuple[str, ...] = ("Bash", "PowerShell", "run_command")
+
+
+def _first_line(text: str) -> str:
+    stripped = text.strip()
+    return stripped.splitlines()[0][:TRANSCRIPT_TEXT_MAX] if stripped else ""
+
+
+def _tool_result_text(block: Dict[str, Any]) -> str:
+    content = block.get("content")
+    if isinstance(content, list):
+        content = " ".join(str(c.get("text") or "") for c in content if isinstance(c, dict))
+    return _first_line(str(content or ""))
+
+
+def _read_transcript_tail(transcript: Path) -> List[str]:
+    with transcript.open("rb") as handle:
+        handle.seek(0, os.SEEK_END)
+        size = handle.tell()
+        handle.seek(max(0, size - TRANSCRIPT_TAIL_BYTES))
+        raw = handle.read().decode("utf-8", errors="replace")
+    lines = raw.splitlines()
+    return lines[1:] if size > TRANSCRIPT_TAIL_BYTES else lines
+
+
+def _collect_from_block(block: Dict[str, Any], commands: List[str], errors: List[str]) -> None:
+    kind = block.get("type")
+    if kind == "tool_use" and block.get("name") in SHELL_TOOL_NAMES:
+        tool_input = block.get("input")
+        cmd = _first_line(str(tool_input.get("command") or "")) if isinstance(tool_input, dict) else ""
+        if cmd:
+            commands.append(cmd)
+    elif kind == "tool_result" and block.get("is_error") is True:
+        err = _tool_result_text(block)
+        if err:
+            errors.append(err)
+
+
+def extract_transcript_signals(transcript_path: str) -> Tuple[List[str], List[str]]:
+    """Extrae comandos de shell y errores de herramientas del transcript JSONL (Claude Code)."""
+    commands: List[str] = []
+    errors: List[str] = []
+    path = Path(transcript_path).expanduser() if transcript_path else None
+    if path is None or not path.is_file():
+        return commands, errors
+    for line in _read_transcript_tail(path):
+        try:
+            record = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        message = record.get("message") if isinstance(record, dict) else None
+        content = message.get("content") if isinstance(message, dict) else None
+        if isinstance(content, list):
+            for block in content:
+                if isinstance(block, dict):
+                    _collect_from_block(block, commands, errors)
+    return commands, errors
+
+
+def _payload_signals(data: Dict[str, Any]) -> Tuple[Any, Any]:
+    commands = data.get("commands")
+    errors = data.get("errors")
+    if commands is None and errors is None:
+        commands, errors = extract_transcript_signals(str(data.get("transcript_path") or ""))
+    return commands, errors
+
+
 def capture_stop_event(
     payload: Optional[Dict[str, Any]] = None,
     repo_root: Optional[Path] = None,
@@ -282,8 +351,9 @@ def capture_stop_event(
         if not target_root.is_dir():
             return {}
         _ingest_explicit_learnings(data.get("learnings"), target_root, plugin_data_dir)
-        _ingest_repeated_items(data.get("commands"), "cmd", "workflow", target_root, plugin_data_dir)
-        _ingest_repeated_items(data.get("errors"), "err", "debugging", target_root, plugin_data_dir)
+        commands, errors = _payload_signals(data)
+        _ingest_repeated_items(commands, "cmd", "workflow", target_root, plugin_data_dir)
+        _ingest_repeated_items(errors, "err", "debugging", target_root, plugin_data_dir)
     except Exception as exc:
         logger.debug("Aislamiento de fallo en hook Stop: %s", exc)
 
