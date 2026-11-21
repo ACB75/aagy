@@ -1,7 +1,7 @@
 {
   "name": "aagy",
   "displayName": "Anything Antigravity (aagy)",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Universal agnostic plugin harness for Google Antigravity & Gemini CLI (aagy) with progressive skill activation and SRE baseline.",
   "suggestedPrompts": [
     "Plan a new feature using search-first and tdd-workflow",

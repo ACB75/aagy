@@ -1,9 +1,7 @@
 ---
 name: lifecycle-coordinator
 description: "Coordinates the 4-phase lifecycle and enforces retrocompatibility, SRE limits, SDK parity and quality gates."
-tools:
-  - read_file
-  - run_command
+tools: Read, Grep, Glob, Bash
 model: inherit
 ---
 
