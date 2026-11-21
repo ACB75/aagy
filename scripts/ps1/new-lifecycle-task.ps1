@@ -3,9 +3,12 @@
     Instancia los artefactos del Engineering Lifecycle desde cualquier punto de entrada (IDEAS, REQ, PLAN, TODO, ALL).
 .DESCRIPTION
     Genera artefactos del flujo flexible [IDEAS -> REQUISITOS -> PLAN -> TODO] resolviendo rutas
-    dinámicamente vía .governance/docs-map.json (con fallback clásico).
+    dinámicamente vía .governance/docs-map.json (con fallback clásico) o vinculando una GitHub Issue (-Issue <N>).
 .PARAMETER TaskId
-    Identificador o rama de la tarea (ej. 'feat/kakebo/export-csv').
+    Identificador o rama de la tarea (ej. 'feat/kakebo/export-csv'). Opcional si se indica -Issue.
+.PARAMETER Issue
+    Número de GitHub Issue (ej. 60): lee título/labels con gh issue view, auto-asigna @me,
+    crea rama <type>/<project>/gh-<N>-<slug> validada por validate_branch.py y registra .governance/active-issue.json.
 .PARAMETER Phase
     Punto de entrada del ciclo de vida: ALL (defecto), IDEAS, REQ, PLAN, TODO, DOCS, REVIEW.
 .PARAMETER OutputDir
@@ -16,11 +19,14 @@
     Simula la creación sin escribir archivos.
 .EXAMPLE
     pwsh -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
+.EXAMPLE
+    pwsh -File scripts/ps1/new-lifecycle-task.ps1 -Issue 60 -Phase REQ
 #>
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory=$true)]
-    [string]$TaskId,
+    [string]$TaskId = "",
+
+    [int]$Issue = 0,
 
     [ValidateSet("ALL", "IDEAS", "REQ", "PLAN", "TODO", "DOCS", "REVIEW")]
     [string]$Phase = "ALL",
@@ -35,6 +41,10 @@ param(
 $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
+if ([string]::IsNullOrWhiteSpace($TaskId) -and $Issue -le 0) {
+    throw "Debe especificar -TaskId o -Issue <N>."
+}
+
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = (Resolve-Path "$ScriptDir\..\..").Path
 $PyScript = Join-Path $RepoRoot "scripts\py\new_lifecycle_task.py"
@@ -45,11 +55,16 @@ if (-not (Test-Path $PyScript)) {
 
 $cmdArgs = @(
     $PyScript,
-    "--task-id", $TaskId,
     "--repo-root", $RepoRoot,
     "--phase", $Phase
 )
 
+if (-not [string]::IsNullOrWhiteSpace($TaskId)) {
+    $cmdArgs += @("--task-id", $TaskId)
+}
+if ($Issue -gt 0) {
+    $cmdArgs += @("--issue", "$Issue")
+}
 if (-not [string]::IsNullOrWhiteSpace($OutputDir)) {
     $cmdArgs += @("--output-dir", $OutputDir)
 }
