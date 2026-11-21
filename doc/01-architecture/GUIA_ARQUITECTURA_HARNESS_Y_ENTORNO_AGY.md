@@ -65,7 +65,7 @@ flowchart TD
    - **Paradigma**: Ejecución secuencial interactiva en terminal con captura directa de flujos estándar (`stdin`/`stdout`).
 2. **`aagy`**:
    - **Motor**: Google Antigravity & Gemini (modelos Gemini 2.5 Pro / Flash).
-   - **Artefactos**: Reglas jerárquicas ([`rules/AGENTS.md`](file:///c:/Workspace/projects/aagy/rules/AGENTS.md)), catálogo de más de 315 skills ([`skills/`](file:///c:/Workspace/projects/aagy/skills/)), 73 subagentes especializados ([`agents/`](file:///c:/Workspace/projects/aagy/agents/)), esquemas de validación JSON ([`schemas/`](file:///c:/Workspace/projects/aagy/schemas/)) y comandos agénticos ([`commands/`](file:///c:/Workspace/projects/aagy/commands/)).
+   - **Artefactos**: Reglas jerárquicas ([`rules/AGENTS.md`](file:///c:/Workspace/projects/aagy/rules/AGENTS.md)), catálogo de más de 315 skills ([`skills/`](file:///c:/Workspace/projects/aagy/skills/)), 73 subagentes especializados ([`agents/`](file:///c:/Workspace/projects/aagy/agents/)), esquemas de validación JSON ([`schemas/`](file:///c:/Workspace/projects/aagy/schemas/)) y puntos de entrada en forma de skill, como [`aagy-doctor`](../../skills/aagy-doctor/SKILL.md). La raíz no tiene carpeta `commands/`: los comandos slash viven en [`aagy-ecc/commands/`](../../aagy-ecc/commands/).
    - **Paradigma**: Invocación estructurada de herramientas en sandboxes OS, orquestación concurrente de subagentes en workspaces aislados (`branch`/`share`), integración nativa de Model Context Protocol (MCP) y bucle de despertar reactivo (*reactive wakeup*).
 
 ---

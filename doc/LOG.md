@@ -5,6 +5,17 @@
 
 ---
 
+## 2026-11-21: Comandos de Diagnóstico `/aagy-doctor` y `/aagy-ecc-doctor`
+
+### Hitos y Decisiones Materiales
+
+1. **Dos doctors con paridad 1:1**: [`aagy_doctor.py`](../scripts/py/aagy_doctor.py) (Antigravity) y [`aagy_ecc_doctor.py`](../aagy-ecc/scripts/py/aagy_ecc_doctor.py) (Claude Code) implementan el catálogo común `DOC-01..14` de [`doctor_core.py`](../scripts/py/doctor_core.py). [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py) falla si sus IDs divergen.
+2. **Solo lectura por defecto**: `--fix` muestra el plan y aplica cada arreglo tras confirmarlo (`--yes` para no preguntar). Salida humana o `--json`; exit `0`/`1`/`2`.
+3. **Manifiesto de instalación**: los instaladores escriben `.aagy-install.json` (harness, fase, versión, commit, repo de origen) con [`install_manifest.py`](../scripts/py/install_manifest.py).
+4. **Puntos de entrada**: skill [`aagy-doctor`](../skills/aagy-doctor/SKILL.md) (añadida a la fase `generic` y excluida del espejo de aagy-ecc) y comando [`/aagy-ecc-doctor`](../aagy-ecc/commands/aagy-ecc-doctor.md). Wrappers en `scripts/ps1/` y `scripts/sh/`. Requisitos y plan en [`doc/06-backlog/plans/`](06-backlog/plans/REQ_aagy_doctor_commands.md); manual en [`MANUAL_aagy_doctor.md`](04-operations/runbooks/MANUAL_aagy_doctor.md).
+
+---
+
 ## 2026-11-20: Paridad Real `aagy-ecc` para Claude Code (Espejo, Hooks Python y Auditoría Estricta)
 
 ### Hitos y Decisiones Materiales

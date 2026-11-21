@@ -31,7 +31,8 @@ subagentes, reglas y motores Python, generada desde la raíz por
 - **`.claude-plugin/`**: manifiesto [`plugin.json`](.claude-plugin/plugin.json) y marketplace local [`marketplace.json`](.claude-plugin/marketplace.json).
 - **`skills/`, `agents/`, `rules/AGENTS.md`, `scripts/py/`**: espejos generados. **No se editan aquí**; se editan en la raíz y se ejecuta `scripts/ps1/sync-aagy-ecc.ps1` (o `scripts/sh/sync-aagy-ecc.sh`).
 - **`hooks/hooks.json`** y **`scripts/hooks/`**: hooks propios de Claude Code (ver [`hooks/README.md`](hooks/README.md)).
-- **`commands/`**: comandos slash (`/plan`, `/code-review`, `/tdd`, `/evolve`, `/promote`...).
+- **`commands/`**: comandos slash (`/plan`, `/code-review`, `/tdd`, `/evolve`, `/promote`, `/aagy-ecc-doctor`...).
+- **`scripts/py/aagy_ecc_doctor.py`**: motor de `/aagy-ecc-doctor` (fuente propia, no espejo). Ver [`MANUAL_aagy_doctor.md`](../doc/04-operations/runbooks/MANUAL_aagy_doctor.md).
 - **`project-template/`**: [`CLAUDE.md`](project-template/CLAUDE.md) y `.claude/rules/` opcionales para copiar en un proyecto.
 
 ---
@@ -72,4 +73,5 @@ Instalar `aagy-ecc` no afecta al plugin `aagy` de Antigravity: cada uno vive en 
 pwsh -NoProfile -File ../scripts/ps1/sync-aagy-ecc.ps1 -Check   # espejo sin deriva
 pwsh -NoProfile -File ../scripts/ps1/audit-plugin-parity.ps1    # paridad aagy <-> aagy-ecc
 claude plugin validate ./aagy-ecc                                # manifiesto, skills y hooks
+pwsh -NoProfile -File ../scripts/ps1/aagy-ecc-doctor.ps1         # diagnóstico de la instalación (DOC-01..14)
 ```

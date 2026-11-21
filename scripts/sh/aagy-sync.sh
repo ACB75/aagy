@@ -11,6 +11,16 @@ REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
 mkdir -p "$TARGET_DIR/skills" "$TARGET_DIR/agents" "$TARGET_DIR/rules"
 
+write_install_manifest() {
+  # Deja .aagy-install.json en el destino para /aagy-doctor. Nunca aborta la sincronización.
+  py="$(command -v python3 || command -v python || true)"
+  if [ -n "$py" ] && [ -f "$REPO_ROOT/scripts/py/install_manifest.py" ]; then
+    "$py" "$REPO_ROOT/scripts/py/install_manifest.py" write --dest "$TARGET_DIR" --harness agy --profile "$1" --repo-root "$REPO_ROOT" || true
+  else
+    echo "[!] Python no disponible: se omite el manifiesto de instalación."
+  fi
+}
+
 case "$PHASE" in
   status)
     echo "=== Anything Antigravity (aagy) Status ($TARGET_DIR) ==="
@@ -21,7 +31,7 @@ case "$PHASE" in
     exit 0
     ;;
   generic)
-    SKILLS=(tdd-workflow search-first verification-loop security-review coding-standards git-workflow conventional-commit-review architecture-decision-records error-handling docs-governance workspace-health-audit config-gc sonarqube-quality-gate sync-microservice-sdk todo-lifecycle sre-reliability agent-sort agent-self-evaluation strategic-compact context-budget safety-guard engineering-lifecycle)
+    SKILLS=(tdd-workflow search-first verification-loop security-review coding-standards git-workflow conventional-commit-review architecture-decision-records error-handling docs-governance workspace-health-audit config-gc sonarqube-quality-gate sync-microservice-sdk todo-lifecycle sre-reliability agent-sort agent-self-evaluation strategic-compact context-budget safety-guard engineering-lifecycle aagy-doctor)
     AGENTS=(planner.md architect.md tdd-guide.md code-reviewer.md security-reviewer.md build-error-resolver.md silent-failure-hunter.md refactor-cleaner.md doc-updater.md todo-archiver.md sync-aligner.md lifecycle-coordinator.md)
     ;;
   infra)
@@ -45,6 +55,7 @@ case "$PHASE" in
     cp -R "$REPO_ROOT/skills/"* "$TARGET_DIR/skills/"
     cp "$REPO_ROOT/agents/"*.md "$TARGET_DIR/agents/"
     echo "[OK] Catálogo completo optimizado sincronizado."
+    write_install_manifest "$PHASE"
     exit 0
     ;;
   *)
@@ -80,3 +91,4 @@ if [ -f "$REPO_ROOT/hooks.json" ]; then
 fi
 
 echo "[OK] Sincronización completada exitosamente."
+write_install_manifest "$PHASE"

@@ -92,6 +92,10 @@ pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1 -Clean
 # Auditoría de paridad multi-harness (aagy <-> aagy-ecc)
 pwsh -NoProfile -File scripts/ps1/audit-plugin-parity.ps1
 
+# Diagnóstico de la instalación (mismos checks DOC-01..14 en los dos harnesses; -Fix con confirmación)
+pwsh -NoProfile -File scripts/ps1/aagy-doctor.ps1        # Antigravity / Gemini
+pwsh -NoProfile -File scripts/ps1/aagy-ecc-doctor.ps1    # Claude Code (o /aagy-ecc-doctor en la sesión)
+
 # Validación de enlaces relativos y contrato .governance/docs-map.json
 pwsh -NoProfile -File scripts/ps1/map-docs.ps1
 

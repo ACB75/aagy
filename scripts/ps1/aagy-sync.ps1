@@ -49,7 +49,8 @@ $PhaseConfig = @{
             "config-gc", "sonarqube-quality-gate", "sync-microservice-sdk",
             "todo-lifecycle", "sre-reliability", "agent-sort",
             "agent-self-evaluation", "strategic-compact",
-            "context-budget", "safety-guard", "engineering-lifecycle"
+            "context-budget", "safety-guard", "engineering-lifecycle",
+            "aagy-doctor"
         )
         Agents = @(
             "planner.md", "architect.md", "tdd-guide.md", "code-reviewer.md",
@@ -105,6 +106,21 @@ $PhaseConfig = @{
     }
 }
 
+
+function Write-InstallManifest {
+    # Deja .aagy-install.json en el plugin global para /aagy-doctor. Nunca aborta la sincronización.
+    param([string]$InstalledPhase)
+    $manifestScript = Join-Path $RepoRoot "scripts\py\install_manifest.py"
+    if (-not (Test-Path $manifestScript)) { return }
+    $py = Get-Command python -ErrorAction SilentlyContinue
+    if (-not $py) { $py = Get-Command python3 -ErrorAction SilentlyContinue }
+    if (-not $py) {
+        Write-Host "[!] Python no disponible: se omite el manifiesto de instalación." -ForegroundColor Yellow
+        return
+    }
+    & $py.Source $manifestScript write --dest $GlobalPluginDir --harness agy --profile $InstalledPhase --repo-root $RepoRoot
+}
+
 if ($Phase -eq "status") {
     $targetInfo = if ($TargetProject) { "$TargetProject\.agents" } else { $GlobalPluginDir }
     Write-Host "=== Estado de Anything Antigravity (aagy) ($targetInfo) ===" -ForegroundColor Cyan
@@ -155,6 +171,7 @@ if ($Phase -eq "all") {
     Copy-Item -Path (Join-Path $SkillsSource "*") -Destination (Join-Path $destRoot "skills") -Recurse -Force
     Copy-Item -Path (Join-Path $AgentsSource "*.md") -Destination (Join-Path $destRoot "agents") -Force
     Write-Host "[OK] Catálogo completo optimizado sincronizado en $destRoot." -ForegroundColor Green
+    if (-not $TargetProject) { Write-InstallManifest -InstalledPhase $Phase }
     exit 0
 }
 
@@ -179,3 +196,4 @@ foreach ($a in $cfg.Agents) {
 }
 
 Write-Host "[OK] Sincronización finalizada para fase '$Phase' en $destRoot." -ForegroundColor Green
+if (-not $TargetProject) { Write-InstallManifest -InstalledPhase $Phase }

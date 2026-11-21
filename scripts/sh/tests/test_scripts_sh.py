@@ -17,6 +17,8 @@ EXPECTED_SH_SCRIPTS = [
     "complete-task-pr.sh",
     "disable-skill.sh",
     "aagy-sync.sh",
+    "aagy-doctor.sh",
+    "aagy-ecc-doctor.sh",
     "enable-skill.sh",
     "format-commit.sh",
     "gemini-deep-ops.sh",
