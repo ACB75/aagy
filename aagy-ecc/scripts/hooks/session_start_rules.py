@@ -84,9 +84,9 @@ def worktree_notice(cwd: Optional[str]) -> str:
     try:
         if py_dir not in sys.path:
             sys.path.insert(0, py_dir)
-        import agent_worktree  # noqa: PLC0415 - módulo del plugin, cargado solo si existe
+        import agent_worktree_guard  # noqa: PLC0415 - módulo del plugin, cargado solo si existe
 
-        return agent_worktree.session_notice("claude", Path(cwd) if cwd else Path.cwd())
+        return agent_worktree_guard.session_notice("claude", Path(cwd) if cwd else Path.cwd())
     except Exception:  # noqa: BLE001 - un hook de arranque nunca debe romper la sesión
         return ""
 

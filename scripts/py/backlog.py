@@ -61,6 +61,7 @@ K_WORKTREE = "worktree"
 K_AGENT_WORKTREE = "agent_worktree"
 GIT_REV_PARSE = "rev-parse"
 OPT_FORCE = "--force"
+OPT_QUIET = "--quiet"
 CMD_GH_SYNC = "gh-sync"
 
 ID_REGEX = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -580,8 +581,12 @@ def _recycle_if_merged(ctx: Context, agent: str) -> List[str]:
             os.chdir(str(ctx.cwd))  # op_recycle cambia al principal para poder borrar en Windows
 
 
+def _ref_exists(path: Path, ref: str) -> bool:
+    return run_git(path, GIT_REV_PARSE, "--verify", OPT_QUIET, ref) is not None
+
+
 def _switch_agent_worktree(path: Path, branch: str) -> None:
-    current = run_git(path, "symbolic-ref", "--quiet", "--short", "HEAD")
+    current = run_git(path, "symbolic-ref", OPT_QUIET, "--short", "HEAD")
     if current == branch:
         return
     if current:
@@ -589,9 +594,9 @@ def _switch_agent_worktree(path: Path, branch: str) -> None:
             f"Tu worktree {path} sigue en la rama {current}. Termina esa tarea (PR fusionada) o haz handoff antes de reclamar otra."
         )
     run_git(path, "fetch", "--prune", "origin")
-    if run_git(path, GIT_REV_PARSE, "--verify", "--quiet", f"refs/heads/{branch}") is not None:
+    if _ref_exists(path, f"refs/heads/{branch}"):
         args = ["switch", branch]
-    elif run_git(path, GIT_REV_PARSE, "--verify", "--quiet", f"refs/remotes/origin/{branch}") is not None:
+    elif _ref_exists(path, f"refs/remotes/origin/{branch}"):
         args = ["switch", "--track", "-c", branch, f"origin/{branch}"]
     else:
         args = ["switch", "-c", branch, "--no-track", "origin/main"]
@@ -617,7 +622,7 @@ def _ensure_worktree(repo: Repo, task_id: str, branch: str) -> Path:
     if path.exists():
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
-    exists = run_git(repo.root, GIT_REV_PARSE, "--verify", "--quiet", f"refs/heads/{branch}") is not None
+    exists = _ref_exists(repo.root, f"refs/heads/{branch}")
     args = [K_WORKTREE, "add", str(path), branch] if exists else [K_WORKTREE, "add", "-b", branch, str(path)]
     if run_git(repo.root, *args) is None:
         raise BacklogError(f"No se pudo crear el worktree {path} en la rama {branch}.")
@@ -1086,7 +1091,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Backlog compartido entre Claude Code y Antigravity.")
     parser.add_argument("--repo", type=Path, default=Path("."), help="Carpeta del repositorio (por defecto, la actual).")
     parser.add_argument("--json", action="store_true", help="Salida JSON.")
-    parser.add_argument("--quiet", action="store_true", help="Sin salida (para hooks).")
+    parser.add_argument(OPT_QUIET, action="store_true", help="Sin salida (para hooks).")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     def with_agent(p: argparse.ArgumentParser) -> argparse.ArgumentParser:

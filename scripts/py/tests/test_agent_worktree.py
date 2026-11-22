@@ -12,6 +12,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import agent_worktree as aw  # noqa: E402
+import agent_worktree_guard as guard  # noqa: E402
 import backlog  # noqa: E402
 
 GH_STATE_FILE = "gh_state.json"
@@ -245,11 +246,11 @@ def active(repo):
 
 def test_guard_file_paths(active):
     claude = active.worktrees["claude"]
-    assert aw.guard_file("claude", claude, "src/a.py") is None
-    assert aw.guard_file("claude", claude, str(active.main / "README.md"))
-    assert aw.guard_file("claude", claude, "../home-lab/README.md")
-    assert aw.guard_file("claude", claude, str(active.worktrees["agy"] / "x.md"))
-    assert aw.guard_file("agy", active.worktrees["agy"], str(claude / "x.md"))
+    assert guard.guard_file("claude", claude, "src/a.py") is None
+    assert guard.guard_file("claude", claude, str(active.main / "README.md"))
+    assert guard.guard_file("claude", claude, "../home-lab/README.md")
+    assert guard.guard_file("claude", claude, str(active.worktrees["agy"] / "x.md"))
+    assert guard.guard_file("agy", active.worktrees["agy"], str(claude / "x.md"))
 
 
 def test_guard_commands(active):
@@ -263,7 +264,7 @@ def test_guard_commands(active):
         f"python scripts/py/agent_worktree.py recycle --agent claude",
     ]
     for command in allowed:
-        assert aw.guard_command("claude", claude, command) is None, command
+        assert guard.guard_command("claude", claude, command) is None, command
     denied = [
         f'git -C "{main}" commit -m x',
         f"cd {main} && git commit -m x",
@@ -273,31 +274,31 @@ def test_guard_commands(active):
         "claude --worktree prueba",
     ]
     for command in denied:
-        assert aw.guard_command("claude", claude, command), command
-    assert aw.guard_command("claude", main, "npm install")
-    assert aw.guard_command("claude", main, "git status") is None
+        assert guard.guard_command("claude", claude, command), command
+    assert guard.guard_command("claude", main, "npm install")
+    assert guard.guard_command("claude", main, "git status") is None
 
 
 def test_guard_inactive_without_marker(repo):
-    assert aw.guard_file("claude", repo, "README.md") is None
-    assert aw.guard_command("claude", repo, "git commit -m x") is None
+    assert guard.guard_file("claude", repo, "README.md") is None
+    assert guard.guard_command("claude", repo, "git commit -m x") is None
 
 
 def test_guard_payload_formats(active):
     main = active.main
     claude_payload = {"tool_name": "Write", "tool_input": {"file_path": str(main / "a.md")}, "cwd": str(active.worktrees["claude"])}
-    response = aw.guard_response(aw.guard_payload("claude", claude_payload, "claude"), "claude")
+    response = guard.guard_response(guard.guard_payload("claude", claude_payload, "claude"), "claude")
     assert response["hookSpecificOutput"]["permissionDecision"] == "deny"
-    assert aw.guard_payload("claude", {"tool_name": "EnterWorktree", "tool_input": {}}, "claude")
+    assert guard.guard_payload("claude", {"tool_name": "EnterWorktree", "tool_input": {}}, "claude")
     agy_payload = {"toolCall": {"name": "run_command", "args": {"CommandLine": "git commit -m x", "Cwd": str(main)}}}
-    assert aw.guard_response(aw.guard_payload("agy", agy_payload, "agy"), "agy")["decision"] == "deny"
+    assert guard.guard_response(guard.guard_payload("agy", agy_payload, "agy"), "agy")["decision"] == "deny"
     ok_payload = {"toolCall": {"name": "write_file", "args": {"Path": str(active.worktrees["agy"] / "a.md")}}}
-    assert aw.guard_response(aw.guard_payload("agy", ok_payload, "agy"), "agy") == {"decision": "allow"}
+    assert guard.guard_response(guard.guard_payload("agy", ok_payload, "agy"), "agy") == {"decision": "allow"}
 
 
 def test_session_notice(active):
-    assert "AVISO" in aw.session_notice("claude", active.main)
-    assert "Trabaja solo aquí" in aw.session_notice("claude", active.worktrees["claude"])
+    assert "AVISO" in guard.session_notice("claude", active.main)
+    assert "Trabaja solo aquí" in guard.session_notice("claude", active.worktrees["claude"])
 
 
 # --------------------------------------------------------------------------- backlog
