@@ -290,3 +290,11 @@ def test_real_generic_install_from_this_repo(tmp_path: Path):
     for cid in ("DOC-02", "DOC-03", "DOC-05", "DOC-06", "DOC-07", "DOC-08"):
         result = doc.REGISTRY[cid](ctx)
         assert result.status == core.STATUS_PASS, (cid, result.message, result.evidence)
+
+
+def test_doc14_skips_outside_aagy_repo(tmp_path: Path, plugin: Path):
+    other = tmp_path / "home-lab"
+    (other / ".git").mkdir(parents=True)
+    result = _run(_ctx(tmp_path, plugin, repo=other), "DOC-14")
+    assert result.status == core.STATUS_SKIP
+    assert "no es el repo aagy" in result.message
