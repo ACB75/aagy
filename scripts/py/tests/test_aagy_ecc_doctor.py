@@ -292,3 +292,11 @@ def test_cli(tmp_path: Path, repo: Path, claude_home: Path, capsys):
                      "--repo-root", str(repo), "--only", "DOC-02,DOC-09"])
     data = json.loads(capsys.readouterr().out)
     assert code == 0 and data["summary"]["PASS"] == 2 and data["version"] == "1.0.0"
+
+
+def test_doc14_skips_outside_aagy_repo(tmp_path: Path, claude_home: Path):
+    other = tmp_path / "home-lab"
+    (other / ".git").mkdir(parents=True)
+    result = doc.check_repo(_ctx(tmp_path, claude_home, repo=other))
+    assert result.status == core.STATUS_SKIP
+    assert "no es el repo aagy" in result.message

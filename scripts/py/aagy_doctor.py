@@ -446,6 +446,8 @@ def git_hooks_installed(repo_root: Path) -> bool:
 def check_repo(ctx: AgyContext) -> core.CheckResult:
     if ctx.repo_root is None:
         return core.result("DOC-14", core.STATUS_SKIP, MSG_NO_REPO)
+    if not (ctx.repo_root / "aagy-ecc").is_dir():
+        return core.result("DOC-14", core.STATUS_SKIP, f"{ctx.repo_root} no es el repo aagy: la paridad solo se comprueba allí.")
     from audit_plugin_parity import audit_parity  # import tardío: solo existe en el repo
     parity = audit_parity(ctx.repo_root)
     problems = list(parity.discrepancies)

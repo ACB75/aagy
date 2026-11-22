@@ -504,9 +504,16 @@ def _import_repo_module(repo_root: Path, name: str):
     return __import__(name)
 
 
+def is_aagy_repo(repo_root: Path) -> bool:
+    """DOC-14 solo aplica al repo aagy (el que contiene aagy-ecc/)."""
+    return (repo_root / "aagy-ecc").is_dir()
+
+
 def check_repo(ctx: EccContext) -> core.CheckResult:
     if ctx.repo_root is None:
         return core.result("DOC-14", core.STATUS_SKIP, MSG_NO_REPO)
+    if not is_aagy_repo(ctx.repo_root):
+        return core.result("DOC-14", core.STATUS_SKIP, f"{ctx.repo_root} no es el repo aagy: la paridad del espejo solo se comprueba allí.")
     report = _import_repo_module(ctx.repo_root, "sync_aagy_ecc").compare(ctx.repo_root)
     parity = _import_repo_module(ctx.repo_root, "audit_plugin_parity").audit_parity(ctx.repo_root)
     if not report.in_sync:
