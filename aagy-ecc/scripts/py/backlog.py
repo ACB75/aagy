@@ -58,8 +58,10 @@ ENV_TTL = "AAGY_BACKLOG_TTL_HOURS"
 ENCODING = "utf-8"
 K_UPDATED = "updated"
 K_WORKTREE = "worktree"
+K_AGENT_WORKTREE = "agent_worktree"
 GIT_REV_PARSE = "rev-parse"
 OPT_FORCE = "--force"
+OPT_QUIET = "--quiet"
 CMD_GH_SYNC = "gh-sync"
 
 ID_REGEX = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
@@ -526,14 +528,91 @@ def op_next(ctx: Context, agent: str, epic: Optional[str]) -> Optional[Task]:
     return ordered[0] if ordered else None
 
 
+def main_root(repo: Repo) -> Path:
+    """Checkout principal del clon (el de Master), aunque se ejecute desde un worktree."""
+    return repo.state_dir.parent.parent if repo.state_dir.parent.name == ".git" else repo.root
+
+
 def default_branch(repo: Repo, task_id: str) -> str:
-    project = slugify(repo.root.name.split(WORKTREE_SUFFIX)[0]) or "repo"
+    project = slugify(main_root(repo).name.split(WORKTREE_SUFFIX)[0]) or "repo"
     return f"feat/{project}/{task_id}"
 
 
 def worktree_path(repo: Repo, task_id: str) -> Path:
-    main_root = repo.state_dir.parent.parent if repo.state_dir.parent.name == ".git" else repo.root
-    return main_root.parent / f"{main_root.name}{WORKTREE_SUFFIX}" / task_id
+    root = main_root(repo)
+    return root.parent / f"{root.name}{WORKTREE_SUFFIX}" / task_id
+
+
+def entry_cwd(entry: Dict[str, Any], fallback: Path) -> Path:
+    """Carpeta en la que trabaja la tarea: su worktree (por tarea o de agente) o la actual."""
+    for key in (K_WORKTREE, K_AGENT_WORKTREE):
+        if entry.get(key) and Path(entry[key]).is_dir():
+            return Path(entry[key])
+    return fallback
+
+
+def agent_worktree_of(ctx: Context, agent: str) -> Optional[Path]:
+    """Worktree fijo del agente si la carpeta actual es ese worktree (agent_worktree.py), o None."""
+    if not ctx.repo.is_git or agent not in ("claude", "agy"):
+        return None
+    try:
+        import agent_worktree  # noqa: PLC0415 - mismo directorio; opcional
+
+        layout = agent_worktree.find_layout(ctx.cwd)
+    except Exception:  # noqa: BLE001 - sin el módulo, comportamiento clásico
+        return None
+    if layout is None or not layout.active or layout.role(ctx.cwd) != agent:
+        return None
+    return layout.worktrees[agent]
+
+
+def _recycle_if_merged(ctx: Context, agent: str) -> List[str]:
+    try:
+        import agent_worktree  # noqa: PLC0415
+
+        layout = agent_worktree.find_layout(ctx.cwd)
+        if layout is None:
+            return []
+        return agent_worktree.op_recycle(layout, agent, if_merged=True)
+    except Exception as exc:  # noqa: BLE001 - el reciclado nunca bloquea el backlog
+        return [f"AVISO: no se recicló el worktree: {exc}"]
+    finally:
+        if ctx.cwd.is_dir():
+            os.chdir(str(ctx.cwd))  # op_recycle cambia al principal para poder borrar en Windows
+
+
+def _ref_exists(path: Path, ref: str) -> bool:
+    return run_git(path, GIT_REV_PARSE, "--verify", OPT_QUIET, ref) is not None
+
+
+def _switch_agent_worktree(path: Path, branch: str) -> None:
+    current = run_git(path, "symbolic-ref", OPT_QUIET, "--short", "HEAD")
+    if current == branch:
+        return
+    if current:
+        raise BacklogError(
+            f"Tu worktree {path} sigue en la rama {current}. Termina esa tarea (PR fusionada) o haz handoff antes de reclamar otra."
+        )
+    run_git(path, "fetch", "--prune", "origin")
+    if _ref_exists(path, f"refs/heads/{branch}"):
+        args = ["switch", branch]
+    elif _ref_exists(path, f"refs/remotes/origin/{branch}"):
+        args = ["switch", "--track", "-c", branch, f"origin/{branch}"]
+    else:
+        args = ["switch", "-c", branch, "--no-track", "origin/main"]
+    if run_git(path, *args) is None:
+        raise BacklogError(f"No se pudo poner {path} en la rama {branch} (¿está abierta en otro worktree?).")
+
+
+def _detach_agent_worktree(entry: Dict[str, Any]) -> Optional[str]:
+    path = entry.get(K_AGENT_WORKTREE)
+    if not path or not Path(path).is_dir():
+        return None
+    if run_git(Path(path), "status", "--porcelain"):
+        return f"El worktree {path} tiene cambios sin commit: la rama sigue abierta ahí hasta que se haga commit."
+    if run_git(Path(path), "switch", "--detach") is None:
+        return f"No se pudo soltar la rama en {path}."
+    return f"Rama {entry.get('branch')} liberada: el otro agente puede abrirla en su worktree."
 
 
 def _ensure_worktree(repo: Repo, task_id: str, branch: str) -> Path:
@@ -543,7 +622,7 @@ def _ensure_worktree(repo: Repo, task_id: str, branch: str) -> Path:
     if path.exists():
         return path
     path.parent.mkdir(parents=True, exist_ok=True)
-    exists = run_git(repo.root, GIT_REV_PARSE, "--verify", "--quiet", f"refs/heads/{branch}") is not None
+    exists = _ref_exists(repo.root, f"refs/heads/{branch}")
     args = [K_WORKTREE, "add", str(path), branch] if exists else [K_WORKTREE, "add", "-b", branch, str(path)]
     if run_git(repo.root, *args) is None:
         raise BacklogError(f"No se pudo crear el worktree {path} en la rama {branch}.")
@@ -554,6 +633,9 @@ def op_claim(
     ctx: Context, task_id: str, agent: str, branch: Optional[str], worktree: bool, force: bool
 ) -> Dict[str, Any]:
     task = ctx.backlog().find(validate_id(task_id))
+    own_worktree = None if worktree else agent_worktree_of(ctx, agent)
+    if own_worktree is not None:
+        _recycle_if_merged(ctx, agent)
     with state_lock(ctx.repo):
         state = load_state(ctx.repo)
         entry = entry_for(state, task.task_id)
@@ -570,6 +652,10 @@ def op_claim(
         target_branch = branch or entry.get("branch") or default_branch(ctx.repo, task.task_id)
         if worktree:
             entry[K_WORKTREE] = str(_ensure_worktree(ctx.repo, task.task_id, target_branch))
+        elif own_worktree is not None:
+            _switch_agent_worktree(own_worktree, target_branch)
+            entry.pop(K_WORKTREE, None)
+            entry[K_AGENT_WORKTREE] = str(own_worktree)
         entry.update({"status": ST_IN_PROGRESS, "owner": agent, "branch": target_branch})
         note = f"relevo desde {previous}" if previous and previous != agent else None
         record(entry, agent, "claim", note)
@@ -595,7 +681,7 @@ def op_checkpoint(ctx: Context, agent: str, task_id: Optional[str], note: Option
         ids = _owned(state, agent, validate_id(task_id) if task_id else None)
         for tid in ids:
             entry = state["tasks"][tid]
-            cwd = Path(entry[K_WORKTREE]) if entry.get(K_WORKTREE) and Path(entry[K_WORKTREE]).is_dir() else ctx.cwd
+            cwd = entry_cwd(entry, ctx.cwd)
             apply_snapshot(entry, cwd)
             if note:
                 entry["note"] = note
@@ -625,6 +711,8 @@ def write_handoff_file(ctx: Context, task: Task, entry: Dict[str, Any], agent: s
     ]
     if entry.get(K_WORKTREE):
         lines.append(f"- **Worktree**: `{entry[K_WORKTREE]}`")
+    if entry.get(K_AGENT_WORKTREE):
+        lines.append(f"- **Worktree del agente que entrega**: `{entry[K_AGENT_WORKTREE]}` (quien continúe abre la rama en el suyo)")
     lines += ["", "## Estado y siguiente paso", "", note, ""]
     if dirty:
         lines += ["## Ficheros sin commit", ""] + [f"- `{item}`" for item in dirty] + [""]
@@ -651,12 +739,16 @@ def op_handoff(
         for tid in ids:
             task = backlog.find(tid)
             entry = state["tasks"][tid]
-            cwd = Path(entry[K_WORKTREE]) if entry.get(K_WORKTREE) and Path(entry[K_WORKTREE]).is_dir() else ctx.cwd
+            cwd = entry_cwd(entry, ctx.cwd)
             apply_snapshot(entry, cwd)
             text = note or _auto_note(entry)
             entry.update({"status": ST_HANDOFF, "note": text})
             if to:
                 entry["handoff_to"] = to
+            released = _detach_agent_worktree(entry)
+            if released:
+                text = f"{text}\n\n{released}"
+                entry["note"] = text
             record(entry, agent, ST_HANDOFF, text)
             results.append((tid, write_handoff_file(ctx, task, entry, agent, text)))
         if ids:
@@ -708,6 +800,8 @@ def op_done(ctx: Context, task_id: str, agent: str, note: Optional[str], archive
     if handoff.exists():
         handoff.unlink()
     messages.extend(_cleanup_worktree(ctx, task.task_id))
+    if agent_worktree_of(ctx, agent) is not None:
+        messages.extend(_recycle_if_merged(ctx, agent))
     return messages
 
 
@@ -997,7 +1091,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Backlog compartido entre Claude Code y Antigravity.")
     parser.add_argument("--repo", type=Path, default=Path("."), help="Carpeta del repositorio (por defecto, la actual).")
     parser.add_argument("--json", action="store_true", help="Salida JSON.")
-    parser.add_argument("--quiet", action="store_true", help="Sin salida (para hooks).")
+    parser.add_argument(OPT_QUIET, action="store_true", help="Sin salida (para hooks).")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     def with_agent(p: argparse.ArgumentParser) -> argparse.ArgumentParser:
@@ -1171,6 +1265,8 @@ def _claim_lines(entry: Dict[str, Any]) -> List[str]:
         lines.append(f"Viene de {entry['previous_owner']}. Nota: {entry.get('note') or '-'}")
     if entry.get(K_WORKTREE):
         lines.append(f"Trabaja en el worktree: {entry[K_WORKTREE]}")
+    elif entry.get(K_AGENT_WORKTREE):
+        lines.append(f"Tu worktree {entry[K_AGENT_WORKTREE]} ya está en la rama {entry['branch']}.")
     elif entry.get("branch"):
         lines.append(f"Cambia a la rama con: git switch {entry['branch']} (o git switch -c si no existe).")
     return lines

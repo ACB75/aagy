@@ -32,8 +32,8 @@ def _registry(**overrides):
 # --------------------------------------------------------------------------- #
 # Catálogo y registro
 # --------------------------------------------------------------------------- #
-def test_catalog_has_fourteen_unique_ids():
-    assert core.CATALOG_IDS == tuple(f"DOC-{n:02d}" for n in range(1, 15))
+def test_catalog_has_fifteen_unique_ids():
+    assert core.CATALOG_IDS == tuple(f"DOC-{n:02d}" for n in range(1, 16))
     assert json.loads(core.catalog_json())[0] == {"id": "DOC-01", "name": "Runtime del harness", "scope": core.SCOPE_INSTALL}
 
 

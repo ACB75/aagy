@@ -6,7 +6,7 @@ description: Diagnose the aagy-ecc install in Claude Code (plugin, hooks, comman
 
 Diagnóstico de la instalación de `aagy-ecc` en Claude Code. Es el equivalente
 de la skill `aagy-doctor` de Antigravity: los dos ejecutan el mismo catálogo de
-checks `DOC-01` a `DOC-14` (paridad 1:1).
+checks `DOC-01` a `DOC-15` (paridad 1:1).
 
 ## Uso
 

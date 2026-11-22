@@ -7,7 +7,7 @@
 
 ## 1. Qué Son
 
-Dos comandos de diagnóstico, uno por harness, con el **mismo catálogo de 14 checks** (`DOC-01` a `DOC-14`):
+Dos comandos de diagnóstico, uno por harness, con el **mismo catálogo de 15 checks** (`DOC-01` a `DOC-15`):
 
 | Harness | Punto de entrada | Motor |
 | :--- | :--- | :--- |
@@ -72,6 +72,7 @@ Dentro de Claude Code basta con `/aagy-ecc-doctor` (o `/aagy-ecc-doctor --fix`).
 | `DOC-12` | Datos y legado | `.data` escribible, sin plugins `ecc` ni huérfanos | Directorio de datos escribible, sin plugins `ecc` |
 | `DOC-13` | Proyecto | `.agents/` del proyecto | `CLAUDE.md` / `.claude/` frente a `project-template/` |
 | `DOC-14` | Repo | Paridad y git hooks | Espejo `IN_SYNC` y paridad |
+| `DOC-15` | Worktrees de agente | `<repo>-aagy` y `<repo>-aagy-ecc` presentes, sin `main` en checkout (si el repo los usa) | Igual |
 
 Los smoke tests usan una cadena que coincide con el patrón bloqueado; nunca se ejecuta un comando destructivo.
 

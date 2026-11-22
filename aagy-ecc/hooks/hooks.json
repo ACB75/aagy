@@ -1,5 +1,5 @@
 {
-  "description": "Hooks de aagy-ecc: mismos guardarrailes que el plugin aagy (reglas Tier 1, safety gate, linter Markdown y captura Stop de self-improve) y backlog compartido con Antigravity (checkpoint en Stop y PreCompact, relevo en SessionEnd).",
+  "description": "Hooks de aagy-ecc: mismos guardarrailes que el plugin aagy (reglas Tier 1, safety gate, linter Markdown y captura Stop de self-improve) y backlog compartido con Antigravity (checkpoint en Stop y PreCompact, relevo en SessionEnd), y worktree fijo por agente (guarda de escritura y reciclado tras el merge).",
   "hooks": {
     "SessionStart": [
       {
@@ -11,6 +11,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/agent_worktree.py\" --quiet recycle --agent claude --if-merged",
+            "timeout": 300
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -20,6 +30,16 @@
           {
             "type": "command",
             "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/safety_check.py\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash|PowerShell|Write|Edit|MultiEdit|NotebookEdit|EnterWorktree",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/worktree_guard.py\"",
             "timeout": 5
           }
         ]

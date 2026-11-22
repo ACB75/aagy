@@ -454,17 +454,39 @@ Estrategia Fast-Rollback:
     }
 
     # 12. Retorno y actualización local de main
-    Write-Host "[+] Sincronizando rama local '$TargetBranch'..." -ForegroundColor Cyan
     # Si hay un merge en progreso no finalizado, abortar antes de conmutar
     git merge --abort 2>$null
-    git checkout -f $TargetBranch
-    git pull origin $TargetBranch
+    # En el worktree fijo de un agente (<repo>-aagy / <repo>-aagy-ecc) no se puede hacer checkout de
+    # main (pertenece al checkout principal de Master): se recicla el worktree con agent_worktree.py,
+    # que además actualiza el principal con --ff-only si está limpio en main.
+    $agentWorktreeScript = Join-Path $RepoRoot "scripts\py\agent_worktree.py"
+    $worktreeRole = ""
+    if (Test-Path $agentWorktreeScript) {
+        $worktreeRole = "$(python $agentWorktreeScript where 2>$null)".Trim()
+    }
+    if ($worktreeRole -in @("agy", "claude")) {
+        Write-Host "[+] Worktree del agente '$worktreeRole': reciclando sobre origin/$TargetBranch..." -ForegroundColor Cyan
+        python $agentWorktreeScript recycle --agent $worktreeRole --if-merged --wait 120
+        if ($LASTEXITCODE -eq 3) {
+            Write-Host "[!] El worktree tiene trabajo sin guardar: no se ha reciclado. Revísalo y ejecuta agent-worktree recycle." -ForegroundColor Yellow
+        } elseif ($LASTEXITCODE -ne 0) {
+            Write-Host "[!] No se pudo reciclar el worktree (código $LASTEXITCODE). Se reintentará en el próximo claim o inicio de sesión." -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "[+] Sincronizando rama local '$TargetBranch'..." -ForegroundColor Cyan
+        # Sin -f: si quedan cambios locales, git se niega a cambiar de rama en lugar de descartarlos
+        git checkout $TargetBranch
+        if ($LASTEXITCODE -ne 0) {
+            throw "No se pudo volver a '$TargetBranch': hay cambios locales sin guardar. La PR ya está fusionada; revisa la carpeta a mano."
+        }
+        git pull origin $TargetBranch
 
-    # Borrado de rama local
-    if ((git branch --list $currentBranch)) {
-        Write-Host "[+] Eliminando rama local '$currentBranch'..." -ForegroundColor Cyan
-        git branch -D $currentBranch 2>$null
-        Write-Host "[OK] Rama local '$currentBranch' eliminada." -ForegroundColor Green
+        # Borrado de rama local
+        if ((git branch --list $currentBranch)) {
+            Write-Host "[+] Eliminando rama local '$currentBranch'..." -ForegroundColor Cyan
+            git branch -D $currentBranch 2>$null
+            Write-Host "[OK] Rama local '$currentBranch' eliminada." -ForegroundColor Green
+        }
     }
 
     Write-Host "`n=======================================================" -ForegroundColor Green

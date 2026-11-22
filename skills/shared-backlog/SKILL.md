@@ -17,6 +17,7 @@ cualquiera puede coger, continuar o entregar una tarea del otro.
 - **Caducidad**: un claim sin actualizar en 4 h queda libre (`AAGY_BACKLOG_TTL_HOURS`).
 
 En Claude Code los mismos pasos están en los comandos `/aagy-todo` y `/epic-*`.
+Si el repo usa worktrees fijos por agente (skill `agent-worktrees`), reclama desde tu worktree: la rama se crea allí.
 
 ## Cuándo usarla
 

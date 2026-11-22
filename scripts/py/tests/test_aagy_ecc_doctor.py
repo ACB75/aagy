@@ -46,6 +46,7 @@ def _make_plugin(root: Path, version: str = "1.0.0") -> Path:
     _write(root / "project-template" / "CLAUDE.md", "# Plantilla\n")
     _write(root / "scripts" / "py" / "self_improve.py", "print('stop')\n")
     _write(root / "scripts" / "py" / "backlog.py", "print('backlog')\n")
+    _write(root / "scripts" / "py" / "agent_worktree.py", "print('worktree')\n")
     return root
 
 

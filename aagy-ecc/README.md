@@ -32,7 +32,7 @@ subagentes, reglas y motores Python, generada desde la raíz por
 - **`packs/<perfil>/`**: paquetes opcionales generados (plugins `aagy-ecc-<perfil>`), uno por perfil de stack de `scripts/sh/aagy-sync.sh` más `extras` con lo que no está en ningún perfil. Sus `commands/` sí se editan aquí.
 - **`skills/`, `agents/`, `rules/AGENTS.md`, `scripts/py/`**: espejos generados (el núcleo lleva el perfil `generic`). **No se editan aquí**; se editan en la raíz y se ejecuta `scripts/ps1/sync-aagy-ecc.ps1` (o `scripts/sh/sync-aagy-ecc.sh`).
 - **`hooks/hooks.json`** y **`scripts/hooks/`**: hooks propios de Claude Code (ver [`hooks/README.md`](hooks/README.md)).
-- **`commands/`**: comandos slash (`/plan`, `/code-review`, `/tdd`, `/evolve`, `/promote`, `/aagy-ecc-doctor`, `/aagy-todo`, `/epic-*`...). `/aagy-todo` y `/epic-*` comparten el backlog con Antigravity; ver [`MANUAL_shared_backlog.md`](../doc/04-operations/runbooks/MANUAL_shared_backlog.md).
+- **`commands/`**: comandos slash (`/plan`, `/code-review`, `/tdd`, `/evolve`, `/promote`, `/aagy-ecc-doctor`, `/aagy-todo`, `/epic-*`, `/aagy-worktree`...). `/aagy-todo` y `/epic-*` comparten el backlog con Antigravity; ver [`MANUAL_shared_backlog.md`](../doc/04-operations/runbooks/MANUAL_shared_backlog.md). `/aagy-worktree` gestiona el worktree fijo de Claude (`<repo>-aagy-ecc`); ver [`MANUAL_agent_worktrees.md`](../doc/04-operations/runbooks/MANUAL_agent_worktrees.md).
 - **`scripts/py/aagy_ecc_doctor.py`**: motor de `/aagy-ecc-doctor` (fuente propia, no espejo). Ver [`MANUAL_aagy_doctor.md`](../doc/04-operations/runbooks/MANUAL_aagy_doctor.md).
 - **`project-template/`**: [`CLAUDE.md`](project-template/CLAUDE.md) y `.claude/rules/` opcionales para copiar en un proyecto.
 

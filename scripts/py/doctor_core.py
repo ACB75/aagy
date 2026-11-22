@@ -2,7 +2,7 @@
 """
 Núcleo común de los doctors de aagy (doctor_core.py).
 
-Define el catálogo único de checks DOC-01..DOC-14 que comparten
+Define el catálogo único de checks DOC-01..DOC-15 que comparten
 /aagy-doctor (Antigravity) y /aagy-ecc-doctor (Claude Code), el modelo de
 resultados, el runner con límite de tiempo por check, la salida humana y
 JSON, los códigos de salida y el plan de arreglos (--fix) con confirmación.
@@ -90,6 +90,7 @@ DOC_CATALOG: Tuple[CheckSpec, ...] = (
     CheckSpec("DOC-12", "Datos y legado", SCOPE_INSTALL),
     CheckSpec("DOC-13", "Proyecto", SCOPE_PROJECT),
     CheckSpec("DOC-14", "Repo", SCOPE_REPO),
+    CheckSpec("DOC-15", "Worktrees de agente", SCOPE_REPO),
 )
 CATALOG_IDS: Tuple[str, ...] = tuple(spec.check_id for spec in DOC_CATALOG)
 _CATALOG_BY_ID: Dict[str, CheckSpec] = {spec.check_id: spec for spec in DOC_CATALOG}

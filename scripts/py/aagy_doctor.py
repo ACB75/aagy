@@ -3,7 +3,7 @@
 /aagy-doctor: diagnóstico de la instalación de aagy en Google Antigravity / Gemini (aagy_doctor.py).
 
 Revisa el plugin global (~/.gemini/config/plugins/aagy), el repo aagy de origen
-y el proyecto actual con el catálogo común DOC-01..DOC-14 de doctor_core.py,
+y el proyecto actual con el catálogo común DOC-01..DOC-15 de doctor_core.py,
 el mismo que usa /aagy-ecc-doctor en Claude Code (paridad 1:1).
 
 Solo lectura por defecto. Con --fix propone arreglos seguros y los aplica tras
@@ -456,6 +456,21 @@ def check_repo(ctx: AgyContext) -> core.CheckResult:
     return core.result("DOC-14", core.STATUS_PASS, f"Paridad PASS y git hooks instalados en {ctx.repo_root}.")
 
 
+def check_agent_worktrees(ctx) -> core.CheckResult:
+    """DOC-15: worktree fijo por agente (<repo>-aagy / <repo>-aagy-ecc), si el repo lo usa."""
+    if ctx.repo_root is None:
+        return core.result("DOC-15", core.STATUS_SKIP, MSG_NO_REPO)
+    try:
+        import agent_worktree  # noqa: PLC0415 - mismo directorio que el doctor
+    except ImportError:
+        return core.result("DOC-15", core.STATUS_SKIP, "agent_worktree.py no está instalado junto al doctor.")
+    status, message, evidence = agent_worktree.doctor_findings(ctx.repo_root)
+    fix = None
+    if status == core.STATUS_WARN and "Falta el worktree" in message:
+        fix = core.FixAction("Crear los worktrees que faltan (agent_worktree.py init)", agent_worktree.init_argv(ctx.repo_root))
+    return core.result("DOC-15", status, message, *evidence, fix=fix)
+
+
 REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-01": check_runtime,
     "DOC-02": check_plugin_installed,
@@ -471,6 +486,7 @@ REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-12": check_data_and_legacy,
     "DOC-13": check_project,
     "DOC-14": check_repo,
+    "DOC-15": check_agent_worktrees,
 }
 
 
