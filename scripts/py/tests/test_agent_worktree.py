@@ -336,3 +336,17 @@ def test_npm_install_without_lockfile_does_not_create_one(tmp_path):
     import agent_worktree_provision as prov
 
     assert prov.installer_for("node_modules", tmp_path) == [["npm", "install", "--no-package-lock"]]
+
+
+def test_guard_ignores_harmless_redirects_and_native_worktrees(active):
+    main = active.main
+    claude = active.worktrees["claude"]
+    assert guard.guard_command("claude", main, "git status 2>&1") is None
+    assert guard.guard_command("claude", main, "git log -1 2>$null") is None
+    assert guard.guard_command("claude", main, "git status > out.txt")
+    native = main / ".claude" / "worktrees" / "eager"
+    native.mkdir(parents=True)
+    assert guard.guard_command("claude", native, "npm test") is None
+    assert guard.guard_file("claude", native, "a.py") is None
+    assert guard.guard_command("claude", native, f"git -C {main} commit -m x")
+    assert guard.guard_command("claude", claude, "git status 2>&1") is None

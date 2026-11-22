@@ -81,7 +81,7 @@ Con el marcador `.git/aagy-worktrees.json` (lo crea `init`), los hooks PreToolUs
 - Comandos que modifican (git que no sea de lectura, `rm`, `>`, `Set-Content`…) con `cwd`, `cd` o `git -C` hacia esas carpetas.
 - `git worktree add|remove|move` a mano y el worktree nativo de Claude Code (`EnterWorktree`, `claude --worktree`).
 
-Leer sí está permitido. Para desactivarla en un repo, borra el marcador.
+Leer sí está permitido, también con redirecciones inocuas (`2>&1`, `>$null`). Los worktrees que crea la propia app de Claude Code dentro de `<repo>/.claude/worktrees/` (sesiones de escritorio y Remote Control) son checkouts aislados y la guarda no los bloquea. Para desactivarla en un repo, borra el marcador.
 
 ## 6. Relevo
 
