@@ -1,7 +1,18 @@
 # Registro Histórico de Decisiones y Cambios Materiales | AAGY / `aagy` Ecosystem
 
 > **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión Canónica**: `4.3.0`
+> **Versión Canónica**: `4.4.0`
+
+---
+
+## 2026-11-22: 4.4.0 Un Worktree Fijo por Agente (ADR-0006)
+
+### Hitos y Decisiones Materiales
+
+1. **Worktrees por agente**: [`agent_worktree.py`](../scripts/py/agent_worktree.py) (+ `agent-worktree.ps1`/`.sh`) crea `<repo>-aagy` (Antigravity) y `<repo>-aagy-ecc` (Claude Code) junto al checkout principal, que queda para Master. `recycle` limpia el worktree tras el merge, copia los `.env`, regenera `node_modules`/`.venv` y actualiza el principal con `--ff-only` si está limpio; nunca borra trabajo sin guardar.
+2. **Guarda**: hooks PreToolUse en ambos harnesses (`worktree_guard.py`, `agent-worktree.ps1 guard`) impiden escribir fuera del worktree propio y el worktree nativo de Claude Code.
+3. **Integración**: `complete-task-pr.ps1` recicla en lugar de `git checkout -f main` cuando corre en un worktree de agente; `backlog.py` crea la rama en el worktree del agente, suelta la rama en `handoff` y recicla en `claim`/`done`; la rama por defecto usa el nombre del checkout principal. `SessionStart` de `aagy-ecc` recicla y avisa si la sesión está fuera de su worktree.
+4. **Superficie y gobernanza**: `/aagy-worktree`, skill `agent-worktrees` (perfil `generic`), check `DOC-15` en los dos doctors, regla Tier 1 en `rules/AGENTS.md` §2, [ADR-0006](02-adr/ADR_aagy_0006_agent_worktrees.md) y [`MANUAL_agent_worktrees.md`](04-operations/runbooks/MANUAL_agent_worktrees.md).
 
 ---
 

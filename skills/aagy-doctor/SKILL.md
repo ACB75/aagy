@@ -9,7 +9,7 @@ metadata:
 
 Diagnóstico de la instalación de `aagy` en Google Antigravity / Gemini. Es el
 equivalente de `/aagy-ecc-doctor` en Claude Code: los dos ejecutan el mismo
-catálogo de checks `DOC-01` a `DOC-14` (paridad 1:1, ver `scripts/py/doctor_core.py`).
+catálogo de checks `DOC-01` a `DOC-15` (paridad 1:1, ver `scripts/py/doctor_core.py`).
 
 ## Cuándo usarla
 

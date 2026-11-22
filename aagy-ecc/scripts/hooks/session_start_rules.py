@@ -11,7 +11,8 @@ Para no gastar tokens en cada sesión (y no pasar el límite de additionalContex
 que Claude Code recorta a un fichero), se inyecta un índice compacto: los
 encabezados y la etiqueta de cada invariante, más la ruta del texto completo para
 leerlo con Read cuando una regla aplique. Si el fichero cabe en el presupuesto,
-se inyecta entero. Si falta, no hace nada.
+se inyecta entero. Si falta, no hace nada. Si el repo usa worktrees por agente,
+añade dónde tiene que trabajar Claude (agent_worktree.py).
 """
 
 from __future__ import annotations
@@ -77,6 +78,19 @@ def backlog_brief(cwd: Optional[str]) -> str:
         return ""
 
 
+def worktree_notice(cwd: Optional[str]) -> str:
+    """Aviso del worktree fijo de Claude (scripts/py/agent_worktree.py), o "" si el repo no lo usa."""
+    py_dir = str(plugin_root() / "scripts" / "py")
+    try:
+        if py_dir not in sys.path:
+            sys.path.insert(0, py_dir)
+        import agent_worktree  # noqa: PLC0415 - módulo del plugin, cargado solo si existe
+
+        return agent_worktree.session_notice("claude", Path(cwd) if cwd else Path.cwd())
+    except Exception:  # noqa: BLE001 - un hook de arranque nunca debe romper la sesión
+        return ""
+
+
 def build_response(rules_file: Optional[Path] = None, extra: str = "") -> Dict[str, Any]:
     """Devuelve el JSON de SessionStart con las reglas (o su índice) y el backlog, o {} si no hay nada."""
     target = rules_file or (plugin_root() / RULES_REL)
@@ -112,7 +126,8 @@ def read_hook_input() -> Dict[str, Any]:
 
 def main() -> int:
     payload = read_hook_input()
-    response = build_response(extra=backlog_brief(payload.get("cwd")))
+    extra = "\n\n".join(p for p in (worktree_notice(payload.get("cwd")), backlog_brief(payload.get("cwd"))) if p)
+    response = build_response(extra=extra)
     if response:
         print(json.dumps(response))  # ASCII: independiente de la codificación de stdout
     return 0

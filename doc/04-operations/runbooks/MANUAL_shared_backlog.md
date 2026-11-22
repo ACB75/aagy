@@ -61,6 +61,8 @@ python3 scripts/py/backlog.py epic close backup-nocturno --agent claude
 
 ### 3.2. Trabajo simultáneo (tareas distintas)
 
+Si el repo usa worktrees fijos por agente ([`MANUAL_agent_worktrees.md`](MANUAL_agent_worktrees.md)), cada agente reclama en su worktree (`<repo>-aagy` / `<repo>-aagy-ecc`) sin `--worktree`: la rama se crea allí y `handoff` la suelta para el otro agente. Lo que sigue es para tareas extra en paralelo:
+
 1. Cada agente reclama su tarea con `--worktree`: se crea `<repo>.wt/<id>` en la rama `feat/<proyecto>/<id>` (o `--branch fix/...`).
 2. Abre esa carpeta en el agente correspondiente. El estado es común, así que `claim` impide que los dos cojan la misma tarea.
 3. `done` marca `[x]`, archiva y borra el worktree si no tiene cambios sin commit.

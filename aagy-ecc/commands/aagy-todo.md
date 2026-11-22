@@ -33,7 +33,8 @@ desde la carpeta del repo en el que trabajas y con `--agent claude`.
    `doc/06-backlog/quick/HANDOFF_<id>.md` antes de nada y sigue desde ahí.
 3. `claim`: pasa los argumentos tal cual. Si falla porque la tiene agy, no la toques
    y ofrece `next`. Tras reclamar, cambia a la rama que indica (`git switch` o
-   `git switch -c`), o trabaja en el worktree si se creó con `--worktree`.
+   `git switch -c`), o trabaja en el worktree si se creó con `--worktree`. Si el repo usa worktrees por
+   agente (`/aagy-worktree`), reclama desde `<repo>-aagy-ecc`: la rama se crea allí.
 4. `checkpoint` y `handoff`: `--note "<texto>"`. En el relevo, haz antes commit de lo
    que compile, y escribe en la nota qué está hecho, qué falta y el siguiente comando.
 5. `done`: verifica primero (tests y gates del repo) y pon en `--note` cómo se
