@@ -57,6 +57,11 @@ GIT_C_TARGET = re.compile(r"(?:^|\s)git(?:\.exe)?\s+(?:-C\s+|--work-tree[= ])(?P
 WORKTREE_CMD = re.compile(r"(?:^|\s)git(?:\.exe)?\s+(?:-C\s+\S+\s+)?worktree\s+(?:add|remove|move)\b")
 NATIVE_WORKTREE = re.compile(r"(?:^|\s)claude(?:\.exe|\.cmd)?\s+(?:[^|;&]*\s)?(?:--worktree|-w)\b")
 SELF_SCRIPT = re.compile(r"agent[_-]worktree\.(?:py|ps1|sh)", re.IGNORECASE)
+# Redirecciones que no escriben ficheros: 2>&1, >$null, 2>/dev/null, >NUL.
+HARMLESS_REDIRECT = re.compile(r"\d?>&\d|\d?>>?\s*(?:\$null|/dev/null|nul)\b", re.IGNORECASE)
+# Worktrees nativos que crea la app de Claude Code (sesiones de escritorio y Remote Control):
+# son checkouts aislados, no el principal de Master.
+NATIVE_WORKTREES_REL = Path(".claude") / "worktrees"
 PATH_TOKEN = re.compile(r"^([A-Za-z]:[\\/]|/|~|\.\.?[\\/])")
 
 MSG_NATIVE = f"{GUARD_TAG} No uses el worktree nativo de Claude Code: cada agente tiene su worktree fijo (agent_worktree.py where)."
@@ -119,7 +124,7 @@ def is_readonly(segment: str) -> bool:
     word = _first_word(words)
     if not word:
         return True
-    if word not in CD_WORDS and WRITE_HINTS.search(segment):
+    if word not in CD_WORDS and WRITE_HINTS.search(HARMLESS_REDIRECT.sub(" ", segment)):
         return False
     if word == "git":
         return _git_is_readonly(segment, words)
@@ -144,6 +149,12 @@ def _deny_reason(agent: str, layout: Layout, target: Path) -> str:
     )
 
 
+def _is_protected(layout: Layout, agent: str, target: Path) -> bool:
+    if is_within(target, layout.main / NATIVE_WORKTREES_REL):
+        return False
+    return any(is_within(target, p) for p in layout.protected_for(agent))
+
+
 def _active_layout(*starts: Path) -> Optional[Layout]:
     for start in starts:
         layout = find_layout(start, use_git=False)
@@ -157,7 +168,7 @@ def guard_file(agent: str, cwd: Path, target_raw: str) -> Optional[str]:
         return None
     target = _resolve(target_raw, cwd)
     layout = _active_layout(target if target.exists() else target.parent, cwd)
-    if layout is not None and any(is_within(target, p) for p in layout.protected_for(agent)):
+    if layout is not None and _is_protected(layout, agent, target):
         return _deny_reason(agent, layout, target)
     return None
 
@@ -169,7 +180,6 @@ def _segment_targets(segment: str, current: Path) -> List[Path]:
 
 
 def _scan_segments(agent: str, layout: Layout, cwd: Path, command: str) -> Optional[str]:
-    protected = layout.protected_for(agent)
     current = cwd
     for segment in filter(str.strip, SEGMENT_SPLIT.split(command)):
         cd = CD_TARGET.match(segment.strip())
@@ -178,7 +188,7 @@ def _scan_segments(agent: str, layout: Layout, cwd: Path, command: str) -> Optio
             continue
         if is_readonly(segment):
             continue
-        hit = next((t for t in _segment_targets(segment, current) if any(is_within(t, p) for p in protected)), None)
+        hit = next((t for t in _segment_targets(segment, current) if _is_protected(layout, agent, t)), None)
         if hit is not None:
             return _deny_reason(agent, layout, hit)
     return None

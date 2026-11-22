@@ -45,7 +45,7 @@ NODE_INSTALLERS: Tuple[Tuple[Tuple[str, ...], List[str]], ...] = (
     (("yarn.lock",), ["yarn", INSTALL, FROZEN]),
     (("bun.lockb", "bun.lock"), ["bun", INSTALL, FROZEN]),
     (("package-lock.json",), ["npm", "ci"]),
-    (("package.json",), ["npm", INSTALL]),
+    (("package.json",), ["npm", INSTALL, "--no-package-lock"]),  # sin lockfile en git: no crear uno
 )
 
 
