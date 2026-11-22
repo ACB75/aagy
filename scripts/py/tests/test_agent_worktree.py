@@ -329,3 +329,10 @@ def test_backlog_claim_and_handoff_between_worktrees(repo):
     assert entry_agy["previous_owner"] == "claude"
     assert git(agy, "rev-parse", "--abbrev-ref", "HEAD") == "feat/home-lab/t-uno"
     assert entry_agy[backlog.K_AGENT_WORKTREE] == str(agy)
+
+
+def test_npm_install_without_lockfile_does_not_create_one(tmp_path):
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    import agent_worktree_provision as prov
+
+    assert prov.installer_for("node_modules", tmp_path) == [["npm", "install", "--no-package-lock"]]
