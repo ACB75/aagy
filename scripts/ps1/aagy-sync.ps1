@@ -8,7 +8,7 @@
     o hacia un proyecto específico (.agents/) (Nivel 2: Específico de Dominio).
 .PARAMETER Phase
     Fase preconfigurada según la arquitectura en dos niveles:
-      - generic    (Nivel 1 Global: 12 core skills y 12 agentes universales de ingeniería)
+      - generic    (Nivel 1 Global: 15 core skills y 12 agentes universales de ingeniería)
       - network-infra (Perfil de stack: Docker, K8s, Homelab, Redes, Seguridad)
       - java-spring   (Perfil de stack: Java 25 / Spring Boot 4, Postgres)
       - angular       (Perfil de stack: Angular 21 / TypeScript, E2E)

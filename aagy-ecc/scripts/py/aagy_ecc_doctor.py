@@ -4,7 +4,7 @@
 
 Revisa el plugin aagy-ecc instalado en Claude Code (marketplace, plugin
 habilitado, copia en caché, hooks y comandos), el repo aagy de origen y el
-proyecto actual con el catálogo común DOC-01..DOC-15 de doctor_core.py, el
+proyecto actual con el catálogo común DOC-01..DOC-15 y DOC-17 de doctor_core.py, el
 mismo que usa /aagy-doctor en Antigravity (paridad 1:1).
 
 Fuente propia de aagy-ecc (no es un espejo). doctor_core.py, install_manifest.py
@@ -539,6 +539,16 @@ def check_agent_worktrees(ctx) -> core.CheckResult:
     return core.result("DOC-15", status, message, *evidence, fix=fix)
 
 
+def check_external_config(ctx) -> core.CheckResult:
+    """DOC-17: capas de configuración externa (.governance/aagy.json y AAGY_ENV_DIR)."""
+    try:
+        import aagy_config  # noqa: PLC0415 - mismo directorio que el doctor
+    except ImportError:
+        return core.result("DOC-17", core.STATUS_SKIP, "aagy_config.py no está instalado junto al doctor.")
+    status, message, evidence = aagy_config.doctor_findings(ctx.project_dir)
+    return core.result("DOC-17", status, message, *evidence)
+
+
 REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-01": check_runtime,
     "DOC-02": check_plugin_installed,
@@ -555,6 +565,7 @@ REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-13": check_project,
     "DOC-14": check_repo,
     "DOC-15": check_agent_worktrees,
+    "DOC-17": check_external_config,
 }
 
 
