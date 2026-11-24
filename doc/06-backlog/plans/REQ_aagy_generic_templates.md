@@ -81,7 +81,7 @@
 - [ ] **CA-06**: con `aagy-ecc` instalado en un repo que no es `aagy`, la fase 4 funciona solo con los scripts del plugin.
 - [ ] **CA-07**: `audit-plugin-parity` da `[PASS]` incluyendo hooks y fase 4.
 - [ ] **CA-08**: tras la revisión final, ningún documento cita scripts, checks, rutas o flujos que no existan.
-- [ ] **CA-09**: `grep -ri` de `home-lab`, `home.lab`, `homelab` y `kakebo` en el repo no devuelve nada.
+- [ ] **CA-09**: `grep -ri` de `home-lab`, `home.lab`, `homelab` y `kakebo` en el repo no devuelve nada, salvo el historial (`git log`, `doc/LOG.md`, `doc/06-backlog/done/`) y este REQ mientras siga abierto.
 - [ ] **CA-10**: en home-lab, tras reinstalar y `aagy-sync --hard`, el doctor no da FAIL y ningún fichero propio de home-lab se ha borrado ni cambiado.
 
 ---
