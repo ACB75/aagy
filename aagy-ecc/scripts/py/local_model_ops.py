@@ -113,12 +113,16 @@ def doctor_findings(start: Optional[Path] = None, registered: Optional[bool] = N
             return STATUS_SKIP, "Sin Ollama: el modo auto se queda en off.", evidence, []
         return STATUS_FAIL, f"Modo {settings.mode} pero Ollama no responde en {settings.url}.", evidence, []
     wanted = [m for m in (settings.tool_model, settings.only_model if settings.mode == MODE_ONLY else "") if m]
+    fim_missing = settings.fim_model and not _model_present(settings.fim_model, status.models)
     missing = [m for m in wanted if not _model_present(m, status.models)]
     problems: List[str] = []
     if not settings.tool_model:
         problems.append("Falta local_model.tool (modelo de herramienta) en la capa de entorno o del proyecto.")
     if missing:
         problems.append(f"Modelos sin descargar: {', '.join(missing)}.")
+    if fim_missing:
+        problems.append(f"Modelo de autocompletado sin descargar: {settings.fim_model} (ollama pull {settings.fim_model}).")
+        missing.append(settings.fim_model)
     if registered is False:
         problems.append(f"El servidor MCP {SERVER_NAME} no está registrado en el harness.")
     unmeasured = [m for m in wanted if m not in measured_models(settings, start) and m not in missing]

@@ -36,6 +36,7 @@ Uso::
     python local_model.py status [--json]
     python local_model.py on | off | auto
     python local_model.py run summarize --path build.log
+    python local_model.py only --harness claude|agy   # sesión solo local
     python local_model.py bench [--models a,b]   # precisión y tokens/s
     python local_model.py usage                  # resumen del registro de uso
     python local_model.py register-agy [--config <mcp_config.json>]
@@ -533,6 +534,15 @@ def _cmd_bench(args: argparse.Namespace, settings: Settings) -> int:
     return 0
 
 
+def _cmd_only(args: argparse.Namespace, settings: Settings) -> int:
+    import local_model_only as only  # noqa: PLC0415 - solo se carga en este modo
+
+    if args.harness == "agy":
+        return only.run_agy(settings)
+    extra = [a for a in args.extra if a != "--"]
+    return only.run_claude(settings, extra)
+
+
 def _cmd_usage(_args: argparse.Namespace, _settings: Settings) -> int:
     summary = usage_summary()
     print(f"[aagy-local] {summary['calls']} llamadas ({summary['ok']} sin error), {summary['total_ms']} ms en total. {summary['path']}")
@@ -558,6 +568,9 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p_run.add_argument("task")
     p_run.add_argument("--path", action="append")
     p_run.add_argument("--param", action="append", help="clave=valor")
+    p_only = sub.add_parser("only", help="Sesión solo local: --harness claude (Claude Code) o agy (SDK de Antigravity).")
+    p_only.add_argument("--harness", choices=("claude", "agy"), default="claude")
+    p_only.add_argument("extra", nargs=argparse.REMAINDER, help="Argumentos para claude, tras --.")
     p_bench = sub.add_parser("bench", help="Mide precisión y tokens/s de los modelos con ficheros del repo.")
     p_bench.add_argument("--models", default="", help="Lista separada por comas (por defecto, los configurados).")
     sub.add_parser("usage", help="Resumen del registro de uso local (sin contenido).")
@@ -575,7 +588,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         sys.stdout.reconfigure(encoding=ENCODING)
     args = parse_args(argv)
     settings = load_settings()
-    handlers = {"status": _cmd_status, "run": _cmd_run, "bench": _cmd_bench, "usage": _cmd_usage, "register-agy": _cmd_register}
+    handlers = {"status": _cmd_status, "run": _cmd_run, "bench": _cmd_bench, "only": _cmd_only, "usage": _cmd_usage, "register-agy": _cmd_register}
     try:
         return handlers.get(args.command, _cmd_set)(args, settings)
     except (LocalModelError, ValueError, OSError) as exc:
