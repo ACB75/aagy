@@ -2,7 +2,7 @@
 
 > **ID de Tarea**: `docs/doc/generic-templates`
 > **Fecha**: `2026-11-24` | **Autor/Rol**: `Claude (toma de requisitos) / Master (aprobación)`
-> **Estado**: `BORRADOR` (preguntas abiertas en la §7, con valor por defecto)
+> **Estado**: `BORRADOR` (P-02 resuelta; P-01, P-03 y P-04 abiertas en la §7, con valor por defecto)
 > **Ubicación en el repo**: `doc/06-backlog/plans/REQ_aagy_generic_templates.md`
 
 ---
@@ -27,7 +27,7 @@
 
 - **Problema**: cada documento y cada workflow tiene su propia forma, las plantillas tienen datos de un proyecto concreto y los dos plugins no hacen lo mismo en la fase 4 ni en los hooks.
 - **Objetivo**: una sola plantilla base, genérica y ampliable, de la que salen todos los documentos y workflows del harness. Los dos plugins la usan igual, y un check la hace cumplir.
-- **Alcance**: plantillas de `doc/`, REQ/PLAN/ADR/postmortem/runbook, IDEAS/TODO, issues y PR, skills, comandos y subagentes; paridad de fase 4 y hooks; alineación issues ↔ `TODO.md`; revisión final de toda la documentación.
+- **Alcance**: sacar del repo todo lo de home-lab y aplicarlo allí con reinstalación y hard sync; plantillas de `doc/`, REQ/PLAN/ADR/postmortem/runbook, IDEAS/TODO, issues y PR, skills, comandos y subagentes; paridad de fase 4 y hooks; alineación issues ↔ `TODO.md`; revisión final de toda la documentación.
 - **Fuera de alcance**: reescribir el contenido técnico de las 172 skills (solo se adapta su esqueleto); cambiar el flujo de 4 fases.
 
 ---
@@ -39,7 +39,7 @@
 - **RF-01**: `doc/00-governance/templates/TEMPLATE_BASE.md` define el esqueleto común: cabecera (id, fecha, autor/rol, estado, ubicación), `0. Estado actual`, `1. Contexto y objetivos`, cuerpo propio del tipo, `Criterios de aceptación`, `Paridad aagy ↔ aagy-ecc`, `Preguntas abiertas` y `Referencias`.
 - **RF-02**: cada tipo de documento (REQ, PLAN, DOCS, PR, ADR, POSTMORTEM, RUNBOOK, IDEA, TODO) es una plantilla que hereda la base y solo añade su cuerpo propio.
 - **RF-03**: puntos de extensión declarados. Un proyecto consumidor añade secciones (por ejemplo, la matriz de impacto de home-lab) en su propio repo, declaradas en `.governance/docs-map.json` (`template_extensions`), sin tocar el plugin. Mismo patrón que los perfiles de stack de ADR-0004.
-- **RF-04**: las plantillas del plugin no contienen nombres de proyectos, hosts, dominios ni usuarios (regla P-13). Lo de home-lab sale a una extensión de ejemplo y luego al repo de home-lab.
+- **RF-04**: las plantillas del plugin no contienen nombres de proyectos, hosts, dominios ni usuarios (regla P-13). Lo de home-lab se va a su repo (RF-14); el plugin solo trae una extensión de ejemplo genérica.
 
 ### 2.2. Workflows
 
@@ -58,7 +58,14 @@
 - **RF-11**: los hooks de los dos plugins cubren los mismos momentos (inicio, antes de herramienta, después de escribir, fin de turno, compactación, fin de sesión) donde el harness lo permita. Si Antigravity no tiene el evento, la asimetría queda documentada en `MANUAL_aagy_ecc_parity_and_migration.md`.
 - **RF-12**: `audit_plugin_parity.py` y los doctores comprueban RF-05, RF-06, RF-10 y RF-11.
 
-### 2.5. Revisión final (última tarea)
+### 2.5. Fuera home-lab y hard sync
+
+- **RF-14**: en este repo no queda nada de home-lab ni de otro proyecto consumidor: código, skills, agentes, packs, plantillas, ADR, runbooks y ejemplos. Antes de borrar, lo que es de home-lab (`audit_sdk_parity`, `audit_pg_locks`, `validate_ingress_routes`, matriz de impacto, runbooks, perfil de stack) se mueve a su repo.
+- **RF-15**: gancho genérico: el repo consumidor declara sus checks de pre-merge y sus secciones de plantilla en `.governance/docs-map.json` (`checks`, `template_extensions`), y la fase 4 los ejecuta sin conocerlos. Un check falla si reaparece una referencia a un proyecto consumidor.
+- **RF-16**: `.aagy-install.json` guarda la lista de ficheros instalados con su hash. `aagy-sync --hard` sobrescribe solo esos, borra los que el plugin ya no trae y nunca toca lo propio del proyecto; si un fichero se editó a mano, avisa y no lo pisa salvo `--force`. Tiene `--dry-run`.
+- **RF-17**: la forma de aplicar los cambios en home-lab (y en cualquier consumidor) es reinstalar el plugin y hacer una hard sync, seguida del doctor.
+
+### 2.6. Revisión final (última tarea)
 
 - **RF-13**: revisar y actualizar toda la documentación (`doc/`, `README.md`, `AGENTS.md`, skills, comandos, agentes, READMEs de `aagy-ecc`) contra el código, pasarla a la plantilla y actualizar o borrar lo desfasado. Va al final porque depende de todo lo anterior.
 
@@ -74,6 +81,8 @@
 - [ ] **CA-06**: con `aagy-ecc` instalado en un repo que no es `aagy`, la fase 4 funciona solo con los scripts del plugin.
 - [ ] **CA-07**: `audit-plugin-parity` da `[PASS]` incluyendo hooks y fase 4.
 - [ ] **CA-08**: tras la revisión final, ningún documento cita scripts, checks, rutas o flujos que no existan.
+- [ ] **CA-09**: `grep -ri` de `home-lab`, `home.lab`, `homelab` y `kakebo` en el repo no devuelve nada.
+- [ ] **CA-10**: en home-lab, tras reinstalar y `aagy-sync --hard`, el doctor no da FAIL y ningún fichero propio de home-lab se ha borrado ni cambiado.
 
 ---
 
@@ -100,14 +109,16 @@
 3. Esqueleto común de workflows y su check (RF-05, RF-06, RF-12).
 4. Fase 4 con motor Python único en los dos plugins (RF-10).
 5. Paridad de hooks (RF-11).
-6. **Última**: revisar y actualizar toda la documentación y actualizar o borrar lo desfasado (RF-13).
+6. Sacar del repo todo lo referente a home-lab (RF-14, RF-15).
+7. Hard sync con lista de ficheros instalados (RF-16, RF-17).
+8. **Última**: revisar y actualizar toda la documentación y actualizar o borrar lo desfasado (RF-13).
 
 ---
 
 ## 7. Preguntas abiertas (con valor por defecto)
 
 - **P-01**: ¿el check de esqueleto aplica también a las skills heredadas de ECC que no son del lifecycle? Por defecto: sí, solo al esqueleto, no al contenido.
-- **P-02**: ¿la extensión de home-lab se mueve ya al repo de home-lab o queda como ejemplo en el plugin hasta entonces? Por defecto: ejemplo genérico en el plugin y la de home-lab en su repo.
+- **P-02**: ~~¿la extensión de home-lab se mueve ya o queda como ejemplo?~~ Resuelta 2026-11-24: en este repo no queda nada de home-lab. Se mueve a su repo y se aplica allí reinstalando el plugin y con una hard sync (RF-14..RF-17).
 - **P-03**: ¿los comandos heredados de ECC que no tienen equivalente en `aagy` se portan a skills de `aagy` o se marcan como asimetría? Por defecto: se marcan, y se portan solo los que se usan.
 - **P-04**: ¿lo desfasado se borra o se archiva? Por defecto: se borra (queda en el historial de git), salvo ADRs, que se marcan `Superseded`.
 

@@ -29,6 +29,12 @@
 - [ ] **Paridad de hooks entre plugins (relevo, compactación e inicio)**
   <!-- aagy-task: id=parity-hooks epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=96 -->
 
+- [ ] **Sacar del repo todo lo referente a home-lab**
+  <!-- aagy-task: id=remove-home-lab epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=100 -->
+
+- [ ] **Hard sync con lista de ficheros instalados**
+  <!-- aagy-task: id=hard-sync-manifest epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=101 -->
+
 - [ ] **REVISAR Y ACTUALIZAR TODA LA DOCUMENTACIÓN Y ACTUALIZAR O BORRAR LO DESFASADO (última tarea)**
   <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 -->
 
