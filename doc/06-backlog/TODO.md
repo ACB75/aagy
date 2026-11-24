@@ -11,3 +11,34 @@
 ## 1. Backlog Activo
 
 ## Épica: Flujo GitHub Issues y Projects v2 (cerrada 2026-11-21 por agy)
+
+## Épica: Modelo local con Ollama (auto/tool/only) (#80)
+
+> Delegar tareas sencillas y repetitivas en un modelo local y poder trabajar solo con modelos locales, sin dependencias duras. REQ: doc/06-backlog/plans/REQ_aagy_local_model.md
+
+- [ ] **Servidor MCP genérico aagy-local con catálogo de tareas declarativo**
+  <!-- aagy-task: id=local-model-mcp epic=modelo-local-con-ollama-auto-tool-only-80 issue=81 -->
+
+- [ ] **Interruptores del modelo local (auto/off/tool/only) y /aagy-local**
+  <!-- aagy-task: id=local-model-switch epic=modelo-local-con-ollama-auto-tool-only-80 issue=82 -->
+
+- [ ] **Reglas de delegación al modelo local y nivel local en /model-route**
+  <!-- aagy-task: id=local-model-rules epic=modelo-local-con-ollama-auto-tool-only-80 issue=83 -->
+
+- [ ] **Guarda de ficheros privados que avisa y pregunta**
+  <!-- aagy-task: id=local-model-private-guard epic=modelo-local-con-ollama-auto-tool-only-80 issue=84 -->
+
+- [ ] **Modo solo local en Claude Code con lanzador claude-local**
+  <!-- aagy-task: id=local-model-claude-only epic=modelo-local-con-ollama-auto-tool-only-80 issue=85 -->
+
+- [ ] **Modo solo local en Antigravity con el SDK (agy-local)**
+  <!-- aagy-task: id=local-model-agy-only epic=modelo-local-con-ollama-auto-tool-only-80 issue=86 -->
+
+- [ ] **Check DOC-16 del modelo local en los doctores**
+  <!-- aagy-task: id=local-model-doctor epic=modelo-local-con-ollama-auto-tool-only-80 issue=87 -->
+
+- [ ] **Bench de modelos locales y registro de uso**
+  <!-- aagy-task: id=local-model-bench epic=modelo-local-con-ollama-auto-tool-only-80 issue=88 -->
+
+- [ ] **Guía de autocompletado local en VS Code y Antigravity**
+  <!-- aagy-task: id=local-model-editor-fim epic=modelo-local-con-ollama-auto-tool-only-80 issue=89 -->
