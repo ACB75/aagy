@@ -15,11 +15,8 @@
 
 > Que el plugin no lleve datos de ningún proyecto, usuario ni máquina, no cueste dinero y no duplique lógica ni tokens. Propuesta P1..P6 de la auditoría del 2026-11-24. P2 y P3 van en #100 y los hooks de P5 en #96.
 
-- [ ] **Capas de configuración externa y check DOC-17 (PR #99)**
-  <!-- aagy-task: id=config-layers epic=plugin-agnostico-presupuesto-0-y-sin-duplicar-103 issue=104 -->
-
 - [ ] **Presupuesto 0 $: CI local en pre-push y Actions opcionales apagadas (incluye la Idea 2)**
-  <!-- aagy-task: id=budget-zero epic=plugin-agnostico-presupuesto-0-y-sin-duplicar-103 issue=105 deps=104,81 -->
+  <!-- aagy-task: id=budget-zero epic=plugin-agnostico-presupuesto-0-y-sin-duplicar-103 issue=105 deps=81 -->
 
 - [ ] **Lanzador único y fuera duplicados (envoltorios, skills repetidas, nombres de usuario)**
   <!-- aagy-task: id=single-launcher epic=plugin-agnostico-presupuesto-0-y-sin-duplicar-103 issue=106 deps=95,96 -->
@@ -32,10 +29,10 @@
 > Delegar tareas sencillas y repetitivas en un modelo local y poder trabajar solo con modelos locales, sin dependencias duras. La configuración se lee con `aagy_config` (#104). REQ: doc/06-backlog/plans/REQ_aagy_local_model.md
 
 - [ ] **Servidor MCP genérico aagy-local con catálogo de tareas declarativo**
-  <!-- aagy-task: id=local-model-mcp epic=modelo-local-con-ollama-auto-tool-only-80 issue=81 deps=104 -->
+  <!-- aagy-task: id=local-model-mcp epic=modelo-local-con-ollama-auto-tool-only-80 issue=81 -->
 
 - [ ] **Interruptores del modelo local (auto/off/tool/only) y /aagy-local**
-  <!-- aagy-task: id=local-model-switch epic=modelo-local-con-ollama-auto-tool-only-80 issue=82 deps=104 -->
+  <!-- aagy-task: id=local-model-switch epic=modelo-local-con-ollama-auto-tool-only-80 issue=82 -->
 
 - [ ] **Reglas de delegación al modelo local y nivel local en /model-route**
   <!-- aagy-task: id=local-model-rules epic=modelo-local-con-ollama-auto-tool-only-80 issue=83 deps=81,82 -->
@@ -74,14 +71,11 @@
 - [ ] **Fase 4 (complete-task-pr) con motor Python único en los dos plugins**
   <!-- aagy-task: id=parity-phase4-python epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=95 -->
 
-- [ ] **Paridad del safety gate rm -rf y guardrails agnósticos de la plantilla (PR #102)**
-  <!-- aagy-task: id=parity-safety-gate epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=108 -->
-
 - [ ] **Paridad de hooks entre plugins con un solo motor Python (relevo, compactación e inicio)**
-  <!-- aagy-task: id=parity-hooks epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=96 deps=108 -->
+  <!-- aagy-task: id=parity-hooks epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=96 -->
 
 - [ ] **Sacar del repo todo lo referente a home-lab y el entorno (incluye P2 y P3 de #103)**
-  <!-- aagy-task: id=remove-home-lab epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=100 deps=104 -->
+  <!-- aagy-task: id=remove-home-lab epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=100 -->
 
 - [ ] **Hard sync con lista de ficheros instalados**
   <!-- aagy-task: id=hard-sync-manifest epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=101 -->
@@ -91,6 +85,6 @@
 > Va después de todas las épicas. Si se abre una épica o tarea nueva, su issue se añade a `deps=` de esta tarea y al cuerpo de #97.
 
 - [ ] **REVISAR Y ACTUALIZAR TODA LA DOCUMENTACIÓN Y ACTUALIZAR O BORRAR LO DESFASADO (última tarea)**
-  <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 deps=81,82,83,84,85,86,87,88,89,92,93,94,95,96,100,101,104,105,106,107,108 -->
+  <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 deps=81,82,83,84,85,86,87,88,89,92,93,94,95,96,100,101,105,106,107 -->
 
 ## Épica: Flujo GitHub Issues y Projects v2 (cerrada 2026-11-21 por agy)
