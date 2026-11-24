@@ -10,4 +10,26 @@
 
 ## 1. Backlog Activo
 
+## Épica: Plantilla genérica ampliable y paridad entre plugins (#91)
+
+> Que todos los workflows y documentos salgan de una plantilla genérica ampliable y que aagy y aagy-ecc se comporten igual. REQ: doc/06-backlog/plans/REQ_aagy_generic_templates.md
+
+- [ ] **Plantilla base genérica con puntos de extensión**
+  <!-- aagy-task: id=generic-template-base epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=92 -->
+
+- [ ] **Issues, PR y TODO con las mismas secciones y check de paridad issues ↔ TODO**
+  <!-- aagy-task: id=generic-template-issues-todo epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=93 -->
+
+- [ ] **Esqueleto común de workflows (skills, comandos, agentes) y su check**
+  <!-- aagy-task: id=generic-template-workflows epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=94 -->
+
+- [ ] **Fase 4 (complete-task-pr) con motor Python único en los dos plugins**
+  <!-- aagy-task: id=parity-phase4-python epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=95 -->
+
+- [ ] **Paridad de hooks entre plugins (relevo, compactación e inicio)**
+  <!-- aagy-task: id=parity-hooks epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=96 -->
+
+- [ ] **REVISAR Y ACTUALIZAR TODA LA DOCUMENTACIÓN Y ACTUALIZAR O BORRAR LO DESFASADO (última tarea)**
+  <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 -->
+
 ## Épica: Flujo GitHub Issues y Projects v2 (cerrada 2026-11-21 por agy)
