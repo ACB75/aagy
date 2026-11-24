@@ -67,7 +67,7 @@
 
 ### 2.6. Revisión final (última tarea)
 
-- **RF-13**: revisar y actualizar toda la documentación (`doc/`, `README.md`, `AGENTS.md`, skills, comandos, agentes, READMEs de `aagy-ecc`) contra el código, pasarla a la plantilla y actualizar o borrar lo desfasado. Va al final porque depende de todo lo anterior.
+- **RF-13**: revisar y actualizar toda la documentación (`doc/`, `README.md`, `AGENTS.md`, skills, comandos, agentes, READMEs de `aagy-ecc`) contra el código, pasarla a la plantilla y actualizar o borrar lo desfasado. Es la última tarea de todo el backlog, no solo de esta épica: depende también de las épicas #80 (modelo local) y #103 (plugin agnóstico).
 
 ---
 
@@ -108,10 +108,11 @@
 2. Plantillas de issues, PR, IDEAS y TODO alineadas con la base, y check de paridad issues ↔ TODO (RF-07..RF-09).
 3. Esqueleto común de workflows y su check (RF-05, RF-06, RF-12).
 4. Fase 4 con motor Python único en los dos plugins (RF-10).
-5. Paridad de hooks (RF-11).
-6. Sacar del repo todo lo referente a home-lab (RF-14, RF-15).
-7. Hard sync con lista de ficheros instalados (RF-16, RF-17).
-8. **Última**: revisar y actualizar toda la documentación y actualizar o borrar lo desfasado (RF-13).
+5. Paridad del safety gate y guardrails agnósticos (#108, PR #102).
+6. Paridad de hooks con un solo motor Python (RF-11; incluye los hooks de P5 de #103).
+7. Sacar del repo todo lo referente a home-lab (RF-14, RF-15; incluye P2 y P3 de #103, con los datos en las capas de `aagy_config` de #104).
+8. Hard sync con lista de ficheros instalados (RF-16, RF-17).
+9. **Última de todo el backlog**: revisar y actualizar toda la documentación y actualizar o borrar lo desfasado (RF-13).
 
 ---
 
