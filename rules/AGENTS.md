@@ -16,6 +16,7 @@
 - **SonarQube Quality Gate A (`sonarqube-quality-gate`)**: KISS/DRY/YAGNI, immutability, files `<=400` lines (`800` max), nesting `<4`, Complexity `<=15` (`S3776`), `<=7` params (`S107`), zero literals duplicated `>=3x` (`S1192`), empty `catch` (`S108`), generic throws (`java:S112`), or `<?>` returns (`java:S1452`), `>=80%` coverage, `<=3%` duplication.
 - **Dependencies & SDK Parity (`sync-microservice-sdk`)**: Never add unofficial third-party deps without warning and explicit user confirmation. Update and test `<project>-sdk/` (`home-lab-sdk/`) in the same commit on contract changes.
 - **Security (`security-review`, `safety-guard`)**: Never hardcode secrets; validate `.env`/secret managers at startup, parameterize SQL, sanitize HTML/URLs (XSS/CSRF/SSRF/path traversal), never leak stack traces.
+- **Agnostic Plugin & External Config (`aagy_config.py`, `DOC-17`)**: The plugin holds no project, user or machine data. Read it from `AAGY_*` vars, the consumer repo's `.governance/aagy.json`, or `<AAGY_ENV_DIR>/aagy/env.json` (private env repo, no secrets); if a value is missing, skip the step and warn, never hardcode a default.
 - **Stack Profiles & Multi-OS**: Load stack standards (Java 25/Spring 4, Angular 21+, Python/FastAPI, Go, infra) via `aagy-sync -Repo .`. Respect `pwsh` on Windows 11 and strict POSIX LF (`\n`) on `.sh` for Linux.
 
 ## 2. Dynamic Task Lifecycle, Governance & Workflow

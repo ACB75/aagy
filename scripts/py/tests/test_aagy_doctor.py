@@ -263,7 +263,7 @@ def test_sync_fix_prefers_pwsh(tmp_path: Path, repo: Path, plugin: Path, monkeyp
 
 def test_cli_json_and_list_checks(tmp_path: Path, repo: Path, plugin: Path, capsys):
     assert doc.main(["--list-checks"]) == 0
-    assert len(json.loads(capsys.readouterr().out)) == 15
+    assert len(json.loads(capsys.readouterr().out)) == len(core.CATALOG_IDS)
     code = doc.main(["--json", "--home", str(tmp_path / "home"), "--repo-root", str(repo), "--only", "DOC-02,DOC-05"])
     data = json.loads(capsys.readouterr().out)
     assert code == 0
