@@ -28,15 +28,6 @@
 
 > Delegar tareas sencillas y repetitivas en un modelo local y poder trabajar solo con modelos locales, sin dependencias duras. La configuración se lee con `aagy_config` (#104). REQ: doc/06-backlog/plans/REQ_aagy_local_model.md
 
-- [ ] **Modo solo local en Claude Code con lanzador claude-local**
-  <!-- aagy-task: id=local-model-claude-only epic=modelo-local-con-ollama-auto-tool-only-80 issue=85 deps=82 -->
-
-- [ ] **Modo solo local en Antigravity con el SDK (agy-local)**
-  <!-- aagy-task: id=local-model-agy-only epic=modelo-local-con-ollama-auto-tool-only-80 issue=86 deps=82 -->
-
-- [ ] **Guía de autocompletado local en VS Code y Antigravity**
-  <!-- aagy-task: id=local-model-editor-fim epic=modelo-local-con-ollama-auto-tool-only-80 issue=89 -->
-
 ## Épica: Plantilla genérica ampliable y paridad entre plugins (#91)
 
 > Que todos los workflows y documentos salgan de una plantilla genérica ampliable y que aagy y aagy-ecc se comporten igual. REQ: doc/06-backlog/plans/REQ_aagy_generic_templates.md

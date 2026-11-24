@@ -93,4 +93,5 @@
 - 🗂️ **[`doc/06-backlog/plans/`](06-backlog/plans/REQ_aagy_unified_self_improvement.md)**: Requisitos y planes en curso (`REQ_doc_structure_v2_and_manual_parity.md`, `REQ_aagy_unified_self_improvement.md`, `REQ_aagy_clean_docs_and_repo_migration.md`).
 - ⚡ **[`doc/06-backlog/quick/README.md`](06-backlog/quick/README.md)**: Notas ligeras para entradas directas vía `--phase TODO` y notas de relevo `HANDOFF_<id>.md`.
 - 🤝 **[`MANUAL_shared_backlog.md`](04-operations/runbooks/MANUAL_shared_backlog.md)**: Backlog compartido entre Claude Code y Antigravity (`backlog.py`).
+- 🦙 **[`MANUAL_local_model.md`](04-operations/runbooks/MANUAL_local_model.md)**: Modelo local con Ollama (`local_model.py`, servidor MCP `aagy-local`, modo solo local y autocompletado).
 - 🗄️ **[`doc/06-backlog/done/`](06-backlog/done/TODO_Ejecutar_optimizacion_maxima_de_tokens_purgar_archivos_no_us_20261120_215458.md)**: Histórico inmutable de tareas completadas y archivadas.

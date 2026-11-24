@@ -92,3 +92,46 @@ def test_guard_denies_in_agy_for_private(repo: Path, monkeypatch: pytest.MonkeyP
 
 def test_guard_noop_without_globs(repo: Path) -> None:
     assert guard.handle(_claude("secrets/a.txt", repo), guard.FMT_CLAUDE) == {}
+
+
+def test_only_env_and_argv(repo: Path) -> None:
+    import local_model_only as only
+
+    settings = lm.load_settings(repo, {"AAGY_LOCAL_AGENT_MODEL": "agent:9b", "AAGY_OLLAMA_URL": "http://h:1"})
+    env = only.claude_env(settings, {"PATH": "x"})
+    assert env["ANTHROPIC_BASE_URL"] == "http://h:1" and env["ANTHROPIC_API_KEY"] == ""
+    assert env["ANTHROPIC_AUTH_TOKEN"] == "ollama" and env["AAGY_LOCAL_MODEL"] == "only" and env["PATH"] == "x"
+    assert only.claude_argv(settings, ["-p", "hola"]) == ["claude", "--model", "agent:9b", "-p", "hola"]
+
+
+def test_only_context_warning() -> None:
+    import local_model_only as only
+
+    assert "64k" in only.context_warning({})
+    assert "menor" in only.context_warning({"OLLAMA_CONTEXT_LENGTH": "8192"})
+    assert only.context_warning({"OLLAMA_CONTEXT_LENGTH": "65536"}) == ""
+
+
+def test_only_preflight_and_agy_without_sdk(repo: Path, ollama: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    import local_model_only as only
+
+    no_model = lm.load_settings(repo, _env(ollama))
+    assert "local_model.only" in only._preflight(no_model)
+    assert only.run_claude(no_model, [], {}) == 1
+    settings = lm.load_settings(repo, _env(ollama, AAGY_LOCAL_AGENT_MODEL="nope"))
+    assert "ollama pull nope" in only._preflight(settings)
+    monkeypatch.setitem(sys.modules, "google.antigravity", None)
+    assert only.run_agy(settings) == 1
+
+
+def test_session_start_only_mode(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture) -> None:
+    hooks = _REPO_ROOT / "aagy-ecc" / "scripts" / "hooks"
+    if str(hooks) not in sys.path:
+        sys.path.insert(0, str(hooks))
+    import session_start_rules as ssr
+
+    monkeypatch.setenv("AAGY_LOCAL_MODEL", "only")
+    monkeypatch.setattr(ssr, "read_hook_input", lambda: {})
+    assert ssr.main() == 0
+    out = json.loads(capsys.readouterr().out)
+    assert "MODO SOLO LOCAL" in out["hookSpecificOutput"]["additionalContext"]

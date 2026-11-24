@@ -1,0 +1,16 @@
+# Plantilla de ~/.continue/config.yaml: solo autocompletado (Tab) con Ollama.
+# El chat y el agente siguen en Claude Code o Antigravity; Continue solo completa código.
+# Cambia <modelo-fim> por el valor de local_model.fim (por ejemplo, un modelo -base de código).
+name: aagy-local-autocomplete
+version: 1.0.0
+schema: v1
+models:
+  - name: autocompletado local
+    provider: ollama
+    model: <modelo-fim>
+    apiBase: http://localhost:11434
+    roles:
+      - autocomplete
+    autocompleteOptions:
+      debounceDelay: 250
+      maxPromptTokens: 1024

@@ -18,6 +18,7 @@ añade dónde tiene que trabajar Claude (agent_worktree.py).
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import re
 import sys
@@ -35,6 +36,20 @@ BRANCH_NOTE = (
     "te asigne otra rama (p. ej. claude/* en Claude Code web): renombra con git branch -m o publica "
     "con git push -u origin HEAD:<tipo>/<proyecto>/<nombre> y abre el PR desde esa rama."
 )
+
+
+ONLY_MODE_VAR = "AAGY_LOCAL_MODEL"
+ONLY_MODE = "only"
+ONLY_NOTICE = (
+    "MODO SOLO LOCAL (AAGY_LOCAL_MODEL=only): esta sesión usa un modelo local, sin modelo en la nube. "
+    "Reglas mínimas: ramas <tipo>/<proyecto>/<nombre>; nunca escribas secretos; tests antes de dar algo por hecho; "
+    "no hagas merge ni push sin que el usuario lo pida; si la tarea te supera, dilo y para."
+)
+
+
+def only_mode(environ: Optional[Dict[str, str]] = None) -> bool:
+    env = os.environ if environ is None else environ
+    return env.get(ONLY_MODE_VAR, "").strip().lower() == ONLY_MODE
 
 
 def plugin_root() -> Path:
@@ -126,6 +141,11 @@ def read_hook_input() -> Dict[str, Any]:
 
 def main() -> int:
     payload = read_hook_input()
+    if only_mode():
+        # Modelo pequeño: reglas reducidas en vez del índice completo para dejarle contexto (RF-12).
+        notice = "\n\n".join(p for p in (ONLY_NOTICE, worktree_notice(payload.get("cwd"))) if p)
+        print(json.dumps({"hookSpecificOutput": {"hookEventName": "SessionStart", "additionalContext": notice}}))
+        return 0
     extra = "\n\n".join(p for p in (worktree_notice(payload.get("cwd")), backlog_brief(payload.get("cwd"))) if p)
     response = build_response(extra=extra)
     if response:
