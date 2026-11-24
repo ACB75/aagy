@@ -2,7 +2,7 @@
 
 > **ID de Tarea**: `docs/doc/generic-templates`
 > **Fecha**: `2026-11-24` | **Autor/Rol**: `Claude (toma de requisitos) / Master (aprobación)`
-> **Estado**: `BORRADOR` (P-02 resuelta; P-01, P-03 y P-04 abiertas en la §7, con valor por defecto)
+> **Estado**: `BORRADOR` (P-02 y P-03 resueltas; P-01 y P-04 abiertas en la §7, con valor por defecto)
 > **Ubicación en el repo**: `doc/06-backlog/plans/REQ_aagy_generic_templates.md`
 
 ---
@@ -44,7 +44,7 @@
 ### 2.2. Workflows
 
 - **RF-05**: esqueleto común para skills, comandos y subagentes: frontmatter (`name`/`description` dentro del presupuesto de tokens), `Cuándo usarlo`, `Uso`, `Qué hacer`, `Reglas`, `Paridad`. Secciones extra permitidas después de las comunes.
-- **RF-06**: un mismo workflow tiene el mismo nombre de sección y el mismo orden en `aagy` (skill) y en `aagy-ecc` (comando o skill). La sección `Paridad` nombra su equivalente en el otro plugin o declara la asimetría.
+- **RF-06**: un mismo workflow tiene el mismo nombre de sección y el mismo orden en `aagy` (skill) y en `aagy-ecc` (comando o skill). La sección `Paridad` nombra su equivalente en el otro plugin. Todo workflow de un plugin se porta al otro si el harness lo permite; si no, la sección declara la asimetría (P-03).
 
 ### 2.3. Issues ↔ TODO
 
@@ -119,7 +119,7 @@
 
 - **P-01**: ¿el check de esqueleto aplica también a las skills heredadas de ECC que no son del lifecycle? Por defecto: sí, solo al esqueleto, no al contenido.
 - **P-02**: ~~¿la extensión de home-lab se mueve ya o queda como ejemplo?~~ Resuelta 2026-11-24: en este repo no queda nada de home-lab. Se mueve a su repo y se aplica allí reinstalando el plugin y con una hard sync (RF-14..RF-17).
-- **P-03**: ¿los comandos heredados de ECC que no tienen equivalente en `aagy` se portan a skills de `aagy` o se marcan como asimetría? Por defecto: se marcan, y se portan solo los que se usan.
+- **P-03**: ~~¿los comandos heredados de ECC sin equivalente en `aagy` se portan o se marcan como asimetría?~~ Resuelta 2026-11-24: se portan a `aagy` siempre que se pueda; si Antigravity no lo permite, se marca la asimetría en su sección `Paridad`.
 - **P-04**: ¿lo desfasado se borra o se archiva? Por defecto: se borra (queda en el historial de git), salvo ADRs, que se marcan `Superseded`.
 
 ---
