@@ -33,7 +33,7 @@
 
 ## Idea 2: Quitar los workflows de GitHub Actions que cuesten dinero
 
-- Status: Draft
+- Status: Approved (2026-11-24, issue #105 de la épica #103: Actions opcionales, apagadas por defecto y con paridad con la CI local)
 - Sector: CI/CD / GitHub Actions
 - DataType: `.github/workflows/*.yml`
 - Objective: Que el repo no consuma minutos de pago de GitHub Actions.
