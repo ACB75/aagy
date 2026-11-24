@@ -29,7 +29,7 @@ if (-not $CommandLine -and [Console]::IsInputRedirected) {
 
 if ($CommandLine) {
     $Dangerous = @(
-        "rm\s+-rf\s+/[^a-zA-Z0-9_]?",
+        "rm\s+-rf\s+/(?:[^a-zA-Z0-9_]|$)",
         "mkfs(\.[a-zA-Z0-9]+)?\s+",
         "DROP\s+DATABASE",
         ">\s*/dev/sd[a-z]",

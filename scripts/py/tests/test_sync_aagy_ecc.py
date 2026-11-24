@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -92,9 +93,18 @@ def test_safety_check_denies_dangerous(command: str):
     assert out["hookSpecificOutput"]["permissionDecision"] == "deny"
 
 
-@pytest.mark.parametrize("command", ["ls -la", "rm -rf ./build", "git status", ""])
+@pytest.mark.parametrize("command", ["ls -la", "rm -rf ./build", "rm -rf /tmp/build", "git status", ""])
 def test_safety_check_allows_safe(command: str):
     assert safety_check.build_response(command) == {}
+
+
+def test_safety_patterns_match_agy_safety_check():
+    """Paridad: el safety gate de aagy (safety-check.ps1) bloquea los mismos patrones que aagy-ecc."""
+    ps1 = (_REPO_ROOT / "scripts" / "ps1" / "safety-check.ps1").read_text(encoding="utf-8-sig")
+    block = re.search(r"\$Dangerous = @\((.*?)\)\s*\n\s*foreach", ps1, flags=re.S)
+    assert block, "No se encontró la lista $Dangerous en safety-check.ps1"
+    agy_patterns = tuple(re.findall(r'"([^"]+)"', block.group(1)))
+    assert agy_patterns == safety_check.DANGEROUS_PATTERNS
 
 
 def test_safety_check_cli_contract():
