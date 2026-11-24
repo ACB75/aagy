@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "aagy-local": {
+      "command": "python",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/scripts/py/local_model_mcp.py"]
+    }
+  }
+}

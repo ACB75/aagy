@@ -64,7 +64,7 @@ EXIT_INVALID = 2
 
 # Claves de primer nivel que entiende cada capa. Una clave desconocida no rompe
 # nada, pero el doctor avisa (suele ser una errata).
-PROJECT_KEYS = frozenset({"projects", "sdk", "quality_gates", "ingress", "ci"})
+PROJECT_KEYS = frozenset({"projects", "sdk", "quality_gates", "ingress", "ci", "local_model"})
 ENV_KEYS = frozenset({"hosts", "domains", "paths", "local_model", "secrets_env"})
 
 # Un valor con pinta de secreto no debe estar en el fichero de entorno.
