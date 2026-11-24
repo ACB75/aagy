@@ -43,6 +43,7 @@ STATUS_SYNCED = "SYNCED"
 # Motores Python que necesitan los hooks y comandos de aagy-ecc (con sus dependencias).
 MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "self_improve.py",
+    "aagy_config.py",
     "instinct_manager.py",
     "security_audit.py",
     "workspace_audit.py",
