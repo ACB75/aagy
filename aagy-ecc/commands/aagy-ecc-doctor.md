@@ -1,12 +1,12 @@
 ---
-description: Diagnose the aagy-ecc install in Claude Code (plugin, hooks, commands, repo parity) with checks DOC-01..14.
+description: Diagnose the aagy-ecc install in Claude Code (plugin, hooks, commands, repo parity) with checks DOC-01..17.
 ---
 
 # aagy-ecc-doctor
 
 Diagnóstico de la instalación de `aagy-ecc` en Claude Code. Es el equivalente
 de la skill `aagy-doctor` de Antigravity: los dos ejecutan el mismo catálogo de
-checks `DOC-01` a `DOC-15` y `DOC-17` (paridad 1:1).
+checks `DOC-01` a `DOC-17` (paridad 1:1).
 
 ## Uso
 

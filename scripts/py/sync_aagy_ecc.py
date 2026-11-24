@@ -46,6 +46,8 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "aagy_config.py",
     "local_model.py",
     "local_model_mcp.py",
+    "local_model_ops.py",
+    "local_private_guard.py",
     "instinct_manager.py",
     "security_audit.py",
     "workspace_audit.py",

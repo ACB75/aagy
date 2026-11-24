@@ -28,23 +28,11 @@
 
 > Delegar tareas sencillas y repetitivas en un modelo local y poder trabajar solo con modelos locales, sin dependencias duras. La configuración se lee con `aagy_config` (#104). REQ: doc/06-backlog/plans/REQ_aagy_local_model.md
 
-- [ ] **Reglas de delegación al modelo local y nivel local en /model-route**
-  <!-- aagy-task: id=local-model-rules epic=modelo-local-con-ollama-auto-tool-only-80 issue=83 deps=81,82 -->
-
-- [ ] **Guarda de ficheros privados que avisa y pregunta**
-  <!-- aagy-task: id=local-model-private-guard epic=modelo-local-con-ollama-auto-tool-only-80 issue=84 deps=82 -->
-
 - [ ] **Modo solo local en Claude Code con lanzador claude-local**
   <!-- aagy-task: id=local-model-claude-only epic=modelo-local-con-ollama-auto-tool-only-80 issue=85 deps=82 -->
 
 - [ ] **Modo solo local en Antigravity con el SDK (agy-local)**
   <!-- aagy-task: id=local-model-agy-only epic=modelo-local-con-ollama-auto-tool-only-80 issue=86 deps=82 -->
-
-- [ ] **Check DOC-16 del modelo local en los doctores**
-  <!-- aagy-task: id=local-model-doctor epic=modelo-local-con-ollama-auto-tool-only-80 issue=87 deps=81,82 -->
-
-- [ ] **Bench de modelos locales y registro de uso**
-  <!-- aagy-task: id=local-model-bench epic=modelo-local-con-ollama-auto-tool-only-80 issue=88 deps=81 -->
 
 - [ ] **Guía de autocompletado local en VS Code y Antigravity**
   <!-- aagy-task: id=local-model-editor-fim epic=modelo-local-con-ollama-auto-tool-only-80 issue=89 -->

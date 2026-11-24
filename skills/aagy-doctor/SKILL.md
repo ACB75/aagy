@@ -1,6 +1,6 @@
 ---
 name: aagy-doctor
-description: "Diagnose global aagy plugin health (DOC-01..15, DOC-17) via aagy_doctor.py."
+description: "Diagnose global aagy plugin health (DOC-01..17) via aagy_doctor.py."
 metadata:
   origin: AAGY
 ---
@@ -9,7 +9,7 @@ metadata:
 
 Diagnóstico de la instalación de `aagy` en Google Antigravity / Gemini. Es el
 equivalente de `/aagy-ecc-doctor` en Claude Code: los dos ejecutan el mismo
-catálogo de checks `DOC-01` a `DOC-15` y `DOC-17` (paridad 1:1, ver `scripts/py/doctor_core.py`).
+catálogo de checks `DOC-01` a `DOC-17` (paridad 1:1, ver `scripts/py/doctor_core.py`).
 
 ## Cuándo usarla
 

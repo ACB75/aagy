@@ -483,6 +483,30 @@ def check_external_config(ctx) -> core.CheckResult:
     return core.result("DOC-17", status, message, *evidence)
 
 
+def _agy_local_registered() -> Optional[bool]:
+    try:
+        import local_model  # noqa: PLC0415
+    except ImportError:
+        return None
+    path = local_model.default_agy_config()
+    if not path.is_file():
+        return False
+    return local_model.SERVER_NAME in core.read_text(path)
+
+
+def check_local_model(ctx) -> core.CheckResult:
+    """DOC-16: modelo local (Ollama), modelos descargados, registro del servidor MCP y bench."""
+    try:
+        import local_model_ops  # noqa: PLC0415 - mismo directorio que el doctor
+    except ImportError:
+        return core.result("DOC-16", core.STATUS_SKIP, "local_model.py no está instalado junto al doctor.")
+    status, message, evidence, missing = local_model_ops.doctor_findings(ctx.project_dir, _agy_local_registered())
+    fix = None
+    if missing:
+        fix = core.FixAction(f"Descargar {missing[0]} en Ollama", tuple(local_model_ops.pull_argv(missing[0])))
+    return core.result("DOC-16", status, message, *evidence, fix=fix)
+
+
 REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-01": check_runtime,
     "DOC-02": check_plugin_installed,
@@ -499,6 +523,7 @@ REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-13": check_project,
     "DOC-14": check_repo,
     "DOC-15": check_agent_worktrees,
+    "DOC-16": check_local_model,
     "DOC-17": check_external_config,
 }
 

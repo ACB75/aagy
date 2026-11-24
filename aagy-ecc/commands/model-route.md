@@ -15,6 +15,7 @@ Recommend the best model tier for the current task by complexity and budget.
 - `haiku`: deterministic, low-risk mechanical changes
 - `sonnet`: default for implementation and refactors
 - `opus`: architecture, deep review, ambiguous requirements
+- `local`: only when the `aagy-local` MCP server is available (`local_status` mode `tool`) and the task is one of its catalog tasks (classify, summarize, extract, translate, complete); run it with `local_run`. Private files always go here with `paths`.
 
 ## Required Output
 

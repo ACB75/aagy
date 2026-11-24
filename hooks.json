@@ -98,5 +98,39 @@
         ]
       }
     ]
+  },
+  "aagy-private-guard": {
+    "PreToolUse": [
+      {
+        "matcher": "view_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python scripts/py/local_private_guard.py --format agy",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "edit_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python scripts/py/local_private_guard.py --format agy",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "write_file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python scripts/py/local_private_guard.py --format agy",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }
