@@ -44,6 +44,8 @@ STATUS_SYNCED = "SYNCED"
 MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "self_improve.py",
     "aagy_config.py",
+    "local_model.py",
+    "local_model_mcp.py",
     "instinct_manager.py",
     "security_audit.py",
     "workspace_audit.py",
@@ -62,9 +64,9 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
 )
 
 # Entradas propias de Antigravity que no deben llegar a Claude Code (relativas al directorio espejo).
-# skills/aagy-doctor lanza el doctor de Antigravity; Claude Code usa /aagy-ecc-doctor.
+# skills/aagy-doctor y skills/aagy-local son de Antigravity; Claude Code usa /aagy-ecc-doctor y /aagy-local.
 MIRROR_EXCLUDED: Dict[str, Tuple[str, ...]] = {
-    "skills": ("aagy-doctor",),
+    "skills": ("aagy-doctor", "aagy-local"),
 }
 
 MIRRORED_FILES: Tuple[Tuple[str, str], ...] = tuple(

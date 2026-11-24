@@ -8,7 +8,7 @@
     o hacia un proyecto específico (.agents/) (Nivel 2: Específico de Dominio).
 .PARAMETER Phase
     Fase preconfigurada según la arquitectura en dos niveles:
-      - generic    (Nivel 1 Global: 15 core skills y 12 agentes universales de ingeniería)
+      - generic    (Nivel 1 Global: 16 core skills y 12 agentes universales de ingeniería)
       - network-infra (Perfil de stack: Docker, K8s, Homelab, Redes, Seguridad)
       - java-spring   (Perfil de stack: Java 25 / Spring Boot 4, Postgres)
       - angular       (Perfil de stack: Angular 21 / TypeScript, E2E)
@@ -51,7 +51,7 @@ $PhaseConfig = @{
             "security-review", "git-workflow", "conventional-commit-review",
             "docs-governance", "sonarqube-quality-gate", "todo-lifecycle",
             "safety-guard", "engineering-lifecycle", "shared-backlog", "agent-worktrees",
-            "agent-self-evaluation", "aagy-doctor"
+            "agent-self-evaluation", "aagy-doctor", "aagy-local"
         )
         Agents = @(
             "planner.md", "architect.md", "tdd-guide.md", "code-reviewer.md",

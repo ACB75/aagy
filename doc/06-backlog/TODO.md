@@ -28,12 +28,6 @@
 
 > Delegar tareas sencillas y repetitivas en un modelo local y poder trabajar solo con modelos locales, sin dependencias duras. La configuración se lee con `aagy_config` (#104). REQ: doc/06-backlog/plans/REQ_aagy_local_model.md
 
-- [ ] **Servidor MCP genérico aagy-local con catálogo de tareas declarativo**
-  <!-- aagy-task: id=local-model-mcp epic=modelo-local-con-ollama-auto-tool-only-80 issue=81 -->
-
-- [ ] **Interruptores del modelo local (auto/off/tool/only) y /aagy-local**
-  <!-- aagy-task: id=local-model-switch epic=modelo-local-con-ollama-auto-tool-only-80 issue=82 -->
-
 - [ ] **Reglas de delegación al modelo local y nivel local en /model-route**
   <!-- aagy-task: id=local-model-rules epic=modelo-local-con-ollama-auto-tool-only-80 issue=83 deps=81,82 -->
 

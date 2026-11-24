@@ -12,7 +12,7 @@
 .PARAMETER Target
     agy | claude | aagy-ecc | homelab
 .PARAMETER Profile
-    minimal (por defecto: Nivel 1 Global con 15 core skills universales) |
+    minimal (por defecto: Nivel 1 Global con 16 core skills universales) |
     full    (despliegue del catálogo completo optimizado a <=140c)
 .PARAMETER Destination
     agy: directorio de destino (por defecto ~/.gemini/config/plugins/aagy).
