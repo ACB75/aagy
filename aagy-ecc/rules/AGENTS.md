@@ -17,6 +17,7 @@
 - **Dependencies & SDK Parity (`sync-microservice-sdk`)**: Never add unofficial third-party deps without warning and explicit user confirmation. Update and test `<project>-sdk/` (`home-lab-sdk/`) in the same commit on contract changes.
 - **Security (`security-review`, `safety-guard`)**: Never hardcode secrets; validate `.env`/secret managers at startup, parameterize SQL, sanitize HTML/URLs (XSS/CSRF/SSRF/path traversal), never leak stack traces.
 - **Agnostic Plugin & External Config (`aagy_config.py`, `DOC-17`)**: The plugin holds no project, user or machine data. Read it from `AAGY_*` vars, the consumer repo's `.governance/aagy.json`, or `<AAGY_ENV_DIR>/aagy/env.json` (private env repo, no secrets); if a value is missing, skip the step and warn, never hardcode a default.
+- **Local Model (`aagy-local` MCP, `DOC-16`)**: When `local_status` shows mode `tool`, send only simple one-shot tasks from its catalog (classify, summarize, extract, translate, complete) to `local_run`; keep design, planning, debugging, review, code changes and decisions on the main model. Private files (`local_model.private_globs`) go only through `local_run` with `paths`.
 - **Stack Profiles & Multi-OS**: Load stack standards (Java 25/Spring 4, Angular 21+, Python/FastAPI, Go, infra) via `aagy-sync -Repo .`. Respect `pwsh` on Windows 11 and strict POSIX LF (`\n`) on `.sh` for Linux.
 
 ## 2. Dynamic Task Lifecycle, Governance & Workflow

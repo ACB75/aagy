@@ -47,6 +47,7 @@ def _make_plugin(root: Path, version: str = "1.0.0") -> Path:
     _write(root / "scripts" / "py" / "self_improve.py", "print('stop')\n")
     _write(root / "scripts" / "py" / "backlog.py", "print('backlog')\n")
     _write(root / "scripts" / "py" / "agent_worktree.py", "print('worktree')\n")
+    _write(root / "scripts" / "py" / "local_private_guard.py", "print('{}')\n")
     return root
 
 

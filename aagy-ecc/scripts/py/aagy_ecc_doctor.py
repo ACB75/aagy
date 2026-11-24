@@ -4,7 +4,7 @@
 
 Revisa el plugin aagy-ecc instalado en Claude Code (marketplace, plugin
 habilitado, copia en caché, hooks y comandos), el repo aagy de origen y el
-proyecto actual con el catálogo común DOC-01..DOC-15 y DOC-17 de doctor_core.py, el
+proyecto actual con el catálogo común DOC-01..DOC-17 de doctor_core.py, el
 mismo que usa /aagy-doctor en Antigravity (paridad 1:1).
 
 Fuente propia de aagy-ecc (no es un espejo). doctor_core.py, install_manifest.py
@@ -549,6 +549,26 @@ def check_external_config(ctx) -> core.CheckResult:
     return core.result("DOC-17", status, message, *evidence)
 
 
+def _ecc_local_registered(ctx: EccContext) -> Optional[bool]:
+    if not ctx.installed:
+        return None
+    mcp = ctx.install_path / ".mcp.json"
+    return mcp.is_file() and "aagy-local" in core.read_text(mcp)
+
+
+def check_local_model(ctx) -> core.CheckResult:
+    """DOC-16: modelo local (Ollama), modelos descargados, registro del servidor MCP y bench."""
+    try:
+        import local_model_ops  # noqa: PLC0415 - mismo directorio que el doctor
+    except ImportError:
+        return core.result("DOC-16", core.STATUS_SKIP, "local_model.py no está instalado junto al doctor.")
+    status, message, evidence, missing = local_model_ops.doctor_findings(ctx.project_dir, _ecc_local_registered(ctx))
+    fix = None
+    if missing:
+        fix = core.FixAction(f"Descargar {missing[0]} en Ollama", tuple(local_model_ops.pull_argv(missing[0])))
+    return core.result("DOC-16", status, message, *evidence, fix=fix)
+
+
 REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-01": check_runtime,
     "DOC-02": check_plugin_installed,
@@ -565,6 +585,7 @@ REGISTRY: Dict[str, core.CheckFunc] = {
     "DOC-13": check_project,
     "DOC-14": check_repo,
     "DOC-15": check_agent_worktrees,
+    "DOC-16": check_local_model,
     "DOC-17": check_external_config,
 }
 

@@ -36,6 +36,8 @@ Uso::
     python local_model.py status [--json]
     python local_model.py on | off | auto
     python local_model.py run summarize --path build.log
+    python local_model.py bench [--models a,b]   # precisión y tokens/s
+    python local_model.py usage                  # resumen del registro de uso
     python local_model.py register-agy [--config <mcp_config.json>]
 
 Se espeja en aagy-ecc/scripts/py/ mediante sync_aagy_ecc.py.
@@ -84,6 +86,7 @@ K_FORMAT = "format"
 K_MAX_CHARS = "max_chars"
 K_NUM_CTX = "num_ctx"
 K_CONTENT = "content"
+K_DURATION = "duration_ms"
 
 # Variables de atajo del REQ, además de las AAGY_LOCAL_MODEL_<CLAVE> de aagy_config.
 ALIASES: Dict[str, str] = {
@@ -261,17 +264,27 @@ def get_status(settings: Settings) -> Status:
     return status
 
 
-def chat(settings: Settings, system: str, user: str, json_format: bool) -> str:
+def chat_raw(settings: Settings, system: str, user: str, json_format: bool, model: str = "") -> Dict[str, Any]:
     payload: Dict[str, Any] = {
-        "model": settings.tool_model,
+        "model": model or settings.tool_model,
         "messages": [{"role": "system", K_CONTENT: system}, {"role": "user", K_CONTENT: user}],
         "stream": False,
         "options": {K_NUM_CTX: settings.num_ctx},
     }
     if json_format:
         payload[K_FORMAT] = FORMAT_JSON
-    data = _http_json(f"{settings.url}/api/chat", payload, settings.timeout_s)
+    return _http_json(f"{settings.url}/api/chat", payload, settings.timeout_s)
+
+
+def chat(settings: Settings, system: str, user: str, json_format: bool) -> str:
+    data = chat_raw(settings, system, user, json_format)
     return str(data.get("message", {}).get(K_CONTENT, "")).strip()
+
+
+def tokens_per_second(data: Mapping[str, Any]) -> float:
+    count = data.get("eval_count") or 0
+    duration_ns = data.get("eval_duration") or 0
+    return round(count / (duration_ns / 1e9), 1) if count and duration_ns else 0.0
 
 
 # --------------------------------------------------------------------------- tareas
@@ -331,7 +344,7 @@ def _source(args: Mapping[str, Any], root: Path, max_chars: int) -> Tuple[str, b
 def run_task(settings: Settings, args: Mapping[str, Any], root: Optional[Path] = None) -> Dict[str, Any]:
     """Ejecuta una tarea del catálogo. Siempre devuelve un dict; ``error`` si algo falla."""
     started = time.monotonic()
-    result: Dict[str, Any] = {"model": settings.tool_model, "duration_ms": 0, "truncated": False}
+    result: Dict[str, Any] = {"model": settings.tool_model, K_DURATION: 0, "truncated": False}
     try:
         name = str(args.get("task", ""))
         spec = settings.tasks.get(name)
@@ -345,8 +358,67 @@ def run_task(settings: Settings, args: Mapping[str, Any], root: Optional[Path] =
         result["result"] = chat(settings, instruction, content, spec.get(K_FORMAT) == FORMAT_JSON)
     except LocalModelError as exc:
         result["error"] = str(exc)
-    result["duration_ms"] = int((time.monotonic() - started) * 1000)
+    result[K_DURATION] = int((time.monotonic() - started) * 1000)
+    log_usage(result, str(args.get("task", "")), root)
     return result
+
+
+# --------------------------------------------------------------------------- registro de uso (RF-14)
+
+def _git_common_dir(root: Path) -> Optional[Path]:
+    for folder in (root, *root.parents):
+        git = folder / ".git"
+        if git.is_dir():
+            return git
+        if git.is_file():
+            text = git.read_text(encoding=ENCODING, errors="replace").strip()
+            if text.startswith("gitdir:"):
+                gitdir = (folder / text.split(":", 1)[1].strip()).resolve()
+                common = gitdir / "commondir"
+                return (gitdir / common.read_text(encoding=ENCODING).strip()).resolve() if common.is_file() else gitdir
+    return None
+
+
+def usage_log_path(root: Optional[Path] = None) -> Optional[Path]:
+    common = _git_common_dir((root or Path.cwd()).resolve())
+    return common / SERVER_NAME / "usage.jsonl" if common else None
+
+
+def log_usage(result: Mapping[str, Any], task: str, root: Optional[Path] = None) -> None:
+    """Una línea por llamada, sin contenido: tarea, modelo, duración, bytes y si hubo error."""
+    path = usage_log_path(root)
+    if path is None:
+        return
+    line = {
+        "ts": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        "task": task,
+        "model": result.get("model", ""),
+        K_DURATION: result.get(K_DURATION, 0),
+        "bytes_out": len(str(result.get("result", ""))),
+        "ok": "error" not in result,
+    }
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding=ENCODING) as handle:
+            handle.write(json.dumps(line, ensure_ascii=False) + "\n")
+    except OSError:
+        return
+
+
+def usage_summary(root: Optional[Path] = None) -> Dict[str, Any]:
+    path = usage_log_path(root)
+    calls = ok = 0
+    ms = 0
+    if path and path.is_file():
+        for raw in path.read_text(encoding=ENCODING, errors="replace").splitlines():
+            try:
+                row = json.loads(raw)
+            except ValueError:
+                continue
+            calls += 1
+            ok += 1 if row.get("ok") else 0
+            ms += int(row.get(K_DURATION, 0))
+    return {"calls": calls, "ok": ok, "total_ms": ms, "path": str(path or "")}
 
 
 def is_private(path: str, settings: Settings, root: Optional[Path] = None) -> bool:
@@ -444,6 +516,29 @@ def _cmd_run(args: argparse.Namespace, settings: Settings) -> int:
     return 1 if "error" in result else 0
 
 
+def _cmd_bench(args: argparse.Namespace, settings: Settings) -> int:
+    models = [m for m in (args.models.split(",") if args.models else [settings.tool_model, settings.only_model]) if m]
+    if not models:
+        print("[aagy-local] Sin modelos que medir (local_model.tool / --models).", file=sys.stderr)
+        return 1
+    import local_model_ops as ops  # noqa: PLC0415 - evita la importación circular
+
+    root = _repo_root()
+    results = [ops.bench_model(settings, model, root) for model in models]
+    path = ops.bench_path(settings)
+    ops.save_bench(results, path)
+    for row in results:
+        print(f"[aagy-local] {row['model']}: precisión {row['accuracy']} · {row['tokens_per_s']} tokens/s ({row['samples']} muestras)")
+    print(f"  Guardado en {path}")
+    return 0
+
+
+def _cmd_usage(_args: argparse.Namespace, _settings: Settings) -> int:
+    summary = usage_summary()
+    print(f"[aagy-local] {summary['calls']} llamadas ({summary['ok']} sin error), {summary['total_ms']} ms en total. {summary['path']}")
+    return 0
+
+
 def _cmd_register(args: argparse.Namespace, _settings: Settings) -> int:
     path = args.config or default_agy_config()
     changed = register_agy(path, args.python)
@@ -463,6 +558,9 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p_run.add_argument("task")
     p_run.add_argument("--path", action="append")
     p_run.add_argument("--param", action="append", help="clave=valor")
+    p_bench = sub.add_parser("bench", help="Mide precisión y tokens/s de los modelos con ficheros del repo.")
+    p_bench.add_argument("--models", default="", help="Lista separada por comas (por defecto, los configurados).")
+    sub.add_parser("usage", help="Resumen del registro de uso local (sin contenido).")
     p_reg = sub.add_parser("register-agy", help="Registra aagy-local en el mcp_config.json de Antigravity.")
     p_reg.add_argument("--config", type=Path, default=None)
     p_reg.add_argument("--python", default="python")
@@ -477,7 +575,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         sys.stdout.reconfigure(encoding=ENCODING)
     args = parse_args(argv)
     settings = load_settings()
-    handlers = {"status": _cmd_status, "run": _cmd_run, "register-agy": _cmd_register}
+    handlers = {"status": _cmd_status, "run": _cmd_run, "bench": _cmd_bench, "usage": _cmd_usage, "register-agy": _cmd_register}
     try:
         return handlers.get(args.command, _cmd_set)(args, settings)
     except (LocalModelError, ValueError, OSError) as exc:
