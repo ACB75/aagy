@@ -3,7 +3,7 @@
 Motor de Diagnóstico Multimodal y Deep Ops con Gemini (stdlib pura).
 
 Provee capacidades de análisis masivo de logs, volcados de memoria y soporte
-para Post-Mortems 5W en Home-Lab con zero-overhead de tokens en reposo.
+para Post-Mortems 5W con zero-overhead de tokens en reposo.
 """
 from __future__ import annotations
 
@@ -64,7 +64,7 @@ def _heuristic_log_analysis(content: str) -> DeepOpsReport:
     if re.search(r"(ConnectionRefusedError|timeout|504 Gateway Time-out)", content, re.IGNORECASE):
         severity = "MEDIUM" if severity == "INFO" else severity
         summary_items.append("Anomalía de conectividad o saturación de red/ingress.")
-        recommendations.append("Verificar estado de Traefik/cluster-lb y probes de liveness/readiness.")
+        recommendations.append("Verificar el estado del proxy o balanceador de entrada y las probes de liveness/readiness.")
 
     if not summary_items:
         summary_items.append("No se detectaron patrones críticos evidentes en el volcado de logs.")

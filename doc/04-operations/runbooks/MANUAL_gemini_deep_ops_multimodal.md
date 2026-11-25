@@ -7,7 +7,7 @@
 
 ## 1. Filosofía de Diseño: Zero-Overhead en Reposo
 
-El ecosistema Home-Lab y Antigravity prioriza la economía estricta de tokens en cada turno conversacional. El servidor `gemini-mcp` (RLabs-Inc) contiene más de 30 herramientas especializadas que, si se cargaran permanentemente en el arnés global, consumirían de 4.500 a 10.000 tokens en reposo.
+El ecosistema proyecto consumidor y Antigravity prioriza la economía estricta de tokens en cada turno conversacional. El servidor `gemini-mcp` (RLabs-Inc) contiene más de 30 herramientas especializadas que, si se cargaran permanentemente en el arnés global, consumirían de 4.500 a 10.000 tokens en reposo.
 
 Para combinar la máxima potencia analítica con coste cero en reposo, se implementa una arquitectura en tres capas:
 

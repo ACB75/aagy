@@ -13,23 +13,23 @@ from format_commit import (
 
 
 def test_validate_valid_commit():
-    valid_msg = """feat-[cluster]: implement tenant storage manager
+    valid_msg = """feat-[scripts]: implement tenant storage manager
 
 Introduce isolated storage telemetry and directory quotas per tenant.
-- Enforce hermetic environments in cluster inventory.
+- Enforce hermetic environments in scripts inventory.
 - Verified with 100% unit tests passing.
 """
     result = validate_commit_message(valid_msg)
     assert result.is_valid is True
     assert result.commit_type == "feat"
-    assert result.projects == ("cluster",)
+    assert result.projects == ("scripts",)
     assert result.title == "implement tenant storage manager"
     assert result.body_length > 20
     assert len(result.errors) == 0
 
 
 def test_validate_multi_project_commit():
-    multi_proj_msg = """fix-[kakebo,cluster]: resolve cross-service jwt verification
+    multi_proj_msg = """fix-[doc,scripts]: resolve cross-service jwt verification
 
 Normalize curve parameters and ensure public keys match Ed25519 specification.
 - Verified with auth actuator health tests.
@@ -37,7 +37,7 @@ Normalize curve parameters and ensure public keys match Ed25519 specification.
     result = validate_commit_message(multi_proj_msg)
     assert result.is_valid is True
     assert result.commit_type == "fix"
-    assert result.projects == ("kakebo", "cluster")
+    assert result.projects == ("doc", "scripts")
     assert len(result.errors) == 0
 
 
@@ -72,14 +72,14 @@ This commit uses the legacy plus separator and must still validate cleanly.
 
 
 def test_validate_rejects_single_line_commit():
-    single_line = "feat-[cluster]: quick commit without explanation"
+    single_line = "feat-[scripts]: quick commit without explanation"
     result = validate_commit_message(single_line, strict=True)
     assert result.is_valid is False
     assert any("Cuerpo explicativo" in e for e in result.errors)
 
 
 def test_validate_rejects_invalid_title_format():
-    invalid_header = """invalidtype-[cluster]: standard commit format
+    invalid_header = """invalidtype-[scripts]: standard commit format
 
 Here is an explanation of the change that is long enough.
 """
@@ -91,13 +91,33 @@ Here is an explanation of the change that is long enough.
 def test_format_commit_message():
     output = format_commit_message(
         commit_type="refactor",
-        projects=["net", "cluster"],
+        projects=["infra", "scripts"],
         title="streamline traefik dynamic routing",
         body="Consolidated entrypoints and verified TLS passthrough.",
     )
-    assert output.startswith("refactor-[net,cluster]: streamline traefik dynamic routing\n\n")
+    assert output.startswith("refactor-[infra,scripts]: streamline traefik dynamic routing\n\n")
     assert "Consolidated entrypoints" in output
 
     # Validar que el resultado de format_commit_message pasa la validación
     result = validate_commit_message(output)
     assert result.is_valid is True
+
+
+MSG_BODY = "\n\nCuerpo explicativo suficientemente largo para la validación.\n"
+
+
+def test_projects_come_from_consumer_repo(tmp_path, monkeypatch):
+    """La lista de proyectos la declara el repo (`projects` de .governance/aagy.json)."""
+    import format_commit as fc
+
+    (tmp_path / ".governance").mkdir()
+    (tmp_path / ".governance" / "aagy.json").write_text('{"projects": ["api", "web"]}', encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    assert fc.allowed_projects() == frozenset({"api", "web"})
+    assert validate_commit_message("feat-[api,web]: algo" + MSG_BODY).is_valid
+    assert not validate_commit_message("feat-[otro]: algo" + MSG_BODY).is_valid
+
+
+def test_without_declared_projects_any_slug_is_valid():
+    assert validate_commit_message("feat-[cualquiera]: algo" + MSG_BODY, projects=None).is_valid
+    assert not validate_commit_message("feat-[Mal Slug]: algo" + MSG_BODY, projects=None).is_valid

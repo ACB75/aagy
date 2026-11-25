@@ -1,6 +1,6 @@
 # Fase 2: Plan de Acción, Diseño Arquitectónico y Estrategia TDD — Un worktree por agente
 
-> **Referencia de Gobernanza**: Fase 2 del Workflow de Ingeniería AAGY / Home-Lab
+> **Referencia de Gobernanza**: Fase 2 del Workflow de Ingeniería AAGY / proyecto consumidor
 > **ID de Tarea**: `feat/aagy/agent-worktrees`
 > **Requisitos**: [`REQ_aagy_agent_worktrees.md`](REQ_aagy_agent_worktrees.md) (APROBADO 2026-11-22)
 > **Fecha**: `2026-11-22` | **Autor/Rol**: `Claude (plan) / Master (aprobación)`
@@ -12,7 +12,7 @@
 ## 1. Prerrequisitos
 
 1. PR #56 (backlog compartido, `backlog.py`) y PR #55 (hooks de nombres de rama) en `main`. Ya lo están (`main` @ `b74fc3a`).
-2. `git` ≥ 2.38 (`git worktree add --detach`, `git switch --detach`) y `gh` autenticado en FRACTAL.
+2. `git` ≥ 2.38 (`git worktree add --detach`, `git switch --detach`) y `gh` autenticado en equipo local.
 3. Tests con `pytest` y repos git temporales; los que necesitan `pwsh` o `gh` real se saltan si no están.
 
 ---
@@ -35,10 +35,10 @@ Sin dependencias nuevas: Python stdlib + `git` + `gh`.
 ## 3. Arquitectura
 
 ```text
-C:\Workspace\projects\
-├── home-lab\               ← Master (main). Clon principal: tiene el .git real.
-├── home-lab-aagy\          ← Antigravity. Worktree, HEAD desacoplado o rama de tarea.
-├── home-lab-aagy-ecc\      ← Claude Code. Worktree, HEAD desacoplado o rama de tarea.
+<padre>\
+├── app\               ← Master (main). Clon principal: tiene el .git real.
+├── app-aagy\          ← Antigravity. Worktree, HEAD desacoplado o rama de tarea.
+├── app-aagy-ecc\      ← Claude Code. Worktree, HEAD desacoplado o rama de tarea.
 ├── aagy\  aagy-aagy\  aagy-aagy-ecc\   ← mismo patrón para el repo aagy
 ```
 
@@ -108,7 +108,7 @@ Códigos de salida: `0` hecho o nada que hacer, `3` bloqueado por trabajo sin gu
 - **Ficheros** (Claude `Write|Edit|MultiEdit|NotebookEdit`; agy `write_file|edit_file`): se resuelve la ruta absoluta (también rutas relativas y `..`). Se bloquea si cae en el principal o en el worktree del otro agente. Las lecturas no se bloquean.
 - **Comandos** (Claude `Bash|PowerShell`; agy `run_command`): se bloquea si el `cwd`, un `cd <ruta>`, un `git -C <ruta>` o un `Set-Location` apuntan al principal o al otro worktree y el comando escribe (`git` que no sea `status|log|diff|show|fetch|branch --list`, redirecciones `>`, `rm`, `mv`, `cp` con destino allí, `Remove-Item`, `Set-Content`…). También se bloquea `git worktree add|remove|move` a mano, salvo desde `agent_worktree.py`.
 - **Worktree nativo de Claude Code** (P-10): se deniega la herramienta `EnterWorktree` y `claude --worktree` / `-w`.
-- Mensaje: `[WORKTREE-GUARD] Claude trabaja en C:\...\home-lab-aagy-ecc. No puede escribir en C:\...\home-lab.`
+- Mensaje: `[WORKTREE-GUARD] Claude trabaja en C:\...\app-aagy-ecc. No puede escribir en C:\...\app.`
 - Si la sesión arrancó fuera de su worktree, el SessionStart de Claude lo avisa con la ruta correcta.
 
 ### 3.6 Cambios en piezas existentes
@@ -131,10 +131,10 @@ Códigos de salida: `0` hecho o nada que hacer, `3` bloqueado por trabajo sin gu
 
 ```mermaid
 sequenceDiagram
-    participant C as Claude (home-lab-aagy-ecc)
+    participant C as Claude (app-aagy-ecc)
     participant B as backlog.py
     participant G as GitHub
-    participant M as home-lab (Master)
+    participant M as app (Master)
     C->>B: claim T1
     B->>C: recycle --if-merged, switch -c feat/x/t1 origin/main
     C->>G: complete-task-pr → PR + auto-merge
@@ -180,20 +180,20 @@ sequenceDiagram
 
 ---
 
-## 7. Verificación en FRACTAL
+## 7. Verificación en equipo local
 
-1. `agent-worktree.ps1 init` en `home-lab` y en `aagy`.
-2. Abrir `home-lab-aagy` en Antigravity y `home-lab-aagy-ecc` en Claude Code.
-3. Tarea de prueba en cada uno → PR → merge → comprobar reciclado y que `home-lab` avanza solo.
-4. Con un fichero sin commit en `home-lab`, comprobar que no se toca y que sale el aviso.
-5. Intentar que Claude edite `home-lab` → bloqueado.
+1. `agent-worktree.ps1 init` en `app` y en `aagy`.
+2. Abrir `app-aagy` en Antigravity y `app-aagy-ecc` en Claude Code.
+3. Tarea de prueba en cada uno → PR → merge → comprobar reciclado y que `app` avanza solo.
+4. Con un fichero sin commit en `app`, comprobar que no se toca y que sale el aviso.
+5. Intentar que Claude edite `app` → bloqueado.
 6. `aagy-ecc-doctor` y `aagy-doctor` → `DOC-15 PASS`.
 
 ---
 
 ## 8. Migración
 
-- Hoy los dos agentes trabajan en `home-lab` y `aagy`. Antes de `init`, cada sesión abierta tiene que terminar o hacer `handoff`: su rama se empuja y luego se abre en el worktree del agente.
+- Hoy los dos agentes trabajan en `app` y `aagy`. Antes de `init`, cada sesión abierta tiene que terminar o hacer `handoff`: su rama se empuja y luego se abre en el worktree del agente.
 - Los worktrees `<repo>.wt/<id>` ya creados siguen funcionando; `DOC-15` los lista como aviso.
 
 ---
@@ -214,4 +214,4 @@ sequenceDiagram
 | ID | Decisión |
 | :--- | :--- |
 | D-01 | Una sola PR. |
-| D-02 | `home-lab` no tiene generados fuera de los lockfiles: basta con `install: "auto"`. |
+| D-02 | `app` no tiene generados fuera de los lockfiles: basta con `install: "auto"`. |

@@ -1,7 +1,7 @@
 # Manual de Operación: Telemetría de Tokens en Sesión y Política de Compactación
 
 > **Referencia de Gobernanza**: Optimización de Contexto y Gestión del Ciclo de Vida de Agentes  
-> **Ámbito**: Ecosistema Antigravity (`AGY`), Harness `aagy` y Monorepo `home-lab`  
+> **Ámbito**: Ecosistema Antigravity (`AGY`), Harness `aagy` y Monorepo `app`  
 > **Fecha de Publicación**: `2026-11-20`  
 
 ---

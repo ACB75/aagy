@@ -7,11 +7,11 @@
 
 ## Context
 
-El Nivel 2 de ADR-0001 sincronizaba skills de dominio en `<project>/.agents/` con fases nombradas según proyectos de `home-lab` (`kakebo`, `cluster`, `token-hill`) y `-TargetProject` apuntando a subcarpetas concretas. Eso acoplaba el plugin a un consumidor y dejaba copias repetidas en cinco subcarpetas versionadas de `home-lab` (94 ficheros idénticos al catálogo).
+El Nivel 2 de ADR-0001 sincronizaba skills de dominio en `<project>/.agents/` con fases nombradas según proyectos de `app` (`app`, `cluster`, `web`) y `-TargetProject` apuntando a subcarpetas concretas. Eso acoplaba el plugin a un consumidor y dejaba copias repetidas en cinco subcarpetas versionadas de `app` (94 ficheros idénticos al catálogo).
 
 ## Decision
 
-1. **Perfiles de stack, no de proyecto**: `aagy-sync.{ps1,sh}` ofrece `generic` (global), `network-infra`, `java-spring`, `angular`, `go`, `python` y `all`. Las fases antiguas (`infra`, `kakebo`, `cluster`, `token-hill`) se retiran con un error explicativo.
+1. **Perfiles de stack, no de proyecto**: `aagy-sync.{ps1,sh}` ofrece `generic` (global), `network-infra`, `java-spring`, `angular`, `go`, `python` y `all`. Las fases antiguas (`infra`, `app`, `cluster`, `web`) se retiran con un error explicativo.
 2. **El consumidor declara, el plugin instala**: cada repositorio declara sus perfiles en `<repo>/.governance/aagy-profiles.json` (`{"profiles": [...]}`). `aagy-sync -Repo <repo>` / `aagy-sync.sh --repo <repo>` delega en [`repo_profiles.py`](../../scripts/py/repo_profiles.py), que instala una sola vez la unión de perfiles (menos lo ya incluido en `generic`) en `<repo>/.agents/`.
 3. **Sin versionar copias**: lo instalado se registra en `.agents/.aagy-profiles.lock.json` y en un bloque gestionado de `.agents/.gitignore`; las skills y agentes propios del repositorio nunca se tocan.
 4. **Fuente única**: las listas de cada perfil siguen viviendo en `scripts/sh/aagy-sync.sh` (las lee `/aagy-doctor` y `repo_profiles.py`).
@@ -29,4 +29,4 @@ El Nivel 2 de ADR-0001 sincronizaba skills de dominio en `<project>/.agents/` co
 
 ### Risks
 
-- Un `.agents/` anidado en subcarpetas del consumidor volvería a duplicar contenido; los consumidores lo bloquean en su auditoría (`home-lab`: `workspace_audit.find_nested_agents_dirs`).
+- Un `.agents/` anidado en subcarpetas del consumidor volvería a duplicar contenido; los consumidores lo bloquean en su auditoría (`app`: `workspace_audit.find_nested_agents_dirs`).

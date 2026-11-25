@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import sys
 
 import pytest
@@ -97,9 +98,12 @@ def test_missing_manifest_fails_with_exit_code(tmp_path: Path, aagy: Path) -> No
     assert rp.main(["install", "--repo", str(tmp_path), "--aagy-root", str(aagy)]) == 1
 
 
+STACK_CASES = {"status", "generic", "network-infra", "java-spring", "angular", "go", "python", "all", "infra", "*"}
+
+
 def test_real_profiles_are_stack_named_and_agnostic() -> None:
     text = (_REPO_ROOT / "scripts" / "sh" / "aagy-sync.sh").read_text(encoding="utf-8")
     for profile in ("network-infra", "java-spring", "angular", "go", "python"):
         assert rp.expected_catalog(_REPO_ROOT, profile) is not None, profile
-    for consumer in ("home-lab", "kakebo", "token-hill"):
-        assert f"  {consumer})" not in text
+    cases = re.findall(r"^  ([a-z|-]+)\)$", text, re.MULTILINE)
+    assert all(set(c.split("|")) <= STACK_CASES for c in cases), cases

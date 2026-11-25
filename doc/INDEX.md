@@ -11,7 +11,7 @@
 - 🧭 **[`doc/CONTEXT.md`](CONTEXT.md)**: Vocabulario estable de dominio, arquitectura Two-Tier y límites de módulos.
 - 🚦 **[`doc/STATUS.md`](STATUS.md)**: Métricas de calidad, SonarQube Rating A, cobertura `pytest` y presupuesto de tokens.
 - 📜 **[`doc/LOG.md`](LOG.md)**: Registro histórico append-only de hitos arquitectónicos e incidentes materiales.
-- ⚙️ **[`.governance/docs-map.json`](../.governance/docs-map.json)**: Contrato v2 de rutas resuelto por [`scripts/py/docs_map.py`](../scripts/py/docs_map.py) (con fallback retrocompatible para `home-lab`).
+- ⚙️ **[`.governance/docs-map.json`](../.governance/docs-map.json)**: Contrato v2 de rutas resuelto por [`scripts/py/docs_map.py`](../scripts/py/docs_map.py) (con fallback retrocompatible para `app`).
 
 ---
 
@@ -61,10 +61,7 @@
 
 ### Runbooks Operativos (`doc/04-operations/runbooks/`)
 
-- 🔒 **[`MANUAL_audit_pg_locks.md`](04-operations/runbooks/MANUAL_audit_pg_locks.md)**: Analizador estático de bloqueos DDL y concurrencia en PostgreSQL LTS.
-- 🌐 **[`MANUAL_ingress_routes_validator.md`](04-operations/runbooks/MANUAL_ingress_routes_validator.md)**: Validador de congruencia Ingress Traefik, Split-DNS y catálogo `/portal`.
-- 🔄 **[`MANUAL_sdk_parity_audit.md`](04-operations/runbooks/MANUAL_sdk_parity_audit.md)**: Linter de paridad estática entre microservicios y `home-lab-sdk`.
-- 🚢 **[`MANUAL_multitier_deployment.md`](04-operations/runbooks/MANUAL_multitier_deployment.md)**: Despliegue automatizado multi-tier por etiquetas en FRACTAL y NEO.
+- 🚢 **[`MANUAL_multitier_deployment.md`](04-operations/runbooks/MANUAL_multitier_deployment.md)**: Despliegue automatizado multi-tier por etiquetas en equipo local y servidor Live.
 - 🧠 **[`MANUAL_gemini_deep_ops_multimodal.md`](04-operations/runbooks/MANUAL_gemini_deep_ops_multimodal.md)**: Diagnósticos multimodales bajo demanda con Gemini MCP.
 - 📊 **[`MANUAL_session_token_telemetry.md`](04-operations/runbooks/MANUAL_session_token_telemetry.md)**: Telemetría de tokens en sesión y política de auto-compactación.
 - 🧹 **[`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md)**: Arquitectura multi-runtime en `scripts/` y poda agresiva de reglas.

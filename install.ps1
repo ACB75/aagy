@@ -8,9 +8,8 @@
                    como plugin (marketplace local). Con -Destination copia además la plantilla
                    de proyecto (CLAUDE.md + .claude/).
       - aagy-ecc : Alias explícito de 'claude'.
-      - homelab  : Alias de compatibilidad hacia 'agy'.
 .PARAMETER Target
-    agy | claude | aagy-ecc | homelab
+    agy | claude | aagy-ecc
 .PARAMETER Profile
     minimal (por defecto: Nivel 1 Global con 16 core skills universales) |
     full    (despliegue del catálogo completo optimizado a <=140c)
@@ -22,10 +21,10 @@
 .EXAMPLE
     pwsh -File install.ps1 -Target agy -Profile minimal
     pwsh -File install.ps1 -Target aagy-ecc
-    pwsh -File install.ps1 -Target aagy-ecc -Destination C:\Workspace\my-app
+    pwsh -File install.ps1 -Target aagy-ecc -Destination <ruta-del-repo>
 #>
 param(
-    [ValidateSet("claude", "aagy-ecc", "agy", "homelab")]
+    [ValidateSet("claude", "aagy-ecc", "agy")]
     [string]$Target = "agy",
 
     [ValidateSet("minimal", "full")]
@@ -44,10 +43,6 @@ Write-Host "         ANYTHING ANTIGRAVITY (AAGY / AAGY-ECC) INSTALLER        " -
 Write-Host "=================================================================" -ForegroundColor Cyan
 Write-Host "Distribución seleccionada: $Target | Perfil: $Profile" -ForegroundColor Yellow
 
-if ($Target -eq "homelab") {
-    Write-Host "[i] Nota: 'homelab' ha sido unificado en la distribución 'aagy'." -ForegroundColor Yellow
-    $Target = "agy"
-}
 if ($Target -eq "aagy-ecc") {
     $Target = "claude"
 }

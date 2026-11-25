@@ -35,7 +35,7 @@ Enforces SonarQube static analysis rules and Quality Gate `A` ratings across Jav
    - Group related parameters into an immutable `record`, `@dataclass(frozen=True)`, Go `struct`, or TypeScript `interface` when parameter count exceeds 7.
 4. **`S108` & `S2486` (No Empty Blocks or Swallowed Exceptions)**:
    - Never leave `catch`, `else`, or nested blocks empty; handle or rethrow with context.
-5. **Java 25 Specific Rules (`kakebo-backend`)**:
+5. **Java 25 Specific Rules (Java backends)**:
    - **`java:S112`**: Never throw raw `RuntimeException`, `Exception`, `Throwable`, or `Error`; throw specific domain or standard exceptions (`IllegalArgumentException`, `IllegalStateException`).
    - **`java:S1452`**: Never return wildcard generic types (`ResponseEntity<?>`); return `ResponseEntity<SpecificDto>` or `ResponseEntity<Object>`.
    - **`java:S2696`**: Never assign `static` fields directly inside an instance method (`@PostConstruct`); delegate to a `private static` setter method.

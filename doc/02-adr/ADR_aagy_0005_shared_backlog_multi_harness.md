@@ -23,7 +23,7 @@ Claude Code (`aagy-ecc`) y Antigravity (`aagy`) trabajan en el mismo PC y en la 
 ### Positive
 
 - Cualquier agente puede continuar la tarea del otro con la nota `quick/HANDOFF_<id>.md`, la rama y el último commit.
-- Funciona en cualquier repo del home-lab (`backlog.py init`) y sin red.
+- Funciona en cualquier repo del app (`backlog.py init`) y sin red.
 - Los comandos `epic-*` que citaban `dev-team` y `story-lifecycle` ya existen.
 
 ### Negative

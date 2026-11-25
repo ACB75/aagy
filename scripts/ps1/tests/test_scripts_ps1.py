@@ -8,11 +8,9 @@ PS1_DIR = REPO_ROOT / "scripts" / "ps1"
 
 EXPECTED_PS1_SCRIPTS = [
     "archive-todo.ps1",
-    "audit-pg-locks.ps1",
     "backlog.ps1",
     "audit-plugin-parity.ps1",
     "sync-aagy-ecc.ps1",
-    "audit-sdk-parity.ps1",
     "audit-workspace.ps1",
     "auto-evolve.ps1",
     "complete-task-pr.ps1",
@@ -38,7 +36,6 @@ EXPECTED_PS1_SCRIPTS = [
     "sonar-audit.ps1",
     "sync-ideas-todo.ps1",
     "toggle-gemini-mcp.ps1",
-    "validate-ingress-routes.ps1",
 ]
 
 
@@ -64,5 +61,13 @@ def test_ps1_scripts_valid_structure():
 
 def test_auto_evolve_ps1_is_agnostic():
     content = (PS1_DIR / "auto-evolve.ps1").read_text(encoding="utf-8")
-    assert "home-lab" not in content.lower()
+    assert not [w for w in _consumer_terms() if w in content.lower()]
     assert "self_improve.py" in content
+
+
+def _consumer_terms():
+    """Términos de consumer_refs del repo (.governance/aagy.json): el plugin no los conoce."""
+    import json
+    cfg = Path(__file__).resolve().parents[3] / ".governance" / "aagy.json"
+    data = json.loads(cfg.read_text(encoding="utf-8")) if cfg.is_file() else {}
+    return [str(t).lower() for t in data.get("consumer_refs", [])]

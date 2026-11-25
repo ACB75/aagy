@@ -20,7 +20,7 @@
   - Wrappers `scripts/ps1/` y `scripts/sh/` como el resto de scripts.
 - **Fuera de Alcance (`Out-of-Scope`)**:
   - Reparaciones destructivas automáticas (borrar instalaciones, tocar `settings.json` del usuario fuera de la clave del plugin).
-  - Diagnóstico de proyectos de negocio (kakebo, cluster...) más allá de la plantilla de aagy.
+  - Diagnóstico de proyectos de negocio (app, cluster...) más allá de la plantilla de aagy.
   - Llamadas de red por defecto.
 
 ---

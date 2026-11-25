@@ -10,7 +10,7 @@
 .PARAMETER Type
     Tipo de commit Conventional (feat, fix, refactor, chore, docs, test, perf, build, ci, sec).
 .PARAMETER Projects
-    Proyectos o módulos afectados (ej. cluster, kakebo, whoiam, net, aagy).
+    Proyectos o módulos afectados (los que declare `projects` en .governance/aagy.json; sin lista, cualquier slug).
 .PARAMETER Title
     Título en modo imperativo.
 .PARAMETER Body
@@ -18,7 +18,7 @@
 .PARAMETER Json
     Emite el resultado en formato JSON estructurado.
 .EXAMPLE
-    .\format-commit.ps1 -Type feat -Projects cluster -Title "implement storage manager" -Body "Detalle..."
+    .\format-commit.ps1 -Type feat -Projects aagy -Title "implement storage manager" -Body "Detalle..."
 #>
 [CmdletBinding()]
 param(

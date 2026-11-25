@@ -1,6 +1,6 @@
 # Fase 1: Toma de Requisitos — Backlog compartido Claude Code (`aagy-ecc`) ↔ Antigravity (`aagy`)
 
-> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / Home-Lab
+> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / proyecto consumidor
 > **ID de Tarea**: `feat/aagy/shared-backlog-multi-harness`
 > **Fecha**: `2026-11-21` | **Autor/Rol**: `Claude (toma de requisitos) / Master (aprobación)`
 > **Estado**: `APROBADO` (Master, 2026-11-21, ver §8)
@@ -45,11 +45,11 @@
 
 | Opción | Cómo funciona | A favor | En contra |
 | :--- | :--- | :--- | :--- |
-| **A. Backlog markdown en el repo + protocolo de *claim* (recomendada)** | `TODO.md` sigue siendo la verdad; cada tarea lleva `owner`, `status`, `branch`, `updated`. `backlog.py` edita con bloqueo de fichero. | Reutiliza todo lo existente, cero infraestructura, visible en git y en PRs, funciona offline en FRACTAL. | Si los dos agentes editan en ramas distintas a la vez, el estado se reconcilia al hacer merge (conflictos en `TODO.md`). |
+| **A. Backlog markdown en el repo + protocolo de *claim* (recomendada)** | `TODO.md` sigue siendo la verdad; cada tarea lleva `owner`, `status`, `branch`, `updated`. `backlog.py` edita con bloqueo de fichero. | Reutiliza todo lo existente, cero infraestructura, visible en git y en PRs, funciona offline en equipo local. | Si los dos agentes editan en ramas distintas a la vez, el estado se reconcilia al hacer merge (conflictos en `TODO.md`). |
 | **B. GitHub Issues como autoridad (comandos `epic-*`)** | Cada tarea es un issue; labels = estado, assignee/label = agente. | Funciona entre máquinas y con sesiones de Claude en la nube; *claim* atómico; historial. | Requiere `gh` y red; más tokens por consulta; duplica `TODO.md` si no se elige uno solo. |
 | **C. Servidor MCP local de tareas (SQLite)** | Ambos harnesses se conectan al mismo MCP `aagy-tasks`. | Atómico y en tiempo real. | Proceso nuevo que mantener; el estado no queda en git; más superficie de seguridad. |
 
-**Decisión**: A. Los dos agentes trabajan en el mismo PC (FRACTAL) sobre la misma carpeta, así que no hace falta GitHub Issues ni un servidor. El CLI se diseña con un contrato que permitiría otro *backend* más adelante.
+**Decisión**: A. Los dos agentes trabajan en el mismo PC (equipo local) sobre la misma carpeta, así que no hace falta GitHub Issues ni un servidor. El CLI se diseña con un contrato que permitiría otro *backend* más adelante.
 
 ---
 
@@ -68,7 +68,7 @@
 - **`RF-11` Relevo por agotamiento de tokens (prioritario)**: cuando un agente se queda sin presupuesto (límite de uso, contexto lleno o fin de sesión), deja la tarea en `status=handoff` con una nota estructurada: objetivo, hecho, pendiente, rama, último commit, ficheros tocados y siguiente comando a ejecutar. Se dispara (a) a mano con `backlog.py handoff`, (b) desde el hook `Stop`/`PreCompact` de `aagy-ecc` y su equivalente en `aagy`, y (c) desde el guardrail de presupuesto de contexto existente cuando supera el umbral. El otro agente, al arrancar, ve primero las tareas en `handoff` y puede hacer `claim` y continuar sin preguntar a Master.
 - **`RF-12` Modo simultáneo y modo relevo**: se admiten los dos. En simultáneo, cada agente trabaja en una tarea distinta y el `claim` impide coger la misma. En relevo, la tarea pasa de un agente a otro con `handoff` y se conserva la rama.
 - **`RF-14` Épicas y comandos `epic-*`**: una tarea puede llevar `epic=<slug>` en sus metadatos, y una épica es un bloque `## Épica: <título>` en `TODO.md` con sus tareas debajo. Se implementan los comandos `epic-*` que ya citan las skills `dev-team` y `story-lifecycle`, pero sobre `backlog.py` (fichero, no GitHub): `/epic-decompose` (parte un REQ/objetivo en tareas de la épica), `/epic-claim` (coge la siguiente tarea libre de la épica), `/epic-sync` (resume avance, dueños y relevos) y `/epic-close` (archiva cuando todas están `done`). Existen como comandos en `aagy-ecc` y como workflows equivalentes en `aagy`. Las skills se corrigen para decir que la autoridad es `TODO.md`, no GitHub Issues.
-- **`RF-13` Repos consumidores del home-lab**: el CLI y los scripts del ciclo funcionan en cualquier repo con `.governance/docs-map.json`. Si el repo no lo tiene, `backlog.py init` crea `doc/06-backlog/` mínimo y el `docs-map.json`. Ambos plugins traen los mismos scripts, así que no dependen de que el repo los copie.
+- **`RF-13` Repos consumidores del app**: el CLI y los scripts del ciclo funcionan en cualquier repo con `.governance/docs-map.json`. Si el repo no lo tiene, `backlog.py init` crea `doc/06-backlog/` mínimo y el `docs-map.json`. Ambos plugins traen los mismos scripts, así que no dependen de que el repo los copie.
 
 ### 3.1. Criterios de Aceptación
 
@@ -80,20 +80,20 @@
 - [ ] **`CA-06`**: Cobertura de tests ≥ 80 % en `backlog.py`.
 - [ ] **`CA-07`**: Dado que Claude agota sus tokens en mitad de una tarea, cuando se abre una sesión de agy en la misma carpeta, entonces agy ve la tarea en `handoff` con la nota, hace `claim` y continúa en la misma rama.
 - [ ] **`CA-09`**: Dado un REQ aprobado, cuando Claude ejecuta `/epic-decompose`, entonces `TODO.md` contiene la épica con sus tareas en `todo`, y agy puede hacer `/epic-claim` sobre ella.
-- [ ] **`CA-08`**: En un repo del home-lab sin `doc/06-backlog/`, `backlog.py init` lo crea y `list` funciona desde los dos plugins.
+- [ ] **`CA-08`**: En un repo del app sin `doc/06-backlog/`, `backlog.py init` lo crea y `list` funciona desde los dos plugins.
 
 ---
 
-## 4. Matriz de Impacto en Arquitectura Home-Lab
+## 4. Matriz de Impacto en Arquitectura proyecto consumidor
 
 | Dimensión | ¿Impactado? | Riesgo | Detalle |
 | :--- | :---: | :---: | :--- |
-| **Paridad `home-lab-sdk`** | `NO` | - | Solo harness. |
+| **Paridad `<repo>-sdk`** | `NO` | - | Solo harness. |
 | **Persistencia PostgreSQL LTS** | `NO` | - | Estado en markdown (opción A). |
-| **Ingress Único (`cluster-lb`)** | `NO` | - | - |
+| **Ingress Único (`lb`)** | `NO` | - | - |
 | **Resolución Split-DNS** | `NO` | - | - |
 | **Restricciones de Hardware** | `NO` | Bajo | Script corto, sin proceso residente. |
-| **Variables `.env` / Secretos** | `NO` | - | Opción B necesitaría token de `gh`, ya presente en FRACTAL. |
+| **Variables `.env` / Secretos** | `NO` | - | Opción B necesitaría token de `gh`, ya presente en equipo local. |
 
 ---
 
@@ -124,8 +124,8 @@
 
 ## 8. Respuestas de Master (2026-11-21)
 
-1. **Dónde**: los dos en el mismo PC (FRACTAL), misma carpeta. → Opción A.
+1. **Dónde**: los dos en el mismo PC (equipo local), misma carpeta. → Opción A.
 2. **Modo**: los dos, simultáneo y por relevos, sobre todo cuando uno se queda sin tokens. → `RF-11`, `RF-12`.
-3. **Alcance**: también los repos del home-lab. → `RF-13`.
+3. **Alcance**: también los repos del app. → `RF-13`.
 4. **Comandos `epic-*`**: una épica es un objetivo grande partido en tareas pequeñas. Master decidió mantenerlos y usarlos. → `RF-14`, implementados sobre `TODO.md` (no GitHub Issues).
 5. **TTL del `claim`**: 4 h sin actualizar, confirmado. → `RF-03`.

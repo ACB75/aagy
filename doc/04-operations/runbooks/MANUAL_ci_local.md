@@ -58,3 +58,20 @@ python scripts/py/ci_local.py actions off   # quita solo las copiadas por aagy
   no las instala y `toggle_gemini_mcp.py --enable` se niega.
 - `gemini_deep_ops.py` no usa la API de Gemini: análisis heurístico más el resumen del
   modelo local (`local_run`) si está disponible.
+
+## 6. Sin referencias a proyectos consumidores
+
+El plugin no nombra a ningún proyecto, máquina ni usuario que lo use (RF-14).
+`scripts/py/consumer_refs.py` busca, en los ficheros versionados, los términos que el
+repo declara en `consumer_refs` de `.governance/aagy.json` (o de la capa de entorno) y
+falla si aparece alguno. El fichero que declara la lista es el único excluido.
+
+```json
+{ "projects": ["api", "web"], "consumer_refs": ["nombre-de-mi-proyecto", "mi-host"] }
+```
+
+Lo ejecutan `workspace_audit.py` (paso de auditoría de `ci_local.py`) y
+`audit_plugin_parity.py` (solo en los árboles de los plugins). Sin términos declarados,
+se salta. Los checks propios de un consumidor (paridad de SDK, bloqueos de migraciones,
+rutas de ingress) viven en su repo y se declaran en `checks` de
+`.governance/docs-map.json`; `complete_task_pr.py` los ejecuta sin conocerlos.

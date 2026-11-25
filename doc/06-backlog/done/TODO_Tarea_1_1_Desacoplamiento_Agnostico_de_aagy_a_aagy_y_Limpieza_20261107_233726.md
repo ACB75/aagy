@@ -16,7 +16,7 @@ completed_at: "2026-11-07 23:37:26"
 - **01 - ROLE:** AI Agent Platform Architect & Systems Tooling Engineer.
 - **02 - CONTEXT:** `[Sector: AI Agent Orchestration & Metatooling]` `[Data Type: Claude / Antigravity Plugins, Agent Manifests, Submodules]` `[Objective: Transformar el repositorio aagy en el plugin harness universal aagy (Anything, Anywhere, Gemini / Antigravity), completamente agnóstico y desacoplado, manteniendo intacto aagy/aagy y eliminando aagy/aagy]`.
 - **03 - PHASE 1 (ANALYSIS):**
-  - Actualmente `aagy` contiene acoplamientos específicos del dominio `home-lab`.
+  - Actualmente `aagy` contiene acoplamientos específicos del dominio `app`.
   - El arnés debe operar como un plugin agnóstico reutilizable en cualquier cuenta o entorno, trasladando dependencias de dominio a los repositorios destino.
 - **04 - PHASE 2 (STRATEGY):**
   - Aislar en `aagy` componentes abstractos, contratos reutilizables e interfaces genéricas.

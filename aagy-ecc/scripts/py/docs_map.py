@@ -5,7 +5,7 @@ Resolvedor centralizado de rutas documentales vía `.governance/docs-map.json` (
 Soporta:
   - Esquema v2 (`/doc` numerado `00-governance`..`06-backlog` y subclave `paths`).
   - Esquema v1 parcial (claves de nivel superior en `docs-map.json`).
-  - Fallback transparente a rutas clásicas heredadas (`home-lab`: `doc/TODO.md`, `doc/TODO_DONE/`, etc.).
+  - Fallback transparente a rutas clásicas heredadas (esquema v1: `doc/TODO.md`, `doc/TODO_DONE/`, etc.).
   - Validación estricta contra path traversal y rutas absolutas externas.
 
 Cumple con SonarQube Quality Gate A (S3776 <= 15, S1192 sin duplicados, S107 <= 7).

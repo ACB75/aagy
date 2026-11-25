@@ -14,14 +14,14 @@ flowchart TD
     subgraph Core["Repositorio Maestro Anything Antigravity (/aagy)"]
         Root["aagy (Raíz: plugin.json, hooks.json, rules/AGENTS.md, skills/, agents/)"]
         Scripts["scripts/{py,ps1,sh}/tests/<br/>(Automatización Multi-Runtime & Paridad Manual 1-a-1)"]
-        Docs["doc/ v2 + .governance/docs-map.json<br/>(00-governance .. 06-backlog + fallback home-lab)"]
+        Docs["doc/ v2 + .governance/docs-map.json<br/>(00-governance .. 06-backlog + fallback v1)"]
         SubPlugin["aagy-ecc/<br/>(Distribución Hermana para Claude Code)"]
     end
 
     subgraph Targets["Entornos de Despliegue"]
         AGY["Google Antigravity & Gemini 3.8<br/>(~/.gemini/config/plugins/aagy)"]
         Claude["Anthropic Claude Code CLI<br/>(CLAUDE.md + .claude/ + .claude-plugin/)"]
-        Projects["Proyectos & Monorepos (Home-Lab / Enterprise)<br/>(.agents/instincts/ + Lifecycle 4 Fases)"]
+        Projects["Proyectos & Monorepos consumidores<br/>(.agents/instincts/ + Lifecycle 4 Fases)"]
     end
 
     Root --> AGY
@@ -114,7 +114,7 @@ pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover -Scope all
 
 ## 5. Arquitectura Documental `/doc` v2 y Gobernanza
 
-La documentación sigue el estándar **`/doc` v2** gobernado por [`.governance/docs-map.json`](.governance/docs-map.json) (con *fallback* retrocompatible automático para proyectos clásicos como `home-lab`):
+La documentación sigue el estándar **`/doc` v2** gobernado por [`.governance/docs-map.json`](.governance/docs-map.json) (con *fallback* retrocompatible automático para proyectos con la estructura clásica v1):
 
 - 📑 **[`doc/INDEX.md`](doc/INDEX.md)**: Índice maestro navegable de toda la documentación.
 - 🧭 **[`doc/CONTEXT.md`](doc/CONTEXT.md)**: Vocabulario canónico y fronteras del ecosistema `aagy` / `aagy-ecc`.

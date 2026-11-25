@@ -48,13 +48,13 @@ def fake_gh(tmp_path, monkeypatch):
 
 @pytest.fixture()
 def repo(tmp_path, monkeypatch):
-    """Remoto bare + clon principal `home-lab` en main, con .gitignore y un .env sin versionar."""
+    """Remoto bare + clon principal `app` en main, con .gitignore y un .env sin versionar."""
     monkeypatch.chdir(tmp_path)
     remote = tmp_path / "remote.git"
     git(tmp_path, "init", "--bare", "-b", "main", str(remote))
     work = tmp_path / "projects"
     work.mkdir()
-    main = work / "home-lab"
+    main = work / "app"
     git(work, "clone", str(remote), str(main))
     for key, value in (("user.email", "t@example.com"), ("user.name", "Test"), ("commit.gpgsign", "false")):
         git(main, "config", key, value)
@@ -105,7 +105,7 @@ def test_init_creates_two_detached_worktrees(repo):
     layout = layout_of(repo)
     messages = aw.op_init(layout, install=False)
     for agent, suffix in (("agy", "-aagy"), ("claude", "-aagy-ecc")):
-        path = repo.parent / f"home-lab{suffix}"
+        path = repo.parent / f"app{suffix}"
         assert path.is_dir()
         assert git(path, "rev-parse", "--abbrev-ref", "HEAD") == "HEAD"
         assert (path / ".env").read_text(encoding="utf-8") == "SECRET=1\n"
@@ -120,26 +120,26 @@ def test_init_creates_two_detached_worktrees(repo):
 def test_where_roles(repo, tmp_path):
     layout = layout_of(repo)
     aw.op_init(layout, install=False)
-    from_wt = aw.find_layout(repo.parent / "home-lab-aagy-ecc")
+    from_wt = aw.find_layout(repo.parent / "app-aagy-ecc")
     assert from_wt is not None and from_wt.main == layout.main
-    assert from_wt.role(repo.parent / "home-lab-aagy-ecc" / "src") == "claude"
-    assert from_wt.role(repo.parent / "home-lab-aagy") == "agy"
+    assert from_wt.role(repo.parent / "app-aagy-ecc" / "src") == "claude"
+    assert from_wt.role(repo.parent / "app-aagy") == "agy"
     assert from_wt.role(repo / "doc") == "main"
     assert from_wt.role(tmp_path) == "other"
-    assert aw.find_layout(repo.parent / "home-lab-aagy", use_git=False).main == layout.main
+    assert aw.find_layout(repo.parent / "app-aagy", use_git=False).main == layout.main
 
 
 def test_recycle_merged_clean(repo, fake_gh):
     layout = layout_of(repo)
     aw.op_init(layout, install=False)
     wt = layout.worktrees["claude"]
-    start_task(wt, "feat/home-lab/t1")
-    head = merge_on_remote(repo, wt, "feat/home-lab/t1")
+    start_task(wt, "feat/app/t1")
+    head = merge_on_remote(repo, wt, "feat/app/t1")
     fake_gh("MERGED", head)
     messages = aw.op_recycle(layout, "claude", install=False)
     assert git(wt, "rev-parse", "HEAD") == git(repo, "rev-parse", "origin/main")
     assert git(wt, "rev-parse", "--abbrev-ref", "HEAD") == "HEAD"
-    assert not git(repo, "branch", "--list", "feat/home-lab/t1")
+    assert not git(repo, "branch", "--list", "feat/app/t1")
     assert (wt / ".env").is_file()
     assert git(repo, "rev-parse", "HEAD") == git(repo, "rev-parse", "origin/main")
     assert any("principal actualizado" in m for m in messages)
@@ -149,23 +149,23 @@ def test_recycle_blocks_on_dirty(repo, fake_gh):
     layout = layout_of(repo)
     aw.op_init(layout, install=False)
     wt = layout.worktrees["agy"]
-    start_task(wt, "fix/home-lab/t2")
-    head = merge_on_remote(repo, wt, "fix/home-lab/t2")
+    start_task(wt, "fix/app/t2")
+    head = merge_on_remote(repo, wt, "fix/app/t2")
     fake_gh("MERGED", head)
     (wt / "README.md").write_text("sin guardar\n", encoding="utf-8")
     with pytest.raises(aw.WorktreeError) as err:
         aw.op_recycle(layout, "agy", install=False)
     assert err.value.code == aw.EXIT_BLOCKED
     assert (wt / "README.md").read_text(encoding="utf-8") == "sin guardar\n"
-    assert git(wt, "rev-parse", "--abbrev-ref", "HEAD") == "fix/home-lab/t2"
+    assert git(wt, "rev-parse", "--abbrev-ref", "HEAD") == "fix/app/t2"
 
 
 def test_recycle_blocks_on_commits_after_pr(repo, fake_gh):
     layout = layout_of(repo)
     aw.op_init(layout, install=False)
     wt = layout.worktrees["claude"]
-    start_task(wt, "feat/home-lab/t3")
-    head = merge_on_remote(repo, wt, "feat/home-lab/t3")
+    start_task(wt, "feat/app/t3")
+    head = merge_on_remote(repo, wt, "feat/app/t3")
     (wt / "y.txt").write_text("más\n", encoding="utf-8")
     git(wt, "add", "y.txt")
     git(wt, "commit", "-m", "posterior")
@@ -180,13 +180,13 @@ def test_recycle_not_merged(repo, fake_gh):
     layout = layout_of(repo)
     aw.op_init(layout, install=False)
     wt = layout.worktrees["claude"]
-    start_task(wt, "feat/home-lab/t4")
+    start_task(wt, "feat/app/t4")
     fake_gh("OPEN", git(wt, "rev-parse", "HEAD"))
     assert aw.op_recycle(layout, "claude", if_merged=True, install=False) == []
     with pytest.raises(aw.WorktreeError) as err:
         aw.op_recycle(layout, "claude", install=False)
     assert err.value.code == aw.EXIT_NOT_MERGED
-    assert git(wt, "rev-parse", "--abbrev-ref", "HEAD") == "feat/home-lab/t4"
+    assert git(wt, "rev-parse", "--abbrev-ref", "HEAD") == "feat/app/t4"
 
 
 def test_recycle_hard_recreate(repo, fake_gh):
@@ -205,8 +205,8 @@ def test_recycle_keeps_dirty_main(repo, fake_gh):
     layout = layout_of(repo)
     aw.op_init(layout, install=False)
     wt = layout.worktrees["claude"]
-    start_task(wt, "feat/home-lab/t5")
-    head = merge_on_remote(repo, wt, "feat/home-lab/t5")
+    start_task(wt, "feat/app/t5")
+    head = merge_on_remote(repo, wt, "feat/app/t5")
     fake_gh("MERGED", head)
     (repo / "README.md").write_text("de Master\n", encoding="utf-8")
     before = git(repo, "rev-parse", "HEAD")
@@ -248,7 +248,7 @@ def test_guard_file_paths(active):
     claude = active.worktrees["claude"]
     assert guard.guard_file("claude", claude, "src/a.py") is None
     assert guard.guard_file("claude", claude, str(active.main / "README.md"))
-    assert guard.guard_file("claude", claude, "../home-lab/README.md")
+    assert guard.guard_file("claude", claude, "../app/README.md")
     assert guard.guard_file("claude", claude, str(active.worktrees["agy"] / "x.md"))
     assert guard.guard_file("agy", active.worktrees["agy"], str(claude / "x.md"))
 
@@ -319,15 +319,15 @@ def test_backlog_claim_and_handoff_between_worktrees(repo):
     claude, agy = layout.worktrees["claude"], layout.worktrees["agy"]
     ctx = backlog.Context(repo=backlog.locate_repo(claude), cwd=claude)
     entry = backlog.op_claim(ctx, "t-uno", "claude", None, False, False)
-    assert entry["branch"] == "feat/home-lab/t-uno"
-    assert git(claude, "rev-parse", "--abbrev-ref", "HEAD") == "feat/home-lab/t-uno"
+    assert entry["branch"] == "feat/app/t-uno"
+    assert git(claude, "rev-parse", "--abbrev-ref", "HEAD") == "feat/app/t-uno"
     assert entry[backlog.K_AGENT_WORKTREE] == str(claude)
     backlog.op_handoff(ctx, "claude", "t-uno", "sigue tú", "agy")
     assert git(claude, "rev-parse", "--abbrev-ref", "HEAD") == "HEAD"
     ctx_agy = backlog.Context(repo=backlog.locate_repo(agy), cwd=agy)
     entry_agy = backlog.op_claim(ctx_agy, "t-uno", "agy", None, False, False)
     assert entry_agy["previous_owner"] == "claude"
-    assert git(agy, "rev-parse", "--abbrev-ref", "HEAD") == "feat/home-lab/t-uno"
+    assert git(agy, "rev-parse", "--abbrev-ref", "HEAD") == "feat/app/t-uno"
     assert entry_agy[backlog.K_AGENT_WORKTREE] == str(agy)
 
 

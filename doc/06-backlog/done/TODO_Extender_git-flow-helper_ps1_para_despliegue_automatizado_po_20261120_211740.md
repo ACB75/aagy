@@ -14,7 +14,7 @@ completed_at: "2026-11-20 21:17:40"
 ### Detalle Original
 
 - **01 - ROLE:** Release Automation & Multi-Tier Deployment Engineer.
-- **02 - CONTEXT:** `[Sector: Continuous Delivery & Infrastructure Automation]` `[Data Type: PowerShell git-flow-helper.ps1, SSH / Docker Compose commands]` `[Objective: Integrar en la acción 'promote' de git-flow-helper.ps1 la capacidad opcional (-Deploy) de conectarse al host de Home-Lab mediante SSH o localmente, ejecutar el pull de imágenes o checkout del tag, levantar los contenedores y verificar los healthchecks automáticos con rollback en < 2 minutos si fallan]` `[Restrictions: No interrumpir servicios no afectados; rollback garantizado ante cualquier código de salida no-cero]`.
+- **02 - CONTEXT:** `[Sector: Continuous Delivery & Infrastructure Automation]` `[Data Type: PowerShell git-flow-helper.ps1, SSH / Docker Compose commands]` `[Objective: Integrar en la acción 'promote' de git-flow-helper.ps1 la capacidad opcional (-Deploy) de conectarse al host de proyecto consumidor mediante SSH o localmente, ejecutar el pull de imágenes o checkout del tag, levantar los contenedores y verificar los healthchecks automáticos con rollback en < 2 minutos si fallan]` `[Restrictions: No interrumpir servicios no afectados; rollback garantizado ante cualquier código de salida no-cero]`.
 - **03 - PHASE 1 (ANALYSIS):**
   - Actualmente `git-flow-helper.ps1 -Action promote` crea el tag semántico anotado y lo sube a GitHub, pero el despliegue físico en el servidor de destino requiere pasos manuales por SSH.
   - Se busca cerrar el ciclo Trunk-Based para que la promoción ejecute el despliegue y valide las sondas de salud de forma unificada.

@@ -1,19 +1,23 @@
 # Manual de Operación: Despliegue Automatizado por Etiquetas (`git-flow-helper.ps1`)
 
-> **Ecosistema**: AAGY Ecosystem & Home-Lab  
+> **Ecosistema**: AAGY (cualquier repo consumidor)  
 > **Ubicación Canónica**: `scripts/ps1/git-flow-helper.ps1` y `git-flow-helper.sh`  
 > **Gobernanza**: ADR-0006 (Trunk-Based Development & Multi-Tier Promotion)  
 
 ---
 
-## 1. Filosofía de Promoción Multi-Tier en Home-Lab
+## 1. Filosofía de Promoción Multi-Tier
 
-Home-Lab implementa un modelo de desarrollo basado en tronco canónico (*Trunk-Based Development*):
+El repo consumidor implementa un modelo de desarrollo basado en tronco canónico (*Trunk-Based Development*):
 
 - Todo cambio se integra exclusivamente en `main` mediante PRs aisladas y automerge squash (`LOCAL`).
 - La promoción hacia entornos físicos de prueba (`SANDBOX`) y producción (`LIVE`) se orquesta a través de **etiquetas Git semánticas inmutables**:
-  - `SANDBOX`: etiqueta `vX.Y.Z-sandbox` desplegada en el servidor **FRACTAL** (`192.168.1.100`).
-  - `LIVE`: etiqueta `vX.Y.Z` desplegada en el servidor **NEO** (`192.168.1.200`).
+  - `SANDBOX`: etiqueta `vX.Y.Z-sandbox` desplegada en el host `hosts.sandbox`.
+  - `LIVE`: etiqueta `vX.Y.Z` desplegada en el host `hosts.live`.
+
+Los hosts no viven en el plugin: se leen de la capa de entorno de `aagy_config`
+(`<AAGY_ENV_DIR>/aagy/env.json`) o de `AAGY_HOSTS_SANDBOX` / `AAGY_HOSTS_LIVE`.
+Si falta el del entorno pedido, `-Deploy` para y dice qué clave declarar.
 
 La acción `promote` de `git-flow-helper.ps1` automatiza el etiquetado, la publicación en GitHub y el despliegue físico desatendido con sondas de salud y rollback instantáneo.
 
@@ -26,7 +30,7 @@ sequenceDiagram
     autonumber
     actor Dev as Ingeniero / Pipeline
     participant Tool as git-flow-helper (-Deploy)
-    participant Host as Host FRACTAL / NEO
+    participant Host as Host Sandbox / Live
     participant SRE as Sondas de Salud
 
     Dev->>Tool: promote -Tag v1.2.0-sandbox -Deploy
@@ -54,10 +58,10 @@ sequenceDiagram
 # 1. Simulación segura previa (-DryRun)
 pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox -Deploy -DryRun
 
-# 2. Despliegue en SANDBOX (FRACTAL)
+# 2. Despliegue en SANDBOX (hosts.sandbox)
 pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.2.0-sandbox -Deploy
 
-# 3. Despliegue en LIVE (NEO)
+# 3. Despliegue en LIVE (hosts.live)
 pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.2.0 -Deploy -Environment live
 
 # 4. Promoción clásica sin despliegue (solo etiquetado Git)

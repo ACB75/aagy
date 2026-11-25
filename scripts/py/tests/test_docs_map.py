@@ -24,7 +24,7 @@ from docs_map import (
 
 
 def test_legacy_fallback_without_docs_map(tmp_path: Path) -> None:
-    """Si no existe .governance/docs-map.json, usa rutas clásicas heredadas de home-lab."""
+    """Si no existe .governance/docs-map.json, usa rutas clásicas heredadas (esquema v1)."""
     dmap = load_docs_map(tmp_path)
     assert dmap.schema_version == 1
     assert dmap.relative("todo") == "doc/TODO.md"

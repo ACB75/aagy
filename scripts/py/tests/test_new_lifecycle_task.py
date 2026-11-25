@@ -56,9 +56,9 @@ def _seed_v2_repo(tmp_path: Path) -> None:
 
 def test_slugify_task_id():
     """Verifica que el generador de slugs limpie prefijos de rama y caracteres especiales."""
-    assert slugify_task_id("feat/kakebo/export-csv") == "kakebo_export_csv"
+    assert slugify_task_id("feat/app/export-csv") == "app_export_csv"
     assert slugify_task_id("fix/cluster/oom-timeout") == "cluster_oom_timeout"
-    assert slugify_task_id("refactor/whoiam/signals-upgrade") == "whoiam_signals_upgrade"
+    assert slugify_task_id("refactor/auth/signals-upgrade") == "auth_signals_upgrade"
     assert slugify_task_id("simple-task") == "simple_task"
     assert slugify_task_id("") == "task"
 
@@ -66,10 +66,10 @@ def test_slugify_task_id():
 def test_render_template_content():
     """Verifica la sustitución de marcadores de posición."""
     raw = "ID: <id_tarea> | Fecha: YYYY-MM-DD | Doc: REQ_<id_tarea>.md"
-    rendered = render_template_content(raw, "feat/kakebo/test", "2026-11-20")
-    assert "ID: feat/kakebo/test" in rendered
+    rendered = render_template_content(raw, "feat/app/test", "2026-11-20")
+    assert "ID: feat/app/test" in rendered
     assert "Fecha: 2026-11-20" in rendered
-    assert "Doc: REQ_feat/kakebo/test.md" in rendered
+    assert "Doc: REQ_feat/app/test.md" in rendered
 
 
 def test_scaffold_lifecycle_task_dry_run(tmp_path: Path):
@@ -87,7 +87,7 @@ def test_scaffold_lifecycle_task_dry_run(tmp_path: Path):
         (tmpl_dir / filename).write_text(f"Content for {filename}", encoding="utf-8")
 
     files = scaffold_lifecycle_task(
-        task_id="feat/kakebo/test",
+        task_id="feat/app/test",
         repo_root=tmp_path,
         templates_rel="doc/templates",
         output_rel="doc/plan",
@@ -112,19 +112,19 @@ def test_scaffold_lifecycle_task_creates_files(tmp_path: Path):
         (tmpl_dir / filename).write_text(f"Template for <id_tarea>", encoding="utf-8")
 
     files = scaffold_lifecycle_task(
-        task_id="feat/kakebo/export-csv",
+        task_id="feat/app/export-csv",
         repo_root=tmp_path,
         templates_rel="doc/templates",
         output_rel="doc/plan",
     )
     assert len(files) == 4
-    assert (out_dir / "REQ_kakebo_export_csv.md").exists()
-    assert (out_dir / "PLAN_kakebo_export_csv.md").exists()
-    assert (out_dir / "DOCS_kakebo_export_csv.md").exists()
-    assert (out_dir / "REVIEW_kakebo_export_csv.md").exists()
+    assert (out_dir / "REQ_app_export_csv.md").exists()
+    assert (out_dir / "PLAN_app_export_csv.md").exists()
+    assert (out_dir / "DOCS_app_export_csv.md").exists()
+    assert (out_dir / "REVIEW_app_export_csv.md").exists()
 
-    content = (out_dir / "REQ_kakebo_export_csv.md").read_text(encoding="utf-8")
-    assert "feat/kakebo/export-csv" in content
+    content = (out_dir / "REQ_app_export_csv.md").read_text(encoding="utf-8")
+    assert "feat/app/export-csv" in content
 
 
 def test_scaffold_lifecycle_task_prevents_overwrite_without_force(tmp_path: Path):
@@ -142,11 +142,11 @@ def test_scaffold_lifecycle_task_prevents_overwrite_without_force(tmp_path: Path
     ]:
         (tmpl_dir / filename).write_text("New template content", encoding="utf-8")
 
-    req_file = out_dir / "REQ_kakebo_existing.md"
+    req_file = out_dir / "REQ_app_existing.md"
     req_file.write_text("Existing custom content", encoding="utf-8")
 
     scaffold_lifecycle_task(
-        task_id="feat/kakebo/existing",
+        task_id="feat/app/existing",
         repo_root=tmp_path,
         templates_rel="doc/templates",
         output_rel="doc/plan",
@@ -156,7 +156,7 @@ def test_scaffold_lifecycle_task_prevents_overwrite_without_force(tmp_path: Path
 
     # Con force=True debe sobrescribir
     scaffold_lifecycle_task(
-        task_id="feat/kakebo/existing",
+        task_id="feat/app/existing",
         repo_root=tmp_path,
         templates_rel="doc/templates",
         output_rel="doc/plan",
@@ -223,10 +223,10 @@ def test_legacy_fallback_resolution_without_docs_map(tmp_path: Path) -> None:
     for filename in ALL_TEMPLATE_FILENAMES:
         (tmpl_dir / filename).write_text("Legacy <id_tarea>", encoding="utf-8")
 
-    created = scaffold_lifecycle_task(task_id="feat/homelab/compat", repo_root=tmp_path, phase="PLAN")
+    created = scaffold_lifecycle_task(task_id="feat/legacy/compat", repo_root=tmp_path, phase="PLAN")
     assert len(created) == 3
-    assert (tmp_path / "doc" / "plan" / "PLAN_homelab_compat.md").is_file()
-    assert not (tmp_path / "doc" / "plan" / "REQ_homelab_compat.md").exists()
+    assert (tmp_path / "doc" / "plan" / "PLAN_legacy_compat.md").is_file()
+    assert not (tmp_path / "doc" / "plan" / "REQ_legacy_compat.md").exists()
 
 
 def test_parse_issue_metadata_extracts_canonical_branch() -> None:
