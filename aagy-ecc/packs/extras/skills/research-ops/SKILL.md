@@ -13,16 +13,14 @@ Use this when the user asks to research something current, compare options, enri
 
 Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `research-ops`.
 
-This is the operator wrapper around the repo's research stack. It is not a replacement for `deep-research`, `exa-search`, or `market-research`; it tells you when and how to use them together.
+This is the operator wrapper around the repo's research stack. It coordinates native web search, local docs lookup, and durable knowledge capture without requiring paid search skills.
 
 ## Skill Stack
 
 Pull these AAGY-native skills into the workflow when relevant:
 
-- `exa-search` for fast current-web discovery
-- `deep-research` for multi-source synthesis with citations
-- `market-research` when the end result should be a recommendation or ranked decision
-- `lead-intelligence` when the task is people/company targeting instead of generic research
+- `documentation-lookup` for official API/framework documentation
+- `search-first` to check existing local code, docs, and packages before external lookups
 - `knowledge-ops` when the result should be stored in durable context afterward
 
 ## When to Use
@@ -65,10 +63,10 @@ Choose the right lane before searching:
 
 ### 3. Take the lightest useful evidence path first
 
-- use `exa-search` for fast discovery
-- escalate to `deep-research` when synthesis or multiple sources matter
-- use `market-research` when the outcome should end in a recommendation
-- hand off to `lead-intelligence` when the real ask is target ranking or warm-path discovery
+- check local code and docs first (`search-first`)
+- use native web search or `documentation-lookup` for fast current-web discovery
+- synthesize across multiple primary sources with explicit citations and dates when accuracy matters
+- persist durable findings with `knowledge-ops` when the result will be reused
 
 ### 4. Report with explicit evidence boundaries
 

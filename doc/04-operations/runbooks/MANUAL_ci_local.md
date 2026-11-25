@@ -52,8 +52,8 @@ python scripts/py/ci_local.py actions off   # quita solo las copiadas por aagy
 
 ## 5. Dependencias de pago
 
-- Las skills que usan una API de pago declaran `cost: paid` en su frontmatter
-  (`exa-search`, `deep-research`). `audit_plugin_parity.py` lo comprueba.
+- Las skills que usen una API de pago deben declarar `cost: paid` en su frontmatter
+  (actualmente el catálogo no incluye skills de pago). `audit_plugin_parity.py` lo comprueba.
 - Con `AAGY_BUDGET` sin definir o `0` (`budget` en las capas de `aagy_config`), `aagy-sync`
   no las instala y `toggle_gemini_mcp.py --enable` se niega.
 - `gemini_deep_ops.py` no usa la API de Gemini: análisis heurístico más el resumen del

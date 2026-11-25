@@ -87,8 +87,12 @@ def test_budget_defaults_to_zero(tmp_path: Path) -> None:
     assert aagy_config.paid_allowed(root, {"AAGY_BUDGET": "abc"}) is False
 
 
-def test_paid_skills_declared() -> None:
-    assert {"exa-search", "deep-research"} <= set(aagy_config.paid_skills(_REPO_ROOT / "skills"))
+def test_paid_skills_declared(tmp_path: Path) -> None:
+    assert aagy_config.paid_skills(_REPO_ROOT / "skills") == []
+    sample = tmp_path / "paid-demo"
+    sample.mkdir()
+    (sample / "SKILL.md").write_text("---\nname: paid-demo\ncost: paid\n---\n", encoding="utf-8")
+    assert aagy_config.paid_skills(tmp_path) == ["paid-demo"]
     discrepancies: List[str] = []
     parity._check_paid_skills(_REPO_ROOT, discrepancies)
     assert discrepancies == []
