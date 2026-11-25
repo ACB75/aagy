@@ -29,9 +29,6 @@
 
 > Que todos los workflows y documentos salgan de una plantilla genérica ampliable y que aagy y aagy-ecc se comporten igual. REQ: doc/06-backlog/plans/REQ_aagy_generic_templates.md
 
-- [ ] **Fase 4 (complete-task-pr) con motor Python único en los dos plugins**
-  <!-- aagy-task: id=parity-phase4-python epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=95 -->
-
 - [ ] **Paridad de hooks entre plugins con un solo motor Python (relevo, compactación e inicio)**
   <!-- aagy-task: id=parity-hooks epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=96 -->
 

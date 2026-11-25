@@ -31,7 +31,7 @@ trabajando en el principal. Después abre `home-lab-aagy` en Antigravity y
 ## 3. Ciclo de una tarea
 
 1. El agente hace `backlog.py claim <id>` en su worktree: se crea la rama `feat/<proyecto>/<id>` desde `origin/main`.
-2. Trabaja y cierra con `complete-task-pr.ps1`.
+2. Trabaja y cierra con `python scripts/py/complete_task_pr.py` (abre la PR; la fusiona una persona).
 3. Tras el merge, `agent_worktree.py recycle`:
    1. Comprueba con `gh` que la PR está `MERGED`.
    2. Comprueba que no hay trabajo sin guardar. Si lo hay, **se para y lo lista**.
@@ -40,7 +40,7 @@ trabajando en el principal. Después abre `home-lab-aagy` en Antigravity y
    5. Copia los `.env` del principal y regenera `node_modules` / `.venv`.
    6. Actualiza tu principal con `--ff-only` si está en `main` y limpio.
 
-El reciclado se lanza solo al final de `complete-task-pr`, en el siguiente
+El reciclado se lanza solo al final de `complete_task_pr.py --merge`, en el siguiente
 `claim`/`done` y, en Claude Code, al iniciar sesión. A mano:
 
 ```powershell
