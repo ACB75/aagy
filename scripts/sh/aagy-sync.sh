@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # aagy-sync.sh - Sincronizador de Anything Antigravity (aagy) para Linux (ADR-0001, perfiles de stack)
+# Prepara la copia nueva en un directorio temporal y la aplica con install_manifest.py apply:
+#   --hard     borra los ficheros que el perfil ya no trae
+#   --force    pisa también los ficheros editados a mano
+#   --dry-run  muestra qué cambiaría sin tocar nada
 # ==============================================================================
 set -euo pipefail
+
+APPLY_FLAGS=()
+POSITIONAL=()
+for arg in "$@"; do
+  case "$arg" in
+    --hard|--force|--dry-run) APPLY_FLAGS+=("$arg") ;;
+    *) POSITIONAL+=("$arg") ;;
+  esac
+done
+set -- ${POSITIONAL[@]+"${POSITIONAL[@]}"}
 
 PHASE="${1:-status}"
 if [ "$PHASE" = "--repo" ]; then
@@ -10,25 +24,34 @@ if [ "$PHASE" = "--repo" ]; then
   py="$(command -v python3 || command -v python)"
   exec "$py" "$SCRIPT_DIR/../py/repo_profiles.py" install --repo "${2:?Falta la ruta del repositorio}"
 fi
-TARGET_DIR="${2:-$HOME/.gemini/config/plugins/aagy}"
+DEST_DIR="${2:-$HOME/.gemini/config/plugins/aagy}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "${SCRIPT_DIR}/../.." && pwd)"
 
+if [ "$PHASE" = "status" ]; then
+  TARGET_DIR="$DEST_DIR"
+else
+  # Copia nueva en un temporal; apply_install la lleva al destino.
+  TARGET_DIR="$(mktemp -d)"
+  trap 'rm -rf "$TARGET_DIR"' EXIT
+fi
 mkdir -p "$TARGET_DIR/skills" "$TARGET_DIR/agents" "$TARGET_DIR/rules"
 
-write_install_manifest() {
-  # Deja .aagy-install.json en el destino para /aagy-doctor. Nunca aborta la sincronización.
+apply_install() {
+  # Lleva la copia nueva al destino y deja .aagy-install.json con la lista de ficheros y sus hashes.
   py="$(command -v python3 || command -v python || true)"
-  if [ -n "$py" ] && [ -f "$REPO_ROOT/scripts/py/install_manifest.py" ]; then
-    "$py" "$REPO_ROOT/scripts/py/install_manifest.py" write --dest "$TARGET_DIR" --harness agy --profile "$1" --repo-root "$REPO_ROOT" || true
-  else
-    echo "[!] Python no disponible: se omite el manifiesto de instalación."
+  if [ -z "$py" ] || [ ! -f "$REPO_ROOT/scripts/py/install_manifest.py" ]; then
+    echo "[!] Python no disponible: no se puede aplicar la sincronización." >&2
+    exit 1
   fi
+  mkdir -p "$DEST_DIR/.data/instincts"
+  "$py" "$REPO_ROOT/scripts/py/install_manifest.py" apply --stage "$TARGET_DIR" --dest "$DEST_DIR" \
+    --harness agy --profile "$1" --repo-root "$REPO_ROOT" ${APPLY_FLAGS[@]+"${APPLY_FLAGS[@]}"}
 }
 
 case "$PHASE" in
   status)
-    echo "=== Anything Antigravity (aagy) Status ($TARGET_DIR) ==="
+    echo "=== Anything Antigravity (aagy) Status ($DEST_DIR) ==="
     echo "Skills ($(find "$TARGET_DIR/skills" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)):"
     ls -1 "$TARGET_DIR/skills" 2>/dev/null || true
     echo "Agents ($(find "$TARGET_DIR/agents" -maxdepth 1 -name '*.md' 2>/dev/null | wc -l)):"
@@ -110,10 +133,10 @@ if [ -f "$REPO_ROOT/plugin.json" ]; then
 fi
 if [ -f "$REPO_ROOT/hooks.json" ]; then
   # Los hooks llaman a los .py del plugin con ruta absoluta (como ${CLAUDE_PLUGIN_ROOT} en aagy-ecc).
-  sed "s|\${AAGY_PLUGIN_ROOT}|$TARGET_DIR|g" "$REPO_ROOT/hooks.json" > "$TARGET_DIR/hooks.json"
+  sed "s|\${AAGY_PLUGIN_ROOT}|$DEST_DIR|g" "$REPO_ROOT/hooks.json" > "$TARGET_DIR/hooks.json"
 fi
 
-mkdir -p "$TARGET_DIR/.data/instincts" "$TARGET_DIR/scripts/ps1" "$TARGET_DIR/scripts/sh" "$TARGET_DIR/scripts/py"
+mkdir -p "$TARGET_DIR/scripts/ps1" "$TARGET_DIR/scripts/sh" "$TARGET_DIR/scripts/py"
 for ps in safety-check.ps1 hook-post-write.ps1 lint-markdown.ps1 auto-evolve.ps1 manage-instincts.ps1 backlog.ps1 new-lifecycle-task.ps1 complete-task-pr.ps1 archive-todo.ps1 format-commit.ps1; do
   [ -f "$REPO_ROOT/scripts/ps1/$ps" ] && cp "$REPO_ROOT/scripts/ps1/$ps" "$TARGET_DIR/scripts/ps1/$ps"
 done
@@ -125,5 +148,5 @@ cp "$REPO_ROOT/scripts/py/"*.py "$TARGET_DIR/scripts/py/"
 mkdir -p "$TARGET_DIR/templates/lifecycle"
 cp -R "$REPO_ROOT/doc/00-governance/templates/"* "$TARGET_DIR/templates/lifecycle/"
 
-echo "[OK] Sincronización completada exitosamente."
-write_install_manifest "$PHASE"
+apply_install "$PHASE"
+echo "[OK] aagy-sync terminado ($DEST_DIR)."

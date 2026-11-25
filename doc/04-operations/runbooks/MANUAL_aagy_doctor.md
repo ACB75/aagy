@@ -61,7 +61,7 @@ Dentro de Claude Code basta con `/aagy-ecc-doctor` (o `/aagy-ecc-doctor --fix`).
 | `DOC-01` | Runtime del harness | `antigravity` en el PATH (`SKIP` si no está) | `claude --version` |
 | `DOC-02` | Plugin instalado | Existe `~/.gemini/config/plugins/aagy` | Marketplace registrado, plugin instalado y habilitado |
 | `DOC-03` | Manifiestos | `plugin.json` con `name: aagy` | `plugin.json` y `marketplace.json` coherentes |
-| `DOC-04` | Versión y manifiesto | `.aagy-install.json` y versión igual al repo | Lo mismo sobre la copia en caché |
+| `DOC-04` | Versión y manifiesto | `.aagy-install.json`, versión igual al repo y ficheros sin editar, borrar ni huérfanos | Lo mismo sobre la copia en caché |
 | `DOC-05` | Reglas Tier 1 | `rules/AGENTS.md` ≤ 24 KB / ≤ 16.000 tokens e igual al repo | Las reglas que inyecta `SessionStart` |
 | `DOC-06` | Skills y agentes | Frontmatter y recuento frente a la fase instalada | Frontmatter y recuento frente a `aagy-ecc/` |
 | `DOC-07` | Deriva frente al repo | Contenido instalado frente al repo | Copia en caché frente a `aagy-ecc/` |
@@ -85,14 +85,37 @@ Los instaladores lo escriben con [`install_manifest.py`](../../../scripts/py/ins
 - `aagy-sync.ps1` / `aagy-sync.sh` en `~/.gemini/config/plugins/aagy` (fase instalada).
 - `install.ps1 -Target aagy-ecc` / `install.sh aagy-ecc` en `aagy-ecc/` antes de `claude plugin install`, para que viaje a la caché (ignorado por Git).
 
-Campos: `harness`, `profile`, `version`, `commit`, `installed_at`, `source_repo` y `schema`. Si falta, `DOC-04` sale WARN
-y el doctor asume la fase `generic`. Escribirlo nunca aborta una instalación.
+Campos: `harness`, `profile`, `version`, `commit`, `installed_at`, `source_repo`, `schema` (2), `files`
+(perfil → {ruta: sha256} de cada fichero instalado) y `orphans` (ficheros que el perfil ya no trae y se
+conservaron). Si falta, `DOC-04` sale WARN y el doctor asume la fase `generic`. Escribirlo nunca aborta una
+instalación. Un manifiesto de esquema 1 (sin `files`) se sigue leyendo.
 
-El plugin de Antigravity no incluye `scripts/`, así que la skill `aagy-doctor` usa `source_repo` para encontrar el motor.
+`DOC-04` avisa si un fichero de la lista se editó a mano, se borró o quedó huérfano. En aagy-ecc los
+`packs/` no cuentan: son plugins aparte.
 
 ---
 
-## 5. Avisos Conocidos
+## 5. Sincronización dura (`aagy-sync --hard`)
+
+`aagy-sync` prepara la copia nueva en un temporal y `install_manifest.py apply` la lleva al destino:
+
+```text
+bash scripts/sh/aagy-sync.sh generic                 # copia y anota hashes; conserva huérfanos
+bash scripts/sh/aagy-sync.sh generic --hard          # además borra lo que el perfil ya no trae
+bash scripts/sh/aagy-sync.sh generic --hard --dry-run
+pwsh -File scripts/ps1/aagy-sync.ps1 -Phase generic -Hard [-Force] [-DryRun]
+```
+
+- Solo toca los ficheros de la lista. `.data/` y lo propio del proyecto no se tocan nunca.
+- Un fichero editado a mano (hash distinto del manifiesto) se avisa y no se pisa, salvo con `--force`.
+- Los ficheros comunes a varios perfiles (reglas, scripts) no se borran al sincronizar otro perfil.
+- En un repo consumidor, los cambios del plugin llegan reinstalando, con `--hard` y pasando el doctor.
+
+El doctor usa `source_repo` para encontrar el repo de origen y comparar versiones.
+
+---
+
+## 6. Avisos Conocidos
 
 - **`DOC-09` en Antigravity**: el `hooks.json` raíz llama a `scripts/ps1/*.ps1` y `scripts/py/self_improve.py` con rutas
   relativas, que no se copian al plugin global. Solo funcionan en workspaces que contengan esos scripts. Se marca WARN
