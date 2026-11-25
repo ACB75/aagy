@@ -265,8 +265,8 @@ def _check_paid_skills(repo_root: Path, discrepancies: List[str]) -> None:
 
 # Eventos de Claude Code sin equivalente en Antigravity (asimetría documentada en
 # MANUAL_aagy_ecc_parity_and_migration.md): se cubren con Stop + TTL y con `claim`. Notification
-# (avisos de permiso, MANUAL_ui.md) no tiene equivalente y no hace falta cubrirlo.
-HOOK_ASYMMETRY_EVENTS = frozenset({"SessionStart", "PreCompact", "SessionEnd", "Notification"})
+# (avisos de permiso) lo suple la status line del CLI de Antigravity (MANUAL_ui.md §4.1).
+HOOK_ASYMMETRY_EVENTS = frozenset({"PreCompact", "SessionEnd", "Notification"})
 AGY_PLUGIN_ROOT_REF = "${AAGY_PLUGIN_ROOT}/"
 FILE_HOOKS = "hooks.json"
 DIR_SCRIPTS_PREFIX = "scripts/"
@@ -302,14 +302,9 @@ def _check_hook_parity(repo_root: Path, discrepancies: List[str]) -> None:
 
 
 def _check_workflow_skeleton(repo_root: Path, discrepancies: List[str]) -> None:
-    """RF-05/RF-06: los workflows propios cumplen el esqueleto; los heredados solo avisan."""
-    findings = workflow_skeleton.audit(repo_root)
-    for item in findings:
-        if item.level == workflow_skeleton.LEVEL_FAIL:
-            discrepancies.append(f"El workflow '{item.key}' no sigue el esqueleto común: {'; '.join(item.problems)}")
-    warns = sum(1 for f in findings if f.level == workflow_skeleton.LEVEL_WARN)
-    if warns:
-        logger.warning("[WARN] %d workflows heredados sin esqueleto completo (python scripts/py/workflow_skeleton.py --verbose).", warns)
+    """RF-05/RF-06: todos los workflows (propios y heredados) cumplen el esqueleto común."""
+    for item in workflow_skeleton.audit(repo_root):
+        discrepancies.append(f"El workflow '{item.key}' no sigue el esqueleto común: {'; '.join(item.problems)}")
 
 
 PLUGIN_TREES: Tuple[str, ...] = ("aagy-ecc/", "skills/", "agents/", "rules/", DIR_SCRIPTS_PREFIX, "templates/", "hooks.json")

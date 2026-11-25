@@ -11,6 +11,15 @@ Produce an SVG card summarising this machine's AI coding agent usage — total t
 equivalent API cost, current streak, and the split across agents — and write it into the
 working tree as a file the README can reference.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `token-card`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 The card is a committed artifact rather than a hosted image, so it renders from the
 repository itself and does not depend on a third-party endpoint staying up.
 
@@ -119,3 +128,7 @@ On a dry run: what would have been written, and nothing on disk changed.
 - Requires Node.js 22 or newer (the package declares `engines: { node: ">=22" }`). Nothing is
   installed globally; `npx` fetches the pinned version per run.
 - Reads token counts and timestamps only.
+
+## Paridad
+
+Claude Code: el mismo skill `token-card` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

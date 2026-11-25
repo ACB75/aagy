@@ -9,6 +9,11 @@ Produce useful acceptance criteria without turning specification into ceremony. 
 available context first, expose genuine ambiguity, and choose verification methods that fit
 the work and its risk.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - User asks to clarify a feature, define acceptance criteria, or de-risk a change before implementation
@@ -358,3 +363,7 @@ Before returning the brief, check:
 When another planning or implementation workflow is available, pass the acceptance brief or
 criterion IDs to it. When no dedicated workflow exists, provide the brief directly as the
 implementation reference. Do not assume any named skill or tool is installed.
+
+## Paridad
+
+Claude Code: el mismo skill `intent-driven-development` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -1,7 +1,7 @@
 {
   "name": "aagy-ecc",
   "displayName": "Anything Antigravity for Claude Code (aagy-ecc)",
-  "version": "4.4.0",
+  "version": "5.0.0",
   "description": "Anything Antigravity (aagy-ecc) distribution tailored for Claude Code, hooks, slash commands, and multi-agent parity with aagy.",
   "license": "MIT",
   "main": "CLAUDE.md",

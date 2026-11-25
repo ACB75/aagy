@@ -9,6 +9,15 @@ metadata:
 
 Quick reference for PostgreSQL best practices. For detailed guidance, use the `database-reviewer` agent.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Quick Reference, Related.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Writing SQL queries or migrations
@@ -153,3 +162,7 @@ SELECT pg_reload_conf();
 ---
 
 *Based on Supabase Agent Skills (credit: Supabase team) (MIT License)*
+
+## Paridad
+
+Claude Code: el mismo skill `postgres-patterns` en el paquete `aagy-ecc-shared`, espejado desde la raíz por `sync_aagy_ecc.py`.

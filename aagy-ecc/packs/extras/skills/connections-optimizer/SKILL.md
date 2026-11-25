@@ -9,6 +9,15 @@ metadata:
 
 Reorganize the user's network instead of treating outbound as a one-way prospecting list.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `connections-optimizer`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 This skill handles:
 
 - X following cleanup and expansion
@@ -188,3 +197,7 @@ Drafts
 - `lead-intelligence` for weighted target and warm-path discovery
 - `x-api` for X graph access, drafting, and optional apply flows
 - `content-engine` when the user also wants public launch content around network moves
+
+## Paridad
+
+Claude Code: el mismo skill `connections-optimizer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

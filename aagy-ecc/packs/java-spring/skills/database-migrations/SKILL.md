@@ -9,6 +9,14 @@ metadata:
 
 Safe, reversible database schema changes for production systems.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `database-migrations`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Principles, Migration Safety Checklist, PostgreSQL Patterns, Prisma (TypeScript/Node.js), Drizzle (TypeScript/Node.js).
+
 ## When to Activate
 
 - Creating or altering database tables
@@ -428,3 +436,7 @@ Day 7: Migration drops old status column
 | Inline index on large table | Blocks writes during build | CREATE INDEX CONCURRENTLY |
 | Schema + data in one migration | Hard to rollback, long transactions | Separate migrations |
 | Dropping column before removing code | Application errors on missing column | Remove code first, drop column next deploy |
+
+## Paridad
+
+Claude Code: el mismo skill `database-migrations` en el paquete `aagy-ecc-java-spring`, espejado desde la raíz por `sync_aagy_ecc.py`.

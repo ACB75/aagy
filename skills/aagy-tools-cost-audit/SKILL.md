@@ -9,7 +9,11 @@ metadata:
 
 Use this skill when the user suspects the AAGY Tools GitHub App is burning cost, over-creating PRs, bypassing usage limits, or routing free users into premium analysis paths.
 
-This is a focused operator workflow for the sibling [AAGY-Tools](../../AAGY-Tools) repo. It is not a generic billing skill and it is not a repo-wide code review pass.
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `aagy-tools-cost-audit`.
+
+This is a focused operator workflow for the sibling AAGY-Tools repo. It is not a generic billing skill and it is not a repo-wide code review pass.
 
 ## Skill Stack
 
@@ -159,3 +163,7 @@ If the system can spend tokens and then fail on PR creation, file update, or bra
 - fixes are ordered by burn impact, not code neatness
 - proving commands are named
 - final status distinguishes local change, verification, push, and deployment
+
+## Paridad
+
+Claude Code: el mismo skill `aagy-tools-cost-audit` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -18,6 +18,18 @@ tools: Read, Grep, Glob
 
 You deeply analyze codebases to understand how existing features work before new work begins.
 
+## Cuándo usarlo
+
+Deeply analyzes existing codebase features by tracing execution paths, mapping architecture layers, and documenting d...
+
+## Uso
+
+Subagente `code-explorer`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Prompt Defense Baseline, Analysis Process, Output Format.
+
 ## Analysis Process
 
 ### 1. Entry Point Discovery
@@ -76,3 +88,7 @@ You deeply analyze codebases to understand how existing features work before new
 - Reuse [...]
 - Avoid [...]
 ```
+
+## Paridad
+
+Claude Code: el mismo subagente `code-explorer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

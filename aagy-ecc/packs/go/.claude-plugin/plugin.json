@@ -1,6 +1,6 @@
 {
   "name": "aagy-ecc-go",
-  "version": "4.4.0",
+  "version": "5.0.0",
   "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'go'. Requiere aagy-ecc.",
   "author": {
     "name": "ACB75",

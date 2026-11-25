@@ -6,6 +6,11 @@ description: Save current session state to a dated file in ~/.claude/session-dat
 
 Capture everything that happened in this session — what was built, what worked, what failed, what's left — and write it to a dated file so the next session can pick up exactly where this one left off.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - End of a work session before closing Claude Code
@@ -273,3 +278,7 @@ Then test with Postman — the response should include a `Set-Cookie` header.
 - The file is meant to be read by Claude at the start of the next session via `/resume-session`
 - Use the canonical global session store: `~/.claude/session-data/`
 - Prefer the short-id filename form (`YYYY-MM-DD-<short-id>-session.tmp`) for any new session file
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

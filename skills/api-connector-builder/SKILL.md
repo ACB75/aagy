@@ -10,6 +10,10 @@ metadata:
 
 Use this when the job is to add a repo-native integration surface, not just a generic HTTP client.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `api-connector-builder`.
+
 The point is to match the host repository's pattern:
 
 - connector layout
@@ -119,3 +123,7 @@ src/integrations/
 - `backend-patterns`
 - `mcp-server-patterns`
 - `github-ops`
+
+## Paridad
+
+Claude Code: el mismo skill `api-connector-builder` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

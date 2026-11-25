@@ -85,7 +85,7 @@ def test_guard_denies_in_agy_for_private(repo: Path, monkeypatch: pytest.MonkeyP
     monkeypatch.setenv("AAGY_OLLAMA_URL", _dead_url())
     _private_repo(repo)
     payload = {"toolCall": {"args": {"AbsolutePath": str(repo / "secrets" / "a.txt")}}, "cwd": str(repo)}
-    assert guard.handle(payload, guard.FMT_AGY)["decision"] == "deny"
+    assert guard.handle(payload, guard.FMT_AGY)["decision"] == "force_ask"
     payload["toolCall"]["args"]["AbsolutePath"] = str(repo / "README.md")
     assert guard.handle(payload, guard.FMT_AGY) == {"decision": "allow"}
 

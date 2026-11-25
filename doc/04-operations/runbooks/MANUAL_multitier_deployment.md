@@ -10,7 +10,7 @@
 
 El repo consumidor implementa un modelo de desarrollo basado en tronco canónico (*Trunk-Based Development*):
 
-- Todo cambio se integra exclusivamente en `main` mediante PRs aisladas y automerge squash (`LOCAL`).
+- Todo cambio se integra exclusivamente en `main` mediante PRs aisladas con squash, que fusiona una persona (`LOCAL`).
 - La promoción hacia entornos físicos de prueba (`SANDBOX`) y producción (`LIVE`) se orquesta a través de **etiquetas Git semánticas inmutables**:
   - `SANDBOX`: etiqueta `vX.Y.Z-sandbox` desplegada en el host `hosts.sandbox`.
   - `LIVE`: etiqueta `vX.Y.Z` desplegada en el host `hosts.live`.

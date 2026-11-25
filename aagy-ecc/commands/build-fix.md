@@ -6,6 +6,19 @@ description: Detect the project build system and incrementally fix build/type er
 
 Incrementally fix build and type errors with minimal, safe changes.
 
+## Cuándo usarlo
+
+Detect the project build system and incrementally fix build/type errors with minimal safe changes.
+
+## Uso
+
+`/build-fix` en Claude Code, con los argumentos que se describen abajo.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Step 1: Detect Build System
 
 Identify the project's build tool and run the build:
@@ -66,3 +79,7 @@ Show results:
 | Build tool misconfiguration | Read config file; compare with working defaults |
 
 Fix one error at a time for safety. Prefer minimal diffs over refactoring.
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

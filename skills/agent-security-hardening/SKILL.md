@@ -9,6 +9,19 @@ metadata:
 
 Harden the boundaries where an agent turns untrusted data into filesystem, network, memory, or tool actions. Produce concrete controls and tests for the framework being reviewed; a checklist without enforcement evidence is incomplete.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-security-hardening`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Important, When to Activate, Hardening Workflow, Verification Gate, Common Issues, When NOT to Use.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Important
 
 - Treat model output, retrieved content, tool output, memory, and cross-agent messages as untrusted input.
@@ -175,3 +188,7 @@ Redact before values enter the logger, tracer, exception, or model context. Add 
 - `agent-harness-construction`
 - `security-review`
 - `security-scan`
+
+## Paridad
+
+Claude Code: el mismo skill `agent-security-hardening` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

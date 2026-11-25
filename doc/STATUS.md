@@ -1,49 +1,57 @@
 # Estado de Salud y Métricas Operacionales | AAGY / `aagy` Ecosystem
 
-> **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión**: `4.4.0` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-20  
+> **Repositorio**: [ACB75/aagy](https://github.com/ACB75/aagy)
+> **Versión**: `5.0.0` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-25
 > **Estado Operativo Global**: 🟢 **SALUDABLE (VERDE)**
 
 ---
 
-## 1. Métricas de Calidad y Quality Gate
+## 1. Métricas de calidad
 
-| Dimensión | Indicador / Umbral | Estado Actual | Cumplimiento |
-| :--- | :--- | :--- | :---: |
-| **SonarQube Quality Gate** | Rating A (0 violaciones críticas) | 0 violaciones detectadas | ✅ PASS |
-| **Complejidad Cognitiva** | $\le 15$ por función/método (`S3776`) | Máximo $\le 15$ en todo el código | ✅ PASS |
-| **Duplicación de Literales** | Cero cadenas $\ge 3$ repetidas (`S1192`) | 0 duplicados detectados | ✅ PASS |
-| **Parámetros de Función** | $\le 7$ parámetros (`S107`) | Cumple en todos los módulos | ✅ PASS |
-| **Seguridad Estática** | 0 secretos / 0 inyecciones de comandos | 0 vulnerabilidades detectadas | ✅ PASS |
-| **Estándar Markdown** | DavidAnson `.markdownlint.json` | 100% compliant (`--check-only`) | ✅ PASS |
-| **Tests Multi-Runtime** | Cobertura $\ge 80\%$, exit code 0 | 154+ tests pasando (`py` / `ps1` / `sh`) | ✅ PASS |
-| **Integridad `/doc` v2** | Cero enlaces rotos y `docs-map.json` válido | 0 incidencias en `map_docs.py` y `audit-docs.py` | ✅ PASS |
-| **Hard Gate Presupuesto** | Reglas $\le 24$ KB, tokens $\le 16$k, eager $\le 3$k | 100% compliant en Root y Plugin | ✅ PASS |
+Todas salen de la CI local (`python scripts/py/ci_local.py run`, también en `pre-push`). No hay GitHub Actions
+activas: el presupuesto es 0 $ ([`MANUAL_ci_local.md`](04-operations/runbooks/MANUAL_ci_local.md)).
 
----
-
-## 2. Presupuesto de Tokens y Contexto (Two-Tier Architecture)
-
-- **Tier 1 (Global Plugin `~/.gemini/config/plugins/aagy`)**:
-  - **Reglas Globales (`rules/`)**: Archivo canónico único [`rules/AGENTS.md`](../rules/AGENTS.md) compactado a `< 12 KB` (~2.050 tokens frente al límite de 16.000), integrando el ciclo completo de PR y squash-automerge.
-  - **`AGENTS.md` en Raíz**: Puntero estático ultra-ligero (~14 líneas) con marcador KV-cache (`<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->`).
-- **Tier 2 (Lazy / Por Demanda en Repositorio)**:
-  - **Skills de Stack**: Cargadas bajo demanda (`0` tokens en reposo) manteniendo descripciones $\le 140$ caracteres.
-  - **Subagentes**: Frontmatter `description` $\le 120$ caracteres con principio de mínimo privilegio.
+| Paso de `ci_local.py` | Qué comprueba | Estado |
+| :--- | :--- | :---: |
+| `markdownlint` | `.markdownlint.json` en todo el repo | ✅ |
+| `pytest` | 475 tests de `scripts/py/tests/` | ✅ |
+| `workspace_audit` | Presupuesto de reglas, `docs-map.json`, descripciones ≤ 200 caracteres, esqueleto de workflows, `consumer_refs` | ✅ |
+| `sonar` | Reglas locales tipo SonarQube (`S1192`, `S3776`, `S108`...) | ✅ |
+| `security` | Secretos e inyecciones de comandos | ✅ |
+| `templates` | Documentos generados desde la plantilla base | ✅ |
+| `mirror` | `aagy-ecc` sin deriva respecto a la raíz (`sync_aagy_ecc.py --check`) | ✅ |
+| `parity` | Paridad `aagy` ↔ `aagy-ecc`: skills, agentes, hooks y esqueleto común (`audit_plugin_parity.py`) | ✅ |
 
 ---
 
-## 3. Estado de Automatización y Gobernanza del Harness
+## 2. Presupuesto de tokens
 
-- **Arquitectura Documental `/doc` v2 y Fallback Clásico**: Resuelta por [`scripts/py/docs_map.py`](../scripts/py/docs_map.py) leyendo [`.governance/docs-map.json`](../.governance/docs-map.json) (`schema_version: 2`) con fallback automático para `app` y bloqueo estricto contra *path traversal*. Estándar en [`DOC_STANDARDS.md`](00-governance/DOC_STANDARDS.md).
-- **Flujo Flexible `[IDEAS -> REQ -> PLAN -> TODO]` y Paridad Manual 1-a-1**: Soportado por [`new_lifecycle_task.py`](../scripts/py/new_lifecycle_task.py) (`--phase ALL|IDEAS|REQ|PLAN|TODO|DOCS|REVIEW`), [`MANUAL_WORKFLOW.md`](00-governance/MANUAL_WORKFLOW.md) y wrappers espejo en `scripts/ps1/`, `scripts/sh/` y proxies en `scripts/ps1/`.
-- **Workflow de Ingeniería 4 Fases**: Estandarizado en [`doc/00-governance/templates/README.md`](00-governance/templates/README.md).
-- **Hard Gate de Presupuesto en Harness**: Implementado en [`scripts/py/workspace_audit.py`](../scripts/py/workspace_audit.py), integrando validación de `.governance/docs-map.json`.
-- **Integración Zero-Overhead Gemini MCP & Deep Ops**: Plantilla con `"disabled": true` y CLI [`scripts/py/gemini_deep_ops.py`](../scripts/py/gemini_deep_ops.py) / [`scripts/py/toggle_gemini_mcp.py`](../scripts/py/toggle_gemini_mcp.py).
-- **Hooks Nativos, AgentShield, Instintos a Doble Nivel y Automejora Unificada**: Manifiesto [`hooks.json`](../hooks.json) (con hook pasivo `Stop` `< 500 ms` y `0` tokens), motor [`scripts/py/self_improve.py`](../scripts/py/self_improve.py), auditoría [`scripts/py/security_audit.py`](../scripts/py/security_audit.py), instintos proyecto + `PLUGIN_DATA` en [`scripts/py/instinct_manager.py`](../scripts/py/instinct_manager.py) y manual [`MANUAL_unified_self_improvement.md`](04-operations/runbooks/MANUAL_unified_self_improvement.md).
-- **Validadores de Gobernanza Git**:
-  - Ramas canónicas: [`scripts/py/validate_branch.py`](../scripts/py/validate_branch.py)
-  - Autopsias 5W: [`scripts/py/generate_postmortem.py`](../scripts/py/generate_postmortem.py)
-  - Paridad Multi-Harness `aagy` $\leftrightarrow$ `aagy-ecc`: [`scripts/py/audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py)
-- **Ciclo Completo de PR y Automerge**: Orquestado en [`scripts/ps1/aagy.ps1 complete-task-pr`](../scripts/ps1/aagy.ps1 complete-task-pr) y [`scripts/sh/aagy.sh complete-task-pr`](../scripts/sh/aagy.sh complete-task-pr) con resolución dinámica de `TODO.md`/`done/`, suites `pytest` multi-runtime y compuerta documental `map_docs.py --check-docs-map`.
-- **Backlog Activo**: En [`doc/06-backlog/TODO.md`](06-backlog/TODO.md) (`0` tareas pendientes; `Tarea 0.1`, `Tarea 0.2`, `Tarea 0.3`, `Tarea 0.4` y `Tarea 5.1` completadas y archivadas en `doc/06-backlog/done/`).
+| Tope | Valor | Dónde se comprueba |
+| :--- | :--- | :--- |
+| Índice de reglas que inyecta `SessionStart` (aagy-ecc) | ≤ 2 KB | `test_token_caps.py` |
+| `description` de skills, agentes y comandos | ≤ 200 caracteres | `optimize_catalog_tokens.py --check` |
+| Mensaje de un hook | una línea, ≤ 160 caracteres | `test_token_caps.py` |
+
+Antigravity carga [`rules/AGENTS.md`](../rules/AGENTS.md) de forma nativa; el `AGENTS.md` de la raíz solo apunta a él.
+Detalle en [`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md).
+
+---
+
+## 3. Catálogo
+
+| Pieza | `aagy` (Antigravity) | `aagy-ecc` (Claude Code) |
+| :--- | :--- | :--- |
+| Skills | 168 en `skills/` | Perfil `generic` en el núcleo; el resto en `packs/` |
+| Subagentes | 47 en `agents/` | Perfil `generic` en el núcleo; el resto en `packs/` |
+| Comandos slash | No tiene (equivalen a skills) | `aagy-ecc/commands/` |
+| Hooks | `SessionStart`, `PreToolUse`, `PostToolUse`, `Stop` | Los mismos, más `PreCompact`, `SessionEnd` y `Notification` |
+
+Todos los workflows siguen el esqueleto común (Cuándo usarlo, Uso, Qué hacer, Reglas, Paridad), comprobado por
+`workflow_skeleton.py`.
+
+---
+
+## 4. Backlog
+
+[`doc/06-backlog/TODO.md`](06-backlog/TODO.md) está en paridad con las issues abiertas (`backlog.py gh-sync --check`).
+Lo terminado se archiva en `doc/06-backlog/done/`. Historial de versiones en [`LOG.md`](LOG.md).

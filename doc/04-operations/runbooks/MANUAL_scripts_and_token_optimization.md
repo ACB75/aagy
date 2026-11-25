@@ -47,12 +47,12 @@ se retiraron. Equivalencias con otro nombre: `audit-workspace` → `workspace-au
 
 El directorio `rules/` solo debe contener reglas transversales invariantes de aplicación global en cada turno de conversación:
 
-1. `rules/AGENTS.md`: Constitución y estándares universales de ingeniería (Google 5-Pillars, SRE, TBD, SonarQube Rating A).
-2. `rules/AGENTS.md`: Ciclo de vida completo de PR, autoresolución de conflictos y squash-automerge.
+1. `rules/AGENTS.md`: constitución y estándares universales de ingeniería (Google 5-Pillars, SRE, TBD,
+   SonarQube Rating A) y ciclo de vida de la PR (sin auto-merge: la fusiona una persona).
 
 ### Migración de Reglas de Stack a Skills
 
-Las 37 guías de desarrollo por lenguaje (Angular, Go, Java, Python, TypeScript, Web) se han trasladado al almacén de habilidades lazy-loaded:
+Las guías de desarrollo por lenguaje (Angular, Go, Java, Python, TypeScript, Web) se han trasladado al almacén de habilidades lazy-loaded:
 
 - `skills/typescript-patterns/SKILL.md`: Tipos, interfaces, estrechamiento de `unknown` y prohibición de `any`.
 - `skills/angular-developer/`: Componentes standalone, Signals, OnPush y control flow.

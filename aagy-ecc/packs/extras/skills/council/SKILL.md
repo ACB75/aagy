@@ -215,3 +215,7 @@ Likely council shape:
 - Critic focuses on support burden, expectation debt, and rollout confusion
 
 The value is not unanimity. The value is making the disagreement legible before choosing.
+
+## Paridad
+
+Claude Code: el mismo skill `council` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

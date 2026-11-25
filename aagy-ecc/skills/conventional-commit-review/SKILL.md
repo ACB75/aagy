@@ -10,6 +10,14 @@ metadata:
 Review staged git diffs and draft commit messages that strictly follow the workspace standard:
 `[type]-[projects]: <title>` accompanied by a mandatory explanatory body comment (`msg comment`).
 
+## Cuándo usarlo
+
+Draft and review [type]-[projects]: <title> commits with body comments.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `conventional-commit-review`.
+
 ## Standard Commit Format
 
 ### 1. Title Structure: `[type]-[projects]: <title>`
@@ -61,3 +69,7 @@ Fix cryptographic key decoding failure under RFC 7517 verification.
 - Single-line commits without an explanatory body.
 - Using standard parentheses `feat(scope):` instead of `[type]-[projects]: <title>`.
 - Executing `git commit` or `git push` autonomously without explicit user confirmation.
+
+## Paridad
+
+Claude Code: el mismo skill `conventional-commit-review` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

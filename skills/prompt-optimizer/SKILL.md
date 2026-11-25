@@ -12,6 +12,11 @@ metadata:
 Analyze a draft prompt, critique it, match it to AAGY ecosystem components,
 and output a complete optimized prompt the user can paste and run.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - User says "optimize this prompt", "improve my prompt", "rewrite this prompt"
@@ -393,3 +398,7 @@ Recommended: Opus 5 for blueprint planning, Sonnet 5 for phase execution.
 | `blueprint` | EPIC-scope optimized prompts (invoke as skill, not command) |
 | `strategic-compact` | Long session context management |
 | `cost-aware-llm-pipeline` | Token optimization recommendations |
+
+## Paridad
+
+Claude Code: el mismo skill `prompt-optimizer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

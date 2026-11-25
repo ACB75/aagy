@@ -9,6 +9,10 @@ metadata:
 
 Treat Claude Code as a persistent runtime / operating system rather than a chat session. This skill codifies the architecture used by production agentic setups: a kernel config that routes tasks to specialist agents, persistent file-based memory, scheduled automation, and a JSON/markdown data layer.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Architecture Overview, The Kernel, Specialist Agents, Commands and Daily Workflows, Persistent Memory.
+
 ## When to Activate
 
 - Building a multi-agent workflow inside Claude Code
@@ -386,3 +390,7 @@ Keep routing declarative in `CLAUDE.md` markdown tables. It is inspectable, edit
 - [ ] Scheduled tasks use external cron (LaunchAgent, systemd, pm2), not Claude Code's session cron
 - [ ] Cost tracking: log API spend per session in `data/logs/<date>-costs.json`
 - [ ] One project = one Agentic OS. Do not share a single `CLAUDE.md` across unrelated projects.
+
+## Paridad
+
+Claude Code: el mismo skill `agentic-os` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

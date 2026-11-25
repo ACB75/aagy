@@ -10,6 +10,10 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 
 A diagnostic workflow for agent systems that hide failures behind wrapper layers, stale memory, retry loops, or transport/rendering mutations.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-architecture-audit`.
+
 ## When to Activate
 
 **MANDATORY for:**
@@ -263,3 +267,7 @@ Audits should produce structured reports following this shape:
 - `security-review` — Security audit for code and configuration
 - `autonomous-agent-harness` — Set up autonomous agent operations
 - `agent-harness-construction` — Build agent harnesses from scratch
+
+## Paridad
+
+Claude Code: el mismo skill `agent-architecture-audit` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

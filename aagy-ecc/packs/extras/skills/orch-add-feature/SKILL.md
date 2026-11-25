@@ -10,6 +10,11 @@ metadata:
 Actor · action · target: **orch · add · feature**. Thin wrapper over the shared
 engine in [`orch-pipeline`](../orch-pipeline/SKILL.md).
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - The user wants a capability that does **not exist yet** ("add", "build",
@@ -43,3 +48,7 @@ orch-add-feature: add OAuth2 login to nws-poller
 → TDD each task → code-review (+ security-reviewer: auth path)
 → commit  [GATE 2: confirm]
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `orch-add-feature` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

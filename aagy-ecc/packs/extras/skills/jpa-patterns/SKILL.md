@@ -9,6 +9,19 @@ metadata:
 
 Use for data modeling, repositories, and performance tuning in Spring Boot.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `jpa-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Entity Design, Relationships and N+1 Prevention, Repository Patterns, Transactions, Pagination.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Designing JPA entities and table mappings
@@ -154,3 +167,7 @@ spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
 - Assert SQL efficiency using logs: set `logging.level.org.hibernate.SQL=DEBUG` and `logging.level.org.hibernate.orm.jdbc.bind=TRACE` for parameter values
 
 **Remember**: Keep entities lean, queries intentional, and transactions short. Prevent N+1 with fetch strategies and projections, and index for your read/write paths.
+
+## Paridad
+
+Claude Code: el mismo skill `jpa-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

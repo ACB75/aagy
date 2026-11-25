@@ -9,6 +9,10 @@ metadata:
 
 Run AAGY's engineering process retroactively against a project that was built without it. Pick any slice of an existing codebase, audit what exists, reconstruct how it got there, extract a four-axis gap register, then execute the fixes forward through the standard AAGY pipeline.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `brownfield-retrospective`.
+
 The workflow is slice-first: no whole-repo onboarding is required before it is useful, and every phase is re-enterable from a durable artifact on disk. Start in the middle, work backwards, then move forward.
 
 ## When to Activate
@@ -175,3 +179,7 @@ Any session can start in the middle. Read `docs/retro/<slice>/gap-register.md` f
 - `verification-loop` — Phase 6 closure
 - `production-audit` — launch-readiness lens (complementary, later)
 - `security-review` — security-only requests
+
+## Paridad
+
+Claude Code: el mismo skill `brownfield-retrospective` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

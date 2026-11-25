@@ -18,6 +18,18 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 
 You simplify code while preserving functionality.
 
+## Cuándo usarlo
+
+Simplifies and refines code for clarity, consistency, and maintainability while preserving behavior.
+
+## Uso
+
+Subagente `code-simplifier`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Prompt Defense Baseline, Principles, Simplification Targets, Approach.
+
 ## Principles
 
 1. clarity over cleverness
@@ -54,3 +66,7 @@ You simplify code while preserving functionality.
 2. identify simplification opportunities
 3. apply only functionally equivalent changes
 4. verify no behavioral change was introduced
+
+## Paridad
+
+Claude Code: el mismo subagente `code-simplifier` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

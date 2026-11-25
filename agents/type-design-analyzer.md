@@ -18,6 +18,18 @@ tools: Read, Grep, Glob
 
 You evaluate whether types make illegal states harder or impossible to represent.
 
+## Cuándo usarlo
+
+Analyze type design for encapsulation, invariant expression, usefulness, and enforcement.
+
+## Uso
+
+Subagente `type-design-analyzer`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Prompt Defense Baseline, Evaluation Criteria, Output Format.
+
 ## Evaluation Criteria
 
 ### 1. Encapsulation
@@ -48,3 +60,7 @@ For each type reviewed:
 - scores for the four dimensions
 - overall assessment
 - specific improvement suggestions
+
+## Paridad
+
+Claude Code: el mismo subagente `type-design-analyzer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

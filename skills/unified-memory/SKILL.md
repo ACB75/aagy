@@ -11,6 +11,15 @@ Use the AAGY Memory Vault as the common context layer between harnesses. The
 vault stores portable `aagy.memory.v1` Markdown documents rather than
 harness-specific transcripts or inboxes.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `unified-memory`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Runtime Prerequisite
 
 This skill is guidance, not the Memory Vault executable. Skill-only, minimal,
@@ -197,3 +206,7 @@ It exposes only:
 
 The MCP surface deliberately has no review, promotion, overwrite, transcript
 import, or shell-execution tool.
+
+## Paridad
+
+Claude Code: el mismo skill `unified-memory` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

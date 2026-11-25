@@ -7,6 +7,11 @@ metadata:
 
 # Design System — Generate & Audit Visual Systems
 
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## When to Use
 
 - Starting a new project that needs a design system
@@ -84,3 +89,7 @@ Identifies generic AI-generated design patterns:
 ```
 /design-system slop-check
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `design-system` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -146,5 +146,24 @@
         ]
       }
     ]
+  },
+  "aagy-session-start": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${AAGY_PLUGIN_ROOT}/scripts/py/agent_worktree.py\" --quiet recycle --agent agy --if-merged",
+            "timeout": 30
+          },
+          {
+            "type": "command",
+            "command": "python \"${AAGY_PLUGIN_ROOT}/scripts/py/aagy_ui.py\" --quiet repair",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }

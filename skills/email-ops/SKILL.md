@@ -9,6 +9,10 @@ metadata:
 
 Use this when the real task is mailbox work: triage, drafting, replying, sending, or proving a message landed in Sent.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `email-ops`.
+
 This is not a generic writing skill. It is an operator workflow around the actual mail surface.
 
 ## Skill Stack
@@ -131,3 +135,7 @@ NEXT STEP
 - the response names the account and thread or recipient
 - any send claim includes Sent proof or an explicit client-side confirmation
 - the final state is one of drafted / sent / blocked / awaiting verification
+
+## Paridad
+
+Claude Code: el mismo skill `email-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

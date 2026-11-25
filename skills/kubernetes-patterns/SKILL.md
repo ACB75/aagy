@@ -757,3 +757,7 @@ spec:
 - `deployment-patterns` — CI/CD pipelines, rollback strategy, health check endpoints
 - `security-review` — Broader security hardening context
 - `git-workflow` — GitOps integration with K8s (ArgoCD / Flux patterns)
+
+## Paridad
+
+Claude Code: el mismo skill `kubernetes-patterns` en el paquete `aagy-ecc-shared`, espejado desde la raíz por `sync_aagy_ecc.py`.

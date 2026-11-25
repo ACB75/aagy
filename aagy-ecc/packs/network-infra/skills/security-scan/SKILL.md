@@ -9,6 +9,15 @@ metadata:
 
 Audit your Claude Code configuration for security issues using [AgentShield](https://github.com/affaan-m/agentshield).
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, What It Scans, Prerequisites, Usage, Severity Levels, Interpreting Results.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Setting up a new Claude Code project
@@ -171,3 +180,7 @@ Add to your CI pipeline:
 
 - **GitHub**: [github.com/affaan-m/agentshield](https://github.com/affaan-m/agentshield)
 - **npm**: [npmjs.com/package/aagy-agentshield](https://www.npmjs.com/package/aagy-agentshield)
+
+## Paridad
+
+Claude Code: el mismo skill `security-scan` en el paquete `aagy-ecc-network-infra`, espejado desde la raíz por `sync_aagy_ecc.py`.

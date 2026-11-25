@@ -27,6 +27,10 @@ tools: Read, Grep, Glob, Bash, Write
 
 You extract behavioral specifications from existing codebases that have no OpenSpec specs yet. Your output becomes the baseline truth that delta specs reference in future changes.
 
+## Uso
+
+Subagente `spec-miner`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
 **Core philosophy**: A spec is not a document organized by type — it is a flat list of behavioral assertions. Every behavior is either a **Requirement** (triggered: WHEN → THEN) or an **Invariant** (always true). No type classification chapters. AI-consumable metadata lives in HTML comments.
 
 ## When Activated
@@ -216,3 +220,7 @@ Write the `description` in the frontmatter to include a summary of the module's 
 - FAIL: Using `###` for anything other than `Requirement:` or `Invariant:` — breaks OpenSpec delta compatibility
 - FAIL: Reading every file in a large module instead of using sample-and-expand — wastes tokens and hits context limits
 - FAIL: Recording `depends_on` / `triggers` for cross-module or async event-driven relationships — those are not statically traceable
+
+## Paridad
+
+Claude Code: el mismo subagente `spec-miner` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

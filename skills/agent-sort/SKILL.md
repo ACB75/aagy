@@ -9,6 +9,10 @@ metadata:
 
 Use this skill when a repo needs a project-specific AAGY surface instead of the default full install.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-sort`.
+
 The goal is not to guess what "feels useful." The goal is to classify AAGY components with evidence from the actual codebase.
 
 ## When to Use
@@ -214,3 +218,7 @@ INSTALL PLAN
 VERIFICATION
 - checks run and remaining gaps
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `agent-sort` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

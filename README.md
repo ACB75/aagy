@@ -1,7 +1,7 @@
 # Anything Antigravity (`aagy`)
 
 > **Ecosistema Maestro Multi-Harness para Google Antigravity, Gemini 3.8 y Anthropic Claude Code (`aagy-ecc`)**  
-> Repositorio Canónico: [`ACB75/aagy`](https://github.com/ACB75/aagy) | Versión: `4.4.0`
+> Repositorio Canónico: [`ACB75/aagy`](https://github.com/ACB75/aagy) | Versión: `5.0.0`
 
 ---
 
@@ -36,7 +36,7 @@ flowchart TD
 
 | Distribución | Destino | Características Clave | Presupuesto en Reposo |
 | :--- | :--- | :--- | :--- |
-| **`aagy` (Raíz)** | Google Antigravity & Gemini (`~/.gemini/config/plugins/aagy`) | **Tier 1 Global**: [`rules/AGENTS.md`](rules/AGENTS.md) compactado (`< 12 KB`), 22 skills nucleares transversales, 12 subagentes y [`hooks.json`](hooks.json) deterministas (`PreToolUse`, `PostToolUse`, `Stop`). **Tier 2 Lazy**: 169 skills ($\le 140$ chars) y 49 subagentes ($\le 120$ chars) cargados bajo demanda. | **~3.635 tokens** (bajo el límite duro de 16.000 tokens de reglas y 3.000 tokens eager). |
+| **`aagy` (Raíz)** | Google Antigravity & Gemini (`~/.gemini/config/plugins/aagy`) | **Tier 1 Global**: [`rules/AGENTS.md`](rules/AGENTS.md), perfil `generic` (17 skills y 12 subagentes) y [`hooks.json`](hooks.json) (`SessionStart`, `PreToolUse`, `PostToolUse`, `Stop`). **Tier 2**: 168 skills y 47 subagentes en total, instalados por perfil de stack. | Descripciones ≤ 200 caracteres; topes comprobados en CI ([`MANUAL_scripts_and_token_optimization.md`](doc/04-operations/runbooks/MANUAL_scripts_and_token_optimization.md)). |
 | **[`aagy-ecc`](aagy-ecc/README.md)** | Anthropic Claude Code (`aagy-ecc/`) | Plugin hermano con espejo generado de `skills/`, `agents/` y `rules/AGENTS.md` ([`sync_aagy_ecc.py`](scripts/py/sync_aagy_ecc.py)), hooks propios de Claude Code (`SessionStart` reglas, `PreToolUse` safety gate, `PostToolUse` markdownlint, `Stop` self-improve), `commands/` y [`project-template/`](aagy-ecc/project-template/CLAUDE.md); deriva bloqueada por [`audit_plugin_parity.py`](scripts/py/audit_plugin_parity.py). | Paridad 100% con `aagy`. |
 
 ---
@@ -96,7 +96,7 @@ pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit --clean
 # Auditoría de paridad multi-harness (aagy <-> aagy-ecc)
 pwsh -NoProfile -File scripts/ps1/aagy.ps1 audit-plugin-parity
 
-# Diagnóstico de la instalación (mismos checks DOC-01..14 en los dos harnesses; -Fix con confirmación)
+# Diagnóstico de la instalación (mismos checks DOC-01..17 en los dos harnesses; -Fix con confirmación)
 pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor        # Antigravity / Gemini
 pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-ecc-doctor    # Claude Code (o /aagy-ecc-doctor en la sesión)
 
@@ -124,7 +124,7 @@ La documentación sigue el estándar **`/doc` v2** gobernado por [`.governance/d
 - 🛠️ **[`doc/00-governance/MANUAL_WORKFLOW.md`](doc/00-governance/MANUAL_WORKFLOW.md)**: Guía de paridad manual 1-a-1 CLI $\leftrightarrow$ Plugin y puntos de entrada flexibles (`IDEAS` $\rightarrow$ `REQ` $\rightarrow$ `PLAN` $\rightarrow$ `TODO`).
 - 🏗️ **[`doc/01-architecture/`](doc/01-architecture/GUIA_ARQUITECTURA_HARNESS_Y_ENTORNO_AGY.md)**: Arquitectura del harness Antigravity y manual de paridad [`MANUAL_aagy_ecc_parity_and_migration.md`](doc/01-architecture/MANUAL_aagy_ecc_parity_and_migration.md).
 - 🏛️ **[`doc/02-adr/README.md`](doc/02-adr/README.md)**: Índice de Architecture Decision Records (`ADR-0001`..`ADR-0003`).
-- 🔄 **[`doc/03-domain-and-flows/`](doc/03-domain-and-flows/README.md)**: Flujos de dominio y diagramas PlantUML / BPMN2.
+- 🔄 **[`doc/03-domain-and-flows/`](doc/03-domain-and-flows/)**: Flujos de dominio y diagramas PlantUML / BPMN2.
 - ⚙️ **[`doc/04-operations/`](doc/04-operations/runbooks/MANUAL_unified_self_improvement.md)**: Runbooks operativos y guías de configuración.
 - 🩺 **[`doc/05-post-mortems/`](doc/05-post-mortems/PM_fix_scripts_install_dir_creation_20261120_203232.md)**: Autopsias SRE 5-Whys (*blameless*).
 - 📋 **[`doc/06-backlog/TODO.md`](doc/06-backlog/TODO.md)**: Backlog activo, [`IDEAS.md`](doc/06-backlog/IDEAS.md), planes `REQ_*.md` y archivo histórico `doc/06-backlog/done/`.

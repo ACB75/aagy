@@ -9,6 +9,19 @@ metadata:
 
 Use this skill when agents are being managed like a team rather than a single assistant. The purpose is to make team-based orchestration reliable: clear work items, explicit ownership, agent Kanban state, branch isolation, control pane visibility, and merge gates.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `team-agent-orchestration`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When To Activate, Operating Model, Agent Kanban, Team-Based Orchestration Flow, Control Pane Requirements, Dynamic Workflow Compatibility.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When To Activate
 
 - The task spans multiple agents, tools, harnesses, branches, or worktrees.
@@ -109,3 +122,7 @@ Finish each orchestration pass with:
 - Tests and eval evidence.
 - Blockers with owner and next action.
 - New shared skill candidates.
+
+## Paridad
+
+Claude Code: el mismo skill `team-agent-orchestration` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

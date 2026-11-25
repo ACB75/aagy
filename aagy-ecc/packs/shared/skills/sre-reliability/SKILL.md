@@ -7,6 +7,14 @@ description: "Google SRE practices: SLI/SLO error budgets, blast radius control,
 
 Operational baseline and engineering practices to enforce high reliability, fail-fast boundaries, and toil elimination across services.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `sre-reliability`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Principles, The 4 Golden Signals Matrix, Resilience Patterns Checklist, Automated SRE Audit.
+
 ## When to Activate
 
 - Designing new microservices, background workers, or infrastructure topologies.
@@ -75,3 +83,7 @@ Linux / WSL:
 ```bash
 bash scripts/sh/audit-sre.sh
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `sre-reliability` en el paquete `aagy-ecc-shared`, espejado desde la raíz por `sync_aagy_ecc.py`.

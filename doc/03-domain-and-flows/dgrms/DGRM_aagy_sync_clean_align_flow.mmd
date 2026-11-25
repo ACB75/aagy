@@ -13,13 +13,13 @@ flowchart TD
     subgraph Documentacion["Fase 2: Documentación Viva"]
         P2 --> DOC1["Actualizar doc/STATUS.md (Salud y Notas)"]
         DOC1 --> DOC2["Registrar Hito en doc/LOG.md"]
-        DOC2 --> DOC3["Sincronizar doc/INDEX.md y doc/scripts/README.md"]
+        DOC2 --> DOC3["Sincronizar doc/INDEX.md"]
     end
 
     Documentacion --> P3["3. Alineación y Verificación"]
 
     subgraph Verificacion["Fase 3: Auditoría y Verificación"]
-        P3 --> V1["sync-portal.ps1 -Audit (0 Drift en /portal)"]
+        P3 --> V1["aagy sync-aagy-ecc --check (0 deriva en aagy-ecc)"]
         V1 --> V2["aagy workspace-audit (Higiene, Tokens, Docs, SonarQube)"]
         V2 --> V3["Pruebas Unitarias (go test, pytest)"]
     end

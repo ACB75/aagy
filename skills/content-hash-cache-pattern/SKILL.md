@@ -9,6 +9,14 @@ metadata:
 
 Cache expensive file processing results (PDF parsing, text extraction, image analysis) using SHA-256 content hashes as cache keys. Unlike path-based caching, this approach survives file moves/renames and auto-invalidates when content changes.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `content-hash-cache-pattern`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Pattern, Key Design Decisions, Best Practices, Anti-Patterns to Avoid, When to Use.
+
 ## When to Activate
 
 - Building file processing pipelines (PDF, images, text extraction)
@@ -160,3 +168,7 @@ data = dataclasses.asdict(entry)  # Use manual serialization instead
 - Data that must always be fresh (real-time feeds)
 - Cache entries that would be extremely large (consider streaming instead)
 - Results that depend on parameters beyond file content (e.g., different extraction configs)
+
+## Paridad
+
+Claude Code: el mismo skill `content-hash-cache-pattern` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

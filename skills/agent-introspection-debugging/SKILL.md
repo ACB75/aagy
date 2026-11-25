@@ -9,6 +9,14 @@ metadata:
 
 Use this skill when an agent run is failing repeatedly, consuming tokens without progress, looping on the same tools, or drifting away from the intended task.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-introspection-debugging`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Scope Boundaries, Four-Phase Loop, Recovery Heuristics, Integration with AAGY, Output Standard.
+
 This is a workflow skill, not a hidden runtime. It teaches the agent to debug itself systematically before escalating to a human.
 
 ## When to Activate
@@ -160,3 +168,7 @@ Always provide:
 - the root-cause hypothesis
 - the recovery action
 - the evidence that the situation is now better or still blocked
+
+## Paridad
+
+Claude Code: el mismo skill `agent-introspection-debugging` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

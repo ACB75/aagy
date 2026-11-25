@@ -14,6 +14,18 @@ freshness, or execution speed. This includes HFT-like infrastructure, but the
 skill is engineering-focused. It does not authorize live trading or financial
 advice.
 
+## Cuándo usarlo
+
+Low-latency hot-path optimization, p50/p95/p99 tracking, caching (Ignite), and non-blocking I/O.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `latency-critical-systems`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Split The Metrics, Map The Hot Path, Optimization Order, Verification, Guardrails.
+
 ## Split The Metrics
 
 Do not collapse everything into "fast." Track:
@@ -73,3 +85,7 @@ ready.
 - Do not run live orders, destructive migrations, or customer-impacting deploys
   without an explicit approval gate.
 - Keep secrets and private payloads out of logs and benchmark artifacts.
+
+## Paridad
+
+Claude Code: el mismo skill `latency-critical-systems` en el paquete `aagy-ecc-go`, espejado desde la raíz por `sync_aagy_ecc.py`.

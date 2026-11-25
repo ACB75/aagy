@@ -18,6 +18,14 @@ tools: Read, Grep, Glob, Bash
 
 You design feature architectures based on a deep understanding of the existing codebase.
 
+## Cuándo usarlo
+
+Designs feature architectures by analyzing existing codebase patterns and conventions, then providing implementation...
+
+## Uso
+
+Subagente `code-architect`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
 ## Process
 
 ### 1. Pattern Analysis
@@ -78,3 +86,7 @@ Order the implementation by dependency:
 1. Step 1
 2. Step 2
 ```
+
+## Paridad
+
+Claude Code: el mismo subagente `code-architect` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -385,3 +385,7 @@ Show sprint assignment when relevant.
 - `council` — use when stories surface a genuine design tradeoff before implementation
 - `shared-backlog` / `epic-*` commands — multi-agent coordination on `TODO.md`; use for
   the handoff described above instead of syncing `.stories/`
+
+## Paridad
+
+Claude Code: el mismo skill `story-lifecycle` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -9,6 +9,19 @@ metadata:
 
 Backend architecture patterns and best practices for scalable server-side applications.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `backend-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, API Design Patterns, Database Patterns, Caching Strategies, Error Handling Patterns, Authentication & Authorization.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Designing REST or GraphQL API endpoints
@@ -560,3 +573,7 @@ export async function GET(request: Request) {
 ```
 
 **Remember**: Backend patterns enable scalable, maintainable server-side applications. Choose patterns that fit your complexity level.
+
+## Paridad
+
+Claude Code: el mismo skill `backend-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

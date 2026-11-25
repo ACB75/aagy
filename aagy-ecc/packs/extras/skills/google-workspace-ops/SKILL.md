@@ -9,6 +9,15 @@ metadata:
 
 This skill is for operating shared docs, spreadsheets, and decks as working systems, not just editing one file in isolation.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `google-workspace-ops`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - User needs to find a doc, sheet, or deck and update it in place
@@ -94,3 +103,7 @@ FOLLOW-UPS
 - "Clean up this customer spreadsheet and show me the churn-risk rows"
 - "Import this deck into Slides and make it presentable"
 - "Find the current tracker, not the stale duplicate"
+
+## Paridad
+
+Claude Code: el mismo skill `google-workspace-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -9,6 +9,10 @@ metadata:
 
 Use this when the user wants real repo execution: run commands, inspect git state, debug CI or builds, make a narrow fix, and report exactly what changed and what was verified.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `terminal-ops`.
+
 This skill is intentionally narrower than general coding guidance. It is an operator workflow for evidence-first terminal execution.
 
 ## Skill Stack
@@ -108,3 +112,7 @@ STATUS
 - the response names the proving command or test
 - git-related work names the repo path and branch
 - any push claim includes the target branch and exact result
+
+## Paridad
+
+Claude Code: el mismo skill `terminal-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

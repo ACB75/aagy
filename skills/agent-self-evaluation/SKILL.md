@@ -8,6 +8,19 @@ origin: AAGY
 
 Combines post-task 5-axis quality evaluation, passive `Stop` hook instinct capture (`0` prompt tokens, $< 500\text{ ms}$), dual-level instinct persistence (`<repo>/.agents/instincts/` + `$PLUGIN_DATA/instincts/`), Eval-Driven Development (`pass@k` / `pass^k`), and budget-gated artifact promotion (`scripts/py/self_improve.py`).
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-self-evaluation`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, The 5 Evaluation Axes, Unified Self-Discovery & Self-Improvement Architecture, CLI Parity Commands (`pwsh` / `bash` / `python`), References & Templates.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - After completing code changes spanning 3+ files or a multi-step engineering lifecycle (`implement -> test -> review`)
@@ -87,3 +100,7 @@ python scripts/py/self_improve.py --evaluate "All 146 tests passed (exit code 0)
 - [`references/evaluation-criteria.md`](references/evaluation-criteria.md) — Detailed 5-axis rubric
 - [`references/eval-driven-development.md`](references/eval-driven-development.md) — Eval-Driven Development (`pass@k`, `pass^k`, Code/Model/Human graders)
 - [`templates/evaluation-report.md`](templates/evaluation-report.md) — Standard evaluation report template
+
+## Paridad
+
+Claude Code: el mismo skill `agent-self-evaluation` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

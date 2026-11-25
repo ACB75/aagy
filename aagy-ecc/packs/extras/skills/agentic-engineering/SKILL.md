@@ -9,6 +9,23 @@ metadata:
 
 Use this skill for engineering workflows where AI agents perform most implementation work and humans enforce quality and risk controls.
 
+## Cuándo usarlo
+
+Operate as an agentic engineer using eval-first exec. Use when planning or executing engineering work that agents will carry out end to end.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agentic-engineering`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Operating Principles, Eval-First Loop, Task Decomposition, Model Routing, Session Strategy, Review Focus for AI-Generated Code.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Operating Principles
 
 1. Define completion criteria before execution.
@@ -65,3 +82,7 @@ Track per task:
 - success/failure
 
 Escalate model tier only when lower tier fails with a clear reasoning gap.
+
+## Paridad
+
+Claude Code: el mismo skill `agentic-engineering` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

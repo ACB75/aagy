@@ -10,6 +10,11 @@ metadata:
 Actor · action · target: **orch · build · mvp**. Thin wrapper over the shared
 engine in [`orch-pipeline`](../orch-pipeline/SKILL.md).
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - The user has a **design / spec document** (SDD, PRD, system_design) and wants a
@@ -47,3 +52,7 @@ orch-build-mvp: civicpulse/docs/SDD-v0.6.md
 → /gan-build --skip-planner (generator → evaluator loop) scores vs spec → review
 → commit feat:  [GATE 2: confirm] → next slice
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `orch-build-mvp` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

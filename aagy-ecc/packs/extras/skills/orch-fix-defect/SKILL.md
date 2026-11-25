@@ -10,6 +10,11 @@ metadata:
 Actor · action · target: **orch · fix · defect**. Thin wrapper over the shared
 engine in [`orch-pipeline`](../orch-pipeline/SKILL.md).
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - Something is **broken**: wrong output, an error, a crash, a regression.
@@ -41,3 +46,7 @@ orch-fix-defect: poller crashes on empty NWS response
 → write failing test reproducing the crash → fix to green
 → code-review → commit  [GATE 2: confirm]   (commit: fix:)
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `orch-fix-defect` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

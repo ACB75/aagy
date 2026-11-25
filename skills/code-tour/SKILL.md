@@ -260,3 +260,7 @@ The tour should feel like a path, not an inventory.
 - `coding-standards`
 - `council`
 - official upstream format: `microsoft/codetour`
+
+## Paridad
+
+Claude Code: el mismo skill `code-tour` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

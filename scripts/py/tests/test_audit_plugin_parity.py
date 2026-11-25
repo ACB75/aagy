@@ -25,6 +25,8 @@ from audit_plugin_parity import (
     main,
 )
 
+SKELETON = "## When to Use\n## Usage\n## Process\n## Rules\n## Parity\n\n`aagy-ecc`\n"
+
 
 @pytest.fixture
 def mock_repo_structure(tmp_path: Path):
@@ -40,7 +42,7 @@ def mock_repo_structure(tmp_path: Path):
     skills_dir = tmp_path / "skills"
     skills_dir.mkdir()
     (skills_dir / "tdd-workflow").mkdir()
-    (skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD", encoding="utf-8")
+    (skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD\n" + SKELETON, encoding="utf-8")
 
     # Claude Code plugin aagy-ecc
     claude_dir = tmp_path / "aagy-ecc"
@@ -54,12 +56,12 @@ def mock_repo_structure(tmp_path: Path):
     claude_skills_dir = claude_dir / "skills"
     claude_skills_dir.mkdir(parents=True)
     (claude_skills_dir / "tdd-workflow").mkdir()
-    (claude_skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD", encoding="utf-8")
+    (claude_skills_dir / "tdd-workflow" / "SKILL.md").write_text("# TDD\n" + SKELETON, encoding="utf-8")
 
     (tmp_path / "agents").mkdir()
-    (tmp_path / "agents" / "planner.md").write_text("# planner", encoding="utf-8")
+    (tmp_path / "agents" / "planner.md").write_text("# planner\n" + SKELETON, encoding="utf-8")
     (claude_dir / "agents").mkdir()
-    (claude_dir / "agents" / "planner.md").write_text("# planner", encoding="utf-8")
+    (claude_dir / "agents" / "planner.md").write_text("# planner\n" + SKELETON, encoding="utf-8")
 
     hooks_dir = claude_dir / "hooks"
     hooks_dir.mkdir()

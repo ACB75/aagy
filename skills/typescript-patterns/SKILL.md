@@ -7,6 +7,14 @@ description: "TypeScript 5+ types, interfaces, unknown narrowing, strict immutab
 
 Idiomatic TypeScript patterns, interface contracts, and type-narrowing standards for robust applications.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `typescript-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Principles.
+
 ## When to Activate
 
 - Writing or refactoring TypeScript / JavaScript modules
@@ -104,3 +112,7 @@ export function getRequiredEnv(name: string): string {
   return value
 }
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `typescript-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

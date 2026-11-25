@@ -7,6 +7,19 @@ description: "Audit secrets, auth, injection, SSRF/XSS/CSRF, and boundaries."
 
 This skill ensures all code follows security best practices and identifies potential vulnerabilities.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `security-review`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Security Checklist, Security Testing, Pre-Deployment Security Checklist, Resources.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Implementing authentication or authorization
@@ -538,3 +551,7 @@ Before ANY production deployment:
 ---
 
 **Remember**: Security is not optional. One vulnerability can compromise the entire platform. When in doubt, err on the side of caution.
+
+## Paridad
+
+Claude Code: el mismo skill `security-review` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

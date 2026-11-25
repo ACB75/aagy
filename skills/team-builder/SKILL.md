@@ -172,3 +172,7 @@ Both agents agree on: [...]
 Tension: Security recommends CSP that blocks inline styles, SEO needs inline schema markup. Resolution: [...]
 Next steps: [...]
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `team-builder` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

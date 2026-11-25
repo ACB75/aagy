@@ -9,6 +9,19 @@ metadata:
 
 Production deployment workflows and CI/CD best practices.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `deployment-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Deployment Strategies, Docker, CI/CD Pipeline, Health Checks, Environment Configuration.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Setting up CI/CD pipelines
@@ -431,3 +444,7 @@ Before any production deployment:
 - [ ] Database migration tested against production-sized data
 - [ ] Runbook for common failure scenarios
 - [ ] On-call rotation and escalation path defined
+
+## Paridad
+
+Claude Code: el mismo skill `deployment-patterns` en el paquete `aagy-ecc-network-infra`, espejado desde la raíz por `sync_aagy_ecc.py`.

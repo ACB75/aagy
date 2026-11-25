@@ -161,10 +161,10 @@
  install.sh                                         |  10 +-
  package.json                                       |   8 +-
  plugin.json                                        |   8 +-
- scripts/ps1/aagy.ps1 audit-plugin-parity        |  40 ++++
- scripts/sh/aagy.sh audit-plugin-parity         |  19 ++
- scripts/ps1/aagy.ps1 complete-task-pr           |  10 +
- scripts/sh/aagy.sh complete-task-pr            |   5 +
+ scripts/ps1/audit-plugin-parity.ps1        |  40 ++++
+ scripts/sh/audit-plugin-parity.sh         |  19 ++
+ scripts/ps1/complete-task-pr.ps1           |  10 +
+ scripts/sh/complete-task-pr.sh            |   5 +
  scripts/py/audit_plugin_parity.py             | 213 +++++++++++++++++++++
  scripts/py/format_commit.py                   |   2 +-
  scripts/py/security_audit.py                  |   2 +-

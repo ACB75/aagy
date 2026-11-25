@@ -9,6 +9,18 @@ metadata:
 
 Use this skill when you are improving how an agent plans, calls tools, recovers from errors, and converges on completion.
 
+## Cuándo usarlo
+
+Design and optimize AI agent action spaces, tool de. Use when defining or revising an agent's tool set, action space, or observation format.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-harness-construction`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Core Model, Action Space Design, Granularity Rules, Observation Design, Error Recovery Contract, Context Budgeting.
+
 ## Core Model
 
 Agent output quality is constrained by:
@@ -76,3 +88,7 @@ Track:
 - Opaque tool output with no recovery hints.
 - Error-only output without next steps.
 - Context overloading with irrelevant references.
+
+## Paridad
+
+Claude Code: el mismo skill `agent-harness-construction` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

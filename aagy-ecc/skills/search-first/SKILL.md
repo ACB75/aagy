@@ -193,3 +193,7 @@ Result: 1 package + 1 schema file, no custom validation logic
 - **Silent skipping**: Reporting "nothing found" when a search channel was unavailable
 - **Over-customizing**: Wrapping a library so heavily it loses its benefits
 - **Dependency bloat**: Installing a massive package for one small feature
+
+## Paridad
+
+Claude Code: el mismo skill `search-first` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

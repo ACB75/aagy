@@ -10,6 +10,10 @@ metadata:
 Build a production-ready, AI-powered data collection agent for any public data source.
 Runs on a schedule, enriches results with a free LLM, stores to a database, and improves over time.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `data-scraper-agent`.
+
 **Stack: Python · Gemini Flash (free) · GitHub Actions (free) · Notion / Sheets / Supabase**
 
 ## When to Activate
@@ -782,3 +786,7 @@ Before marking the agent complete:
 A complete working agent built with this exact architecture would collect from 4+ sources,
 batch Gemini calls, learn from Applied/Rejected decisions stored in Notion, and run
 100% free on GitHub Actions. Follow Steps 1–9 above to build your own.
+
+## Paridad
+
+Claude Code: el mismo skill `data-scraper-agent` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

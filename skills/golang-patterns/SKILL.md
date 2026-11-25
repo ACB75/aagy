@@ -9,6 +9,10 @@ metadata:
 
 Idiomatic Go patterns and best practices for building robust, efficient, and maintainable applications.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Principles, Error Handling Patterns, Concurrency Patterns, Interface Design, Package Organization.
+
 ## When to Activate
 
 - Writing new Go code
@@ -674,3 +678,7 @@ func (c *Counter) Increment() { c.n++ }        // Pointer receiver
 ```
 
 **Remember**: Go code should be boring in the best way - predictable, consistent, and easy to understand. When in doubt, keep it simple.
+
+## Paridad
+
+Claude Code: el mismo skill `golang-patterns` en el paquete `aagy-ecc-go`, espejado desde la raíz por `sync_aagy_ecc.py`.

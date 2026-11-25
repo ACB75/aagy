@@ -9,6 +9,19 @@ metadata:
 
 Use this skill when a user needs help understanding, navigating, installing, or choosing parts of AAGY.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `aagy-guide`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When To Use, Core Principle, Repository Map, Response Style, Common Tasks, Output Templates.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When To Use
 
 Use this skill when the user:
@@ -188,3 +201,7 @@ Needs approval before apply: <yes/no>
 - `/skill-health`: skill quality review
 - `/skill-create`: generate a new skill from local git history
 - `/security-scan`: inspect Claude/OpenCode configuration security
+
+## Paridad
+
+Claude Code: el mismo skill `aagy-guide` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

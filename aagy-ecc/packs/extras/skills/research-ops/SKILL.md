@@ -9,6 +9,10 @@ metadata:
 
 Use this when the user asks to research something current, compare options, enrich people or companies, or turn repeated lookups into a monitored workflow.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `research-ops`.
+
 This is the operator wrapper around the repo's research stack. It is not a replacement for `deep-research`, `exa-search`, or `market-research`; it tells you when and how to use them together.
 
 ## Skill Stack
@@ -111,3 +115,7 @@ RECOMMENDATION
 - important claims are labeled by evidence type
 - freshness-sensitive outputs include dates
 - the final recommendation matches the actual research mode used
+
+## Paridad
+
+Claude Code: el mismo skill `research-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

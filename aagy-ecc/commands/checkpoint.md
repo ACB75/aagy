@@ -6,6 +6,15 @@ description: Create, verify, or list workflow checkpoints after running verifica
 
 Create or verify a checkpoint in your workflow.
 
+## Cuándo usarlo
+
+Create, verify, or list workflow checkpoints after running verification checks.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Usage
 
 `/checkpoint [create|verify|list] [name]`
@@ -79,3 +88,7 @@ $ARGUMENTS:
 - `verify <name>` - Verify against named checkpoint
 - `list` - Show all checkpoints
 - `clear` - Remove old checkpoints (keeps last 5)
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

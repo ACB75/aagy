@@ -12,6 +12,14 @@ metadata:
 > should be authored there, while this skill remains available to avoid
 > breaking existing workflows.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `autonomous-loops`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Use, Loop Pattern Spectrum, Sequential Pipeline (`claude -p`), NanoClaw REPL, Infinite Agentic Loop, Continuous Claude PR Loop.
+
 Patterns, architectures, and reference implementations for running Claude Code autonomously in loops. Covers everything from simple `claude -p` pipelines to full RFC-driven multi-agent DAG orchestration.
 
 ## When to Use
@@ -621,3 +629,7 @@ These patterns compose well:
 | Continuous Claude | AnandChowdhary | credit: @AnandChowdhary |
 | NanoClaw | AAGY | `/claw` command in this repo |
 | Verification Loop | AAGY | `skills/verification-loop/` in this repo |
+
+## Paridad
+
+Claude Code: el mismo skill `autonomous-loops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -6,6 +6,19 @@ description: Recommend the best model tier for the current task based on complex
 
 Recommend the best model tier for the current task by complexity and budget.
 
+## Cuándo usarlo
+
+Recommend the best model tier for the current task based on complexity, risk, and budget.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Usage, Routing Heuristic, Required Output, Arguments.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Usage
 
 `/model-route [task-description] [--budget low|med|high]`
@@ -30,3 +43,7 @@ $ARGUMENTS:
 
 - `[task-description]` optional free-text
 - `--budget low|med|high` optional
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

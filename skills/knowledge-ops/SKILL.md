@@ -9,6 +9,14 @@ metadata:
 
 Manage a multi-layered knowledge system for ingesting, organizing, syncing, and retrieving knowledge across multiple stores.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `knowledge-ops`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Knowledge Architecture, Ingestion Workflow, Sync Operations, Memory Patterns, Best Practices.
+
 Prefer the live workspace model:
 
 - code work lives in the real cloned repos
@@ -176,3 +184,7 @@ Before completing any knowledge operation:
 - indexes and summaries updated
 - appropriate storage layer chosen for the data type
 - cross-references added where relevant
+
+## Paridad
+
+Claude Code: el mismo skill `knowledge-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

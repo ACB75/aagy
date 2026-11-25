@@ -1,7 +1,6 @@
 # Runbook Operativo: Motor Unificado de Autodescubrimiento y Automejora (`self_improve.py`)
 
 > **Alcance**: `aagy` (*Anything Antigravity*) y paridad `aagy` (*Claude Code*)  
-> **Requisitos Cubiertos**: [`REQ_aagy_unified_self_improvement.md`](../../06-backlog/plans/REQ_aagy_unified_self_improvement.md) (`RF-01`..`RF-05`, `CA-01`..`CA-04`)  
 > **Módulos Canónicos**: [`scripts/py/self_improve.py`](../../../scripts/py/self_improve.py), [`scripts/py/instinct_manager.py`](../../../scripts/py/instinct_manager.py), [`hooks.json`](../../../hooks.json), [`skills/agent-self-evaluation/SKILL.md`](../../../skills/agent-self-evaluation/SKILL.md)
 
 ---

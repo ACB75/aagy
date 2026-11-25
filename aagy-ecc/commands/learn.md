@@ -6,6 +6,15 @@ description: Extract reusable patterns from the current session and save approve
 
 Analyze the current session and extract any patterns worth saving as skills.
 
+## Uso
+
+`/learn` en Claude Code, con los argumentos que se describen abajo.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Trigger
 
 Run `/learn` at any point during a session when you've solved a non-trivial problem.
@@ -105,3 +114,7 @@ when to load the skill automatically.
 - Don't extract one-time issues (specific API outages, etc.)
 - Focus on patterns that will save time in future sessions
 - Keep skills focused - one pattern per skill
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

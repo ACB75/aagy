@@ -11,6 +11,14 @@ Coordinate frontend/backend or service-to-service work through one authoritative
 machine-checkable contract. Consumers state what they need, providers implement
 that shape, and both sides verify against the same artifact before integration.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `contract-first`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, The Boundary Artifact, Consumer-First Workflow, Contract Change Protocol, Anti-Patterns, Best Practices.
+
 This skill governs how teams change a boundary. It complements `api-design`,
 which governs what a good API looks like, and `ai-regression-testing`, which
 guards fixed bugs from returning.
@@ -285,3 +293,7 @@ does not coordinate parallel work or prevent drift.
 - `backend-patterns` - provider-side API and service architecture
 - `frontend-patterns` - consumer-side data access and UI integration
 - `tdd-workflow` - test-first implementation discipline
+
+## Paridad
+
+Claude Code: el mismo skill `contract-first` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

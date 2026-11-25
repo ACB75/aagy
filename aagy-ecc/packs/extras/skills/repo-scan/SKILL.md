@@ -169,3 +169,7 @@ On a 50,000-file C++ monorepo:
 ## Links
 
 - [GitHub Repository](https://github.com/haibindev/repo-scan)
+
+## Paridad
+
+Claude Code: el mismo skill `repo-scan` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -14,6 +14,23 @@ including secret-bearing variables. The launcher does not filter the
 environment. Run it from a shell whose environment is safe to expose to the
 target command.
 
+## Cuándo usarlo
+
+Open an executable and its argument array in a visible terminal window through a reusable, shell-free launch plan with dry-run, JSON...
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `terminal-opener`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Launch a command, Recover from terminal configuration, Inspect before launch.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Launch a command
 
 Pass launcher options before `--`, then pass exactly one executable followed by
@@ -53,3 +70,7 @@ Run `--detect --json` without a command to probe terminal availability. Follow
 the returned `action` when the adapter is missing or unsupported. Use WezTerm
 for the current adapter; treat other requested terminals as unsupported plans,
 not as commands to execute.
+
+## Paridad
+
+Claude Code: el mismo skill `terminal-opener` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

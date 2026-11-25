@@ -83,3 +83,7 @@ After implementation, check:
 5. Whether temporary code, compatibility logic, unfinished migration work, or follow-up Issues remain.
 
 Report the alignment result in the delivery response by default. For a requested durable high-risk review, reuse the project's mapped or indexed review location and confirm before writing. If none exists, ask the user to choose one; do not force `docs/reviews/` or create a generic `REFLECTION.md`.
+
+## Paridad
+
+Claude Code: el mismo skill `change-impact` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

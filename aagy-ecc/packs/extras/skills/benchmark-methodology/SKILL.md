@@ -12,6 +12,14 @@ explicit 1–5 rubrics, then captured in a uniform profile card. Consistency is
 the point: scores are only useful if the same evidence would earn the same
 number for any competitor.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `benchmark-methodology`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Client positioning brief (establish first), Why these dimensions, The nine dimensions (with weights), Scoring rubric (1–5, applies to dimensions 1–8), How to collect the data.
+
 ## When to Activate
 
 - A scoped, tiered competitor set from competitive-platform-analysis is ready to score.
@@ -184,3 +192,7 @@ Hand the completed cards plus the tension plot to `competitive-report-structure`
 
 - `competitive-platform-analysis` — the prerequisite; produces the tiered competitor set this skill scores.
 - `competitive-report-structure` — the next step; assembles the scored profile cards into a client-deliverable report.
+
+## Paridad
+
+Claude Code: el mismo skill `benchmark-methodology` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

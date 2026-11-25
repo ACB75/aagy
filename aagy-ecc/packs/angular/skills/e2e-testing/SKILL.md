@@ -9,6 +9,23 @@ metadata:
 
 Comprehensive Playwright patterns for building stable, fast, and maintainable E2E test suites.
 
+## Cuándo usarlo
+
+Playwright E2E testing with Page Object Model, stable locators, and CI artifact capture. Not for unit tests.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `e2e-testing`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Test File Organization, Page Object Model (POM), Test Structure, Playwright Configuration, Flaky Test Patterns, Artifact Management.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Test File Organization
 
 ```
@@ -328,3 +345,7 @@ test('trade execution', async ({ page }) => {
   await expect(page.locator('[data-testid="trade-success"]')).toBeVisible()
 })
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `e2e-testing` en el paquete `aagy-ecc-angular`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -10,6 +10,23 @@ metadata:
 Use the provider's native meter for live session usage. Keep the separate,
 estimated installation audit behind an explicit opt-in.
 
+## Cuándo usarlo
+
+Audit always-on context token budget across rules, skills, and subagents. Only scan files when explicitly requested.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `context-budget`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Default: Live Context, Explicit Static Audit, Audit Output, Optional Selected-Record Diagnostic.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Default: Live Context
 
 Treat an invocation with no audit request as a live-context request. This
@@ -131,3 +148,7 @@ values, missing or non-string types, and blank lines are unclassified. Neither c
 These counts do not establish active context, remaining room, token usage, billing, or what a
 reconnect loads. For current harness-reported context and usage, use the version-appropriate
 [`/context` and `/usage` commands (`/cost` is an alias)](https://code.claude.com/docs/en/commands).
+
+## Paridad
+
+Claude Code: el mismo skill `context-budget` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

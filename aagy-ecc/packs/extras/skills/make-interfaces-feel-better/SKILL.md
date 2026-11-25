@@ -10,6 +10,14 @@ metadata:
 Use this skill for the small design-engineering details that compound into a
 more polished interface.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `make-interfaces-feel-better`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Use, Core Principles, Review Output, Checklist.
+
 Source: salvaged from stale community PR #1659 by `linus707`.
 
 ## When to Use
@@ -150,3 +158,7 @@ Omit principles that you checked but did not change.
 - Buttons have tactile active states without exaggerated motion.
 - `transition: all` and `will-change: all` are absent.
 - Small controls still have usable hit areas.
+
+## Paridad
+
+Claude Code: el mismo skill `make-interfaces-feel-better` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

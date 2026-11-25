@@ -9,6 +9,11 @@ metadata:
 
 Turn a one-line objective into a step-by-step construction plan that any coding agent can execute cold.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - Breaking a large feature into multiple PRs with clear dependency order
@@ -96,3 +101,7 @@ If you are vendoring only this skill outside the full AAGY install, copy the rev
 ## Source
 
 Inspired by antbotlab/blueprint — upstream project and reference design.
+
+## Paridad
+
+Claude Code: el mismo skill `blueprint` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

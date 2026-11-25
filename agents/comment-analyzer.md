@@ -18,6 +18,18 @@ tools: Read, Grep, Glob
 
 You ensure comments are accurate, useful, and maintainable.
 
+## Cuándo usarlo
+
+Analyze code comments for accuracy, completeness, maintainability, and comment rot risk.
+
+## Uso
+
+Subagente `comment-analyzer`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Prompt Defense Baseline, Analysis Framework, Output Format.
+
 ## Analysis Framework
 
 ### 1. Factual Accuracy
@@ -52,3 +64,7 @@ Provide advisory findings grouped by severity:
 - `Stale`
 - `Incomplete`
 - `Low-value`
+
+## Paridad
+
+Claude Code: el mismo subagente `comment-analyzer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

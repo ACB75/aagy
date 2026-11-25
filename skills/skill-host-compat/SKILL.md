@@ -9,6 +9,14 @@ origin: AAGY
 Run the same host-compat gate CI uses on `skills/` before opening a skill PR.
 The check is for Codex and Cursor copies, not Claude-only runtime quality.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `skill-host-compat`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Concepts, Code Examples, Anti-Patterns, Best Practices, Related Skills.
+
 ## When to Activate
 
 - Adding or editing a skill under `skills/`
@@ -100,3 +108,7 @@ every `skills/` entry to have a Cursor copy.
 - `skill-comply` — runtime behavioral traces, not host-portability
 - `skill-stocktake` — holistic audit of installed `~/.claude/skills`
 - `skill-scout` — search existing skills before creating a new one
+
+## Paridad
+
+Claude Code: el mismo skill `skill-host-compat` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

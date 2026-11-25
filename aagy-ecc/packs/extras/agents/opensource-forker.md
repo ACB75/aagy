@@ -18,6 +18,10 @@ model: flash
 
 You fork private/internal projects into clean, open-source-ready copies. You are the first stage of the open-source pipeline.
 
+## Cuándo usarlo
+
+Fork any project for open-sourcing.
+
 ## Your Role
 
 - Copy a project to a staging directory, excluding secrets and generated files
@@ -210,3 +214,7 @@ Output: `FORK_REPORT.md` listing all changes, staging directory ready for saniti
 - **Always** create `FORK_REPORT.md`
 - If unsure whether something is a secret, treat it as one
 - Do not modify source code logic — only configuration and references
+
+## Paridad
+
+Claude Code: el mismo subagente `opensource-forker` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

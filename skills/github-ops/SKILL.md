@@ -9,6 +9,19 @@ metadata:
 
 Manage GitHub repositories with a focus on community health, CI reliability, and contributor experience.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `github-ops`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Tool Requirements, Untrusted Repository Content, Issue Triage, PR Management, CI/CD Operations.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Triaging issues (classifying, labeling, responding, deduplicating)
@@ -161,3 +174,7 @@ Before completing any GitHub operations task:
 - CI failures have been investigated (not just re-run)
 - releases include accurate changelogs
 - security alerts are acknowledged and tracked
+
+## Paridad
+
+Claude Code: el mismo skill `github-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

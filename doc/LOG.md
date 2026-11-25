@@ -1,7 +1,34 @@
 # Registro Histórico de Decisiones y Cambios Materiales | AAGY / `aagy` Ecosystem
 
 > **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión Canónica**: `4.4.0`
+> **Versión Canónica**: `5.0.0`
+
+---
+
+## 2026-11-25: 5.0.0 Plugin agnóstico, modelo local, plantilla común y paridad de UI
+
+Versión mayor: se retiran los envoltorios `.ps1`/`.sh` y los comandos cambian de nombre (ver
+[`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md) §2).
+
+### Hitos y Decisiones Materiales
+
+1. **Configuración externa y plugin agnóstico (#103)**: capas de `aagy_config` (proyecto, entorno, variables)
+   y DOC-17 (#99). Ni datos de proyectos consumidores ni de máquinas: `consumer_refs` falla en CI si reaparecen
+   (#121). Sincronización dura con manifiesto de hashes y `--hard` (#125). Un solo lanzador `aagy <comando>`
+   en lugar de 26 envoltorios, y el paquete `aagy-ecc-shared` para lo común a varios stacks (#126). Topes de
+   tokens comprobados en CI (#127).
+2. **Modelo local con Ollama (#80)**: servidor MCP `aagy-local` e interruptores `auto/off/tool/only` (#110),
+   guarda de ficheros privados, DOC-16 y bench (#111), modo solo local y autocompletado (#112).
+3. **Plantilla genérica y paridad (#91)**: presupuesto 0 $ con CI local en `pre-push` y Actions apagadas
+   (#113). Plantilla base con puntos de extensión (#114). Issues, PR y TODO con las mismas secciones (#115).
+   Esqueleto común de workflows (#117), obligatorio también en los 224 heredados de ECC desde #97. Fase 4 con
+   motor Python único (#118) y hooks con un solo motor en los dos plugins (#120).
+4. **UI (#116)**: status line, avisos de escritorio, `ccusage` opcional y extensiones de VS Code (#119).
+   Uso de tokens en Antigravity con `/aagy-ui usage` (#128). Status line del CLI de Antigravity, aviso de
+   confirmación y duración del turno (#129).
+5. **Revisión final (#97)**: Antigravity tiene `SessionStart` (recicla el worktree y repara la status line) y
+   `force_ask` para ficheros privados. Se borran los REQ y PLAN ya implementados (quedan en git) y los
+   post-mortems duplicados. Versión 5.0.0 en los dos plugins.
 
 ---
 
@@ -73,7 +100,7 @@
 1. **Dos doctors con paridad 1:1**: [`aagy_doctor.py`](../scripts/py/aagy_doctor.py) (Antigravity) y [`aagy_ecc_doctor.py`](../aagy-ecc/scripts/py/aagy_ecc_doctor.py) (Claude Code) implementan el catálogo común `DOC-01..14` de [`doctor_core.py`](../scripts/py/doctor_core.py). [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py) falla si sus IDs divergen.
 2. **Solo lectura por defecto**: `--fix` muestra el plan y aplica cada arreglo tras confirmarlo (`--yes` para no preguntar). Salida humana o `--json`; exit `0`/`1`/`2`.
 3. **Manifiesto de instalación**: los instaladores escriben `.aagy-install.json` (harness, fase, versión, commit, repo de origen) con [`install_manifest.py`](../scripts/py/install_manifest.py).
-4. **Puntos de entrada**: skill [`aagy-doctor`](../skills/aagy-doctor/SKILL.md) (añadida a la fase `generic` y excluida del espejo de aagy-ecc) y comando [`/aagy-ecc-doctor`](../aagy-ecc/commands/aagy-ecc-doctor.md). Wrappers en `scripts/ps1/` y `scripts/sh/`. Requisitos y plan en [`doc/06-backlog/plans/`](06-backlog/plans/REQ_aagy_doctor_commands.md); manual en [`MANUAL_aagy_doctor.md`](04-operations/runbooks/MANUAL_aagy_doctor.md).
+4. **Puntos de entrada**: skill [`aagy-doctor`](../skills/aagy-doctor/SKILL.md) (añadida a la fase `generic` y excluida del espejo de aagy-ecc) y comando [`/aagy-ecc-doctor`](../aagy-ecc/commands/aagy-ecc-doctor.md). Wrappers en `scripts/ps1/` y `scripts/sh/`. Requisitos y plan en `doc/06-backlog/plans/`; manual en [`MANUAL_aagy_doctor.md`](04-operations/runbooks/MANUAL_aagy_doctor.md).
 
 ---
 
@@ -209,11 +236,11 @@
    - Generador de sugerencias exactas de configuración (`--fix`) para Corefile y código Go.
    - Omisión limpia (`SKIPPED`, exit code 0) en repositorios sin infraestructura compose ni CoreDNS.
 2. **Ergonomía CLI e Integración en Lifecycle**:
-   - Wrappers multiplataforma [`scripts/ps1/validate-ingress-routes.ps1`](../scripts/ps1/validate-ingress-routes.ps1) y `validate-ingress-routes.sh` con flags `--fix`, `--json` y `--no-strict`.
-   - Integración como compuerta de validación previa en el paso 7.5 de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1) y `complete-task-pr.sh`.
+   - Wrappers multiplataforma `scripts/ps1/validate-ingress-routes.ps1` y `validate-ingress-routes.sh` con flags `--fix`, `--json` y `--no-strict`.
+   - Integración como compuerta de validación previa en el paso 7.5 de `complete-task-pr.ps1` y `complete-task-pr.sh`.
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_ingress_routes_validator.md`](04-operations/runbooks/MANUAL_ingress_routes_validator.md).
-   - Suite de pruebas [`scripts/py/tests/test_validate_ingress_routes.py`](../scripts/py/tests/test_validate_ingress_routes.py) con 6/6 tests pasando (total 108/108 superados al 100%).
+   - Manual operativo `doc/manual/MANUAL_ingress_routes_validator.md`.
+   - Suite de pruebas `scripts/py/tests/test_validate_ingress_routes.py` con 6/6 tests pasando (total 108/108 superados al 100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -229,11 +256,11 @@
    - Sugerencias inmediatas de remediación segura para garantizar disponibilidad en PostgreSQL LTS multitenant.
    - Exclusión automática de directorios internos (`.git`, `node_modules`, `skills`, `.agents`) en escaneos de árbol.
 2. **Ergonomía CLI e Integración en Lifecycle**:
-   - Wrappers multiplataforma [`scripts/ps1/audit-pg-locks.ps1`](../scripts/ps1/audit-pg-locks.ps1) y `audit-pg-locks.sh` con flags `--file`, `--dir`, `--json` y `--no-strict`.
-   - Integración en la compuerta de validación previa en el paso 7.4 de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1) y `complete-task-pr.sh`.
+   - Wrappers multiplataforma `scripts/ps1/audit-pg-locks.ps1` y `audit-pg-locks.sh` con flags `--file`, `--dir`, `--json` y `--no-strict`.
+   - Integración en la compuerta de validación previa en el paso 7.4 de `complete-task-pr.ps1` y `complete-task-pr.sh`.
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_audit_pg_locks.md`](04-operations/runbooks/MANUAL_audit_pg_locks.md).
-   - Suite de pruebas [`scripts/py/tests/test_audit_pg_locks.py`](../scripts/py/tests/test_audit_pg_locks.py) con 8/8 tests pasando (total 102/102 superados al 100%).
+   - Manual operativo `doc/manual/MANUAL_audit_pg_locks.md`.
+   - Suite de pruebas `scripts/py/tests/test_audit_pg_locks.py` con 8/8 tests pasando (total 102/102 superados al 100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -248,11 +275,11 @@
    - Exclusión automática de endpoints internos de infraestructura (`/metrics`, `/health`, `/livez`, `/readyz`, `/debug/*`, `/ping`, `/favicon.ico`).
    - Omisión elegante (`SKIPPED`, exit code 0) en repositorios sin carpetas `services/` ni `<repo>-sdk/`.
 2. **Ergonomía CLI e Integración en Lifecycle**:
-   - Wrappers multiplataforma [`scripts/ps1/audit-sdk-parity.ps1`](../scripts/ps1/audit-sdk-parity.ps1) y `audit-sdk-parity.sh` con flags `--json` y `--no-strict`.
-   - Integración como compuerta de validación previa en el paso 7.3 de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1).
+   - Wrappers multiplataforma `scripts/ps1/audit-sdk-parity.ps1` y `audit-sdk-parity.sh` con flags `--json` y `--no-strict`.
+   - Integración como compuerta de validación previa en el paso 7.3 de `complete-task-pr.ps1`.
 3. **Calidad y Documentación**:
-   - Manual operativo [`doc/manual/MANUAL_sdk_parity_audit.md`](04-operations/runbooks/MANUAL_sdk_parity_audit.md).
-   - Suite de pruebas [`scripts/py/tests/test_audit_sdk_parity.py`](../scripts/py/tests/test_audit_sdk_parity.py) con 6/6 tests pasando (total 94/94 pasando al 100%).
+   - Manual operativo `doc/manual/MANUAL_sdk_parity_audit.md`.
+   - Suite de pruebas `scripts/py/tests/test_audit_sdk_parity.py` con 6/6 tests pasando (total 94/94 pasando al 100%).
    - SonarQube Rating A (0 violaciones), markdownlint 100% compliant.
 
 ---
@@ -409,7 +436,7 @@
    - Creada skill [`skills/engineering-lifecycle/SKILL.md`](../skills/engineering-lifecycle/SKILL.md) e incorporada al catálogo Tier 1 (`generic`).
    - Creado subagente auditor [`agents/lifecycle-coordinator.md`](../agents/lifecycle-coordinator.md).
 3. **Herramienta CLI de Scaffolding de Tareas (`new-lifecycle-task`)**:
-   - Desarrollado [`scripts/py/new_lifecycle_task.py`](../scripts/py/new_lifecycle_task.py) y wrappers [`new-lifecycle-task.ps1`](../scripts/ps1/new-lifecycle-task.ps1) / `new-lifecycle-task.sh`.
+   - Desarrollado [`scripts/py/new_lifecycle_task.py`](../scripts/py/new_lifecycle_task.py) y wrappers `new-lifecycle-task.ps1` / `new-lifecycle-task.sh`.
    - Incorporada suite de tests unitarios (`test_new_lifecycle_task.py`) alcanzando 66/66 tests passing (100%).
 4. **Actualización de Reglas de Gobernanza (`rules/AGENTS.md`)**:
    - Incorporado el workflow de 4 fases como regla obligatoria en la sección 1 de `rules/AGENTS.md` y `AGENTS.md`.
@@ -444,12 +471,12 @@
    - Desarrollo del generador [`generate_postmortem.py`](../scripts/py/generate_postmortem.py) e integración automática en el cierre de ramas `fix/*`.
 
 6. **Consolidación de Cierre Atómico, Auto-PR y Pre-Flight Review** (PR #15, PR #16 | Commits `ef04125`, `23c40d9`):
-   - Fortalecimiento de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1) y [`complete-task-pr.sh`](../scripts/sh/complete-task-pr.sh).
+   - Fortalecimiento de `complete-task-pr.ps1` y `complete-task-pr.sh`.
    - Auto-archivo sincronizado de tareas completadas (`- [x]`) de `doc/TODO.md` a `doc/TODO_DONE/` a write-time con `lint-markdown.ps1 -Fix`.
    - Pre-merge Quality Gate estricto: markdownlint, suite `pytest` (61 tests) y SonarQube Rating A.
    - Manejo determinista de colecciones bajo `Set-StrictMode -Version Latest`.
 
 7. **Normalización de la Espina Dorsal Documental y Limpieza Final**:
-   - Reorganización de planes de trabajo sueltos hacia [`doc/plan/`](06-backlog/plans/REQ_aagy_unified_self_improvement.md).
+   - Reorganización de planes de trabajo sueltos hacia `doc/plan/`.
    - Registro de mapeo documental en [`.governance/docs-map.json`](../.governance/docs-map.json).
    - Creación de estado operativo [`doc/STATUS.md`](STATUS.md) e histórico [`doc/LOG.md`](LOG.md).

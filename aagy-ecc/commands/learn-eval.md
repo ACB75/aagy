@@ -6,6 +6,19 @@ description: "Extract reusable patterns from the session, self-evaluate quality 
 
 Extends `/learn` with a quality gate, save-location decision, and knowledge-placement awareness before writing any skill file.
 
+## Cuándo usarlo
+
+Extract reusable patterns from the session, self-evaluate quality before saving, and determine the right save location (Global vs Project).
+
+## Uso
+
+`/learn-eval` en Claude Code, con los argumentos que se describen abajo.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## What to Extract
 
 Look for:
@@ -151,3 +164,7 @@ This version replaces the previous 5-dimension numeric scoring rubric (Specifici
 - Focus on patterns that will save time in future sessions
 - Keep skills focused — one pattern per skill
 - When the verdict is Absorb, append to the existing skill rather than creating a new file
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

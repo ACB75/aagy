@@ -9,7 +9,7 @@ metadata:
 
 The Model Context Protocol (MCP) lets AI assistants call tools, read resources, and use prompts from your server. Use this skill when building or maintaining MCP servers. The SDK API evolves; check Context7 (query-docs for "MCP") or the official MCP documentation for current method names and signatures.
 
-For the broader routing decision of when a capability should be a rule, a skill, MCP, or a plain CLI/API workflow, see [docs/capability-surface-selection.md](../../docs/capability-surface-selection.md).
+For the broader routing decision of when a capability should be a rule, a skill, MCP, or a plain CLI/API workflow, see docs/capability-surface-selection.md.
 
 ## When to Use
 
@@ -68,3 +68,7 @@ Use **Zod** (or the SDK’s preferred schema format) for input validation.
 - **JavaScript/TypeScript**: `@modelcontextprotocol/sdk` (npm). Use Context7 with library name "MCP" for current registration and transport patterns.
 - **Go**: Official Go SDK on GitHub (`modelcontextprotocol/go-sdk`).
 - **C#**: Official C# SDK for .NET.
+
+## Paridad
+
+Claude Code: el mismo skill `mcp-server-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

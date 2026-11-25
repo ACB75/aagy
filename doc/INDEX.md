@@ -65,7 +65,7 @@
 - 🧠 **[`MANUAL_gemini_deep_ops_multimodal.md`](04-operations/runbooks/MANUAL_gemini_deep_ops_multimodal.md)**: Diagnósticos multimodales bajo demanda con Gemini MCP.
 - 📊 **[`MANUAL_session_token_telemetry.md`](04-operations/runbooks/MANUAL_session_token_telemetry.md)**: Telemetría de tokens en sesión y política de auto-compactación.
 - 🧹 **[`MANUAL_scripts_and_token_optimization.md`](04-operations/runbooks/MANUAL_scripts_and_token_optimization.md)**: Arquitectura multi-runtime en `scripts/` y poda agresiva de reglas.
-- 🩺 **[`MANUAL_aagy_doctor.md`](04-operations/runbooks/MANUAL_aagy_doctor.md)**: Doctors `/aagy-doctor` y `/aagy-ecc-doctor` con catálogo común `DOC-01..14`, manifiesto `.aagy-install.json` y `--fix` con confirmación.
+- 🩺 **[`MANUAL_aagy_doctor.md`](04-operations/runbooks/MANUAL_aagy_doctor.md)**: Doctors `/aagy-doctor` y `/aagy-ecc-doctor` con catálogo común `DOC-01..17`, manifiesto `.aagy-install.json` y `--fix` con confirmación.
 - 🧬 **[`MANUAL_unified_self_improvement.md`](04-operations/runbooks/MANUAL_unified_self_improvement.md)**: Motor unificado de autodescubrimiento, hook `Stop` pasivo, instintos a doble nivel y promoción con *budget gate*.
 
 ### Guías de Configuración (`doc/04-operations/setup-guides/`)
@@ -87,7 +87,7 @@
 
 - 💡 **[`doc/06-backlog/IDEAS.md`](06-backlog/IDEAS.md)**: Registro estructurado de ideas candidatas (`Draft` / `Approved`).
 - 📋 **[`doc/06-backlog/TODO.md`](06-backlog/TODO.md)**: Backlog activo y asignación de modelos/compactación.
-- 🗂️ **[`doc/06-backlog/plans/`](06-backlog/plans/REQ_aagy_unified_self_improvement.md)**: Requisitos y planes en curso (`REQ_doc_structure_v2_and_manual_parity.md`, `REQ_aagy_unified_self_improvement.md`, `REQ_aagy_clean_docs_and_repo_migration.md`).
+- 🗂️ **[`doc/06-backlog/plans/`](06-backlog/plans/README.md)**: Requisitos y planes de las épicas abiertas; se borran al cerrarlas.
 - ⚡ **[`doc/06-backlog/quick/README.md`](06-backlog/quick/README.md)**: Notas ligeras para entradas directas vía `--phase TODO` y notas de relevo `HANDOFF_<id>.md`.
 - 🤝 **[`MANUAL_shared_backlog.md`](04-operations/runbooks/MANUAL_shared_backlog.md)**: Backlog compartido entre Claude Code y Antigravity (`backlog.py`).
 - 🦙 **[`MANUAL_local_model.md`](04-operations/runbooks/MANUAL_local_model.md)**: Modelo local con Ollama (`local_model.py`, servidor MCP `aagy-local`, modo solo local y autocompletado).

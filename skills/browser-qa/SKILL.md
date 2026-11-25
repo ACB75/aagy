@@ -7,6 +7,15 @@ metadata:
 
 # Browser QA — Automated Visual Testing & Interaction
 
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `browser-qa`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## When to Use
 
 - After deploying a feature to staging/preview
@@ -108,3 +117,7 @@ Works with any browser MCP:
 - Direct Puppeteer scripts
 
 Pair with `/canary-watch` for post-deploy monitoring.
+
+## Paridad
+
+Claude Code: el mismo skill `browser-qa` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

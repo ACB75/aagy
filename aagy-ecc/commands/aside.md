@@ -6,6 +6,11 @@ description: Answer a quick side question without interrupting or losing context
 
 Ask a question mid-task and get an immediate, focused answer — then continue right where you left off. The current task, files, and context are never modified.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - You're curious about something while Claude is working and don't want to lose momentum
@@ -171,3 +176,7 @@ WARNING: Note: This could affect the feature we're building. Want to address thi
 - Keep answers focused: the goal is to unblock the user quickly, not to deliver a lecture
 - If an aside sparks a larger discussion, finish the current task first unless the aside reveals a blocker
 - Asides are not saved to session files unless explicitly relevant to the task outcome
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

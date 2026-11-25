@@ -10,6 +10,10 @@ metadata:
 
 Run a multi-persona session where PM, Architect, Developer, and QA each respond from their own perspective in a single turn.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `dev-team`.
+
 This is the **preset four-lens review** for collaborative design and planning. It is not
 adversarial challenge (`council`), and it is not a free-form team composer
 (`team-builder` selects arbitrary agents; `dev-team` always runs the same four roles).
@@ -201,3 +205,7 @@ Run `dev-team` to shape a proposal, then `council` if a specific decision within
 - `architect` (agent) — deep single-role architecture design
 - `/plan-prd` (command) — product requirements document before the team session
 - `/epic-decompose` (command) — break the outcome into shared-backlog tasks (`shared-backlog` skill)
+
+## Paridad
+
+Claude Code: el mismo skill `dev-team` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

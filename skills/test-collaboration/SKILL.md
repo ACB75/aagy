@@ -5,6 +5,14 @@ description: "Inventory and govern a project's test assets. Connect requirements
 
 # Test Collaboration Governance
 
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `test-collaboration`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Anti-Patterns, Related Skills, Trust Boundary, Goal, Responsibility Boundary.
 ## When to Activate
 
 - Inventorying test assets, test gaps, or the standard test entry point.
@@ -168,3 +176,7 @@ When creating or updating a test-registry artifact, adapt `templates/TESTS.examp
 5. only the highest-priority next test actions.
 
 Inventory tasks modify governance documentation only by default. Do not change production code, delete tests, or silently implement missing behavior without separate authorization.
+
+## Paridad
+
+Claude Code: el mismo skill `test-collaboration` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

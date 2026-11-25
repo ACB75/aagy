@@ -9,6 +9,11 @@ metadata:
 
 Intercept the response flow to offer the user a choice about response depth **before** Claude answers.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - User wants to control how long or detailed a response is
@@ -121,3 +126,7 @@ This skill uses heuristic estimation — no real tokenizer. Accuracy ~85-90%, va
 
 Standalone skill from [TBA — Token Budget Advisor for Claude Code](https://github.com/Xabilimon1/Token-Budget-Advisor-Claude-Code-).
 Original project also ships a Python estimator script, but this repository keeps the skill self-contained and heuristic-only.
+
+## Paridad
+
+Claude Code: el mismo skill `token-budget-advisor` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

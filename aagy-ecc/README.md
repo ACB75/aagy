@@ -16,7 +16,7 @@ subagentes, reglas y motores Python, generada desde la raíz por
 
 | Capacidad | `aagy` (Antigravity) | `aagy-ecc` (Claude Code) |
 | :--- | :--- | :--- |
-| Skills | `skills/` (169) | `skills/` (perfil `generic`) + paquetes opcionales en `packs/` |
+| Skills | `skills/` (168) | `skills/` (perfil `generic`) + paquetes opcionales en `packs/` |
 | Subagentes | `agents/` | `agents/` (perfil `generic`) + paquetes opcionales en `packs/` |
 | Reglas Tier 1 | `rules/AGENTS.md` siempre cargado | índice de `rules/AGENTS.md` (espejo) inyectado por el hook `SessionStart`, con la ruta del texto completo |
 | Safety gate | `PreToolUse` `run_command` → `aagy hook-safety` | `PreToolUse` `Bash\|PowerShell` → `scripts/hooks/safety_check.py` |
@@ -91,5 +91,5 @@ Instalar `aagy-ecc` no afecta al plugin `aagy` de Antigravity: cada uno vive en 
 pwsh -NoProfile -File ../scripts/ps1/aagy.ps1 sync-aagy-ecc --check   # espejo sin deriva
 pwsh -NoProfile -File ../scripts/ps1/aagy.ps1 audit-plugin-parity    # paridad aagy <-> aagy-ecc
 claude plugin validate ./aagy-ecc                                # manifiesto, skills y hooks
-pwsh -NoProfile -File ../scripts/ps1/aagy.ps1 aagy-ecc-doctor         # diagnóstico de la instalación (DOC-01..14)
+pwsh -NoProfile -File ../scripts/ps1/aagy.ps1 aagy-ecc-doctor         # diagnóstico de la instalación (DOC-01..17)
 ```

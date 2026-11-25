@@ -106,19 +106,19 @@ pwsh -File scripts/ps1/aagy.ps1 sync-aagy-ecc
 
 Los dos plugins usan los mismos motores Python (`scripts/py/hook_safety.py`, `hook_post_write.py`,
 `agent_worktree.py guard`, `local_private_guard.py`, `self_improve.py`, `backlog.py`) con
-`--format claude` o `--format agy`. Los envoltorios `safety-check` y `hook-post-write` (`.ps1`/`.sh`)
-solo llaman al motor. En `aagy`, `hooks.json` usa `${AAGY_PLUGIN_ROOT}` y el instalador lo sustituye por
+`--format claude` o `--format agy`; los hooks llaman directamente al `.py`, sin envoltorios. En `aagy`, `hooks.json` usa `${AAGY_PLUGIN_ROOT}` y el instalador lo sustituye por
 la carpeta del plugin, como `${CLAUDE_PLUGIN_ROOT}` en `aagy-ecc`.
 
-Antigravity no tiene los eventos `SessionStart`, `PreCompact`, `SessionEnd` ni `Notification`. Así se cubren:
+Antigravity tiene `SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, `PostInvocation` y `Stop`
+([Hooks](https://antigravity.google/docs/hooks/)). No tiene `PreCompact`, `SessionEnd` ni `Notification`. Así se cubren:
 
 | Momento | Claude Code | Antigravity |
 | :--- | :--- | :--- |
-| Inicio (reglas, resumen del backlog, reciclado del worktree) | `SessionStart` | Lee `AGENTS.md` de forma nativa; recicla en `backlog.py claim` y en `complete_task_pr.py --merge` |
+| Inicio (reglas, reciclado del worktree, ruta de la status line) | `SessionStart` | `SessionStart`: mismos motores (`agent_worktree.py recycle`, `aagy_ui.py repair`); las reglas las lee de forma nativa (`AGENTS.md`) |
 | Compactación | `PreCompact` (`checkpoint`) | `checkpoint` en cada `Stop` |
 | Fin de sesión | `SessionEnd` (`handoff`) | `checkpoint` en cada `Stop` y caducidad del claim (`AAGY_BACKLOG_TTL_HOURS`) |
-| Pregunta antes de leer un fichero privado | `ask` | Solo admite `allow` o `deny`: deniega y propone `local_run` |
-| Aviso de escritorio al pedir permiso | `Notification` (`aagy_notify.py`) | Sin evento: solo avisa en `Stop` (ver `MANUAL_ui.md`) |
+| Pregunta antes de leer un fichero privado | `ask` | `force_ask` (pregunta aunque haya un "Always Allow" guardado) |
+| Aviso de escritorio al pedir permiso | `Notification` (`aagy_notify.py`) | Con la status line del CLI, por `tool_confirmation_pending`; sin ella, solo `Stop` (ver `MANUAL_ui.md` §4.1) |
 
 `audit_plugin_parity.py` falla si un evento compartido usa motores distintos o si aparece una asimetría
 no declarada (`HOOK_ASYMMETRY_EVENTS`).

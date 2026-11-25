@@ -6,6 +6,19 @@ description: Analyze coverage, identify gaps, and generate missing tests toward 
 
 Analyze test coverage, identify gaps, and generate missing tests to reach 80%+ coverage.
 
+## Cuándo usarlo
+
+Analyze coverage, identify gaps, and generate missing tests toward the target threshold.
+
+## Uso
+
+`/test-coverage` en Claude Code, con los argumentos que se describen abajo.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Step 1: Detect Test Framework
 
 | Indicator | Coverage Command |
@@ -71,3 +84,7 @@ Overall:               67%     84%  PASS:
 - Utility functions used across the codebase
 - API endpoint handlers (request → response flow)
 - Edge cases: null, undefined, empty string, empty array, zero, negative numbers
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

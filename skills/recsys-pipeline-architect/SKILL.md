@@ -9,6 +9,10 @@ metadata:
 
 A spec-and-scaffold skill for building composable recommendation, ranking, and feed pipelines. It encodes the **six-stage pattern** — Source → Hydrator → Filter → Scorer → Selector → SideEffect — popularized by xAI's open-sourced [For You algorithm](https://github.com/xai-org/x-algorithm) (Apache 2.0). This skill is an independent reimplementation of the pattern (MIT) — no code copied from the original.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `recsys-pipeline-architect`.
+
 Upstream: <https://github.com/mturac/recsys-pipeline-architect>
 
 ## When to Use
@@ -113,3 +117,7 @@ The upstream repository at <https://github.com/mturac/recsys-pipeline-architect>
 - MIT license; pattern attributed to xAI X For You algorithm (Apache 2.0)
 
 Install via skills.sh: `npx skills add mturac/recsys-pipeline-architect`
+
+## Paridad
+
+Claude Code: el mismo skill `recsys-pipeline-architect` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

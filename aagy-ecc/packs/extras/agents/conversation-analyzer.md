@@ -18,6 +18,18 @@ tools: Read, Grep
 
 You analyze conversation history to identify problematic Claude Code behaviors that should be prevented with hooks.
 
+## Cuándo usarlo
+
+Use this agent when analyzing conversation transcripts to find behaviors worth preventing with hooks.
+
+## Uso
+
+Subagente `conversation-analyzer`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Prompt Defense Baseline, What to Look For, Output Format.
+
 ## What to Look For
 
 ### Explicit Corrections
@@ -63,3 +75,7 @@ suggested_rule:
 ```
 
 Prioritize high-frequency, high-severity behaviors first.
+
+## Paridad
+
+Claude Code: el mismo subagente `conversation-analyzer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -9,6 +9,11 @@ metadata:
 
 Structural maintainability feedback for AI-assisted coding. Complements style/lint skills (`coding-standards`, `plankton-code-quality`) with **design-level** health scores and regression gates.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 **Upstream:** [codescene-oss/codescene-mcp-server](https://github.com/codescene-oss/codescene-mcp-server)
 **Package:** `@codescene/codehealth-mcp` (stdio via npx)
 
@@ -165,3 +170,7 @@ Drive-by cleanup across the module
 - `tdd-workflow` — test-first development
 - `security-review` — security checklist
 - `documentation-lookup` — library docs via Context7 (orthogonal)
+
+## Paridad
+
+Claude Code: el mismo skill `codehealth-mcp` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

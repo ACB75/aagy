@@ -9,6 +9,11 @@ metadata:
 
 Long-lived projects often rot at the documentation layer first: the README describes an old pipeline, architecture notes describe a refactor that never shipped, and every new session re-derives context that should already be available.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 **Living Docs Governance** assigns four non-overlapping roles to the project's existing documentation, links those roles from the active agent harness, and defines small update rules that keep the sources useful. The roles matter; the filenames do not.
 
 This is a **maintain-phase** practice. For one-time exploration of an unfamiliar repository, use `codebase-onboarding` first.
@@ -135,3 +140,7 @@ Useful sections to add only when missing:
 - **Agent keeps losing context:** Add short signposts to the active harness instructions. On entry, the agent reads the map, status, and only relevant recent decisions, then verifies claims against the repository.
 - **A deleted file keeps coming back:** Record it in the existing status page's delete-zone and preserve the reason and replacement in an ADR or maintenance decision log.
 - **A log contains an old claim or secret:** Redact sensitive content, append a dated correction, and validate the replacement statement against code, tests, configuration, or Git.
+
+## Paridad
+
+Claude Code: el mismo skill `living-docs-governance` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

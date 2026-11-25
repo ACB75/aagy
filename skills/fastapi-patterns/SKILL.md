@@ -9,6 +9,18 @@ metadata:
 
 Modern, production-grade FastAPI development: project layout, Pydantic v2 schemas, dependency injection, async patterns, auth, transactional service methods, and testing.
 
+## Cuándo usarlo
+
+FastAPI async routes, Pydantic v2 response_model schemas, Depends() DI, and lifespan pooling. No sync blocking I/O.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `fastapi-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Project Structure, App Factory and Lifespan, Configuration with pydantic-settings, Pydantic Schemas (v2), Dependency Injection, Router and Endpoint Design.
+
 ## Project Structure
 
 ```text
@@ -512,3 +524,7 @@ async def list_items(db: AsyncSession = Depends(get_db)):
 - Parse JWT parameters defensively, expecting potential string/integer cast mismatches from modern payload variations.
 - Enforce deterministic sorting (e.g., `.order_by(Model.id)`) on all offset/limit paginated endpoints to avoid data skips.
 - Isolate authorization checks from core authentication dependencies to provide precise REST status signals (`401` vs `403`).
+
+## Paridad
+
+Claude Code: el mismo skill `fastapi-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

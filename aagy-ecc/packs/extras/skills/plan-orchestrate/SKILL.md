@@ -9,6 +9,11 @@ metadata:
 
 Bridge a plan document to the current AAGY slash-command surface by emitting one ready-to-paste command per step. This skill is a router only: it picks the command and fills in the command's own documented argument form. It does not compose agent chains and does not influence what a command runs internally — each command owns its own execution behavior. The skill is generative only; it never executes commands. The user pastes each line when ready.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - User has a multi-step plan document (PRD, RFC, implementation plan) and wants ready-to-paste commands for each step.
@@ -258,3 +263,7 @@ and the step is excluded from the Batch execution block.
 - Argument forms quoted in this skill are derived from the command files; when they drift, fix this skill to match (the registry fixture test enforces it).
 - Match the language of the plan document for task descriptions.
 - Do not insert "Co-Authored-By" lines or emoji in the output unless the user explicitly asks.
+
+## Paridad
+
+Claude Code: el mismo skill `plan-orchestrate` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

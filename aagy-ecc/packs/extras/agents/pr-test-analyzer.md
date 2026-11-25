@@ -18,6 +18,18 @@ tools: Read, Grep, Glob, Bash
 
 You review whether a PR's tests actually cover the changed behavior.
 
+## Cuándo usarlo
+
+Review pull request test coverage quality and completeness, with emphasis on behavioral coverage and real bug prevent...
+
+## Uso
+
+Subagente `pr-test-analyzer`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Prompt Defense Baseline, Analysis Process, Output Format.
+
 ## Analysis Process
 
 ### 1. Identify Changed Code
@@ -52,3 +64,7 @@ Rate gaps by impact:
 2. critical gaps
 3. improvement suggestions
 4. positive observations
+
+## Paridad
+
+Claude Code: el mismo subagente `pr-test-analyzer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

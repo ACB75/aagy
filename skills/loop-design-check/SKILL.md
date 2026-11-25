@@ -9,6 +9,19 @@ metadata:
 
 > **Premise.** An LLM is a feed-forward system: prompt in → tokens out, with no built-in "steer toward the goal" across turns. To make it *behave* like a goal-oriented system, you wrap a feedback loop around it. This skill helps you **write** that loop correctly and **review** it so it won't run away.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `loop-design-check`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to use / not, Red-line premise: two levels of feedback, Action 1 — Write a loop (5 steps), Action 2 — Review a loop (checklist = five failure modes), Worked example — reviewing a "nightly green-keeper" loop, One-line close.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to use / not
 
 **Use it when:**
@@ -146,3 +159,7 @@ The naive loop and the reviewed loop differ by four lines of constraint — and 
 
 > Lineage: Wiener's two-level feedback (*The Human Use of Human Beings*, 1950) for the judgment/execution split and red lines; the plan/build/judge pattern from Anatoli's *Loops explained* and Addy's *Loop Engineering*.
 > Mechanism layer (how to wire the loop architecture): see `autonomous-loops` / `continuous-agent-loop`. This skill does not re-implement mechanism; it covers goal definition and runaway prevention only.
+
+## Paridad
+
+Claude Code: el mismo skill `loop-design-check` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.
