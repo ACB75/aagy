@@ -24,6 +24,7 @@ if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
 from sync_aagy_ecc import compare as sync_compare  # noqa: E402
+import workflow_skeleton  # noqa: E402
 
 # Constantes de Estado y Literales para SonarQube (S1192)
 STATUS_PASS = "PASS"
@@ -261,6 +262,17 @@ def _check_paid_skills(repo_root: Path, discrepancies: List[str]) -> None:
             discrepancies.append(f"La skill '{name}' usa una API de pago y no declara 'cost: paid' en su frontmatter.")
 
 
+def _check_workflow_skeleton(repo_root: Path, discrepancies: List[str]) -> None:
+    """RF-05/RF-06: los workflows propios cumplen el esqueleto; los heredados solo avisan."""
+    findings = workflow_skeleton.audit(repo_root)
+    for item in findings:
+        if item.level == workflow_skeleton.LEVEL_FAIL:
+            discrepancies.append(f"El workflow '{item.key}' no sigue el esqueleto común: {'; '.join(item.problems)}")
+    warns = sum(1 for f in findings if f.level == workflow_skeleton.LEVEL_WARN)
+    if warns:
+        logger.warning("[WARN] %d workflows heredados sin esqueleto completo (python scripts/py/workflow_skeleton.py --verbose).", warns)
+
+
 def audit_parity(repo_root: Path) -> ParityAuditResult:
     """
     Ejecuta la auditoría de paridad completa entre Anything Antigravity y Claude Code.
@@ -274,6 +286,7 @@ def audit_parity(repo_root: Path) -> ParityAuditResult:
     _check_doctor_parity(repo_root, discrepancies)
     _check_ci_template(repo_root, discrepancies)
     _check_paid_skills(repo_root, discrepancies)
+    _check_workflow_skeleton(repo_root, discrepancies)
 
     root_skills_count = _count_dirs(repo_root / DIR_SKILLS)
     root_agents_count = _count_md(repo_root / DIR_AGENTS)

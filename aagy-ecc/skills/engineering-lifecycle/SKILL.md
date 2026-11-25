@@ -1,83 +1,44 @@
 ---
 name: engineering-lifecycle
-description: "Run 4-phase lifecycle (reqs, plan, docs, PR) with SDK and safety gates."
+description: "Run the 4-phase lifecycle (requirements, plan, docs, PR) from the generic base templates."
+metadata:
+  origin: AAGY
 ---
 
-# Engineering Lifecycle Workflow (Home-Lab & AAGY)
+# engineering-lifecycle
 
-Execute the mandatory 4-phase engineering lifecycle for any non-trivial feature, bugfix, or refactoring in `home-lab` and `aagy`:
+Ciclo de vida de 4 fases para cualquier cambio no trivial:
+`1. Requisitos e impacto` -> `2. Plan y TDD` -> `3. Documentación y notas de versión` -> `4. Commits y PR`.
 
-```
-1. Requisitos & Impacto -> 2. Plan de Acción & TDD -> 3. Documentación & Release Notes -> 4. Commits & PR
-```
+## Cuándo usarlo
 
-## When to Activate
+- Una funcionalidad, un arreglo no trivial, una refactorización o un cambio de infraestructura.
+- Un cambio que toca contratos compartidos, esquemas de datos o fronteras del sistema.
+- Preparar una versión y sus notas.
 
-- The user requests a new feature, non-trivial bugfix, refactoring, or infrastructure change.
-- A task touches shared contracts (`home-lab-sdk`), PostgreSQL database schemas, Ingress/DNS, or system boundaries.
-- Preparing releases, changelogs, and multi-tier promotion tags (`LOCAL` -> `SANDBOX` -> `LIVE`).
-
-## The 4 Canonical Phases (Routes via `.governance/docs-map.json`)
-
-> Supports `/doc` v2 (`doc/00-governance/templates/`, `doc/02-adr/`, `doc/05-post-mortems/`, `doc/06-backlog/`) and automatic legacy fallback in `home-lab`.
-
-### Phase 1: Requisitos & Impacto (`01_TOMA_REQUISITOS_E_IMPACTO.md`)
-
-1. Define functional requirements (`RF-xxx`) and testable acceptance criteria (`CA-xxx` Given/When/Then).
-2. Complete the **Home-Lab Impact Matrix**:
-   - `home-lab-sdk` client parity (Java, Go, Python, TypeScript).
-   - PostgreSQL LTS multitenant lock safety (`CREATE INDEX CONCURRENTLY`, zero long table locks).
-   - Reverse Proxy Ingress (`cluster-lb`) and Split-DNS (`CoreDNS`, `*.home.lab`).
-   - SRE limits: `GOMEMLIMIT=80%` on Go runtimes, JVM cgroup limits, log caps (`max-size: 10m`).
-3. Enforce **Zero-Breaking Changes Policy**: strictly non-breaking by default.
-
-### Phase 2: Plan de Acción & TDD (`02_PLAN_ACCION_ARQUITECTURA.md`)
-
-1. Audit existing code to reuse modules/components before writing net-new code (DRY first).
-2. Synchronize models and clients in `home-lab-sdk/` first if contracts changed.
-3. Establish Mermaid/PlantUML/BPMN architecture in `<folder>/dgrms/`.
-4. Execute TDD workflow: `RED` (failing tests) -> `GREEN` (minimal clean implementation) -> `REFACTOR` (clean code, cognitive complexity $\le 15$) -> `VERIFY` (Quality Gate Rating A).
-5. Define Fast-Rollback plan ($< 2$ minutes: `git revert <sha>` and `down-migration.sql`).
-
-### Phase 3: Documentación & Release Notes (`03_DOCUMENTACION_Y_RELEASE_NOTES.md`)
-
-*Must precede Phase 4 so that all documentation is staged and committed atomically with the code.*
-
-1. Draft SemVer Release Notes (`vX.Y.Z`) certifying retrocompatibility.
-2. Define Multi-Tier Promotion Matrix (`LOCAL` on main, `SANDBOX` on `vX.Y.Z-sandbox`, `LIVE` on `vX.Y.Z`).
-3. Update Docs Spine:
-   - Architecture Decision Records in resolved `adr_dir` (`doc/02-adr/` or legacy `doc/adr/`).
-   - Technical manuals/diagrams in `01-architecture/`, `04-operations/`, and `<folder>/dgrms/`.
-   - Metrics in `doc/STATUS.md` and material decisions in `doc/LOG.md`.
-   - Post-Mortem SRE 5W in resolved `postmortems` (`doc/05-post-mortems/` or legacy `doc/post-mortem/`) if fixing an incident (`fix/*`).
-
-### Phase 4: Propuesta de Commits, Pre-Flight Review & PR (`04_PROPUESTA_COMMITS_PR.md`)
-
-1. Validate branch naming with `scripts/py/validate_branch.py`.
-2. Format commit title: `[type]-[projects]: <title>` (e.g. `[feat]-[kakebo,sdk]: export csv and sync sdk`).
-3. Generate structured Pre-Flight Review notice using `complete-task-pr.ps1 -ReviewOnly`.
-4. Run pre-merge Quality Gate (markdownlint, `pytest`, `map-docs`, SonarQube Rating A, security audit).
-5. Execute atomic commit, push, PR creation, conflict auto-resolution, and squash-automerge:
-
-   ```powershell
-   pwsh -File scripts/ps1/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <title>"
-   ```
-
-6. Promote to Sandbox / Live via `git-flow-helper.ps1 -Action promote -Tag ...`.
-
-## Scaffolding Tooling (Flexible `[IDEAS -> REQ -> PLAN -> TODO]`)
-
-Initialize templates or register quick/idea entries from any entry phase (`ALL`, `IDEAS`, `REQ`, `PLAN`, `TODO`):
-
-```powershell
-pwsh -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
-pwsh -File scripts/ps1/new-lifecycle-task.ps1 -Issue 64 -Phase REQ -AttachIssue
-pwsh -File scripts/ps1/new-lifecycle-task.ps1 -ParentIssue 64 -TaskId "[feat]-[scripts]: sub-issue" -AttachIssue
-```
-
-Or in Linux / WSL:
+## Uso
 
 ```bash
-bash scripts/sh/new-lifecycle-task.sh --task-id "feat/kakebo/export-csv" --phase PLAN
-bash scripts/sh/new-lifecycle-task.sh --issue 64 --phase REQ --attach-issue
+python scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase REQ
+python scripts/py/new_lifecycle_task.py --issue <N> --phase REQ --attach-issue
+python scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase TODO   # sin ceremonia
 ```
+
+Envoltorios: `scripts/ps1/new-lifecycle-task.ps1` y `scripts/sh/new-lifecycle-task.sh`. Las rutas salen de `.governance/docs-map.json`.
+
+## Qué hacer
+
+1. **Requisitos** (`01_TOMA_REQUISITOS_E_IMPACTO.md`): RF, CA verificables (dado/cuando/entonces), impacto y retrocompatibilidad. Sin cambios que rompan contratos salvo aprobación.
+2. **Plan** (`02_PLAN_ACCION_ARQUITECTURA.md`): reutiliza antes de escribir código nuevo, diseño, TDD (`RED` -> `GREEN` -> `REFACTOR` -> `VERIFY`) y rollback.
+3. **Documentación** (`03_DOCUMENTACION_Y_RELEASE_NOTES.md`): notas de versión, ADR si la decisión es difícil de revertir, manuales, `STATUS.md`, `LOG.md` y postmortem en ramas `fix/*`. Va antes de la fase 4 para que viaje en el mismo squash.
+4. **PR** (`04_PROPUESTA_COMMITS_PR.md`): rama `<tipo>/<proyecto>/<nombre>`, título `[type]-[projects]: <título>`, `python scripts/py/ci_local.py run` en verde y `complete-task-pr`.
+
+## Reglas
+
+1. Todas las plantillas heredan `TEMPLATE_BASE.md` (`doc_templates.py check`).
+2. Lo propio de un proyecto va en sus extensiones (`template_extensions` en `docs-map.json`), nunca en el plugin.
+3. Sin auto-merge: la PR la fusiona una persona.
+
+## Paridad
+
+Claude Code: la skill se espeja en `aagy-ecc` y las plantillas viajan en `templates/lifecycle/`. Mismo motor (`new_lifecycle_task.py`).
