@@ -534,6 +534,18 @@ def _audit_consumer_refs(root: Path) -> int:
     return len(hits)
 
 
+def _audit_catalog_descriptions(root: Path) -> int:
+    """#107: ninguna description de skill, agente o comando pasa de 200 caracteres."""
+    try:
+        import optimize_catalog_tokens as catalog  # noqa: PLC0415 - solo en el repo fuente
+    except ImportError:
+        return 0
+    too_long = catalog.long_descriptions(root)
+    for rel, length in too_long[:20]:
+        logger.warning("  [DESCRIPTION] %s: %d caracteres (máximo %d)", rel, length, catalog.MAX_DESCRIPTION)
+    return len(too_long)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
     root = args.root.resolve() if args.root else Path(__file__).resolve().parent.parent.parent
@@ -576,6 +588,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     # 2.7 Sin referencias a proyectos consumidores (RF-14)
     total_violations += _audit_consumer_refs(root)
+
+    # 2.8 Tope de 200 caracteres en las description del catálogo (#107)
+    total_violations += _audit_catalog_descriptions(root)
 
     # 3. Artefactos muertos
     logger.info("\n=== [3/4] ARTEFACTOS MUERTOS O HUÉRFANOS ===")
