@@ -4,9 +4,11 @@ description: Local model (Ollama) - status, on/off/auto and delegate simple task
 
 # aagy-local
 
-Modelo local con Ollama. Es el equivalente de la skill `aagy-local` de `aagy`: los
-dos usan `scripts/py/local_model.py` y el servidor MCP `aagy-local`, que el plugin
-registra en `.mcp.json`.
+Modelo local con Ollama mediante el servidor MCP `aagy-local`, que el plugin registra en `.mcp.json`.
+
+## Cuándo usarlo
+
+Para ver o cambiar el modo del modelo local, medirlo o revisar su uso.
 
 ## Uso
 

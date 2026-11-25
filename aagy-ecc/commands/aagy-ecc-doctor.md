@@ -4,9 +4,11 @@ description: Diagnose the aagy-ecc install in Claude Code (plugin, hooks, comman
 
 # aagy-ecc-doctor
 
-Diagnóstico de la instalación de `aagy-ecc` en Claude Code. Es el equivalente
-de la skill `aagy-doctor` de Antigravity: los dos ejecutan el mismo catálogo de
-checks `DOC-01` a `DOC-17` (paridad 1:1).
+Diagnóstico de la instalación de `aagy-ecc` en Claude Code.
+
+## Cuándo usarlo
+
+Tras instalar o actualizar el plugin, o cuando un hook, comando o skill no hace lo que debe.
 
 ## Uso
 
@@ -39,6 +41,11 @@ checks `DOC-01` a `DOC-17` (paridad 1:1).
    python3 "${CLAUDE_PLUGIN_ROOT}/scripts/py/aagy_ecc_doctor.py" --fix --yes
    ```
 
-Nunca apliques arreglos sin confirmación. El doctor es de solo lectura sin `--fix`.
+## Reglas
 
-Exit code: `0` sin FAIL, `1` con algún FAIL (o WARN con `--strict`), `2` error interno del doctor.
+- Nunca apliques arreglos sin confirmación. Sin `--fix`, el doctor es de solo lectura.
+- Exit code: `0` sin FAIL, `1` con algún FAIL (o WARN con `--strict`), `2` error interno.
+
+## Paridad
+
+Antigravity: skill `aagy-doctor`. Los dos ejecutan el mismo catálogo `DOC-01` a `DOC-17` (`doctor_core.py`).
