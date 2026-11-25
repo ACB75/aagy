@@ -1,5 +1,5 @@
 flowchart TD
-    Start(["Inicio: Ejecución Recurrente de Higiene\n(audit-workspace.ps1 / .sh)"]) --> P1["Fase 1: Escaneo de Higiene del Sistema\n- Detección de .bak, .old, .tmp, .swp\n- Limpieza de cachés (__pycache__, pytest, ruff)\n- Detección de carpetas vacías"]
+    Start(["Inicio: Ejecución Recurrente de Higiene\n(aagy workspace-audit / .sh)"]) --> P1["Fase 1: Escaneo de Higiene del Sistema\n- Detección de .bak, .old, .tmp, .swp\n- Limpieza de cachés (__pycache__, pytest, ruff)\n- Detección de carpetas vacías"]
 
     P1 --> P2["Fase 2: Presupuesto de Tokens & Frontmatter\n- Skills: description <= 140 chars\n- Agents: description <= 120 chars, model in {flash, inherit}\n- Least privilege: read-only sin write_tools\n- Cálculo de coste de contexto (~chars / 3.8)"]
 

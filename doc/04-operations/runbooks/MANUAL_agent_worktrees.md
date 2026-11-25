@@ -9,7 +9,7 @@
 
 | Carpeta | Quién | Estado en reposo |
 | :--- | :--- | :--- |
-| `<padre>\app` | Master | `main` |
+| `<padre>\app` | La persona | `main` |
 | `<padre>\app-aagy` | Antigravity | desacoplado en `origin/main` |
 | `<padre>\app-aagy-ecc` | Claude Code | desacoplado en `origin/main` |
 
@@ -20,8 +20,8 @@ checkouts son el mismo clon: comparten ramas, `git fetch` y el estado del backlo
 
 ```powershell
 cd <padre>\app
-pwsh -File scripts/ps1/agent-worktree.ps1 init
-pwsh -File scripts/ps1/agent-worktree.ps1 status
+pwsh -File scripts/ps1/aagy.ps1 agent-worktree init
+pwsh -File scripts/ps1/aagy.ps1 agent-worktree status
 ```
 
 Antes, cierra o entrega (`backlog.py handoff`) las sesiones de agente que estén
@@ -44,8 +44,8 @@ El reciclado se lanza solo al final de `complete_task_pr.py --merge`, en el sigu
 `claim`/`done` y, en Claude Code, al iniciar sesión. A mano:
 
 ```powershell
-pwsh -File scripts/ps1/agent-worktree.ps1 recycle --agent claude
-pwsh -File scripts/ps1/agent-worktree.ps1 recycle --agent agy --hard-recreate
+pwsh -File scripts/ps1/aagy.ps1 agent-worktree recycle --agent claude
+pwsh -File scripts/ps1/aagy.ps1 agent-worktree recycle --agent agy --hard-recreate
 ```
 
 | Código | Significado |

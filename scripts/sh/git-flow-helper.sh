@@ -73,7 +73,7 @@ elif [ "$ACTION" = "status" ]; then
     git status
 else
     # Redirigir a complete-task si aplica
-    if [ -f "$SCRIPT_DIR/complete-task-pr.sh" ]; then
-        exec "$SCRIPT_DIR/complete-task-pr.sh" "$@"
+    if [ -f "$SCRIPT_DIR/aagy.sh" ]; then
+        exec "$SCRIPT_DIR/aagy.sh" complete-task-pr "$@"
     fi
 fi

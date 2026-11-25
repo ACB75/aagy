@@ -81,7 +81,7 @@ bash scripts/sh/aagy-sync.sh --repo /ruta/a/mi-repo
 Toda la automatización del ecosistema reside en tres motores multi-runtime con suites `pytest` dedicadas (`154/154` tests) y **paridad manual 1-a-1** (cualquier flujo es ejecutable desde terminal sin depender del plugin):
 
 - **[`scripts/py/`](scripts/py/)**: Motores Python 3 stdlib pura (`docs_map.py`, `new_lifecycle_task.py`, `self_improve.py`, `instinct_manager.py`, `workspace_audit.py`, `sonar_audit.py`, `security_audit.py`, `audit_plugin_parity.py`, `map_docs.py`, `archive_todo.py`, `sync_ideas_todo.py`, `format_commit.py`, `validate_branch.py`, `generate_postmortem.py`) y pruebas en `scripts/py/tests/`.
-- **[`scripts/ps1/`](scripts/ps1/)**: Wrappers nativos para Windows PowerShell 7 (`complete-task-pr.ps1`, `new-lifecycle-task.ps1`, `audit-workspace.ps1`, `auto-evolve.ps1`, `aagy-sync.ps1`, `lint-markdown.ps1`, `map-docs.ps1`, etc.) y pruebas en `scripts/ps1/tests/`.
+- **[`scripts/ps1/`](scripts/ps1/)**: Wrappers nativos para Windows PowerShell 7 (`aagy complete-task-pr`, `aagy new-lifecycle-task`, `aagy workspace-audit`, `aagy self-improve`, `aagy-sync.ps1`, `lint-markdown.ps1`, `aagy map-docs`, etc.) y pruebas en `scripts/ps1/tests/`.
 - **[`scripts/sh/`](scripts/sh/)**: Wrappers POSIX con finales de línea `LF (\n)` estrictos para Linux/WSL y pruebas en `scripts/sh/tests/`.
 
 ### Comandos Frecuentes de Verificación y Ciclo de Vida
@@ -91,23 +91,23 @@ Toda la automatización del ecosistema reside en tres motores multi-runtime con 
 python -m pytest scripts/py/tests scripts/ps1/tests scripts/sh/tests -q
 
 # Auditoría integral de higiene, presupuesto de tokens, SonarQube Rating A y AgentShield
-pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1 -Clean
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit --clean
 
 # Auditoría de paridad multi-harness (aagy <-> aagy-ecc)
-pwsh -NoProfile -File scripts/ps1/audit-plugin-parity.ps1
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 audit-plugin-parity
 
 # Diagnóstico de la instalación (mismos checks DOC-01..14 en los dos harnesses; -Fix con confirmación)
-pwsh -NoProfile -File scripts/ps1/aagy-doctor.ps1        # Antigravity / Gemini
-pwsh -NoProfile -File scripts/ps1/aagy-ecc-doctor.ps1    # Claude Code (o /aagy-ecc-doctor en la sesión)
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor        # Antigravity / Gemini
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-ecc-doctor    # Claude Code (o /aagy-ecc-doctor en la sesión)
 
 # Validación de enlaces relativos y contrato .governance/docs-map.json
-pwsh -NoProfile -File scripts/ps1/map-docs.ps1
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 map-docs
 
 # Linter de Markdown (DavidAnson markdownlint)
 pwsh -NoProfile -File scripts/ps1/lint-markdown.ps1 -CheckOnly
 
 # Motor unificado de autodescubrimiento, instintos a doble nivel y automejora con budget gate
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover -Scope all
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --discover --scope all
 ```
 
 ---

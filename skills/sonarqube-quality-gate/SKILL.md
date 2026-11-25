@@ -48,16 +48,16 @@ Enforces SonarQube static analysis rules and Quality Gate `A` ratings across Jav
 ### 1. Run Multi-Language Static Audit (Windows 11 `pwsh`)
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/sonar-audit.ps1
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 sonar-audit
 ```
 
 ### 2. Run Multi-Language Static Audit (Debian 12 / WSL2 `bash`)
 
 ```bash
-scripts/sh/sonar-audit.sh
+scripts/sh/aagy.sh sonar-audit
 ```
 
 ### 3. Fix & Re-Verify
 
 - Refactor every reported `[CRITICAL]`, `[MAJOR]`, and `[MINOR]` finding at the exact `file:line`.
-- Re-run `sonar-audit.ps1` and the project's unit test suite to confirm `0` issues and `100%` test pass rate.
+- Re-run `aagy sonar-audit` and the project's unit test suite to confirm `0` issues and `100%` test pass rate.

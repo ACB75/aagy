@@ -99,6 +99,21 @@
       "strict": false
     },
     {
+      "name": "aagy-ecc-shared",
+      "version": "4.4.0",
+      "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'shared'. Requiere aagy-ecc.",
+      "author": {
+        "name": "ACB75",
+        "url": "https://github.com/ACB75"
+      },
+      "homepage": "https://github.com/ACB75/aagy",
+      "repository": "https://github.com/ACB75/aagy",
+      "license": "MIT",
+      "source": "./packs/shared",
+      "category": "workflow",
+      "strict": false
+    },
+    {
       "name": "aagy-ecc-extras",
       "version": "4.4.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'extras'. Requiere aagy-ecc.",

@@ -30,7 +30,7 @@ from pathlib import Path
 import re
 import shutil
 import sys
-from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
+from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple, Union
 
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 logger = logging.getLogger("sync-aagy-ecc")
@@ -110,6 +110,7 @@ MIRRORED_FILES: Tuple[Tuple[str, str], ...] = tuple(
 
 CORE_PROFILE = "generic"
 PACK_EXTRAS = "extras"
+PACK_SHARED = "shared"
 DIR_PACKS = "packs"
 DIR_SKILLS = "skills"
 DIR_AGENTS = "agents"
@@ -185,8 +186,9 @@ def _available(repo_root: Path) -> Catalog:
 def plan_packs(repo_root: Path) -> Dict[str, Catalog]:
     """
     Reparto {paquete: (skills, agentes)}; la clave "" es el núcleo aagy-ecc.
-    Un paquete de stack repite lo que comparte con otro stack (cada uno es autónomo),
-    pero nunca lo que ya trae el núcleo. Lo que no está en ningún perfil va a extras.
+    Cada skill y cada agente vive en un solo paquete: lo que comparten dos o más
+    stacks va al paquete "shared" (se instala junto al del stack) y nunca se repite
+    lo que ya trae el núcleo. Lo que no está en ningún perfil va a extras.
     """
     skills, agents = _available(repo_root)
     profiles = read_profiles(repo_root)
@@ -194,20 +196,31 @@ def plan_packs(repo_root: Path) -> Dict[str, Catalog]:
         return {"": (skills, agents)}
     core_skills = profiles[CORE_PROFILE][0] & skills
     core_agents = profiles[CORE_PROFILE][1] & agents
+    stacks = {name: ((s & skills) - core_skills, (a & agents) - core_agents)
+              for name, (s, a) in profiles.items() if name != CORE_PROFILE}
+    shared = (_in_two_or_more(c[0] for c in stacks.values()), _in_two_or_more(c[1] for c in stacks.values()))
     packs: Dict[str, Catalog] = {"": (core_skills, core_agents)}
-    used_skills, used_agents = set(core_skills), set(core_agents)
-    for name, (p_skills, p_agents) in profiles.items():
-        if name == CORE_PROFILE:
-            continue
-        pack = ((p_skills & skills) - core_skills, (p_agents & agents) - core_agents)
+    for name, (p_skills, p_agents) in stacks.items():
+        pack = (p_skills - shared[0], p_agents - shared[1])
         if pack[0] or pack[1]:
             packs[name] = pack
-            used_skills |= pack[0]
-            used_agents |= pack[1]
+    if shared[0] or shared[1]:
+        packs[PACK_SHARED] = shared
+    used_skills = set().union(*(c[0] for c in packs.values()))
+    used_agents = set().union(*(c[1] for c in packs.values()))
     extras = (skills - used_skills, agents - used_agents)
     if extras[0] or extras[1]:
         packs[PACK_EXTRAS] = extras
     return packs
+
+
+def _in_two_or_more(groups: Iterable[Set[str]]) -> Set[str]:
+    seen: Set[str] = set()
+    repeated: Set[str] = set()
+    for group in groups:
+        repeated |= seen & group
+        seen |= group
+    return repeated
 
 
 def pack_root(pack: str) -> str:

@@ -16,7 +16,7 @@ principal es solo del usuario:
 | `<padre>/<repo>-aagy` | Antigravity (`agy`) |
 | `<padre>/<repo>-aagy-ecc` | Claude Code (`claude`) |
 
-Script: `scripts/py/agent_worktree.py` (+ `scripts/ps1/agent-worktree.ps1`, `scripts/sh/agent-worktree.sh`).
+Script: `scripts/py/agent_worktree.py` (+ `scripts/ps1/aagy.ps1 agent-worktree`, `scripts/sh/aagy.sh agent-worktree`).
 
 ## Cuándo usarlo
 

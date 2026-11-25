@@ -4,7 +4,7 @@
 >
 > 1. Añade propuestas con el formato estructurado a continuación.
 > 2. Cuando una propuesta sea aprobada para desarrollo, cambia su estado a `- Status: Approved`.
-> 3. Ejecuta `pwsh -File scripts/ps1/sync-ideas-todo.ps1` para transformarla mediante la metodología de 7 fases e inyectarla en `doc/06-backlog/TODO.md`.
+> 3. Ejecuta `pwsh -File scripts/ps1/aagy.ps1 sync-ideas-todo` para transformarla mediante la metodología de 7 fases e inyectarla en `doc/06-backlog/TODO.md`.
 
 ---
 
@@ -45,4 +45,4 @@
 - Sector: Gobernanza Git / Lifecycle scripts
 - DataType: Nombres de rama, títulos de PR, `.governance/active-issue.json`
 - Objective: Que ramas y PRs no lleven el prefijo `gh-<N>`.
-- Description: Hoy `new_lifecycle_task.py` crea ramas `<type>/<project>/gh-<N>-<slug>`, y `complete-task-pr.ps1` y `backlog.py` (`GH_ID_RE`, `gh-sync`) detectan la issue a partir de ese `gh-<N>`. Hay que quitar `gh` del nombre y mantener el vínculo con la issue por otra vía (por ejemplo `.governance/active-issue.json` o `Closes #N` en el cuerpo del PR), con paridad en `aagy-ecc`.
+- Description: Hoy `new_lifecycle_task.py` crea ramas `<type>/<project>/gh-<N>-<slug>`, y `aagy complete-task-pr` y `backlog.py` (`GH_ID_RE`, `gh-sync`) detectan la issue a partir de ese `gh-<N>`. Hay que quitar `gh` del nombre y mantener el vínculo con la issue por otra vía (por ejemplo `.governance/active-issue.json` o `Closes #N` en el cuerpo del PR), con paridad en `aagy-ecc`.

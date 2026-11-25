@@ -20,7 +20,7 @@ Operational skill to inspect, audit, and clean the active workspace, verify toke
 
 ## Non-Negotiable Rules
 
-1. **Delegate Deterministic Work**: Always run the canonical wrapper `scripts/ps1/audit-workspace.ps1` (or `scripts/py/workspace-audit.py`) rather than writing ad-hoc find/grep commands.
+1. **Delegate Deterministic Work**: Always run the canonical wrapper `scripts/ps1/aagy.ps1 workspace-audit` (or `scripts/py/workspace-audit.py`) rather than writing ad-hoc find/grep commands.
 2. **Safe Cleanup**: Pass `-Clean` / `--clean` to remove confirmed temporary files (`.bak`, `.tmp`, `__pycache__`, `.pytest_cache`). Pass `-Optimize` / `--optimize` to safely prune redundant local skills shadowed by the global plugin.
 3. **Never Swallow Failures**: If any phase reports a violation, state the exact file path and violation reason.
 
@@ -31,7 +31,7 @@ Operational skill to inspect, audit, and clean the active workspace, verify toke
 Run the audit script in inspection mode:
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit
 ```
 
 ### 2. Inspect the Six Audit Phases
@@ -48,5 +48,5 @@ pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1
 When the user asks to clean up or optimize workspace hygiene:
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1 -Clean -Optimize
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit --clean --optimize
 ```

@@ -15,7 +15,7 @@
 | Checkout principal | `<padre>\app` (y `...\aagy`) | Master y los dos agentes trabajan en la misma carpeta, en `main` | Un agente puede pisar cambios sin commit de Master o del otro agente. |
 | Worktree por tarea | `backlog.py claim --worktree` → `<repo>.wt/<id>` | Crea un worktree por tarea en modo simultáneo; `done` lo borra si está limpio | La ruta cambia en cada tarea: Antigravity tiene que abrir una carpeta nueva cada vez. No hay carpeta fija por agente. |
 | Estado vivo del backlog | `$(git common dir)/aagy-backlog/state.json` | Común a todos los worktrees de un clon | Ya sirve tal cual: los worktrees por agente lo comparten sin cambios. |
-| Cierre de tarea | `scripts/ps1/complete-task-pr.ps1` §12 | Tras el merge hace `git checkout -f main` + `git pull` + `git branch -D` **en la carpeta actual** | Dentro de un worktree de agente **falla**: git no permite tener `main` en dos worktrees a la vez (ya está en `app`). Y `-f` descarta cambios sin aviso. |
+| Cierre de tarea | `scripts/ps1/aagy.ps1 complete-task-pr` §12 | Tras el merge hace `git checkout -f main` + `git pull` + `git branch -D` **en la carpeta actual** | Dentro de un worktree de agente **falla**: git no permite tener `main` en dos worktrees a la vez (ya está en `app`). Y `-f` descarta cambios sin aviso. |
 | Merge en GitHub | Repo con auto-merge y *delete branch on merge* | El merge puede ocurrir minutos después de abrir la PR | El reciclado local no puede depender solo de que el script vea el merge en el momento. |
 | Nombres de rama | `validate_branch.py` + hooks PreToolUse (PR #55) | Solo `<type>/<project>/<name>` | Claude Code nativo (`claude --worktree`, `EnterWorktree`) crea `.claude/worktrees/<n>` con ramas `worktree-*`, que los hooks ya rechazan. |
 

@@ -24,7 +24,7 @@
 | `scripts/py/backlog.py`: `Repo`, `run_git`, `state_lock`, `slugify` | Detección del clon principal (`git-common-dir`), ejecución de git y bloqueo de fichero. Se importan, no se copian. |
 | `$(git common dir)/aagy-backlog/state.json` | Sigue siendo el estado compartido. Se añade el campo `agent_worktree` por entrada. |
 | `scripts/py/validate_branch.py` | Validar la rama que se crea en el worktree. |
-| `aagy-ecc/scripts/hooks/safety_check.py` y `scripts/ps1/safety-check.ps1` | Ya leen el payload PreToolUse de cada harness. La guarda de worktree se añade como una función más, no como un hook nuevo de Bash. |
+| `aagy-ecc/scripts/hooks/safety_check.py` y `scripts/ps1/aagy.ps1 hook-safety` | Ya leen el payload PreToolUse de cada harness. La guarda de worktree se añade como una función más, no como un hook nuevo de Bash. |
 | `scripts/py/doctor_core.py` | Nuevo check `DOC-15`. |
 | `scripts/py/sync_aagy_ecc.py` | Espejar el script nuevo a `aagy-ecc/scripts/py/`. |
 
@@ -44,7 +44,7 @@ Sin dependencias nuevas: Python stdlib + `git` + `gh`.
 
 ```text
 scripts/py/agent_worktree.py      ← núcleo: init | status | where | recycle | guard
-scripts/ps1/agent-worktree.ps1, scripts/sh/agent-worktree.sh   ← wrappers
+scripts/ps1/aagy.ps1 agent-worktree, scripts/sh/aagy.sh agent-worktree   ← wrappers
 aagy-ecc/scripts/py/agent_worktree.py   ← espejo (sync_aagy_ecc)
 aagy-ecc/commands/aagy-worktree.md      ← /aagy-worktree init|status|recycle
 skills/agent-worktrees/SKILL.md         ← punto de entrada en Antigravity (y espejo)
@@ -115,7 +115,7 @@ Códigos de salida: `0` hecho o nada que hacer, `3` bloqueado por trabajo sin gu
 
 | Pieza | Cambio |
 | :--- | :--- |
-| `complete-task-pr.ps1` §12 | Si `where` da `agy`/`claude`: tras `gh pr merge`, esperar hasta 120 s a `state=MERGED` (el auto-merge es asíncrono) y llamar a `recycle`. Si no se fusiona a tiempo, salir avisando de que el reciclado se hará en el siguiente `claim` o SessionStart. En el principal: sustituir `git checkout -f` por `git checkout` (sin `-f`) y abortar si hay cambios. |
+| `aagy complete-task-pr` §12 | Si `where` da `agy`/`claude`: tras `gh pr merge`, esperar hasta 120 s a `state=MERGED` (el auto-merge es asíncrono) y llamar a `recycle`. Si no se fusiona a tiempo, salir avisando de que el reciclado se hará en el siguiente `claim` o SessionStart. En el principal: sustituir `git checkout -f` por `git checkout` (sin `-f`) y abortar si hay cambios. |
 | `backlog.py claim` | En un worktree de agente: primero `recycle --if-merged`; si el worktree ya está en otra rama de tarea sin fusionar, falla (una tarea a la vez por agente). Si no, `git switch -c <rama> origin/main` (o `git switch <rama>` si existe en remoto, para relevos) y registra `agent_worktree`. `--worktree` (`<repo>.wt/<id>`) sigue disponible como excepción (P-07). |
 | `backlog.py handoff` | Antes de entregar: `git push` de la rama y `git switch --detach`, para que el otro agente pueda abrirla en su worktree. Falla si hay cambios sin commit. |
 | `backlog.py done` | Llama a `recycle --if-merged`. |
@@ -171,9 +171,9 @@ sequenceDiagram
 1. [x] Tests rojos de `agent_worktree.py` (`init`, `where`, `recycle`).
 2. [x] `agent_worktree.py` + wrappers ps1/sh.
 3. [x] Copia de configuración e instaladores (§3.4).
-4. [x] `guard()` + integración en `safety_check.py` (Claude) y `safety-check.ps1` (agy); matchers de ficheros y `EnterWorktree` en `aagy-ecc/hooks/hooks.json` y `hooks.json`.
+4. [x] `guard()` + integración en `safety_check.py` (Claude) y `aagy hook-safety` (agy); matchers de ficheros y `EnterWorktree` en `aagy-ecc/hooks/hooks.json` y `hooks.json`.
 5. [x] `backlog.py`: `claim`, `handoff`, `done`.
-6. [x] `complete-task-pr.ps1` §12.
+6. [x] `aagy complete-task-pr` §12.
 7. [x] SessionStart de `aagy-ecc`; `/aagy-worktree`; skill `agent-worktrees`.
 8. [x] `DOC-15` en ambos doctors.
 9. [x] Regla Tier 1, runbook, ADR-0006, `LOG.md`; `sync_aagy_ecc.py` y `audit_plugin_parity.py` en verde; subir versión (4.4.0).
@@ -182,7 +182,7 @@ sequenceDiagram
 
 ## 7. Verificación en equipo local
 
-1. `agent-worktree.ps1 init` en `app` y en `aagy`.
+1. `aagy agent-worktree init` en `app` y en `aagy`.
 2. Abrir `app-aagy` en Antigravity y `app-aagy-ecc` en Claude Code.
 3. Tarea de prueba en cada uno → PR → merge → comprobar reciclado y que `app` avanza solo.
 4. Con un fichero sin commit en `app`, comprobar que no se toca y que sale el aviso.

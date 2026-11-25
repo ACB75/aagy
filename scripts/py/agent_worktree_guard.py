@@ -4,7 +4,7 @@ Guarda PreToolUse de los worktrees por agente.
 
 Si el repo activó los worktrees por agente (marcador `$(git common dir)/aagy-worktrees.json`,
 lo crea `agent_worktree.py init`), cada agente solo puede escribir en su worktree:
-se deniegan escrituras y comandos que modifican el checkout principal de Master o el
+se deniegan escrituras y comandos que modifican el checkout principal (el de la persona) o el
 worktree del otro agente, y los `git worktree add|remove|move` a mano. El worktree nativo
 de Claude Code (EnterWorktree, `claude --worktree`) se deniega siempre.
 
@@ -60,7 +60,7 @@ SELF_SCRIPT = re.compile(r"agent[_-]worktree\.(?:py|ps1|sh)", re.IGNORECASE)
 # Redirecciones que no escriben ficheros: 2>&1, >$null, 2>/dev/null, >NUL.
 HARMLESS_REDIRECT = re.compile(r"\d?>&\d|\d?>>?\s*(?:\$null|/dev/null|nul)\b", re.IGNORECASE)
 # Worktrees nativos que crea la app de Claude Code (sesiones de escritorio y Remote Control):
-# son checkouts aislados, no el principal de Master.
+# son checkouts aislados, no el principal.
 NATIVE_WORKTREES_REL = Path(".claude") / "worktrees"
 PATH_TOKEN = re.compile(r"^([A-Za-z]:[\\/]|/|~|\.\.?[\\/])")
 
@@ -141,7 +141,7 @@ def _paths_in(segment: str, cwd: Path) -> List[Path]:
 def _deny_reason(agent: str, layout: Layout, target: Path) -> str:
     own = layout.worktrees[agent]
     role = layout.role(target)
-    whose = "el checkout principal de Master" if role == ROLE_MAIN else f"el worktree de {AGENT_LABELS.get(role, '?')}"
+    whose = "el checkout principal" if role == ROLE_MAIN else f"el worktree de {AGENT_LABELS.get(role, '?')}"
     return (
         f"{GUARD_TAG} {AGENT_LABELS[agent]} trabaja solo en {own}. {target} es {whose}: no puedes escribir ahí. "
         f"Cambia a tu worktree (cd \"{own}\"); para leer usa Read/Grep. "
@@ -257,8 +257,8 @@ def session_notice(agent: str, cwd: Path) -> str:
         return ""
     own = layout.worktrees[agent]
     if layout.role(cwd) == agent:
-        return f"Worktree de {AGENT_LABELS[agent]}: {own}. Trabaja solo aquí; el checkout principal {layout.main} es de Master."
+        return f"Worktree de {AGENT_LABELS[agent]}: {own}. Trabaja solo aquí; el checkout principal {layout.main} es de la persona."
     return (
         f"AVISO: esta sesión está en {cwd}, pero {AGENT_LABELS[agent]} solo puede escribir en su worktree {own}. "
-        f"Pide a Master que abra la sesión allí o trabaja con cd \"{own}\"."
+        f"Abre la sesión allí o trabaja con cd \"{own}\"."
     )

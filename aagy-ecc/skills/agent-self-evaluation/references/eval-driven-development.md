@@ -9,7 +9,7 @@ Consolidates capability and regression evaluation (`pass@k` and `pass^k`) into t
 
 ## 2. Grader Types
 
-1. **Code-Based Grader (Deterministic)**: `pytest`, `audit-workspace.ps1`, `lint-markdown.ps1 -CheckOnly`, `self_improve.py --review`.
+1. **Code-Based Grader (Deterministic)**: `pytest`, `aagy workspace-audit`, `lint-markdown.ps1 -CheckOnly`, `self_improve.py --review`.
 2. **Model-Based Grader (5-Axis Rubric)**: `skills/agent-self-evaluation/scripts/evaluate.py` or `self_improve.py --evaluate`.
 3. **Human Grader (Mandatory Confirmation Gate)**: Required before promoting any candidate to `skills/`, `rules/`, or `scripts/` (`--confirm`).
 

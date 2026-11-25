@@ -45,7 +45,7 @@ doc/
 ### Reglas de Higiene en `/doc`
 
 1. **Cero duplicidad en raíz**: Queda prohibido mantener `doc/README.md`; el índice único es [`doc/INDEX.md`](../INDEX.md). El archivo `README.md` reside únicamente en la raíz del repositorio.
-2. **Cero directorios vacíos**: Todo subdirectorio activo bajo `doc/` debe contener al menos un documento o `README.md` índice (`audit-workspace.ps1` falla ante carpetas vacías).
+2. **Cero directorios vacíos**: Todo subdirectorio activo bajo `doc/` debe contener al menos un documento o `README.md` índice (`aagy workspace-audit` falla ante carpetas vacías).
 3. **Convención de nombres**:
    - Documentos transversales de referencia en minúsculas con guion (`the-security-guide.md`, `google-modern-stack.md`).
    - Plantillas unificadas en `00-governance/templates/` con prefijo canónico `TEMPLATE_*.md` o `01..04_*.md`.
@@ -79,5 +79,5 @@ Todos los scripts de automatización (`scripts/py/`, `scripts/ps1/`, `scripts/sh
 Todo cambio documental debe superar antes del merge:
 
 - `pwsh -NoProfile -File scripts/ps1/lint-markdown.ps1 -CheckOnly` (exit `0`, estándar DavidAnson `.markdownlint.json`).
-- `pwsh -NoProfile -File scripts/ps1/map-docs.ps1` (`0` enlaces relativos rotos y `.governance/docs-map.json` íntegro).
+- `pwsh -NoProfile -File scripts/ps1/aagy.ps1 map-docs` (`0` enlaces relativos rotos y `.governance/docs-map.json` íntegro).
 - `python skills/docs-governance/scripts/audit-docs.py --root . --scope spine` y `--scope adr` (integridad estructural y de índices ADR).

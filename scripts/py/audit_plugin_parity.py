@@ -155,7 +155,7 @@ def _check_mirror(repo_root: Path, discrepancies: List[str]) -> None:
     discrepancies.append(
         f"Espejo de '{DIR_AAGY_ECC}/' desincronizado: {len(report.missing)} faltan, "
         f"{len(report.changed)} distintos, {len(report.extra)} sobrantes. "
-        "Ejecuta scripts/ps1/sync-aagy-ecc.ps1 (o scripts/sh/sync-aagy-ecc.sh)."
+        "Ejecuta scripts/ps1/aagy.ps1 sync-aagy-ecc (o scripts/sh/aagy.sh sync-aagy-ecc)."
     )
 
 

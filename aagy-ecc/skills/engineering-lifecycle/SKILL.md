@@ -24,7 +24,7 @@ python scripts/py/new_lifecycle_task.py --issue <N> --phase REQ --attach-issue
 python scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase TODO   # sin ceremonia
 ```
 
-Envoltorios: `scripts/ps1/new-lifecycle-task.ps1` y `scripts/sh/new-lifecycle-task.sh`. Las rutas salen de `.governance/docs-map.json`.
+Envoltorios: `scripts/ps1/aagy.ps1 new-lifecycle-task` y `scripts/sh/aagy.sh new-lifecycle-task`. Las rutas salen de `.governance/docs-map.json`.
 
 ## Qué hacer
 

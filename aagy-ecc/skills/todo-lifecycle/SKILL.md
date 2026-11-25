@@ -23,7 +23,7 @@ python scripts/py/archive_todo.py --complete "<título>" --notes "<entregable>"
 python scripts/py/backlog.py gh-sync --check
 ```
 
-Envoltorios: `scripts/ps1/archive-todo.ps1` y `scripts/sh/archive-todo.sh`.
+Envoltorios: `scripts/ps1/aagy.ps1 archive-todo` y `scripts/sh/aagy.sh archive-todo`.
 
 ## Qué hacer
 

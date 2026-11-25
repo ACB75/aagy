@@ -7,35 +7,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 SH_DIR = REPO_ROOT / "scripts" / "sh"
 
 EXPECTED_SH_SCRIPTS = [
-    "archive-todo.sh",
-    "backlog.sh",
-    "audit-plugin-parity.sh",
-    "sync-aagy-ecc.sh",
-    "audit-workspace.sh",
-    "auto-evolve.sh",
-    "complete-task-pr.sh",
-    "disable-skill.sh",
+    "aagy.sh",
     "aagy-sync.sh",
-    "aagy-doctor.sh",
-    "aagy-ecc-doctor.sh",
-    "enable-skill.sh",
-    "format-commit.sh",
-    "gemini-deep-ops.sh",
-    "generate-postmortem.sh",
     "git-flow-helper.sh",
-    "hook-post-write.sh",
-    "hook-stop-capture.sh",
     "install-git-hooks.sh",
     "lint-markdown.sh",
-    "manage-instincts.sh",
-    "map-docs.sh",
-    "new-lifecycle-task.sh",
-    "safety-check.sh",
-    "security-audit.sh",
-    "session-token-monitor.sh",
-    "sonar-audit.sh",
-    "sync-ideas-todo.sh",
-    "toggle-gemini-mcp.sh",
 ]
 
 
@@ -55,10 +31,19 @@ def test_sh_scripts_have_shebang_and_lf():
         assert b"\r\n" not in raw, f"Script {script_name} must use strict LF line endings"
 
 
-def test_auto_evolve_sh_is_agnostic():
-    content = (SH_DIR / "auto-evolve.sh").read_text(encoding="utf-8")
+def test_launcher_is_agnostic_and_forwards_to_python():
+    import subprocess
+    launcher = SH_DIR / "aagy.sh"
+    content = launcher.read_text(encoding="utf-8")
     assert not [w for w in _consumer_terms() if w in content.lower()]
-    assert "self_improve.py" in content
+    assert "../py" in content
+    cmd = ['bash'] + [str(launcher)]
+    listed = subprocess.run(cmd + ["help"], capture_output=True, text=True, check=False)
+    assert listed.returncode == 0 and "complete-task-pr" in listed.stdout
+    ran = subprocess.run(cmd + ["validate-branch", "--branch", "feat/app/x"], capture_output=True, text=True, check=False)
+    assert ran.returncode == 0 and "PASS" in ran.stdout
+    unknown = subprocess.run(cmd + ["no-existe"], capture_output=True, text=True, check=False)
+    assert unknown.returncode == 2
 
 
 def _consumer_terms():

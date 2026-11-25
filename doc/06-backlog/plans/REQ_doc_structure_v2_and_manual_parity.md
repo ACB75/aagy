@@ -36,16 +36,16 @@
 
 - **`RF-01` (Jerarquía `/doc` v2 Limpia y Sin Duplicidad)**: Raíz `/doc` contiene exclusivamente `INDEX.md`, `CONTEXT.md`, `STATUS.md` y `LOG.md`. `the-security-guide.md` se conserva en `00-governance/references/` y `STACK_MODERNO_GOOGLE.md` se renombra a `google-modern-stack.md` siguiendo convenciones del proyecto.
 - **`RF-02` (Convención Universal de Diagramas `<folder>/dgrms/`)**: Toda carpeta con diagramas utiliza la subcarpeta `dgrms/` organizando `.puml` (casos de uso), `.bpmn` (procesos de negocio) y `.mmd` (dominio, arquitectura, actividad y flujo), documentado en `00-governance/DOC_STANDARDS.md`.
-- **`RF-03` (Parametrización de Rutas en `.governance/docs-map.json`)**: Todos los scripts (`archive_todo.py`, `sync_ideas_todo.py`, `new_lifecycle_task.py`, `generate_postmortem.py`, `complete-task-pr.ps1`, `format_commit.py`, `map-docs.ps1`, `lint-markdown.ps1`) resuelven las rutas dinámicamente desde `.governance/docs-map.json` con *fallback* automático a las rutas clásicas (`doc/TODO.md`, `doc/adr/`, etc.) para mantener compatibilidad con `app`.
+- **`RF-03` (Parametrización de Rutas en `.governance/docs-map.json`)**: Todos los scripts (`archive_todo.py`, `sync_ideas_todo.py`, `new_lifecycle_task.py`, `generate_postmortem.py`, `aagy complete-task-pr`, `format_commit.py`, `aagy map-docs`, `lint-markdown.ps1`) resuelven las rutas dinámicamente desde `.governance/docs-map.json` con *fallback* automático a las rutas clásicas (`doc/TODO.md`, `doc/adr/`, etc.) para mantener compatibilidad con `app`.
 - **`RF-04` (Flujo Flexible `[IDEAS -> REQUISITOS -> PLAN -> TODO]`)**: Los scripts y plantillas permiten iniciar trabajo desde cualquiera de los 4 puntos de entrada (`IDEAS`, `REQ`, `PLAN` o `TODO`) sin forzar pasos previos innecesarios cuando la tarea ya está definida.
-- **`RF-05` (Paridad 1-a-1 Manual $\leftrightarrow$ Plugin)**: Cada operación automatizada por el plugin (`aagy` / `aagy`) dispone de un comando CLI idempotente documentado en `00-governance/MANUAL_WORKFLOW.md` para su ejecución manual en terminal, incluyendo el ciclo Git (`validate_branch.py`, `complete-task-pr.ps1` con gate obligatorio de `pytest` + `lint-markdown` + SonarQube).
+- **`RF-05` (Paridad 1-a-1 Manual $\leftrightarrow$ Plugin)**: Cada operación automatizada por el plugin (`aagy` / `aagy`) dispone de un comando CLI idempotente documentado en `00-governance/MANUAL_WORKFLOW.md` para su ejecución manual en terminal, incluyendo el ciclo Git (`validate_branch.py`, `aagy complete-task-pr` con gate obligatorio de `pytest` + `lint-markdown` + SonarQube).
 - **`RF-06` (Absorción de `Tarea 3.5`)**: Los renames `TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md` se aplican directamente en `00-governance/templates/` dentro de esta intervención.
 
 ### 2.2. Criterios de Aceptación Verificables (Given / When / Then)
 
-- [ ] **`CA-01`**: Dado el nuevo árbol `/doc` v2, cuando se ejecuten `lint-markdown.ps1` y `audit-workspace.ps1`, entonces ambos devolverán código de salida `0` y cero enlaces rotos en `INDEX.md` y `.governance/docs-map.json`.
+- [ ] **`CA-01`**: Dado el nuevo árbol `/doc` v2, cuando se ejecuten `lint-markdown.ps1` y `aagy workspace-audit`, entonces ambos devolverán código de salida `0` y cero enlaces rotos en `INDEX.md` y `.governance/docs-map.json`.
 - [ ] **`CA-02`**: Dado un repositorio con estructura v2 (este repo) y otro con estructura clásica (`app`), cuando se ejecuten `archive_todo.py`, `sync_ideas_todo.py`, `new_lifecycle_task.py` y `generate_postmortem.py`, entonces resolverán las rutas correctas en ambos casos sin error.
-- [ ] **`CA-03`**: Dado el parámetro `-Phase` (o equivalente) en `new-lifecycle-task.ps1` y el flujo manual en `MANUAL_WORKFLOW.md`, cuando el usuario inicie desde `IDEAS`, `REQ`, `PLAN` o `TODO`, entonces podrá completar el flujo end-to-end hasta `complete-task-pr.ps1` (con `pytest` 100% verde) sin depender del agente.
+- [ ] **`CA-03`**: Dado el parámetro `-Phase` (o equivalente) en `aagy new-lifecycle-task` y el flujo manual en `MANUAL_WORKFLOW.md`, cuando el usuario inicie desde `IDEAS`, `REQ`, `PLAN` o `TODO`, entonces podrá completar el flujo end-to-end hasta `aagy complete-task-pr` (con `pytest` 100% verde) sin depender del agente.
 - [ ] **`CA-04`**: Cobertura de tests unitarios/integración $\ge 80\%$ sobre la nueva lógica de resolución de rutas y flujo flexible (`pytest` en verde, exit code `0`).
 
 ---
@@ -75,7 +75,7 @@
 
 ## 5. Compuertas SRE de Rendimiento y Persistencia Segura
 
-- **Tiempo de Ejecución**: La resolución de `.governance/docs-map.json` añade $< 5\text{ ms}$ en Python stdlib; `audit-workspace.ps1` y `lint-markdown.ps1` completan en $< 10\text{ s}$.
+- **Tiempo de Ejecución**: La resolución de `.governance/docs-map.json` añade $< 5\text{ ms}$ en Python stdlib; `aagy workspace-audit` y `lint-markdown.ps1` completan en $< 10\text{ s}$.
 - **Persistencia**: Uso exclusivo de `git mv` para preservar trazabilidad de archivos reubicados.
 
 ---
@@ -85,5 +85,5 @@
 | Vector de Ataque / Amenaza | Riesgo (`Bajo/Medio/Alto/N/A`) | Mitigación y Bastionado Aplicado |
 | :--- | :---: | :--- |
 | **Path Traversal desde `docs-map.json`** | `Medio` | Validar que toda ruta leída de `.governance/docs-map.json` resuelva dentro de `RepoRoot` (`resolve().relative_to(repo_root)`). |
-| **Merge de código con tests rotos** | `Alto` | `complete-task-pr.ps1` bloquea la PR/merge si `pytest`, `lint-markdown` o `sonar-audit` devuelven código distinto de `0`. |
-| **Pérdida de plantillas o enlaces rotos** | `Bajo` | Verificación obligatoria con `audit-workspace.ps1` y `git mv` en Fase 3/4. |
+| **Merge de código con tests rotos** | `Alto` | `aagy complete-task-pr` bloquea la PR/merge si `pytest`, `lint-markdown` o `sonar-audit` devuelven código distinto de `0`. |
+| **Pérdida de plantillas o enlaces rotos** | `Bajo` | Verificación obligatoria con `aagy workspace-audit` y `git mv` en Fase 3/4. |

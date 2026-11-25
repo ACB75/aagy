@@ -35,7 +35,7 @@ python "<source_repo>/scripts/py/backlog.py" list --brief --agent agy
 ```
 
 Dentro del repo aagy puedes usar `python scripts/py/backlog.py` o los wrappers
-`scripts/ps1/backlog.ps1` / `scripts/sh/backlog.sh`. Exporta `AAGY_AGENT=agy`
+`scripts/ps1/aagy.ps1 backlog` / `scripts/sh/aagy.sh backlog`. Exporta `AAGY_AGENT=agy`
 (o pasa `--agent agy`) en cada orden que lo pida.
 
 | Acción | Orden |

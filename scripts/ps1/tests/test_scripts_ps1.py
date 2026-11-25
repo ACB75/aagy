@@ -7,35 +7,11 @@ REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 PS1_DIR = REPO_ROOT / "scripts" / "ps1"
 
 EXPECTED_PS1_SCRIPTS = [
-    "archive-todo.ps1",
-    "backlog.ps1",
-    "audit-plugin-parity.ps1",
-    "sync-aagy-ecc.ps1",
-    "audit-workspace.ps1",
-    "auto-evolve.ps1",
-    "complete-task-pr.ps1",
-    "disable-skill.ps1",
+    "aagy.ps1",
     "aagy-sync.ps1",
-    "aagy-doctor.ps1",
-    "aagy-ecc-doctor.ps1",
-    "enable-skill.ps1",
-    "format-commit.ps1",
-    "gemini-deep-ops.ps1",
-    "generate-postmortem.ps1",
     "git-flow-helper.ps1",
-    "hook-post-write.ps1",
-    "hook-stop-capture.ps1",
     "install-git-hooks.ps1",
     "lint-markdown.ps1",
-    "manage-instincts.ps1",
-    "map-docs.ps1",
-    "new-lifecycle-task.ps1",
-    "safety-check.ps1",
-    "security-audit.ps1",
-    "session-token-monitor.ps1",
-    "sonar-audit.ps1",
-    "sync-ideas-todo.ps1",
-    "toggle-gemini-mcp.ps1",
 ]
 
 
@@ -59,10 +35,19 @@ def test_ps1_scripts_valid_structure():
         ), f"Script {script_name} must contain PowerShell structure or documentation"
 
 
-def test_auto_evolve_ps1_is_agnostic():
-    content = (PS1_DIR / "auto-evolve.ps1").read_text(encoding="utf-8")
+def test_launcher_is_agnostic_and_forwards_to_python():
+    import subprocess
+    launcher = PS1_DIR / "aagy.ps1"
+    content = launcher.read_text(encoding="utf-8")
     assert not [w for w in _consumer_terms() if w in content.lower()]
-    assert "self_improve.py" in content
+    assert "../py" in content
+    cmd = ['pwsh', '-NoProfile', '-File'] + [str(launcher)]
+    listed = subprocess.run(cmd + ["help"], capture_output=True, text=True, check=False)
+    assert listed.returncode == 0 and "complete-task-pr" in listed.stdout
+    ran = subprocess.run(cmd + ["validate-branch", "--branch", "feat/app/x"], capture_output=True, text=True, check=False)
+    assert ran.returncode == 0 and "PASS" in ran.stdout
+    unknown = subprocess.run(cmd + ["no-existe"], capture_output=True, text=True, check=False)
+    assert unknown.returncode == 2
 
 
 def _consumer_terms():

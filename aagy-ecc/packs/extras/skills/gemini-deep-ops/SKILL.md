@@ -22,7 +22,7 @@ python scripts/py/gemini_deep_ops.py analyze-log --file <ruta/al.log>
 python scripts/py/gemini_deep_ops.py postmortem --issue fix/<proyecto>/<id> --file <ruta/al.log>
 ```
 
-Envoltorios: `scripts/ps1/gemini-deep-ops.ps1` y `scripts/sh/gemini-deep-ops.sh`.
+Envoltorios: `scripts/ps1/aagy.ps1 gemini-deep-ops` y `scripts/sh/aagy.sh gemini-deep-ops`.
 
 ## Qué hacer
 

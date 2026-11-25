@@ -128,11 +128,11 @@ def test_fix_branch_generates_postmortem(tmp_path):
     assert any("generate_postmortem.py" in " ".join(c) for c in run.calls)
 
 
-def test_wrappers_are_thin_and_delegate():
-    for rel in ("scripts/ps1/complete-task-pr.ps1", "scripts/sh/complete-task-pr.sh"):
+def test_launchers_are_thin_and_generic():
+    for rel in ("scripts/ps1/aagy.ps1", "scripts/sh/aagy.sh"):
         text = (REPO_ROOT / rel).read_text(encoding="utf-8")
-        assert "complete_task_pr.py" in text and "gh pr" not in text and len(text.splitlines()) < 60
-    assert b"\r\n" not in (REPO_ROOT / "scripts/sh/complete-task-pr.sh").read_bytes()
+        assert "complete_task_pr" not in text and "gh pr" not in text and len(text.splitlines()) < 60
+    assert b"\r\n" not in (REPO_ROOT / "scripts/sh/aagy.sh").read_bytes()
 
 
 def test_engine_is_mirrored_in_aagy_ecc():
@@ -142,7 +142,7 @@ def test_engine_is_mirrored_in_aagy_ecc():
 
 def test_sh_wrapper_review_only_runs_engine():
     branch = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True, cwd=REPO_ROOT).stdout.strip()
-    res = subprocess.run(["bash", str(REPO_ROOT / "scripts/sh/complete-task-pr.sh"), "-ReviewOnly", "--title", TITLE],
+    res = subprocess.run(["bash", str(REPO_ROOT / "scripts/sh/aagy.sh"), "complete-task-pr", "--review-only", "--title", TITLE],
                          capture_output=True, text=True, cwd=REPO_ROOT)
     if ctp.validate_branch_name(branch)[0]:
         assert res.returncode == 0 and "AVISO DE" in res.stdout

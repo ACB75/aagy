@@ -100,7 +100,7 @@ No aplica.
 
 ### 4.2. `GREEN`
 
-- [x] `scripts/py/backlog.py` + wrappers `scripts/ps1/backlog.ps1`, `scripts/sh/backlog.sh`.
+- [x] `scripts/py/backlog.py` + wrappers `scripts/ps1/aagy.ps1 backlog`, `scripts/sh/aagy.sh backlog`.
 - [x] `sync_aagy_ecc.py`: añadir `backlog.py`, `new_lifecycle_task.py`, `sync_ideas_todo.py`, `archive_todo.py` a `MIRRORED_PY_MODULES` (`RF-07`).
 - [x] `aagy-ecc/commands/`: `aagy-todo.md` y los 4 `epic-*.md`.
 - [x] `skills/shared-backlog/SKILL.md` (se espeja a ecc).

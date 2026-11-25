@@ -7,7 +7,7 @@
 
 ## Context
 
-Master, Claude Code y Antigravity trabajaban en la misma carpeta (`<padre>\app`, `...\aagy`). Un cambio sin commit, un `checkout` o un `reset` de cualquiera afectaba a los otros dos. `backlog.py claim --worktree` ya creaba un worktree por tarea (`<repo>.wt/<id>`), pero la ruta cambiaba con cada tarea, Antigravity tenía que abrir una carpeta nueva cada vez y nada protegía el checkout de Master. Además, `complete-task-pr.ps1` terminaba con `git checkout -f main`, que falla dentro de un worktree (git no deja `main` en dos worktrees) y descarta cambios sin avisar.
+Master, Claude Code y Antigravity trabajaban en la misma carpeta (`<padre>\app`, `...\aagy`). Un cambio sin commit, un `checkout` o un `reset` de cualquiera afectaba a los otros dos. `backlog.py claim --worktree` ya creaba un worktree por tarea (`<repo>.wt/<id>`), pero la ruta cambiaba con cada tarea, Antigravity tenía que abrir una carpeta nueva cada vez y nada protegía el checkout de Master. Además, `aagy complete-task-pr` terminaba con `git checkout -f main`, que falla dentro de un worktree (git no deja `main` en dos worktrees) y descarta cambios sin avisar.
 
 ## Decision
 
