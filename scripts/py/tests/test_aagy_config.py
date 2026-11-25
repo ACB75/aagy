@@ -130,3 +130,14 @@ def test_cli_get_and_missing(tmp_path: Path, monkeypatch, capsys):
     assert cfg.main(["--start", str(repo), "get", "hosts.live.ip"]) == cfg.EXIT_MISSING
     assert cfg.main(["--start", str(repo), "get", "hosts.live.ip", "--default", "none"]) == cfg.EXIT_OK
     assert capsys.readouterr().out.strip() == "none"
+
+
+def test_windows_user_env_dir_fallback(tmp_path: Path, monkeypatch):
+    import local_model
+
+    (tmp_path / ".git").mkdir()
+    env_root = _env_dir(tmp_path, {"local_model": {"tool": "demo:1b"}, "hosts": {"live": {"name": "prod"}}})
+    monkeypatch.delenv(cfg.ENV_DIR_VAR, raising=False)
+    monkeypatch.setattr(cfg, "_user_env_dir", lambda: str(env_root))
+    assert cfg.load(tmp_path).lookup("hosts.live.name") == ("prod", cfg.LAYER_ENV)
+    assert local_model.load_settings(tmp_path).tool_model == "demo:1b"

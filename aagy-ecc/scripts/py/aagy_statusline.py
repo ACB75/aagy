@@ -90,8 +90,8 @@ def _as_int(value: Any, default: int) -> int:
 
 
 def load_ui(start: Optional[Path] = None, environ: Optional[Mapping[str, str]] = None) -> UiSettings:
-    env = os.environ if environ is None else environ
-    cfg = aagy_config.load(start, env)
+    cfg = aagy_config.load(start, environ)
+    env = cfg.environ
     raw_segments = cfg.get("ui.segments", None)
     if isinstance(raw_segments, str):
         raw_segments = [s.strip() for s in raw_segments.split(",")]

@@ -203,8 +203,8 @@ def merge_tasks(overrides: Any) -> Dict[str, Dict[str, Any]]:
 
 
 def load_settings(start: Optional[Path] = None, environ: Optional[Mapping[str, str]] = None) -> Settings:
-    env = dict(os.environ if environ is None else environ)
-    cfg = aagy_config.load(start, env)
+    cfg = aagy_config.load(start, environ)
+    env = cfg.environ
     mode = str(_value(cfg, "mode", env) or MODE_AUTO).lower()
     globs = _value(cfg, "private_globs", env) or []
     return Settings(

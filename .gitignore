@@ -121,3 +121,4 @@ aagy-ecc/.aagy-install.json
 # Backlog compartido sin git (backlog.py)
 .aagy-backlog/
 .governance/active-issue.json
+.governance/local-model-bench.json
