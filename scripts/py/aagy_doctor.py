@@ -44,6 +44,7 @@ KEY_VERSION = "version"
 DIR_SCRIPTS = "scripts"
 PWSH_NO_PROFILE = "-NoProfile"
 FILE_HOOKS_JSON = "hooks.json"
+PLUGIN_ROOT_PLACEHOLDER = "${AAGY_PLUGIN_ROOT}"
 FILE_RULES = "AGENTS.md"
 FILE_SKILL = "SKILL.md"
 DOCTOR_SKILL = "aagy-doctor"
@@ -257,7 +258,7 @@ def _expected_tree(ctx: AgyContext) -> Dict[str, Path]:
         src = ctx.repo_root / DIR_AGENTS / name
         if src.is_file():
             expected[f"{DIR_AGENTS}/{name}"] = src
-    for rel in (f"{DIR_RULES}/{FILE_RULES}", FILE_PLUGIN_JSON, FILE_HOOKS_JSON):
+    for rel in (f"{DIR_RULES}/{FILE_RULES}", FILE_PLUGIN_JSON):
         if (ctx.repo_root / rel).is_file():
             expected[rel] = ctx.repo_root / rel
     return expected
@@ -271,9 +272,22 @@ def check_drift(ctx: AgyContext) -> core.CheckResult:
     expected = _expected_tree(ctx)
     actual = {rel: path for rel, path in core.list_tree(ctx.plugin_dir).items() if rel in expected}
     diff = core.compare_trees(expected, actual)
-    if diff.clean:
-        return core.result("DOC-07", core.STATUS_PASS, f"{len(expected)} ficheros idénticos al repo.")
-    return core.result("DOC-07", core.STATUS_WARN, f"Deriva frente al repo: {diff.summary()}.", *diff.sample(), fix=sync_fix(ctx))
+    hooks_drift = _hooks_drift(ctx)
+    if diff.clean and not hooks_drift:
+        return core.result("DOC-07", core.STATUS_PASS, f"{len(expected) + 1} ficheros idénticos al repo.")
+    summary = diff.summary() if not diff.clean else "hooks.json distinto"
+    return core.result("DOC-07", core.STATUS_WARN, f"Deriva frente al repo: {summary}.", *diff.sample(), *hooks_drift,
+                       fix=sync_fix(ctx))
+
+
+def _hooks_drift(ctx: AgyContext) -> List[str]:
+    """hooks.json instalado == el del repo con ${AAGY_PLUGIN_ROOT} sustituido por la carpeta del plugin."""
+    assert ctx.repo_root is not None
+    src, dst = ctx.repo_root / FILE_HOOKS_JSON, ctx.plugin_dir / FILE_HOOKS_JSON
+    if not src.is_file():
+        return []
+    installed = core.read_text(dst).replace(ctx.plugin_dir.as_posix(), PLUGIN_ROOT_PLACEHOLDER)
+    return [] if installed.strip() == core.read_text(src).strip() else [f"distinto {FILE_HOOKS_JSON}"]
 
 
 def check_entry_points(ctx: AgyContext) -> core.CheckResult:
@@ -358,25 +372,26 @@ def check_interpreters(ctx: AgyContext) -> core.CheckResult:
 
 def _safety_script(ctx: AgyContext) -> Optional[Path]:
     for base in (ctx.plugin_dir, ctx.repo_root):
-        candidate = base / DIR_SCRIPTS / "ps1" / "safety-check.ps1" if base else None
+        candidate = base / DIR_SCRIPTS / "py" / "hook_safety.py" if base else None
         if candidate and candidate.is_file():
             return candidate
     return None
 
 
 def check_hook_smoke(ctx: AgyContext) -> core.CheckResult:
-    pwsh = core.which("pwsh")
+    python = core.which("python") or core.which("python3")
     script = _safety_script(ctx)
-    if not pwsh or script is None:
-        return core.result("DOC-11", core.STATUS_SKIP, "Sin pwsh o sin safety-check.ps1 accesible para la prueba.")
+    if not python or script is None:
+        return core.result("DOC-11", core.STATUS_SKIP, "Sin Python o sin hook_safety.py accesible para la prueba.")
     payload = '{"toolCall":{"args":{"CommandLine":"%s"}}}'
-    _, deny_out, _ = core.run_capture([pwsh, PWSH_NO_PROFILE, "-File", str(script)], payload % SAFETY_PROBE_DENY, 2.2)
-    _, allow_out, _ = core.run_capture([pwsh, PWSH_NO_PROFILE, "-File", str(script)], payload % SAFETY_PROBE_ALLOW, 2.2)
+    argv = [python, str(script), "--format", "agy"]
+    _, deny_out, _ = core.run_capture(argv, payload % SAFETY_PROBE_DENY, 2.2)
+    _, allow_out, _ = core.run_capture(argv, payload % SAFETY_PROBE_ALLOW, 2.2)
     if '"deny"' not in deny_out:
         return core.result("DOC-11", core.STATUS_FAIL, "El safety gate no bloqueó el comando de prueba.", deny_out.strip()[:200])
     if '"allow"' not in allow_out:
         return core.result("DOC-11", core.STATUS_FAIL, "El safety gate bloqueó un comando inocuo.", allow_out.strip()[:200])
-    return core.result("DOC-11", core.STATUS_PASS, "safety-check.ps1 bloquea el comando de prueba y deja pasar 'ls'.")
+    return core.result("DOC-11", core.STATUS_PASS, "hook_safety.py bloquea el comando de prueba y deja pasar 'ls'.")
 
 
 # --------------------------------------------------------------------------- #

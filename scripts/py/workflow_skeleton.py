@@ -28,21 +28,22 @@ import sys
 from typing import Dict, Iterator, List, Optional, Sequence, Tuple
 
 ENCODING = "utf-8"
-SECTIONS: Tuple[str, ...] = ("Cuándo usarlo", "Uso", "Qué hacer", "Reglas", "Paridad")
+SECTION_WHEN = "Cuándo usarlo"
+SECTIONS: Tuple[str, ...] = (SECTION_WHEN, "Uso", "Qué hacer", "Reglas", "Paridad")
 SECTION_PARITY = SECTIONS[-1]
 LEVEL_FAIL = "FAIL"
 LEVEL_WARN = "WARN"
 
 # Nombres equivalentes: "Cuándo usarla" en las propias y los de ECC en las heredadas.
 ALIASES: Dict[str, Tuple[str, ...]] = {
-    "Cuándo usarlo": ("Cuándo usarla", "When to Use", "When to Activate", "When Activated", "Trigger"),
+    SECTION_WHEN: ("Cuándo usarla", "When to Use", "When to Activate", "When Activated", "Trigger"),
     "Uso": ("Usage", "How to Use"),
     "Qué hacer": ("What to Do", "Process", "Workflow", "How It Works", "Steps"),
     "Reglas": ("Rules", "Guardrails", "Non-Negotiable Rules", "Key Principles"),
     "Paridad": ("Parity",),
 }
 
-OWN_ALIASES: Dict[str, Tuple[str, ...]] = {"Cuándo usarlo": ("Cuándo usarla",)}
+OWN_ALIASES: Dict[str, Tuple[str, ...]] = {SECTION_WHEN: ("Cuándo usarla",)}
 
 # Workflows propios de aagy: deben cumplir el esqueleto exacto (en español y en orden).
 OWN_WORKFLOWS = frozenset({

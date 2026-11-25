@@ -405,27 +405,34 @@ def check_interpreters(ctx: EccContext) -> core.CheckResult:
     return core.result("DOC-10", core.STATUS_PASS, f"{message}; bash disponible.", notes[1])
 
 
-def _run_hook(python: str, script: Path, payload: Dict[str, object], cwd: Path) -> Tuple[int, str]:
-    code, out, err = core.run_capture([python, str(script)], json.dumps(payload), timeout_s=1.5, cwd=cwd)
+FMT_ARG = "--format"
+FMT_CLAUDE = "claude"
+
+
+def _run_hook(python: str, script: Path, payload: Dict[str, object], cwd: Path, *args: str) -> Tuple[int, str]:
+    code, out, err = core.run_capture([python, str(script), *args], json.dumps(payload), timeout_s=1.5, cwd=cwd)
     return code, out or err
 
 
-def _smoke_problems(python: str, hooks_dir: Path, tmp: Path) -> List[str]:
+def _smoke_problems(python: str, scripts_dir: Path, tmp: Path) -> List[str]:
+    """Prueba los hooks: SessionStart en scripts/hooks; safety gate y linter en scripts/py (motor común)."""
     problems: List[str] = []
-    code, out = _run_hook(python, hooks_dir / "session_start_rules.py", {"hook_event_name": "SessionStart"}, tmp)
+    code, out = _run_hook(python, scripts_dir / "hooks" / "session_start_rules.py", {"hook_event_name": "SessionStart"}, tmp)
     if code != 0 or "additionalContext" not in out:
         problems.append("session_start_rules.py no devolvió las reglas.")
-    code, out = _run_hook(python, hooks_dir / "safety_check.py", {KEY_TOOL_INPUT: {"command": SAFETY_PROBE_DENY}}, tmp)
+    safety = scripts_dir / "py" / "hook_safety.py"
+    code, out = _run_hook(python, safety, {KEY_TOOL_INPUT: {"command": SAFETY_PROBE_DENY}}, tmp, FMT_ARG, FMT_CLAUDE)
     if code != 0 or '"deny"' not in out:
-        problems.append("safety_check.py no bloqueó el comando de prueba.")
-    code, out = _run_hook(python, hooks_dir / "safety_check.py", {KEY_TOOL_INPUT: {"command": SAFETY_PROBE_ALLOW}}, tmp)
+        problems.append("hook_safety.py no bloqueó el comando de prueba.")
+    code, out = _run_hook(python, safety, {KEY_TOOL_INPUT: {"command": SAFETY_PROBE_ALLOW}}, tmp, FMT_ARG, FMT_CLAUDE)
     if code != 0 or '"deny"' in out:
-        problems.append("safety_check.py bloqueó un comando inocuo.")
+        problems.append("hook_safety.py bloqueó un comando inocuo.")
     probe = tmp / "probe.txt"
     probe.write_text("x\n", encoding=core.ENCODING)
-    code, _ = _run_hook(python, hooks_dir / "post_write_lint.py", {KEY_TOOL_INPUT: {"file_path": str(probe)}}, tmp)
+    code, _ = _run_hook(python, scripts_dir / "py" / "hook_post_write.py", {KEY_TOOL_INPUT: {"file_path": str(probe)}}, tmp,
+                        FMT_ARG, FMT_CLAUDE)
     if code != 0:
-        problems.append("post_write_lint.py terminó con error.")
+        problems.append("hook_post_write.py terminó con error.")
     return problems
 
 
@@ -436,7 +443,7 @@ def check_hook_smoke(ctx: EccContext) -> core.CheckResult:
     if python is None or core.is_windows_store_stub(python):
         return core.result("DOC-11", core.STATUS_SKIP, "Sin un Python real en el PATH para ejecutar los hooks.")
     with tempfile.TemporaryDirectory(prefix="aagy-ecc-doctor-") as tmp:
-        problems = _smoke_problems(python, ctx.install_path / DIR_SCRIPTS / "hooks", Path(tmp))
+        problems = _smoke_problems(python, ctx.install_path / DIR_SCRIPTS, Path(tmp))
     if problems:
         return core.result("DOC-11", core.STATUS_FAIL, problems[0], *problems[1:], fix=reinstall_fix(ctx))
     return core.result("DOC-11", core.STATUS_PASS, "SessionStart, safety gate y linter responden como se espera.")

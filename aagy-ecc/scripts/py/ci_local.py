@@ -71,18 +71,23 @@ def _script(root: Path, name: str) -> str:
     return str(root / "scripts" / "py" / name)
 
 
+MD_LINT = "markdownlint"
+MD_CONFIG = ".markdownlint.json"
+MD_TARGETS = ("doc/**/*.md", "README.md")
+
+
 def _markdownlint() -> Tuple[str, ...]:
-    if shutil.which("markdownlint-cli2"):
-        return ("markdownlint-cli2", "doc/**/*.md", "README.md")
-    if shutil.which("markdownlint"):
-        return ("markdownlint", "--config", ".markdownlint.json", "doc/**/*.md", "README.md")
+    if shutil.which(f"{MD_LINT}-cli2"):
+        return (f"{MD_LINT}-cli2", *MD_TARGETS)
+    if shutil.which(MD_LINT):
+        return (MD_LINT, "--config", MD_CONFIG, *MD_TARGETS)
     return ()
 
 
 def default_steps(root: Path) -> List[Step]:
     tests = [d for d in ("scripts/py/tests", "scripts/ps1/tests", "scripts/sh/tests") if (root / d).is_dir()]
     steps = [
-        Step("markdownlint", _markdownlint(), needs=(".markdownlint.json",)),
+        Step(MD_LINT, _markdownlint(), needs=(MD_CONFIG,)),
         Step("pytest", (PY, "-m", "pytest", "-q", *tests), fast=False, needs=tuple(tests[:1])),
         Step("workspace_audit", (PY, _script(root, "workspace_audit.py"), "--skip-sonar", "--skip-security"),
              needs=("scripts/py/workspace_audit.py",)),

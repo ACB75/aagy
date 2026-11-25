@@ -192,11 +192,11 @@ def test_interpreters_reject_old_python(tmp_path: Path, plugin: Path, monkeypatc
     assert result.status == core.STATUS_FAIL and "3.8.0" in result.message
 
 
-def test_smoke_skips_without_pwsh_and_checks_output(tmp_path: Path, repo: Path, plugin: Path, monkeypatch):
+def test_smoke_skips_without_python_and_checks_output(tmp_path: Path, repo: Path, plugin: Path, monkeypatch):
     monkeypatch.setattr(core, "which", lambda name: None)
     assert _run(_ctx(tmp_path, plugin, repo), "DOC-11").status == core.STATUS_SKIP
-    _write(repo / "scripts" / "ps1" / "safety-check.ps1", "# fake")
-    monkeypatch.setattr(core, "which", lambda name: "/usr/bin/pwsh")
+    _write(repo / "scripts" / "py" / "hook_safety.py", "# fake")
+    monkeypatch.setattr(core, "which", lambda name: "/usr/bin/python3")
     outputs = iter([(0, '{"decision":"deny"}', ""), (0, '{"decision":"allow"}', "")])
     monkeypatch.setattr(core, "run_capture", lambda *a, **k: next(outputs))
     assert _run(_ctx(tmp_path, plugin, repo), "DOC-11").status == core.STATUS_PASS
