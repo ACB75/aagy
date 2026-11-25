@@ -1,173 +1,150 @@
-"""Tests para consolidación y auditoría de complete-task-pr."""
+"""Fase 4 con motor Python único (complete_task_pr.py, #95)."""
 
-import os
-import re
+import json
+from pathlib import Path
 import subprocess
 import sys
-from pathlib import Path
+from typing import List, Sequence, Tuple
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+import pytest
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-def test_validate_branch_integration():
-    """Verifica que validate_branch.py sea ejecutable y valide ramas correctamente."""
-    script_path = REPO_ROOT / "scripts" / "py" / "validate_branch.py"
-    assert script_path.exists(), "validate_branch.py debe existir"
+import complete_task_pr as ctp  # noqa: E402
 
-    # Rama válida
-    res_valid = subprocess.run(
-        [sys.executable, str(script_path), "--branch", "feat/aagy/consolidate-complete-task-pr"],
-        capture_output=True,
-        text=True,
-    )
-    assert res_valid.returncode == 0
-    assert "[PASS]" in res_valid.stdout
-
-    # Rama no permitida (directo a main)
-    res_invalid = subprocess.run(
-        [sys.executable, str(script_path), "--branch", "main"],
-        capture_output=True,
-        text=True,
-    )
-    assert res_invalid.returncode != 0
-    assert "[REJECT]" in res_invalid.stdout
+REPO_ROOT = Path(__file__).resolve().parents[3]
+TITLE = "[feat]-[aagy]: algo nuevo"
 
 
-def test_todo_contains_completed_items_regex():
-    """Verifica que la expresión regular detecte correctamente tareas completadas."""
-    pattern = re.compile(r"^[\s*\-]*\[x\]", re.MULTILINE | re.IGNORECASE)
+class FakeRunner:
+    """Simula git y gh: responde por prefijo de comando y guarda las llamadas."""
 
-    sample_active = "# TODO\n* [ ] Tarea pendiente 1\n* [ ] Tarea pendiente 2\n"
-    assert not pattern.search(sample_active)
+    def __init__(self, branch: str = "feat/aagy/gh-42-algo", dirty: str = "", pr: str = "", fail: Sequence[str] = ()):
+        self.calls: List[List[str]] = []
+        self.branch, self.dirty, self.pr, self.fail = branch, dirty, pr, tuple(fail)
+        self.created = False
 
-    sample_with_done = "# TODO\n* [x] Tarea completada\n* [ ] Tarea pendiente 2\n"
-    assert pattern.search(sample_with_done) is not None
+    def __call__(self, argv: Sequence[str], cwd: Path) -> Tuple[int, str]:
+        argv = list(argv)
+        self.calls.append(argv)
+        joined = " ".join(argv)
+        if any(f in joined for f in self.fail):
+            return 1, ""
+        if argv[:3] == ["git", "branch", "--show-current"]:
+            return 0, self.branch
+        if argv[:2] == ["git", "status"]:
+            return 0, self.dirty
+        if argv[:3] == ["gh", "pr", "create"]:
+            self.created = True
+            return 0, "https://github.com/o/r/pull/7"
+        if argv[:3] == ["gh", "pr", "list"]:
+            return 0, self.pr or ("7" if self.created else "")
+        if argv[:3] == ["gh", "issue", "view"]:
+            return 0, json.dumps({"labels": [{"name": "bug"}], "milestone": {"title": "M1"}, "projectItems": []})
+        if argv[-1:] == ["where"]:
+            return 0, "main"
+        return 0, ""
 
-    sample_dash = "- [X] Tarea completada con guion\n"
-    assert pattern.search(sample_dash) is not None
+    def ran(self, *prefix: str) -> bool:
+        return any(c[: len(prefix)] == list(prefix) for c in self.calls)
 
 
-def test_scripts_bin_permissions_and_existence():
-    """Verifica la existencia y sintaxis básica de los scripts de cierre."""
-    ps1_script = REPO_ROOT / "scripts" / "ps1" / "complete-task-pr.ps1"
-    sh_script = REPO_ROOT / "scripts" / "sh" / "complete-task-pr.sh"
-
-    assert ps1_script.exists(), "complete-task-pr.ps1 debe existir"
-    assert sh_script.exists(), "complete-task-pr.sh debe existir"
-
-    # Verificar que el script shell use finales de línea LF (\n)
-    sh_content = sh_script.read_bytes()
-    assert b"\r\n" not in sh_content, "complete-task-pr.sh debe usar finales de línea LF estrictos"
+def _args(tmp_path: Path, *extra: str):
+    return ctp.parse_args(["--repo", str(tmp_path), "--title", TITLE, "--yes", *extra])
 
 
-def test_preflight_review_mode_dryrun():
-    """Verifica que complete-task-pr proteja main o ejecute -ReviewOnly en rama de tarea."""
-    ps1_script = REPO_ROOT / "scripts" / "ps1" / "complete-task-pr.ps1"
-    res = subprocess.run(
-        ["pwsh", "-NoProfile", "-File", str(ps1_script), "-ReviewOnly"],
-        capture_output=True,
-        text=True,
-    )
-    current_branch = subprocess.run(
-        ["git", "branch", "--show-current"],
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
-    # En HEAD desacoplado (evento pull_request de GitHub Actions) el script usa GITHUB_HEAD_REF / GITHUB_REF_NAME.
-    if not current_branch:
-        current_branch = os.environ.get("GITHUB_HEAD_REF") or os.environ.get("GITHUB_REF_NAME") or ""
+def test_issue_detection_order(tmp_path):
+    assert ctp.detect_issue("feat/x/y", tmp_path, 5) == 5
+    assert ctp.detect_issue("feat/aagy/gh-42-algo", tmp_path) == 42
+    (tmp_path / ".governance").mkdir()
+    (tmp_path / ctp.ACTIVE_ISSUE_REL).write_text('{"issue": 9}', encoding="utf-8")
+    assert ctp.detect_issue("feat/aagy/algo", tmp_path) == 9
 
-    if not current_branch:
-        assert res.returncode != 0
-        assert "desacoplado" in (res.stdout + res.stderr).lower()
-    elif current_branch in ("main", "master"):
-        assert res.returncode != 0
-        assert "gobernanza" in res.stderr.lower() or "rama" in res.stderr.lower()
+
+def test_with_closes_injects_once():
+    body = ctp.default_body("feat/x/y", "main")
+    once = ctp.with_closes(body, 61)
+    assert once.count("Closes #61") == 1
+    assert ctp.with_closes(once, 61) == once
+    assert "Closes #3" in ctp.with_closes("texto", 3)
+
+
+def test_rejects_invalid_branch_and_detached_head(tmp_path):
+    with pytest.raises(ctp.PhaseError, match="Gobernanza"):
+        ctp.build_plan(tmp_path, FakeRunner(branch="main"), TITLE)
+    with pytest.raises(ctp.PhaseError, match="desacoplado"):
+        ctp.build_plan(tmp_path, FakeRunner(branch=""), TITLE)
+
+
+def test_requires_typed_title(tmp_path):
+    with pytest.raises(ctp.PhaseError, match="title"):
+        ctp.build_plan(tmp_path, FakeRunner(), "")
+
+
+def test_review_only_changes_nothing(tmp_path, capsys):
+    run = FakeRunner()
+    assert ctp.run_phase(ctp.parse_args(["--repo", str(tmp_path), "--title", TITLE, "--review-only"]), run, run) == 0
+    out = capsys.readouterr().out
+    assert "AVISO DE" in out and "Closes #42" in out and "--review-only" in out
+    assert not run.ran("git", "push") and not run.ran("gh", "pr", "create")
+
+
+def test_full_flow_opens_pr_without_merging(tmp_path, capsys):
+    run = FakeRunner(dirty=" M a.py")
+    assert ctp.run_phase(_args(tmp_path), run, run) == 0
+    assert run.ran(ctp.PY, ctp._script("ci_local.py"))
+    assert run.ran("git", "commit", "-m", TITLE)
+    create = next(c for c in run.calls if c[:3] == ["gh", "pr", "create"])
+    assert "--assignee" in create and "--label" in create and "--milestone" in create
+    assert not run.ran("gh", "pr", "merge")
+    assert "Sin auto-merge" in capsys.readouterr().out
+
+
+def test_merge_only_when_asked(tmp_path):
+    run = FakeRunner(pr="7")
+    assert ctp.run_phase(_args(tmp_path, "--merge"), run, run) == 0
+    assert run.ran("gh", "pr", "merge", "7", "--squash", "--delete-branch")
+    assert run.ran("git", "checkout", "main")
+
+
+def test_gate_failure_stops_before_commit(tmp_path):
+    run = FakeRunner(dirty=" M a.py", fail=("ci_local.py",))
+    with pytest.raises(ctp.PhaseError, match="gate"):
+        ctp.run_phase(_args(tmp_path), run, run)
+    assert not run.ran("git", "commit")
+
+
+def test_declared_checks_run_after_ci_local(tmp_path):
+    (tmp_path / ".governance").mkdir()
+    (tmp_path / ctp.DOCS_MAP_REL).write_text(json.dumps({"checks": ["python check_sdk.py --strict"]}), encoding="utf-8")
+    run = FakeRunner()
+    ctp.quality_gate(tmp_path, run)
+    assert run.calls[-1] == ["python", "check_sdk.py", "--strict"]
+
+
+def test_fix_branch_generates_postmortem(tmp_path):
+    run = FakeRunner(branch="fix/aagy/roto")
+    ctp.run_phase(_args(tmp_path, "--skip-gate"), run, run)
+    assert any("generate_postmortem.py" in " ".join(c) for c in run.calls)
+
+
+def test_wrappers_are_thin_and_delegate():
+    for rel in ("scripts/ps1/complete-task-pr.ps1", "scripts/sh/complete-task-pr.sh"):
+        text = (REPO_ROOT / rel).read_text(encoding="utf-8")
+        assert "complete_task_pr.py" in text and "gh pr" not in text and len(text.splitlines()) < 60
+    assert b"\r\n" not in (REPO_ROOT / "scripts/sh/complete-task-pr.sh").read_bytes()
+
+
+def test_engine_is_mirrored_in_aagy_ecc():
+    for name in ("complete_task_pr.py", "generate_postmortem.py", "ci_local.py", "archive_todo.py", "validate_branch.py"):
+        assert (REPO_ROOT / "aagy-ecc" / "scripts" / "py" / name).is_file(), name
+
+
+def test_sh_wrapper_review_only_runs_engine():
+    branch = subprocess.run(["git", "branch", "--show-current"], capture_output=True, text=True, cwd=REPO_ROOT).stdout.strip()
+    res = subprocess.run(["bash", str(REPO_ROOT / "scripts/sh/complete-task-pr.sh"), "-ReviewOnly", "--title", TITLE],
+                         capture_output=True, text=True, cwd=REPO_ROOT)
+    if ctp.validate_branch_name(branch)[0]:
+        assert res.returncode == 0 and "AVISO DE" in res.stdout
     else:
-        assert res.returncode == 0
-        assert "AVISO DE" in res.stdout
-        assert "Modo -ReviewOnly" in res.stdout
-
-
-def test_complete_task_pr_supports_issue_and_metadata_flags():
-    """Verifica que complete-task-pr (.ps1 y .sh) soporte -Issue/--issue, Closes #N y metadatos de gh pr create."""
-    ps1_content = (REPO_ROOT / "scripts" / "ps1" / "complete-task-pr.ps1").read_text(encoding="utf-8")
-    sh_content = (REPO_ROOT / "scripts" / "sh" / "complete-task-pr.sh").read_text(encoding="utf-8")
-
-    for content, name in ((ps1_content, "complete-task-pr.ps1"), (sh_content, "complete-task-pr.sh")):
-        assert "Closes #" in content, f"{name} debe inyectar Closes #<N>"
-        assert "--assignee" in content, f"{name} debe configurar --assignee en gh pr create"
-        assert "--label" in content, f"{name} debe configurar --label en gh pr create"
-        assert "--milestone" in content, f"{name} debe configurar --milestone en gh pr create"
-        assert "--project" in content, f"{name} debe configurar --project en gh pr create"
-
-
-def test_complete_task_pr_review_only_injects_closes_issue():
-    """Verifica que -ReviewOnly con -Issue inyecte Closes #<N> sin duplicarlo si ya existe."""
-    ps1_script = REPO_ROOT / "scripts" / "ps1" / "complete-task-pr.ps1"
-    current_branch = subprocess.run(
-        ["git", "branch", "--show-current"],
-        capture_output=True,
-        text=True,
-    ).stdout.strip()
-    if current_branch in ("main", "master", ""):
-        return
-
-    res = subprocess.run(
-        [
-            "pwsh",
-            "-NoProfile",
-            "-File",
-            str(ps1_script),
-            "-ReviewOnly",
-            "-Issue",
-            "61",
-            "-Body",
-            "Motivación:\n- Prueba unitaria.",
-        ],
-        capture_output=True,
-        text=True,
-    )
-    assert res.returncode == 0
-    assert "Closes #61" in res.stdout
-
-    # Si ya incluye Closes #61 no debe duplicarlo
-    res_existing = subprocess.run(
-        [
-            "pwsh",
-            "-NoProfile",
-            "-File",
-            str(ps1_script),
-            "-ReviewOnly",
-            "-Issue",
-            "61",
-            "-Body",
-            "Motivación:\n- Prueba.\n\nCloses #61",
-        ],
-        capture_output=True,
-        text=True,
-    )
-    assert res_existing.returncode == 0
-    assert res_existing.stdout.count("Closes #61") == 1
-
-    # Si la rama contiene gh-<N>, debe autodetectarlo sin pasar -Issue
-    branch_match = re.search(r"(?:^|/|-)(?:gh|issue)-(\d+)(?:-|$)", current_branch, re.IGNORECASE)
-    if branch_match:
-        expected_issue = branch_match.group(1)
-        res_auto = subprocess.run(
-            [
-                "pwsh",
-                "-NoProfile",
-                "-File",
-                str(ps1_script),
-                "-ReviewOnly",
-                "-Body",
-                "Motivación:\n- Autodetección desde rama.",
-            ],
-            capture_output=True,
-            text=True,
-        )
-        assert res_auto.returncode == 0
-        assert f"Closes #{expected_issue}" in res_auto.stdout
-
-
+        assert res.returncode != 0

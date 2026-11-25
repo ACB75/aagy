@@ -18,7 +18,8 @@ _SCRIPT_DIR = str(Path(__file__).resolve().parent)
 if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
-from docs_map import resolve_doc_path
+import doc_templates  # noqa: E402
+from docs_map import resolve_doc_path  # noqa: E402
 
 DEFAULT_TEMPLATE = Path("doc/post-mortem/TEMPLATE_POSTMORTEM.md")
 DEFAULT_OUTPUT_DIR = Path("doc/post-mortem")
@@ -49,7 +50,7 @@ def format_postmortem_markdown(meta: PostMortemMetadata, template_text: str) -> 
     content = content.replace("{{AUTHOR}}", meta.author)
     content = content.replace("{{ENVIRONMENT}}", meta.environment)
     content = content.replace("{{DIFF_SUMMARY}}", meta.diff_summary)
-    return content
+    return content.replace(doc_templates.EXTENSION_MARKER + "\n\n", "").replace(doc_templates.EXTENSION_MARKER, "")
 
 
 def _run_git_command(args: List[str]) -> str:
@@ -145,6 +146,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     repo_root = args.repo_root.resolve()
     output_dir = args.output_dir if args.output_dir is not None else resolve_doc_path(repo_root, "postmortems")
     template_path = args.template if args.template is not None else resolve_doc_path(repo_root, "postmortem_template")
+    if not template_path.is_file():  # repo sin plantilla propia: la del plugin
+        template_path = doc_templates.find_template(template_path.name, template_path.parent) or template_path
 
     if args.dry_run:
         template_text = template_path.read_text(encoding="utf-8") if template_path.is_file() else ""

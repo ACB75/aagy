@@ -39,7 +39,7 @@ Script: `scripts/py/agent_worktree.py` (+ `scripts/ps1/agent-worktree.ps1`, `scr
 principal, regenera `node_modules`/`.venv` desde sus lockfiles y actualiza el
 principal con `--ff-only` solo si está limpio en `main`.
 
-Se lanza solo al final de `complete-task-pr`, en el siguiente `backlog.py claim`
+Se lanza solo al final de `complete_task_pr.py --merge`, en el siguiente `backlog.py claim`
 y, en Claude Code, al iniciar sesión. Antigravity no tiene hook de inicio: si la
 PR se fusionó más tarde, el reciclado ocurre en el siguiente `claim`.
 
