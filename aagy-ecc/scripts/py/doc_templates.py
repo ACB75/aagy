@@ -16,9 +16,12 @@ la plantilla, sin tocar el plugin. ``*`` vale para todos los tipos.
 
 Si el repo no tiene una plantilla, se usa la que trae el plugin.
 
+Issues, PR y notas de tarea comparten ``WORK_ITEM_SECTIONS`` (#93); ``check``
+también revisa ``.github/`` del repo.
+
 Uso::
 
-    python doc_templates.py check [carpeta]
+    python doc_templates.py check [carpeta] [--repo <raíz>]
 
 Solo stdlib. Se espeja en aagy-ecc/scripts/py/ mediante sync_aagy_ecc.py.
 """
@@ -42,6 +45,9 @@ BASE_TEMPLATE = "TEMPLATE_BASE.md"
 HEADER_FIELDS = ("**ID de Tarea**", "**Fecha**", "**Estado**", "**Ubicación en el repo**")
 LEADING_SECTIONS = ("Estado actual", "Contexto y objetivos")
 TRAILING_SECTIONS = ("Criterios de aceptación", "Paridad", "Preguntas abiertas", "Referencias")
+# Issues, PR y tareas de TODO.md comparten estas secciones, en este orden (#93).
+WORK_ITEM_SECTIONS = ("Motivación", "Criterios de aceptación", "Paridad", "Artefactos")
+GITHUB_TEMPLATES = (".github/pull_request_template.md", ".github/ISSUE_TEMPLATE")
 _HEADING = re.compile(r"^## (?:\d+\.\s*)?(?P<title>.+?)\s*$", re.MULTILINE)
 
 # Plantillas que trae el plugin: en aagy viven en doc/; en aagy-ecc, en templates/lifecycle/.
@@ -91,6 +97,31 @@ def check_dir(folder: Path) -> Dict[str, List[str]]:
         problems = check_template(path.read_text(encoding=ENCODING))
         if problems:
             report[path.name] = problems
+    return report
+
+
+def check_work_item(text: str) -> List[str]:
+    """Problemas de una issue, PR o nota de tarea frente a WORK_ITEM_SECTIONS."""
+    titles = section_titles(text)
+    positions = [_index_of(titles, wanted) for wanted in WORK_ITEM_SECTIONS]
+    problems = [f"falta la sección '{w}'" for w, pos in zip(WORK_ITEM_SECTIONS, positions) if pos < 0]
+    found = [p for p in positions if p >= 0]
+    if found != sorted(found):
+        problems.append("las secciones deben ir en orden: " + ", ".join(WORK_ITEM_SECTIONS))
+    return problems
+
+
+def check_github(repo_root: Path) -> Dict[str, List[str]]:
+    """Problemas de las plantillas de issues y PR del repo (vacío si no tiene)."""
+    paths: List[Path] = []
+    for rel in GITHUB_TEMPLATES:
+        target = repo_root / rel
+        paths.extend(sorted(target.glob("*.md")) if target.is_dir() else [target] if target.is_file() else [])
+    report: Dict[str, List[str]] = {}
+    for path in paths:
+        problems = check_work_item(path.read_text(encoding=ENCODING))
+        if problems:
+            report[path.relative_to(repo_root).as_posix()] = problems
     return report
 
 
@@ -154,9 +185,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     p_check = sub.add_parser("check", help="Comprueba el esqueleto de las plantillas de una carpeta.")
     p_check.add_argument("folder", nargs="?", type=Path, default=None)
+    p_check.add_argument("--repo", type=Path, default=Path.cwd(), help="Repo cuyas plantillas de issues y PR se comprueban.")
     args = parser.parse_args(argv)
     folder = args.folder or next((d for d in PLUGIN_TEMPLATE_DIRS if d.is_dir()), PLUGIN_TEMPLATE_DIRS[0])
-    report = check_dir(folder)
+    report = {**check_dir(folder), **check_github(args.repo)}
     for name, problems in report.items():
         for problem in problems:
             print(f"[FAIL] {name}: {problem}")

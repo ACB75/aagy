@@ -424,28 +424,28 @@ def _scaffold_idea_entry(task_id: str, slug: str, dmap: DocsMap, dry_run: bool) 
     return [ideas_path]
 
 
+def _backlog_id(slug: str) -> str:
+    """Id válido para backlog.py (minúsculas, cifras y guiones)."""
+    return re.sub(r"[^a-z0-9]+", "-", slug.lower()).strip("-") or "task"
+
+
 def _scaffold_todo_quick_entry(
     ctx: ScaffoldContext,
     dmap: DocsMap,
 ) -> List[Path]:
-    """Registra tarea 7-fases en TODO.md y crea nota rápida QUICK_<slug>.md."""
+    """Registra la tarea en TODO.md y crea la nota QUICK_<slug>.md con las secciones comunes."""
     todo_path = dmap.resolve("todo")
     quick_dir = dmap.resolve("quick")
     quick_path = quick_dir / f"QUICK_{ctx.slug}.md"
     created: List[Path] = []
 
     existing_todo = todo_path.read_text(encoding=ENCODING_UTF8) if todo_path.is_file() else "# PROTOCOLO DE EJECUCIÓN Y BACKLOG MAESTRO\n"
-    task_marker = f"**Tarea: {ctx.task_id}**"
+    task_marker = f"**{ctx.task_id}**"
     if task_marker not in existing_todo:
         task_block = (
             f"\n- [ ] {task_marker}\n"
-            f"  - **01 - ROLE:** Principal Software & Automation Architect.\n"
-            f"  - **02 - CONTEXT:** `[Objective: Implementar {ctx.task_id}]` `[Quick Note: {quick_path.name}]`.\n"
-            f"  - **03 - PHASE 1 (ANALYSIS):** Revisar activos reutilizables (DRY) y contratos impactados.\n"
-            f"  - **04 - PHASE 2 (STRATEGY):** Evaluar 3 alternativas antes de implementar.\n"
-            f"  - **05 - PHASE 3 (EXECUTION):** Ejecutar ciclo TDD RED -> GREEN -> REFACTOR.\n"
-            f"  - **06 - PHASE 4 (CRITIC):** Verificar cobertura >= 80%, SonarQube Rating A y markdownlint.\n"
-            f"  - **07 - PHASE 5 (FORMAT):** Cierre atómico con complete-task-pr.\n"
+            f"  <!-- aagy-task: id={_backlog_id(ctx.slug)} -->\n"
+            f"  Nota: `{quick_path.name}` (Motivación, Criterios de aceptación, Paridad, Artefactos).\n"
         )
         if ctx.dry_run:
             print(f"{MSG_DRY_RUN} Añadiría tarea en: {todo_path}")
@@ -457,12 +457,14 @@ def _scaffold_todo_quick_entry(
 
     if not quick_path.exists() or ctx.force:
         quick_body = (
-            f"# Quick Task: {ctx.task_id}\n\n"
-            f"> **Fecha**: `{ctx.date_str}` | **Modo**: Entrada directa `TODO` (sin ceremonia previa)\n\n"
-            f"## Checklist Operativo\n\n"
-            f"- [ ] Tests unitarios TDD en verde (`pytest` >= 80%)\n"
-            f"- [ ] Linter Markdown (`lint-markdown`) y SonarQube Rating A\n"
-            f"- [ ] Integración vía `complete-task-pr`\n"
+            f"# Tarea rápida: {ctx.task_id}\n\n"
+            f"> **Fecha**: `{ctx.date_str}` | **Entrada**: `TODO` (sin REQ ni PLAN)\n\n"
+            f"<!-- Mismas secciones que las issues y la PR (#93). -->\n\n"
+            f"## 1. Motivación\n\nQué se hace y por qué.\n\n"
+            f"## 2. Criterios de aceptación\n\n"
+            f"- [ ] Tests en verde y `python scripts/py/ci_local.py run` en verde.\n\n"
+            f"## 3. Paridad aagy ↔ aagy-ecc\n\n- [ ] Igual en los dos plugins o asimetría declarada.\n\n"
+            f"## 4. Artefactos\n\n- `<rutas>`; cierre con `complete-task-pr`.\n"
         )
         if ctx.dry_run:
             print(f"{MSG_DRY_RUN} Generaría: {quick_path}")

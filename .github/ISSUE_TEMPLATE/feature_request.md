@@ -1,35 +1,32 @@
 ---
 name: Feature Request (feat)
-about: Proponer una nueva funcionalidad o capacidad para aagy / aagy-ecc
+about: Proponer una funcionalidad nueva para aagy / aagy-ecc
 title: "[feat]-[aagy,aagy-ecc]: "
 labels:
   - enhancement
   - harness:both
-assignees:
-  - ACB75
 ---
 
 # Feature Request (`feat/*`)
 
-## 1. Motivación y Contexto
+<!-- Mismas secciones que la PR y la tarea de TODO.md (plantilla base, #93). La tarea lleva issue=<N>. -->
 
-Describe el problema o necesidad operativa en el ecosistema `aagy` (Antigravity) y `aagy-ecc` (Claude Code).
+## 1. Motivación
 
-## 2. Requisitos Funcionales y Criterios de Aceptación (Given / When / Then)
+Problema o necesidad, y por qué ahora.
 
-- **Given**: contexto inicial.
-- **When**: acción o comando ejecutado.
-- **Then**: resultado observable y código de salida (`exit 0`).
+## 2. Criterios de aceptación
 
-## 3. Alcance y Paridad Multi-Harness (`aagy <-> aagy-ecc`)
+- [ ] **CA-01**: Dado `<contexto>`, cuando `<acción>`, entonces `<resultado verificable>`.
 
-- [ ] Aplica a `aagy` (Google Antigravity / Gemini)
+## 3. Paridad aagy ↔ aagy-ecc
+
+- [ ] Aplica a `aagy` (Antigravity)
 - [ ] Aplica a `aagy-ecc` (Claude Code)
-- [ ] Requiere espejo automático en `scripts/py/sync_aagy_ecc.py`
-- [ ] Respeta presupuesto de tokens (`description <= 140c` en skills, `<= 120c` en subagentes, `rules/AGENTS.md <= 12 KB`)
+- [ ] Asimetría declarada si un harness no lo permite
 
-## 4. Artefactos de Lifecycle Vinculados
+## 4. Artefactos
 
-- **Requisitos (`Fase 1`)**: `doc/06-backlog/plans/REQ_<slug>.md`
-- **Plan TDD (`Fase 2`)**: `doc/06-backlog/plans/PLAN_<slug>.md`
-- **ADR (si aplica)**: `doc/02-adr/ADR_aagy_NNNN_<slug>.md`
+- REQ: `doc/06-backlog/plans/REQ_<slug>.md`
+- PLAN: `doc/06-backlog/plans/PLAN_<slug>.md`
+- ADR (si aplica): `doc/02-adr/ADR_<proyecto>_NNNN_<slug>.md`

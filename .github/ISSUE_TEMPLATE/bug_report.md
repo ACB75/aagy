@@ -1,32 +1,30 @@
 ---
 name: Bug Report (fix)
-about: Reportar un fallo, regresión o incidente operativo en aagy / aagy-ecc
+about: Reportar un fallo o una regresión en aagy / aagy-ecc
 title: "[fix]-[aagy,aagy-ecc]: "
 labels:
   - bug
   - harness:both
-assignees:
-  - ACB75
 ---
 
 # Bug Report (`fix/*`)
 
-## 1. Síntoma y Comportamiento Observado
+<!-- Mismas secciones que la PR y la tarea de TODO.md (plantilla base, #93). La tarea lleva issue=<N>. -->
 
-Describe el fallo, mensaje de error y código de salida observado.
+## 1. Motivación
 
-## 2. Pasos para Reproducir
+- **Síntoma**: error, mensaje y código de salida.
+- **Pasos para reproducir**: comando o hook, harness (`aagy`, `aagy-ecc` o ambos) y sistema operativo.
+- **Esperado**: resultado correcto.
 
-1. Comando o hook ejecutado:
-2. Arnés afectado (`aagy` Antigravity | `aagy-ecc` Claude Code | ambos):
-3. Sistema operativo (`Windows 11 pwsh` | `Linux / WSL bash`):
+## 2. Criterios de aceptación
 
-## 3. Comportamiento Esperado
+- [ ] Test de regresión que falla sin la corrección y pasa con ella.
 
-Describe el resultado esperado y la invariante que debe cumplirse.
+## 3. Paridad aagy ↔ aagy-ecc
 
-## 4. Paridad y Post-Mortem (`5-Whys`)
+- [ ] Comprobado en el otro plugin.
 
-- [ ] Test de regresión (`RED -> GREEN`) incluido en `scripts/py/tests/`
-- [ ] Paridad verificada con `pwsh -File scripts/ps1/audit-plugin-parity.ps1`
-- [ ] Post-Mortem 5W requerido en `doc/05-post-mortems/PM_fix_<slug>.md`
+## 4. Artefactos
+
+- Postmortem: `doc/05-post-mortems/PM_<rama>_<fecha>.md`
