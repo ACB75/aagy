@@ -31,7 +31,7 @@ if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
 import doctor_core as core  # noqa: E402
-from install_manifest import InstallManifest, read_manifest  # noqa: E402
+from install_manifest import InstallManifest, drift_problems, read_manifest  # noqa: E402
 
 TARGET_NAME = "aagy (Antigravity)"
 PLUGIN_NAME = "aagy"
@@ -170,6 +170,8 @@ def check_version(ctx: AgyContext) -> core.CheckResult:
     problems: List[str] = []
     if ctx.manifest is None:
         problems.append(f"Falta {core.MANIFEST_FILE}: no se sabe qué fase se instaló (se asume '{DEFAULT_PHASE}').")
+    elif ctx.plugin_dir is not None:
+        problems.extend(drift_problems(ctx.plugin_dir, ctx.manifest, "Reinstala con aagy-sync --hard (usa --force para pisar los editados)."))
     current = installed_version(ctx)
     repo_version = _repo_version(ctx.repo_root)
     if repo_version and current != repo_version:
