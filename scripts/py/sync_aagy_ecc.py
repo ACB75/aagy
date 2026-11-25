@@ -47,6 +47,7 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "aagy_statusline.py",
     "aagy_notify.py",
     "aagy_ui.py",
+    "aagy_ccusage.py",
     "ci_local.py",
     "local_model.py",
     "local_model_mcp.py",

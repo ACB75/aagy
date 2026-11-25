@@ -62,7 +62,8 @@
 
 | Pieza | Claude Code | Antigravity |
 | :--- | :--- | :--- |
-| Status line nativa | Sí (`statusLine`) | No existe: estado con la skill `aagy-ui` (`--plain`) |
+| Comando, subcomandos, `ui.*` y `AAGY_UI_*` | `/aagy-ui` | Skill `aagy-ui` (iguales) |
+| Status line nativa | Sí (`statusLine`) | No existe: estado con la skill `aagy-ui` (`--plain`, contexto estimado por `session_token_monitor.py`) |
 | Avisos de escritorio | `Stop` y `Notification` | `Stop` (sin duración del turno, avisa siempre que `ui.notify` lo permita) |
 | `ccusage` | Sí (lee los transcripts de Claude Code) | No aplica (no lee Antigravity) |
 | Extensiones recomendadas | Sí | Sí (Open VSX) |

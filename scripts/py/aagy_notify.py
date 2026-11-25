@@ -43,7 +43,7 @@ if str(_HERE) not in sys.path:
     sys.path.insert(0, str(_HERE))
 
 import aagy_config  # noqa: E402
-from aagy_statusline import TAIL_BYTES, as_bool  # noqa: E402
+from aagy_statusline import as_bool, read_stdin, tail_entries  # noqa: E402
 
 ENCODING = "utf-8"
 EVENT_STOP = "stop"
@@ -123,21 +123,8 @@ def _is_user_prompt(entry: Mapping[str, Any]) -> bool:
 
 def turn_seconds(transcript: Optional[str], now: Optional[datetime] = None) -> Optional[float]:
     """Segundos desde el último mensaje del usuario, o None si no se sabe."""
-    if not transcript:
-        return None
-    try:
-        with open(transcript, "rb") as handle:
-            handle.seek(0, os.SEEK_END)
-            handle.seek(max(0, handle.tell() - TAIL_BYTES))
-            lines = handle.read().decode(ENCODING, errors="ignore").splitlines()
-    except OSError:
-        return None
-    for line in reversed(lines):
-        try:
-            entry = json.loads(line)
-        except ValueError:
-            continue
-        if isinstance(entry, dict) and _is_user_prompt(entry):
+    for entry in tail_entries(transcript) if transcript else []:
+        if _is_user_prompt(entry):
             started = _parse_ts(entry.get("timestamp"))
             if started is None:
                 return None
@@ -198,16 +185,6 @@ def launch(argv: List[str], extra_env: Mapping[str, str]) -> None:
         )
     except OSError:
         return
-
-
-def read_stdin() -> Dict[str, Any]:
-    if sys.stdin is None or sys.stdin.isatty():
-        return {}
-    try:
-        data = json.loads(sys.stdin.read() or "{}")
-    except ValueError:
-        return {}
-    return data if isinstance(data, dict) else {}
 
 
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:

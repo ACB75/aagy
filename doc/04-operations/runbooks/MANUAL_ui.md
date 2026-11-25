@@ -10,8 +10,11 @@
 
 | Pieza | Claude Code | Antigravity |
 | :--- | :--- | :--- |
-| Status line | Línea fija con modelo, rama, contexto, coste, modo local, épica y tarea, `ccusage` opcional | Estado en una línea con `/aagy-ui` (rama, modo local, épica y tarea) |
-| Avisos de escritorio | Al pedir permiso o quedar a la espera (`Notification`) y al terminar un turno largo (`Stop`) | Al terminar (`Stop`) |
+| Comando | `/aagy-ui` (mismos subcomandos) | Skill `aagy-ui` (mismos subcomandos) |
+| Configuración | `ui.*` / `AAGY_UI_*` | Igual |
+| Status line | Línea fija con modelo, rama, contexto, coste, modo local, épica y tarea, `ccusage` opcional | **Asimetría**: no hay status line nativa. `/aagy-ui` da rama, contexto (estimado por `session_token_monitor.py`), modo local, épica y tarea con los mismos umbrales |
+| Avisos de escritorio | Al pedir permiso o quedar a la espera (`Notification`) y al terminar un turno largo (`Stop`) | **Asimetría**: solo `Stop` y sin medir la duración del turno (no hay evento de permiso ni marca de inicio) |
+| `ccusage` | Opcional | **Asimetría**: solo lee transcripts de Claude Code |
 | Extensiones recomendadas | `aagy_ui.py vscode --apply` | Igual (Open VSX) |
 
 Todo corre fuera del contexto del modelo: no gasta tokens. Sin git, sin backlog o sin

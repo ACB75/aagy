@@ -17,10 +17,14 @@ usan `scripts/py/aagy_ui.py`, `aagy_statusline.py` y `aagy_notify.py`.
 
 ## Uso
 
+Mismos subcomandos que `/aagy-ui` de Claude Code; los que Antigravity no puede tener lo dicen.
+
 ```text
-/aagy-ui                     # estado en una línea: rama | modo local | épica y tarea
-/aagy-ui notify auto|on|off  # avisos de escritorio al terminar (hook Stop)
-/aagy-ui vscode [--apply]    # extensiones recomendadas (TODO, Git) en .vscode/extensions.json
+/aagy-ui                       # estado en una línea: rama | contexto | modo local | épica y tarea
+/aagy-ui config                # configuración ui.* y si los avisos están activos aquí
+/aagy-ui notify auto|on|off    # avisos de escritorio al terminar (hook Stop)
+/aagy-ui vscode [--apply]      # extensiones recomendadas (TODO, Git) en .vscode/extensions.json
+/aagy-ui statusline | ccusage | usage   # no aplican en Antigravity (ver Paridad)
 ```
 
 ## Qué hacer
@@ -29,8 +33,12 @@ Scripts en `<source_repo>/scripts/py/`, con `source_repo` de
 `~/.gemini/config/plugins/aagy/.aagy-install.json` (en el repo aagy, `scripts/py/`).
 Ejecuta desde la carpeta del repo en el que trabajas.
 
-1. Sin argumentos: `aagy_statusline.py --plain --agent agy` y muestra la línea tal cual.
-2. `notify`, `vscode`: `aagy_ui.py <argumentos>`.
+1. Sin argumentos: `aagy_statusline.py --plain --agent agy` y muestra la línea tal cual. El contexto es la
+   estimación de `session_token_monitor.py` frente a su umbral de `/compact`, con los mismos colores y umbrales
+   (`ui.context_warn_pct`, `ui.context_crit_pct`).
+2. `config`: `aagy_ui.py status --harness agy`.
+3. `notify`, `vscode`: `aagy_ui.py <argumentos>`.
+4. `statusline`, `ccusage`, `usage`: di en una línea por qué no aplican (Paridad).
 
 ## Reglas
 
@@ -40,4 +48,6 @@ Ejecuta desde la carpeta del repo en el que trabajas.
 
 ## Paridad
 
-Claude Code: comando `/aagy-ui` de `aagy-ecc`, con status line nativa y `ccusage`. Antigravity no tiene status line ni `ccusage`.
+Claude Code: comando `/aagy-ui` de `aagy-ecc`. Mismos scripts, claves `ui.*` y variables `AAGY_UI_*`.
+Asimetrías: Antigravity no tiene status line nativa (el estado sale con `/aagy-ui`), ni evento de permiso
+(solo avisa en `Stop`, sin medir la duración del turno), y `ccusage` solo lee transcripts de Claude Code.

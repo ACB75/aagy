@@ -5,7 +5,7 @@ extensiones recomendadas de VS Code / Antigravity.
 
 Uso::
 
-    python aagy_ui.py status
+    python aagy_ui.py status [--harness claude|agy]
     python aagy_ui.py statusline on|off [--scope user|project|local] [--force]
     python aagy_ui.py repair              # hook SessionStart: ruta nueva tras actualizar el plugin
     python aagy_ui.py notify auto|on|off  # ui.notify en .governance/aagy.json
@@ -199,16 +199,23 @@ def _scope_paths(start: Optional[Path] = None) -> List[Path]:
     return [settings_path(scope, start) for scope in SCOPES]
 
 
-def cmd_status(_args: argparse.Namespace) -> int:
+def cmd_status(args: argparse.Namespace) -> int:
     ui = aagy_statusline.load_ui()
     cfg = aagy_config.load()
-    installed = [scope for scope in SCOPES if is_ours(_safe_entry(settings_path(scope)))]
-    print(f"{PREFIX} statusline: {'instalada en ' + ', '.join(installed) if installed else 'no instalada'}"
-          f" · ui.statusline={ui.enabled} · segmentos={','.join(ui.segments)}")
+    agy = getattr(args, "harness", "claude") == "agy"
+    if agy:
+        print(f"{PREFIX} statusline: no aplica en Antigravity; estado con aagy_statusline.py --plain --agent agy")
+    else:
+        installed = [scope for scope in SCOPES if is_ours(_safe_entry(settings_path(scope)))]
+        print(f"{PREFIX} statusline: {'instalada en ' + ', '.join(installed) if installed else 'no instalada'}"
+              f" · ui.statusline={ui.enabled} · segmentos={','.join(ui.segments)}")
     print(f"{PREFIX} contexto: aviso {ui.warn_pct}% · crítico {ui.crit_pct}%")
     print(f"{PREFIX} avisos: ui.notify={aagy_notify.notify_mode(cfg)} · activos aquí="
           f"{aagy_notify.enabled(cfg, os.environ, sys.platform)}")
-    print(f"{PREFIX} ccusage: ui.ccusage={ui.ccusage} · en PATH={shutil.which(CCUSAGE) is not None}")
+    if agy:
+        print(f"{PREFIX} ccusage: no aplica (solo lee transcripts de Claude Code)")
+    else:
+        print(f"{PREFIX} ccusage: ui.ccusage={ui.ccusage} · en PATH={shutil.which(CCUSAGE) is not None}")
     return 0
 
 
@@ -265,7 +272,8 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="UI de aagy: status line, avisos, ccusage y extensiones.")
     parser.add_argument("--quiet", action="store_true")
     sub = parser.add_subparsers(dest="command")
-    sub.add_parser("status")
+    p_st = sub.add_parser("status")
+    p_st.add_argument("--harness", choices=("claude", "agy"), default="claude")
     p_sl = sub.add_parser("statusline")
     p_sl.add_argument("state", choices=("on", "off"))
     p_sl.add_argument("--scope", choices=SCOPES, default="user")

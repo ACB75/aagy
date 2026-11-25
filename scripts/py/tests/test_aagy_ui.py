@@ -17,6 +17,7 @@ _SCRIPTS_DIR = Path(__file__).resolve().parent.parent
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
+import aagy_ccusage as cu  # noqa: E402
 import aagy_config  # noqa: E402
 import aagy_notify as nt  # noqa: E402
 import aagy_statusline as sl  # noqa: E402
@@ -138,8 +139,8 @@ def test_usage_from_cache_without_blocking(tmp_path: Path, monkeypatch: pytest.M
 def test_stale_usage_cache(tmp_path: Path) -> None:
     cache = tmp_path / "usage.json"
     cache.write_text(json.dumps({"cost": 2, "at": time.time() - 3600}), encoding="utf-8")
-    assert sl.read_usage_cache(cache, time.time()) == (2.0, True)
-    assert sl.read_usage_cache(tmp_path / "missing.json", time.time()) == (None, True)
+    assert cu.read_cache(cache, time.time()) == (2.0, True)
+    assert cu.read_cache(tmp_path / "missing.json", time.time()) == (None, True)
 
 
 # --------------------------------------------------------------------------- avisos
@@ -266,3 +267,16 @@ def test_usage_without_ccusage(monkeypatch: pytest.MonkeyPatch, capsys: pytest.C
     monkeypatch.setattr(ui.shutil, "which", lambda _name: None)
     assert ui.main(["usage"]) == 0
     assert "npm install -g ccusage" in capsys.readouterr().out
+
+
+def test_plain_agy_context_from_monitor(monkeypatch: pytest.MonkeyPatch) -> None:
+    import session_token_monitor as stm
+    report = stm.SessionTokenReport("t", 3, 1000, 40000, 45000, False)
+    monkeypatch.setattr(stm, "analyze_transcript", lambda: report)
+    assert sl.segment_context(sl.agy_context(), _ui()) == "ctx 40k/45k 89% /compact"
+
+
+def test_status_per_harness(capsys: pytest.CaptureFixture) -> None:
+    assert ui.main(["status", "--harness", "agy"]) == 0
+    out = capsys.readouterr().out
+    assert "statusline: no aplica" in out and "ccusage: no aplica" in out
