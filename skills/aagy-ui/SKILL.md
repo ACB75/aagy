@@ -24,7 +24,8 @@ Mismos subcomandos que `/aagy-ui` de Claude Code; los que Antigravity no puede t
 /aagy-ui config                # configuración ui.* y si los avisos están activos aquí
 /aagy-ui notify auto|on|off    # avisos de escritorio al terminar (hook Stop)
 /aagy-ui vscode [--apply]      # extensiones recomendadas (TODO, Git) en .vscode/extensions.json
-/aagy-ui statusline | ccusage | usage   # no aplican en Antigravity (ver Paridad)
+/aagy-ui usage [daily|monthly|session]  # tokens estimados por día, mes o sesión (sin coste en $)
+/aagy-ui statusline | ccusage  # no aplican en Antigravity (ver Paridad)
 ```
 
 ## Qué hacer
@@ -38,7 +39,9 @@ Ejecuta desde la carpeta del repo en el que trabajas.
    (`ui.context_warn_pct`, `ui.context_crit_pct`).
 2. `config`: `aagy_ui.py status --harness agy`.
 3. `notify`, `vscode`: `aagy_ui.py <argumentos>`.
-4. `statusline`, `ccusage`, `usage`: di en una línea por qué no aplican (Paridad).
+4. `usage [daily|monthly|session]`: `aagy_ui.py usage <informe> --harness agy` y muestra la tabla tal cual.
+   Lee los transcripts de `~/.gemini/antigravity/brain/` con `session_token_monitor.py`; no llama a ninguna API.
+5. `statusline`, `ccusage`: di en una línea por qué no aplican (Paridad).
 
 ## Reglas
 
@@ -50,4 +53,4 @@ Ejecuta desde la carpeta del repo en el que trabajas.
 
 Claude Code: comando `/aagy-ui` de `aagy-ecc`. Mismos scripts, claves `ui.*` y variables `AAGY_UI_*`.
 Asimetrías: Antigravity no tiene status line nativa (el estado sale con `/aagy-ui`), ni evento de permiso
-(solo avisa en `Stop`, sin medir la duración del turno), y `ccusage` solo lee transcripts de Claude Code.
+(solo avisa en `Stop`, sin medir la duración del turno), y `ccusage` solo lee transcripts de Claude Code: `usage` da tokens estimados, sin coste en $.

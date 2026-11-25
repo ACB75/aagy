@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -280,3 +281,39 @@ def test_status_per_harness(capsys: pytest.CaptureFixture) -> None:
     assert ui.main(["status", "--harness", "agy"]) == 0
     out = capsys.readouterr().out
     assert "statusline: no aplica" in out and "ccusage: no aplica" in out
+
+
+# --------------------------------------------------------------------------- usage en Antigravity (#123)
+
+def _agy_transcript(home: Path, session: str, text: str, mtime: float) -> Path:
+    path = home / ".gemini" / "antigravity" / "brain" / session / ".system_generated" / "logs" / "transcript.jsonl"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps({"content": text}) + "\n", encoding="utf-8")
+    os.utime(path, (mtime, mtime))
+    return path
+
+
+def test_agy_usage_groups_by_day_and_session(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    day1 = datetime(2026, 11, 24, 12).timestamp()
+    day2 = datetime(2026, 11, 25, 12).timestamp()
+    _agy_transcript(tmp_path, "s1", "x" * 380, day1)
+    _agy_transcript(tmp_path, "s2", "x" * 38, day2)
+    _agy_transcript(tmp_path, "s3", "x" * 38, day2)
+    transcripts = ui._token_monitor().find_transcripts(tmp_path)
+    assert ui.agy_usage_rows("daily", transcripts) == [("2026-11-25", 2, 20), ("2026-11-24", 1, 100)]
+    assert ui.agy_usage_rows("monthly", transcripts) == [("2026-11", 3, 120)]
+    sessions = ui.agy_usage_rows("session", transcripts)
+    assert sorted(sessions) == [("s1", 1, 100), ("s2", 1, 10), ("s3", 1, 10)] and sessions[-1][0] == "s1"
+    assert ui.cmd_usage_agy("daily", tmp_path) == 0
+    assert "120 tokens estimados" in capsys.readouterr().out
+
+
+def test_agy_usage_without_transcripts(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    assert ui.cmd_usage_agy("daily", tmp_path) == 0
+    out = capsys.readouterr().out.strip().splitlines()
+    assert len(out) == 1 and "No hay transcripts" in out[0]
+
+
+def test_agy_usage_blocks_not_applicable(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    assert ui.cmd_usage_agy("blocks", tmp_path) == 0
+    assert "no aplica" in capsys.readouterr().out

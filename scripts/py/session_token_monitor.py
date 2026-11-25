@@ -38,22 +38,20 @@ class SessionTokenReport:
     compact_recommended: bool
 
 
+def find_transcripts(home: Optional[Path] = None) -> list[Path]:
+    """Todos los transcript.jsonl de Antigravity brain, del más reciente al más antiguo."""
+    brain_base = (home or Path.home()) / ".gemini" / "antigravity" / "brain"
+    if not brain_base.is_dir():
+        return []
+    candidates = [t for t in brain_base.glob("*/.system_generated/logs/transcript.jsonl") if t.is_file()]
+    candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
+    return candidates
+
+
 def _find_latest_transcript() -> Optional[Path]:
     """Localiza el transcript.jsonl más reciente en la estructura de Antigravity brain."""
-    user_home = Path.home()
-    candidates: list[Path] = []
-
-    brain_base = user_home / ".gemini" / "antigravity" / "brain"
-    if brain_base.is_dir():
-        for t_file in brain_base.glob("*/.system_generated/logs/transcript.jsonl"):
-            if t_file.is_file():
-                candidates.append(t_file)
-
-    if not candidates:
-        return None
-
-    candidates.sort(key=lambda p: p.stat().st_mtime, reverse=True)
-    return candidates[0]
+    candidates = find_transcripts()
+    return candidates[0] if candidates else None
 
 
 def _extract_step_chars(data: dict) -> int:

@@ -30,9 +30,6 @@
 - [ ] **Validar la UI en Windows 11 (status line, toast y CI local)**
   <!-- aagy-task: id=ui-windows-validation epic=ui-de-claude-code-y-antigravity-116 issue=122 deps=116 -->
 
-- [ ] **Uso de tokens en Antigravity con /aagy-ui usage (equivalente a ccusage)**
-  <!-- aagy-task: id=ui-agy-usage epic=ui-de-claude-code-y-antigravity-116 issue=123 deps=116 -->
-
 - [ ] **Cerrar las asimetrías de UI de Antigravity cuando la plataforma lo permita**
   <!-- aagy-task: id=ui-agy-asymmetries epic=ui-de-claude-code-y-antigravity-116 issue=124 deps=116,122 -->
 
