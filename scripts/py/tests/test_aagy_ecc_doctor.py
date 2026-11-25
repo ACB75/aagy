@@ -300,7 +300,7 @@ def test_cli(tmp_path: Path, repo: Path, claude_home: Path, capsys):
 
 
 def test_doc14_skips_outside_aagy_repo(tmp_path: Path, claude_home: Path):
-    other = tmp_path / "home-lab"
+    other = tmp_path / "consumer"
     (other / ".git").mkdir(parents=True)
     result = doc.check_repo(_ctx(tmp_path, claude_home, repo=other))
     assert result.status == core.STATUS_SKIP

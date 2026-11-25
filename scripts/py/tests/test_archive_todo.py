@@ -93,7 +93,7 @@ def test_cli_resolves_v2_docs_map_and_legacy_fallback(tmp_path):
     assert len(list(v2_done.glob("TODO_*.md"))) == 1
     assert "Tarea A" not in v2_todo.read_text(encoding="utf-8")
 
-    # 2. Caso clásico home-lab sin docs-map.json
+    # 2. Caso clásico sin docs-map.json
     legacy_root = tmp_path / "repo_legacy"
     (legacy_root / "doc").mkdir(parents=True)
     legacy_todo = legacy_root / "doc" / "TODO.md"

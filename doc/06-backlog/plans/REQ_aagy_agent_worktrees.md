@@ -1,6 +1,6 @@
-# Fase 1: Toma de Requisitos — Un worktree por agente (`home-lab-aagy` / `home-lab-aagy-ecc`)
+# Fase 1: Toma de Requisitos — Un worktree por agente (`app-aagy` / `app-aagy-ecc`)
 
-> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / Home-Lab
+> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / proyecto consumidor
 > **ID de Tarea**: `feat/aagy/agent-worktrees`
 > **Fecha**: `2026-11-21` | **Autor/Rol**: `Claude (toma de requisitos) / Master (aprobación)`
 > **Estado**: `APROBADO` (Master, 2026-11-22, decisiones de la §8)
@@ -12,10 +12,10 @@
 
 | Pieza | Dónde | Qué hace hoy | Problema para este requisito |
 | :--- | :--- | :--- | :--- |
-| Checkout principal | `C:\Workspace\projects\home-lab` (y `...\aagy`) | Master y los dos agentes trabajan en la misma carpeta, en `main` | Un agente puede pisar cambios sin commit de Master o del otro agente. |
+| Checkout principal | `<padre>\app` (y `...\aagy`) | Master y los dos agentes trabajan en la misma carpeta, en `main` | Un agente puede pisar cambios sin commit de Master o del otro agente. |
 | Worktree por tarea | `backlog.py claim --worktree` → `<repo>.wt/<id>` | Crea un worktree por tarea en modo simultáneo; `done` lo borra si está limpio | La ruta cambia en cada tarea: Antigravity tiene que abrir una carpeta nueva cada vez. No hay carpeta fija por agente. |
 | Estado vivo del backlog | `$(git common dir)/aagy-backlog/state.json` | Común a todos los worktrees de un clon | Ya sirve tal cual: los worktrees por agente lo comparten sin cambios. |
-| Cierre de tarea | `scripts/ps1/complete-task-pr.ps1` §12 | Tras el merge hace `git checkout -f main` + `git pull` + `git branch -D` **en la carpeta actual** | Dentro de un worktree de agente **falla**: git no permite tener `main` en dos worktrees a la vez (ya está en `home-lab`). Y `-f` descarta cambios sin aviso. |
+| Cierre de tarea | `scripts/ps1/complete-task-pr.ps1` §12 | Tras el merge hace `git checkout -f main` + `git pull` + `git branch -D` **en la carpeta actual** | Dentro de un worktree de agente **falla**: git no permite tener `main` en dos worktrees a la vez (ya está en `app`). Y `-f` descarta cambios sin aviso. |
 | Merge en GitHub | Repo con auto-merge y *delete branch on merge* | El merge puede ocurrir minutos después de abrir la PR | El reciclado local no puede depender solo de que el script vea el merge en el momento. |
 | Nombres de rama | `validate_branch.py` + hooks PreToolUse (PR #55) | Solo `<type>/<project>/<name>` | Claude Code nativo (`claude --worktree`, `EnterWorktree`) crea `.claude/worktrees/<n>` con ramas `worktree-*`, que los hooks ya rechazan. |
 
@@ -28,7 +28,7 @@
 - **Problema**: Claude Code y Antigravity comparten carpeta con Master. Cualquier cambio sin commit, `checkout` o `reset` de uno afecta a los otros dos.
 - **Objetivo principal**: cada agente trabaja siempre en **su** worktree fijo del mismo clon; Master se queda con el checkout principal, que se mantiene al día solo. Al fusionarse la PR de un agente, su worktree vuelve a un estado limpio sobre `origin/main`, listo para la siguiente tarea, en la misma ruta.
 - **Alcance (`In-Scope`)**:
-  - Dos worktrees persistentes por repositorio: `home-lab-aagy` (Antigravity) y `home-lab-aagy-ecc` (Claude Code).
+  - Dos worktrees persistentes por repositorio: `app-aagy` (Antigravity) y `app-aagy-ecc` (Claude Code).
   - Script determinista único `scripts/py/agent_worktree.py` (+ wrappers ps1/sh), espejado a `aagy-ecc`.
   - Reciclado tras merge (borrar y regenerar limpio) con protección de trabajo no guardado.
   - Autoactualización del checkout principal de Master tras cada merge.
@@ -58,7 +58,7 @@ Las tres dejan el worktree en **HEAD desacoplado sobre `origin/main`** (no en `m
 
 | ID | Requisito | Prioridad |
 | :--- | :--- | :--- |
-| RF-01 | `agent_worktree.py init` crea, si faltan, `<padre>/<repo>-aagy` y `<padre>/<repo>-aagy-ecc` como worktrees del clon principal, desacoplados en `origin/main`. Idempotente. Para `home-lab` → `home-lab-aagy` y `home-lab-aagy-ecc`. | Must |
+| RF-01 | `agent_worktree.py init` crea, si faltan, `<padre>/<repo>-aagy` y `<padre>/<repo>-aagy-ecc` como worktrees del clon principal, desacoplados en `origin/main`. Idempotente. Para `app` → `app-aagy` y `app-aagy-ecc`. | Must |
 | RF-02 | Cada harness conoce su worktree: `aagy` → `*-aagy`, `aagy-ecc` → `*-aagy-ecc`. Al arrancar sesión fuera de él, el SessionStart avisa e indica la ruta correcta. | Must |
 | RF-03 | Guarda de escritura (PreToolUse): un agente no puede escribir ficheros ni ejecutar `git commit/checkout/reset/clean/stash/push` en el checkout principal ni en el worktree del otro agente. | Must |
 | RF-04 | `agent_worktree.py recycle` comprueba con `gh pr view` que la PR de la rama actual está `MERGED`, que no hay cambios sin commit y que no hay commits sin push; si todo es correcto, limpia el worktree (opción de la §2), borra la rama local y hace `git worktree prune`. | Must |
@@ -71,7 +71,7 @@ Las tres dejan el worktree en **HEAD desacoplado sobre `origin/main`** (no en `m
 | RF-11 | Tras regenerar (P-08): (a) **configuración** no versionada (`.env`, `.env.*`, y los patrones de `.governance/agent-worktrees.json`) se copia del checkout principal; (b) **generados** (`node_modules`, `.venv`, `target`, `dist`…) no se copian: se borran y se regeneran con el instalador que corresponda al lockfile (`npm ci`, `pnpm i --frozen-lockfile`, `uv sync`/`pip install -r`, `go mod download`…), declarable en el mismo JSON. | Must |
 | RF-12 | `aagy-doctor` / `aagy-ecc-doctor`: nuevo check que valida que existen los dos worktrees, que apuntan al mismo clon y que ninguno tiene `main` en checkout. | Should |
 | RF-13 | Mismo contrato en ambos harnesses: comando `/aagy-worktree` (Claude) y workflow/skill equivalente (Antigravity) con `init`, `status`, `recycle`. | Must |
-| RF-14 | Patrón genérico `<repo>-aagy` / `<repo>-aagy-ecc` (P-02): `home-lab` y también `aagy` (`aagy-aagy`, `aagy-aagy-ecc`) y cualquier repo consumidor. | Must |
+| RF-14 | Patrón genérico `<repo>-aagy` / `<repo>-aagy-ecc` (P-02): `app` y también `aagy` (`aagy-aagy`, `aagy-aagy-ecc`) y cualquier repo consumidor. | Must |
 
 ## 4. Requisitos No Funcionales (RNF)
 
@@ -79,7 +79,7 @@ Las tres dejan el worktree en **HEAD desacoplado sobre `origin/main`** (no en `m
 | :--- | :--- |
 | RNF-01 | Nunca se pierde trabajo: ninguna operación destructiva sin comprobar antes cambios sin commit, commits sin push y stash. |
 | RNF-02 | Idempotente y seguro ante ejecución concurrente (mismo bloqueo de fichero que `backlog.py`). |
-| RNF-03 | Windows primero (FRACTAL, PowerShell), compatible con Linux/macOS. Sin dependencias fuera de la stdlib de Python + `git` + `gh`. |
+| RNF-03 | Windows primero (equipo local, PowerShell), compatible con Linux/macOS. Sin dependencias fuera de la stdlib de Python + `git` + `gh`. |
 | RNF-04 | Paridad simétrica: un solo script en la raíz, espejado a `aagy-ecc` por `sync_aagy_ecc.py`; `audit_plugin_parity.py` lo comprueba. |
 | RNF-05 | Tests en `scripts/py/tests/test_agent_worktree.py` con repos git temporales (init, recycle limpio, recycle bloqueado por cambios, handoff, principal sucio). |
 | RNF-06 | Markdown y mensajes en español, como el resto del ciclo. |
@@ -90,9 +90,9 @@ Las tres dejan el worktree en **HEAD desacoplado sobre `origin/main`** (no en `m
 
 ```mermaid
 flowchart LR
-    P["home-lab (Master, main)"]
-    A["home-lab-aagy (agy)"]
-    C["home-lab-aagy-ecc (Claude)"]
+    P["app (Master, main)"]
+    A["app-aagy (agy)"]
+    C["app-aagy-ecc (Claude)"]
     A -- "feat/x/y → PR" --> G[(GitHub)]
     C -- "fix/x/z → PR" --> G
     G -- "merge" --> R{"recycle"}
@@ -105,12 +105,12 @@ flowchart LR
 
 ## 6. Criterios de Aceptación (CA)
 
-- **CA-01**: con `home-lab` en `main`, `init` crea los dos worktrees desacoplados en `origin/main` y `git worktree list` muestra tres entradas.
-- **CA-02**: Claude intenta editar un fichero en `home-lab` o en `home-lab-aagy` → el hook lo deniega con un mensaje que indica su worktree.
-- **CA-03**: tras fusionarse la PR de Claude, `recycle` deja `home-lab-aagy-ecc` limpio en el commit del merge y sin la rama local.
+- **CA-01**: con `app` en `main`, `init` crea los dos worktrees desacoplados en `origin/main` y `git worktree list` muestra tres entradas.
+- **CA-02**: Claude intenta editar un fichero en `app` o en `app-aagy` → el hook lo deniega con un mensaje que indica su worktree.
+- **CA-03**: tras fusionarse la PR de Claude, `recycle` deja `app-aagy-ecc` limpio en el commit del merge y sin la rama local.
 - **CA-04**: con un fichero sin commit, `recycle` no toca nada y lo informa.
-- **CA-05**: tras el merge, `home-lab` (limpio, en `main`) queda en el commit del merge; si Master tiene cambios, queda intacto y con aviso.
-- **CA-06**: `handoff` de Claude a agy: agy hace `claim` y continúa la misma rama en `home-lab-aagy`.
+- **CA-05**: tras el merge, `app` (limpio, en `main`) queda en el commit del merge; si Master tiene cambios, queda intacto y con aviso.
+- **CA-06**: `handoff` de Claude a agy: agy hace `claim` y continúa la misma rama en `app-aagy`.
 - **CA-07**: `complete-task-pr` ejecutado dentro de un worktree de agente termina sin error y recicla.
 
 ---
@@ -130,8 +130,8 @@ flowchart LR
 
 | ID | Pregunta | Decisión |
 | :--- | :--- | :--- |
-| P-01 | Ubicación | Hermanos del principal: `C:\Workspace\projects\<repo>-aagy` y `<repo>-aagy-ecc`. |
-| P-02 | Repos | Genérico. `home-lab` y también `aagy`. |
+| P-01 | Ubicación | Hermanos del principal: `<padre>\<repo>-aagy` y `<repo>-aagy-ecc`. |
+| P-02 | Repos | Genérico. `app` y también `aagy`. |
 | P-03 | Borrar o limpiar | Opción C: limpiar en sitio, borrado físico como respaldo. |
 | P-04 | Trabajo sin guardar al reciclar | Bloquear y avisar. |
 | P-05 | Actualizar el principal | Solo al reciclar. |

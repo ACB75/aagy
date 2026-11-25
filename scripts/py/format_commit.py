@@ -44,10 +44,26 @@ ALLOWED_TYPES: frozenset[str] = frozenset({
     "perf", "build", "ci", "sec", "security", "style", "revert",
 })
 
-ALLOWED_PROJECTS: frozenset[str] = frozenset({
-    "cluster", "kakebo", "whoiam", "net", "scripts", "aagy", "aagy-ecc", "aagy-homelab", "doc",
-    "docs", "infra", "portal", "token-hill", "uoc", "sdk", "home-lab-sdk", "all",
-})
+# Lista de proyectos de commit: la declara el repo consumidor en ``projects`` de
+# ``.governance/aagy.json`` (aagy_config). Sin lista, vale cualquier slug en minúsculas.
+PROJECTS_KEY = "projects"
+FROM_CONFIG = object()
+PROJECT_SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9_-]*$")
+
+
+def allowed_projects(start: Optional[Path] = None) -> Optional[frozenset[str]]:
+    """Proyectos declarados por el repo consumidor, o ``None`` si no declara ninguno."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import aagy_config  # noqa: E402  (mismo directorio; se espeja junto a este script)
+
+    declared = aagy_config.get(PROJECTS_KEY, None, start)
+    if not isinstance(declared, list) or not declared:
+        return None
+    return frozenset(str(p).strip().lower() for p in declared if str(p).strip())
+
+
+def project_allowed(proj: str, projects: Optional[frozenset[str]]) -> bool:
+    return proj in projects if projects is not None else bool(PROJECT_SLUG_RE.match(proj))
 
 
 @dataclass(frozen=True)
@@ -60,7 +76,7 @@ class CommitValidationResult:
     errors: Tuple[str, ...]
 
 
-def parse_commit_header(first_line: str) -> Tuple[Optional[str], List[str], str]:
+def parse_commit_header(first_line: str, projects: Optional[frozenset[str]] = None) -> Tuple[Optional[str], List[str], str]:
     """Parsea el encabezado del commit soportando múltiples sintaxis ergonómicas."""
     line = first_line.strip()
     if not line:
@@ -78,7 +94,7 @@ def parse_commit_header(first_line: str) -> Tuple[Optional[str], List[str], str]
     if m2:
         t = m2.group(1).lower()
         proj = m2.group(2).lower()
-        if t in ALLOWED_TYPES and proj in ALLOWED_PROJECTS:
+        if t in ALLOWED_TYPES and project_allowed(proj, projects):
             return t, [proj], m2.group(3).strip()
 
     # 3. Formato convencional con ámbito: type(projects): title (ej. feat(doc): ...)
@@ -93,7 +109,7 @@ def parse_commit_header(first_line: str) -> Tuple[Optional[str], List[str], str]
     if m4:
         t = m4.group(1).lower()
         proj = m4.group(2).lower()
-        if t in ALLOWED_TYPES and proj in ALLOWED_PROJECTS:
+        if t in ALLOWED_TYPES and project_allowed(proj, projects):
             return t, [proj], m4.group(3).strip()
 
     # 5. Formato convencional simple: type: title (ej. feat: update todo.md, docs: ...)
@@ -106,9 +122,9 @@ def parse_commit_header(first_line: str) -> Tuple[Optional[str], List[str], str]
     return None, [], line
 
 
-def _validate_header(first_line: str) -> Tuple[Optional[str], Sequence[str], str, List[str]]:
+def _validate_header(first_line: str, allowed: Optional[frozenset[str]]) -> Tuple[Optional[str], Sequence[str], str, List[str]]:
     errors: List[str] = []
-    commit_type, projects, title = parse_commit_header(first_line)
+    commit_type, projects, title = parse_commit_header(first_line, allowed)
 
     if commit_type is None:
         errors.append(
@@ -126,8 +142,9 @@ def _validate_header(first_line: str) -> Tuple[Optional[str], Sequence[str], str
         errors.append(f"Tipo '{commit_type}' no reconocido. Tipos permitidos: {', '.join(sorted(ALLOWED_TYPES))}")
 
     for proj in projects:
-        if proj not in ALLOWED_PROJECTS:
-            errors.append(f"Proyecto '[{proj}]' no reconocido. Proyectos permitidos: {', '.join(sorted(ALLOWED_PROJECTS))}")
+        if not project_allowed(proj, allowed):
+            hint = ", ".join(sorted(allowed)) if allowed is not None else "slug en minúsculas"
+            errors.append(f"Proyecto '[{proj}]' no reconocido. Proyectos permitidos: {hint}")
 
     if not title:
         errors.append("El titulo del commit no puede estar vacio.")
@@ -152,8 +169,9 @@ def _validate_body(lines: Sequence[str], strict: bool) -> Tuple[int, List[str]]:
     return body_length, errors
 
 
-def validate_commit_message(message: str, strict: bool = False) -> CommitValidationResult:
-    """Valida un mensaje de commit permitiendo tanto commits estructurados como interactivos."""
+def validate_commit_message(message: str, strict: bool = False, projects: object = FROM_CONFIG) -> CommitValidationResult:
+    """Valida un mensaje de commit. ``projects``: lista permitida, ``None`` (cualquier slug) o la del repo."""
+    allowed = allowed_projects() if projects is FROM_CONFIG else projects
     raw = message.strip()
     if not raw:
         return CommitValidationResult(False, "", (), "", 0, ("El mensaje de commit esta vacio.",))
@@ -162,7 +180,7 @@ def validate_commit_message(message: str, strict: bool = False) -> CommitValidat
     if not lines:
         return CommitValidationResult(False, "", (), "", 0, ("El mensaje de commit solo contiene comentarios.",))
 
-    commit_type, projects, title, header_errors = _validate_header(lines[0].strip())
+    commit_type, projects, title, header_errors = _validate_header(lines[0].strip(), allowed)  # type: ignore[arg-type]
     body_length, body_errors = _validate_body(lines, strict)
 
     all_errors = header_errors + body_errors

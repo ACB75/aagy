@@ -9,7 +9,7 @@
 .PARAMETER Phase
     Fase preconfigurada según la arquitectura en dos niveles:
       - generic    (Nivel 1 Global: 16 core skills y 12 agentes universales de ingeniería)
-      - network-infra (Perfil de stack: Docker, K8s, Homelab, Redes, Seguridad)
+      - network-infra (Perfil de stack: Docker, K8s, Redes, Seguridad)
       - java-spring   (Perfil de stack: Java 25 / Spring Boot 4, Postgres)
       - angular       (Perfil de stack: Angular 21 / TypeScript, E2E)
       - go            (Perfil de stack: Go, Docker, K8s, Latencia, Postgres)
@@ -63,12 +63,11 @@ $PhaseConfig = @{
     "network-infra" = @{
         Skills = @(
             "docker-patterns", "deployment-patterns", "kubernetes-patterns",
-            "homelab-network-readiness", "homelab-network-setup", "homelab-pihole-dns",
-            "homelab-vlan-segmentation", "homelab-wireguard-vpn", "network-config-validation",
+            "network-config-validation",
             "network-interface-health", "security-scan", "safety-guard", "sre-reliability"
         )
         Agents = @(
-            "homelab-architect.md", "network-architect.md", "network-config-reviewer.md",
+            "network-architect.md", "network-config-reviewer.md",
             "network-troubleshooter.md"
         )
     }
@@ -76,7 +75,7 @@ $PhaseConfig = @{
         Skills = @(
             "springboot-patterns", "springboot-security", "springboot-tdd",
             "springboot-verification", "java-coding-standards", "postgres-patterns",
-            "database-migrations", "api-design", "sonarqube-quality-gate", "sync-microservice-sdk"
+            "database-migrations", "api-design", "sonarqube-quality-gate"
         )
         Agents = @(
             "java-reviewer.md", "java-build-resolver.md", "database-reviewer.md"
@@ -84,7 +83,7 @@ $PhaseConfig = @{
     }
     "angular" = @{
         Skills = @(
-            "angular-developer", "e2e-testing", "sonarqube-quality-gate", "sync-microservice-sdk"
+            "angular-developer", "e2e-testing", "sonarqube-quality-gate"
         )
         Agents = @(
             "typescript-reviewer.md", "e2e-runner.md"
@@ -95,7 +94,7 @@ $PhaseConfig = @{
             "golang-patterns", "golang-testing", "docker-patterns",
             "kubernetes-patterns", "postgres-patterns", "latency-critical-systems",
             "data-throughput-accelerator", "benchmark-optimization-loop",
-            "sonarqube-quality-gate", "sync-microservice-sdk", "sre-reliability"
+            "sonarqube-quality-gate", "sre-reliability"
         )
         Agents = @(
             "go-reviewer.md", "go-build-resolver.md", "performance-optimizer.md",

@@ -64,8 +64,8 @@ EXIT_INVALID = 2
 
 # Claves de primer nivel que entiende cada capa. Una clave desconocida no rompe
 # nada, pero el doctor avisa (suele ser una errata).
-PROJECT_KEYS = frozenset({"projects", "sdk", "quality_gates", "ingress", "ci", "local_model", "budget", "ui"})
-ENV_KEYS = frozenset({"hosts", "domains", "paths", "local_model", "secrets_env", "budget", "ui"})
+PROJECT_KEYS = frozenset({"projects", "sdk", "quality_gates", "ingress", "ci", "local_model", "budget", "consumer_refs", "ui"})
+ENV_KEYS = frozenset({"hosts", "domains", "paths", "local_model", "secrets_env", "budget", "consumer_refs", "ui"})
 
 # Un valor con pinta de secreto no debe estar en el fichero de entorno.
 _SECRET_NAME_RE = re.compile(r"(token|secret|password|passwd|api[_-]?key|private[_-]?key)", re.IGNORECASE)

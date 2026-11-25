@@ -24,6 +24,7 @@ if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
 from sync_aagy_ecc import compare as sync_compare  # noqa: E402
+import consumer_refs  # noqa: E402
 import workflow_skeleton  # noqa: E402
 
 # Constantes de Estado y Literales para SonarQube (S1192)
@@ -268,6 +269,7 @@ def _check_paid_skills(repo_root: Path, discrepancies: List[str]) -> None:
 HOOK_ASYMMETRY_EVENTS = frozenset({"SessionStart", "PreCompact", "SessionEnd", "Notification"})
 AGY_PLUGIN_ROOT_REF = "${AAGY_PLUGIN_ROOT}/"
 FILE_HOOKS = "hooks.json"
+DIR_SCRIPTS_PREFIX = "scripts/"
 _HOOK_PY = re.compile(r"scripts/py/([A-Za-z0-9_]+\.py)")
 
 
@@ -295,7 +297,7 @@ def _check_hook_parity(repo_root: Path, discrepancies: List[str]) -> None:
             discrepancies.append(f"Hooks '{event}' con motores distintos: aagy={sorted(agy[event])}, aagy-ecc={sorted(ecc[event])}.")
     agy_file = repo_root / FILE_HOOKS
     raw = agy_file.read_text(encoding="utf-8") if agy_file.is_file() else ""
-    if "scripts/" in raw.replace(AGY_PLUGIN_ROOT_REF + "scripts/", ""):
+    if DIR_SCRIPTS_PREFIX in raw.replace(AGY_PLUGIN_ROOT_REF + DIR_SCRIPTS_PREFIX, ""):
         discrepancies.append(f"hooks.json usa rutas relativas: usa '{AGY_PLUGIN_ROOT_REF}scripts/py/...'.")
 
 
@@ -308,6 +310,19 @@ def _check_workflow_skeleton(repo_root: Path, discrepancies: List[str]) -> None:
     warns = sum(1 for f in findings if f.level == workflow_skeleton.LEVEL_WARN)
     if warns:
         logger.warning("[WARN] %d workflows heredados sin esqueleto completo (python scripts/py/workflow_skeleton.py --verbose).", warns)
+
+
+PLUGIN_TREES: Tuple[str, ...] = ("aagy-ecc/", "skills/", "agents/", "rules/", DIR_SCRIPTS_PREFIX, "templates/", "hooks.json")
+
+
+def _check_consumer_refs(repo_root: Path, discrepancies: List[str]) -> None:
+    """RF-14: ninguno de los dos plugins nombra a un proyecto consumidor (``consumer_refs``)."""
+    _terms, hits = consumer_refs.audit(repo_root)
+    in_plugins = [h for h in hits if h.path.startswith(PLUGIN_TREES)]
+    for hit in in_plugins[:10]:
+        discrepancies.append(f"Referencia a un proyecto consumidor en {hit.path}:{hit.line} ('{hit.term}').")
+    if len(in_plugins) > 10:
+        discrepancies.append(f"... y {len(in_plugins) - 10} referencias más (python scripts/py/consumer_refs.py).")
 
 
 def audit_parity(repo_root: Path) -> ParityAuditResult:
@@ -325,6 +340,7 @@ def audit_parity(repo_root: Path) -> ParityAuditResult:
     _check_paid_skills(repo_root, discrepancies)
     _check_workflow_skeleton(repo_root, discrepancies)
     _check_hook_parity(repo_root, discrepancies)
+    _check_consumer_refs(repo_root, discrepancies)
 
     root_skills_count = _count_dirs(repo_root / DIR_SKILLS)
     root_agents_count = _count_md(repo_root / DIR_AGENTS)

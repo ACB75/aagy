@@ -21,7 +21,7 @@ systematically and produce a concise root cause summary with evidence.
 
 - Connectivity, packet loss, slow links, DNS failures, route reachability, BGP
   neighbor state, VLAN reachability, and ACL/firewall symptoms.
-- Router, switch, Linux host, and homelab environments.
+- Router, switch, Linux host, and small self-hosted environments.
 - Read-only diagnosis. Do not apply configuration changes while diagnosing.
 
 ## Workflow

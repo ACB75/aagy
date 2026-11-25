@@ -25,7 +25,7 @@ You are a specialized maintenance agent. Your mission is to execute the recurrin
    Execute the canonical script:
 
    ```powershell
-   pwsh -File C:\Workspace\projects\home-lab\scripts/ps1/sync-clean-align.ps1
+   pwsh -File <ruta-del-repo>/scripts/ps1/sync-clean-align.ps1
    ```
 
 2. **Documentation Audit & Update**:
@@ -39,7 +39,7 @@ You are a specialized maintenance agent. Your mission is to execute the recurrin
    Format the proposed commit message using:
 
    ```powershell
-   pwsh -File C:\Workspace\projects\home-lab\scripts/ps1/format-commit.ps1 -Type ... -Projects ... -Title ... -Body ...
+   pwsh -File <ruta-del-repo>/scripts/ps1/format-commit.ps1 -Type ... -Projects ... -Title ... -Body ...
    ```
 
    Never execute `git commit` or `git push` autonomously.

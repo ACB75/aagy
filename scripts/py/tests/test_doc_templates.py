@@ -7,13 +7,15 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import doc_templates as dt  # noqa: E402
+import consumer_refs  # noqa: E402
 from new_lifecycle_task import scaffold_lifecycle_task  # noqa: E402
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 TEMPLATES = REPO_ROOT / "doc" / "00-governance" / "templates"
 ECC_TEMPLATES = REPO_ROOT / "aagy-ecc" / "templates" / "lifecycle"
 # Nombres de proyectos consumidores que no pueden aparecer en las plantillas del plugin (CA-03).
-FORBIDDEN = ("home-lab", "home.lab", "homelab", "kakebo", "cluster-lb")
+# La lista la declara el repo en consumer_refs (.governance/aagy.json); el plugin no la conoce.
+FORBIDDEN = tuple(t.lower() for t in consumer_refs.declared_terms(REPO_ROOT))
 
 
 def test_plugin_templates_follow_base():

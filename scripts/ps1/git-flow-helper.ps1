@@ -1,13 +1,16 @@
 #!/usr/bin/env pwsh
 <#
 .SYNOPSIS
-    Asistente de ciclo de vida Git para el Monorepo Home-Lab (Trunk-Based Development con Promoción y PRs).
+    Asistente de ciclo de vida Git para cualquier repo consumidor (Trunk-Based Development con promoción y PRs).
+    Los datos del entorno no viven aquí: los hosts Live y Sandbox salen de la capa de entorno de
+    aagy_config (hosts.live, hosts.sandbox) y la URL del repo de 'git remote get-url origin'.
 .PARAMETER Action
     new-branch | promote | status | create-pr
 .PARAMETER Type
     feat | fix | infra | docs | chore
 .PARAMETER Project
-    cluster | kakebo | whoiam | doc-viewer | token-hill | net | aagy | all
+    Proyecto de la rama (<type>/<project>/<name>). Si el repo declara 'projects' en
+    .governance/aagy.json, debe ser uno de ellos.
 .PARAMETER Name
     Descripción corta de la rama (ej. 'export-csv')
 .PARAMETER Tag
@@ -17,8 +20,8 @@
 .PARAMETER Body
     Cuerpo opcional explicativo de la Pull Request
 .EXAMPLE
-    pwsh -File scripts/ps1/git-flow-helper.ps1 -Action new-branch -Type feat -Project kakebo -Name export-csv
-    pwsh -File scripts/ps1/git-flow-helper.ps1 -Action create-pr -Title "feat-[kakebo]: exportar transacciones a csv"
+    pwsh -File scripts/ps1/git-flow-helper.ps1 -Action new-branch -Type feat -Project app -Name export-csv
+    pwsh -File scripts/ps1/git-flow-helper.ps1 -Action create-pr -Title "[feat]-[app]: exportar transacciones a csv"
     pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag v1.1.0-sandbox
 #>
 param(
@@ -29,8 +32,7 @@ param(
     [ValidateSet("feat", "fix", "infra", "docs", "chore")]
     [string]$Type = "feat",
 
-    [ValidateSet("cluster", "kakebo", "whoiam", "doc-viewer", "token-hill", "net", "aagy", "all")]
-    [string]$Project = "cluster",
+    [string]$Project,
 
     [string]$Name,
 
@@ -56,6 +58,22 @@ $ErrorActionPreference = "Stop"
 Set-StrictMode -Version Latest
 
 $RepoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..\.." )).Path
+$ConfigScript = Join-Path $PSScriptRoot "../py/aagy_config.py"
+$Python = if (Get-Command python3 -ErrorAction SilentlyContinue) { "python3" } else { "python" }
+
+function Get-AagyConfig([string]$Key) {
+    $value = & $Python $ConfigScript get $Key 2>$null
+    if ($LASTEXITCODE -ne 0) { return $null }
+    return ($value | Out-String).Trim()
+}
+
+function Get-DeployHost([string]$EnvName) {
+    $hostValue = Get-AagyConfig "hosts.$EnvName"
+    if (-not $hostValue) {
+        throw "Falta el host de '$EnvName'. Declara 'hosts.$EnvName' en <AAGY_ENV_DIR>/aagy/env.json o exporta AAGY_HOSTS_$($EnvName.ToUpper())."
+    }
+    return $hostValue
+}
 Push-Location $RepoRoot
 try {
     switch ($Action) {
@@ -69,8 +87,15 @@ try {
         }
 
         "new-branch" {
-            if (-not $Name) {
-                throw "Debe proporcionar un nombre para la rama (-Name <descripcion>)."
+            if (-not $Name -or -not $Project) {
+                throw "Debe proporcionar proyecto y nombre para la rama (-Project <proyecto> -Name <descripcion>)."
+            }
+            $declared = Get-AagyConfig "projects"
+            if ($declared) {
+                $projects = @($declared | ConvertFrom-Json)
+                if ($Project -notin $projects) {
+                    throw "Proyecto '$Project' no declarado en .governance/aagy.json (projects: $($projects -join ', '))."
+                }
             }
             $branchName = "$Type/$Project/$Name"
             Write-Host "[+] Actualizando 'main' antes de ramificar..." -ForegroundColor Cyan
@@ -98,11 +123,7 @@ try {
             }
 
             if ($Deploy) {
-                $targetHost = if ($Environment -eq "live") {
-                    if ($env:HOMELAB_LIVE_HOST) { $env:HOMELAB_LIVE_HOST } else { "NEO (192.168.1.200)" }
-                } else {
-                    if ($env:HOMELAB_SANDBOX_HOST) { $env:HOMELAB_SANDBOX_HOST } else { "FRACTAL (192.168.1.100)" }
-                }
+                $targetHost = Get-DeployHost $Environment
 
                 Write-Host "[+] Iniciando pipeline de despliegue automatizado hacia entorno '$Environment' ($targetHost)..." -ForegroundColor Cyan
 
@@ -193,8 +214,13 @@ $Title
                     Write-Host "[OK] Pull Request creada y aislada exitosamente." -ForegroundColor Green
                 }
             } else {
+                $remote = (git remote get-url origin 2>$null)
+                if (-not $remote) {
+                    throw "'gh' no está disponible y el repo no tiene remoto 'origin': no se puede indicar dónde abrir la PR."
+                }
+                $web = ($remote.Trim() -replace '^git@([^:]+):', 'https://$1/' -replace '\.git$', '')
                 Write-Host "[!] 'gh' CLI no disponible. Abra la PR manualmente en:" -ForegroundColor Yellow
-                Write-Host "https://github.com/ACB75/home-lab/compare/main...$currentBranch" -ForegroundColor Cyan
+                Write-Host "$web/compare/main...$currentBranch" -ForegroundColor Cyan
             }
         }
 

@@ -16,7 +16,7 @@ Review staged git diffs and draft commit messages that strictly follow the works
 
 - **`[type]`**: Conventional Commit type: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`, `build`, `ci`, `sec` (or `security`).
 - **`-`**: Mandatory delimiter between type and affected projects.
-- **`[projects]`**: One or more affected projects or modules: `[cluster]`, `[kakebo]`, `[whoiam]`, `[net]`, `[scripts]`, `[aagy]`, `[doc]` (or comma-separated `[cluster,net]` for cross-cutting changes).
+- **`[projects]`**: One or more affected projects or modules, as declared in `projects` of the repo's `.governance/aagy.json` (any lowercase slug if it declares none), e.g. `[api]`, `[web]`, `[scripts]`, `[doc]` (or comma-separated `[api,web]` for cross-cutting changes).
 - **`: <title>`**: Colon followed by a concise, imperative title in lowercase without a trailing period.
 
 ### 2. Mandatory Explanatory Body Comment (`msg comment`)
@@ -48,7 +48,7 @@ Introduce isolated storage telemetry and directory quotas per tenant.
 ```
 
 ```gitcommit
-fix-[whoiam]: resolve ed25519 public key parsing in jwks endpoint
+fix-[auth]: resolve ed25519 public key parsing in jwks endpoint
 
 Fix cryptographic key decoding failure under RFC 7517 verification.
 - Normalize base64url padding and validate curve parameters at startup.

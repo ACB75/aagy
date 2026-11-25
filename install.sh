@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Anything Antigravity (aagy / aagy-ecc) Multi-Distribution Installer (Linux / WSL / macOS)
-# Targets: agy | claude | aagy-ecc | homelab (alias to agy)
+# Targets: agy | claude | aagy-ecc
 # Finales de línea estrictamente POSIX LF (\n).
 # ==============================================================================
 
@@ -16,10 +16,6 @@ echo "         ANYTHING ANTIGRAVITY (AAGY / AAGY-ECC) INSTALLER        "
 echo "================================================================="
 echo "Target distribution: ${TARGET}"
 
-if [ "${TARGET}" = "homelab" ]; then
-  echo "[i] Note: 'homelab' has been unified into 'aagy'. Deploying aagy..."
-  TARGET="agy"
-fi
 if [ "${TARGET}" = "aagy-ecc" ]; then
   TARGET="claude"
 fi

@@ -13,7 +13,7 @@ La ingeniería de software asistida por agentes autónomos ha evolucionado hacia
 1. **Anthropic Claude Code**: Basado en una interfaz de línea de comandos (CLI) interactiva, con hooks bash/python, configuración en `CLAUDE.md`, y comandos de barra inclinada (*slash commands*).
 2. **Google Antigravity & Gemini**: Basado en un runtime de escritorio/IDE con invocación nativa de herramientas, orquestación de subagentes paralelos en subprocesos aislados (`branch`/`share`), descubrimiento dinámico de plugins (`~/.gemini/config/plugins/`), soporte nativo para el protocolo MCP (Model Context Protocol), y un sistema de activación reactivo (*reactive wakeup* sin sondeo).
 
-Previamente, existía una fragmentación entre `aagy` (agnóstico) y `aagy-homelab` (específico de infraestructura física), además del repositorio original de Everything Claude Code. Esta fragmentación generaba duplicación masiva de código (más de 300 skills repetidas), inconsistencias de gobernanza y dificultades para desplegar el sistema en proyectos de terceros (ej. empresas externas en Barcelona).
+Previamente, existía una fragmentación entre `aagy` (agnóstico) y `aagy-consumer` (específico de infraestructura física), además del repositorio original de Everything Claude Code. Esta fragmentación generaba duplicación masiva de código (más de 300 skills repetidas), inconsistencias de gobernanza y dificultades para desplegar el sistema en proyectos de terceros (ej. empresas externas en Barcelona).
 
 ---
 
@@ -22,7 +22,7 @@ Previamente, existía una fragmentación entre `aagy` (agnóstico) y `aagy-homel
 Se adopta formalmente una **Arquitectura Multi-Harness Unificada** en el repositorio maestro `ACB75/aagy`:
 
 1. **Unificación de Distribuciones Antigravity**:
-   - Se fusiona `aagy-homelab` dentro de `aagy`. Todos los comandos, esquemas, reglas SRE y subagentes se consolidan en una única distribución unificada `aagy`.
+   - Se fusiona `aagy-consumer` dentro de `aagy`. Todos los comandos, esquemas, reglas SRE y subagentes se consolidan en una única distribución unificada `aagy`.
    - Las reglas específicas de infraestructura física o dominios locales se delegan al Nivel 2 de personalización (`<project>/.agents/rules/`), manteniendo el Nivel 1 (`aagy`) limpio y exportable a $N$ proyectos empresariales.
 2. **Estructura Multi-Harness en el Monorepo `aagy`**:
    - **`aagy-ecc/`**: Almacena los artefactos nativos para Claude Code (`CLAUDE.md`, `.claude/`, slash commands, hooks).
@@ -34,7 +34,7 @@ Se adopta formalmente una **Arquitectura Multi-Harness Unificada** en el reposit
 
 ## 3. Alternatives Considered
 
-### Alternative 1: Mantener repositorios completamente separados (`aagy-ecc`, `aagy`, `aagy-homelab`)
+### Alternative 1: Mantener repositorios completamente separados (`aagy-ecc`, `aagy`, `aagy-consumer`)
 
 - **Pros**: Independencia total de versionado.
 - **Cons**: Coste de mantenimiento triplicado, desincronización de skills y reglas, fricción extrema para propagar mejoras en linters o formatos de commit.

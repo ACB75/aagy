@@ -16,7 +16,7 @@ completed_at: "2026-11-20 22:40:17"
 - **01 - ROLE:** Autonomous Agent Reliability & Self-Improvement Systems Architect.
 - **02 - CONTEXT:** `[Sector: Agent Self-Discovery & Continuous Learning]` `[Data Type: auto-evolve, instinct_manager.py, hooks.json, skills de evaluación/aprendizaje]` `[Objective: Unificar las piezas sueltas de autodescubrimiento y automejora en un flujo determinista y acotado en presupuesto para aagy]` `[Restrictions: Toma de requisitos dedicada previa a la implementación; cero inflación de AGENTS.md/rules/; promoción segura con smoke-test y gate de presupuesto]`.
 - **03 - PHASE 1 (ANALYSIS):**
-  - Existen piezas desconectadas (`auto-evolve.ps1` orientado a `home-lab`, `instinct_manager.py`, skills legacy `continuous-learning-v2` / `eval-harness` / `agent-self-evaluation`).
+  - Existen piezas desconectadas (`auto-evolve.ps1` orientado a `app`, `instinct_manager.py`, skills legacy `continuous-learning-v2` / `eval-harness` / `agent-self-evaluation`).
   - Ver requisitos aprobados en [`REQ_aagy_unified_self_improvement.md`](../plans/REQ_aagy_unified_self_improvement.md).
 - **04 - PHASE 2 (STRATEGY):**
   - Definir requisitos formales primero y consolidar un único motor agnóstico conectado al ciclo de vida y presupuesto.

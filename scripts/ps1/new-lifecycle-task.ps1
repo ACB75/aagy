@@ -5,7 +5,7 @@
     Genera artefactos del flujo flexible [IDEAS -> REQUISITOS -> PLAN -> TODO] resolviendo rutas
     dinámicamente vía .governance/docs-map.json (con fallback clásico) o vinculando una GitHub Issue (-Issue <N>).
 .PARAMETER TaskId
-    Identificador o rama de la tarea (ej. 'feat/kakebo/export-csv'). Opcional si se indica -Issue.
+    Identificador o rama de la tarea (ej. 'feat/app/export-csv'). Opcional si se indica -Issue.
 .PARAMETER Issue
     Número de GitHub Issue (ej. 60): lee título/labels con gh issue view, auto-asigna @me,
     crea rama <type>/<project>/gh-<N>-<slug> validada por validate_branch.py y registra .governance/active-issue.json.
@@ -18,7 +18,7 @@
 .PARAMETER DryRun
     Simula la creación sin escribir archivos.
 .EXAMPLE
-    pwsh -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase PLAN
+    pwsh -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/app/export-csv" -Phase PLAN
 .EXAMPLE
     pwsh -File scripts/ps1/new-lifecycle-task.ps1 -Issue 60 -Phase REQ
 #>

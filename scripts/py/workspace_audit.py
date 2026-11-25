@@ -521,6 +521,19 @@ def _audit_workflow_skeleton(root: Path) -> int:
     return len(fails)
 
 
+def _audit_consumer_refs(root: Path) -> int:
+    """RF-14: el repo no nombra a ningún proyecto consumidor (términos en ``consumer_refs``)."""
+    try:
+        import consumer_refs  # noqa: PLC0415 - opcional en instalaciones antiguas
+    except ImportError:
+        return 0
+    terms, hits = consumer_refs.audit(root)
+    for hit in hits[:20]:
+        logger.warning("  [CONSUMER-REF] %s:%d: '%s'", hit.path, hit.line, hit.term)
+    logger.info("[consumer-refs] %d términos declarados, %d apariciones", len(terms), len(hits))
+    return len(hits)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
     root = args.root.resolve() if args.root else Path(__file__).resolve().parent.parent.parent
@@ -560,6 +573,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     # 2.6 Esqueleto común de workflows (RF-05; los propios fallan, los heredados avisan)
     skeleton = _audit_workflow_skeleton(root)
     total_violations += skeleton
+
+    # 2.7 Sin referencias a proyectos consumidores (RF-14)
+    total_violations += _audit_consumer_refs(root)
 
     # 3. Artefactos muertos
     logger.info("\n=== [3/4] ARTEFACTOS MUERTOS O HUÉRFANOS ===")

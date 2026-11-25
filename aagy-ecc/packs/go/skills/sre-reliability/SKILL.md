@@ -67,7 +67,7 @@ $$t_{\text{wait}} = \min(t_{\text{max}}, t_{\text{base}} \times 2^{\text{attempt
 Run the automated static reliability audit:
 
 ```powershell
-pwsh -File scripts/ps1/audit-sre.ps1 -Root C:\Workspace\projects\home-lab
+pwsh -File scripts/ps1/audit-sre.ps1 -Root <ruta-del-repo>
 ```
 
 Linux / WSL:

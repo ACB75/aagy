@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Dict, Tuple
 
 DEEP_REASONING_AGENTS = {
-    "architect.md", "planner.md", "code-architect.md", "homelab-architect.md",
+    "architect.md", "planner.md", "code-architect.md",
     "network-architect.md", "spec-miner.md", "gan-planner.md",
 }
 

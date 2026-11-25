@@ -8,11 +8,9 @@ SH_DIR = REPO_ROOT / "scripts" / "sh"
 
 EXPECTED_SH_SCRIPTS = [
     "archive-todo.sh",
-    "audit-pg-locks.sh",
     "backlog.sh",
     "audit-plugin-parity.sh",
     "sync-aagy-ecc.sh",
-    "audit-sdk-parity.sh",
     "audit-workspace.sh",
     "auto-evolve.sh",
     "complete-task-pr.sh",
@@ -38,7 +36,6 @@ EXPECTED_SH_SCRIPTS = [
     "sonar-audit.sh",
     "sync-ideas-todo.sh",
     "toggle-gemini-mcp.sh",
-    "validate-ingress-routes.sh",
 ]
 
 
@@ -60,5 +57,13 @@ def test_sh_scripts_have_shebang_and_lf():
 
 def test_auto_evolve_sh_is_agnostic():
     content = (SH_DIR / "auto-evolve.sh").read_text(encoding="utf-8")
-    assert "home-lab" not in content.lower()
+    assert not [w for w in _consumer_terms() if w in content.lower()]
     assert "self_improve.py" in content
+
+
+def _consumer_terms():
+    """Términos de consumer_refs del repo (.governance/aagy.json): el plugin no los conoce."""
+    import json
+    cfg = Path(__file__).resolve().parents[3] / ".governance" / "aagy.json"
+    data = json.loads(cfg.read_text(encoding="utf-8")) if cfg.is_file() else {}
+    return [str(t).lower() for t in data.get("consumer_refs", [])]

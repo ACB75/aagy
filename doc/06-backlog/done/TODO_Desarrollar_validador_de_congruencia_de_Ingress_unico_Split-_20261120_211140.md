@@ -14,7 +14,7 @@ completed_at: "2026-11-20 21:11:40"
 ### Detalle Original
 
 - **01 - ROLE:** Edge Ingress & Network Infrastructure Architect.
-- **02 - CONTEXT:** `[Sector: Home-Lab Networking & Service Mesh]` `[Data Type: docker-compose.yml (traefik labels), Corefile / zone files, Go source (main.go)]` `[Objective: Implementar un script de validación que certifique que cualquier servicio HTTP definido en docker-compose tenga configuradas sus etiquetas Traefik (router, service, middleware TLS), su registro DNS coincidente en CoreDNS y su entrada en el catálogo /portal]` `[Restrictions: Python stdlib / PowerShell, sin requerir daemon Docker corriendo en modo estático]`.
+- **02 - CONTEXT:** `[Sector: proyecto consumidor Networking & Service Mesh]` `[Data Type: docker-compose.yml (traefik labels), Corefile / zone files, Go source (main.go)]` `[Objective: Implementar un script de validación que certifique que cualquier servicio HTTP definido en docker-compose tenga configuradas sus etiquetas Traefik (router, service, middleware TLS), su registro DNS coincidente en CoreDNS y su entrada en el catálogo /portal]` `[Restrictions: Python stdlib / PowerShell, sin requerir daemon Docker corriendo en modo estático]`.
 - **03 - PHASE 1 (ANALYSIS):**
   - El Pilar 2 de Google Engineering ("Single Ingress & Unified TLS") y la regla 7 de `GEMINI.md` requieren que los microservicios no expongan puertos crudos y que el catálogo `/portal` se mantenga sincronizado.
   - La configuración manual de etiquetas Traefik y registros DNS puede sufrir desalineaciones sutiles (ej. un subdominio mal escrito en un router).

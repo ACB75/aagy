@@ -16,7 +16,7 @@ completed_at: "2026-11-20 21:05:03"
 - **01 - ROLE:** Principal Database Reliability Engineer (DBRE) & PostgreSQL Internalist.
 - **02 - CONTEXT:** `[Sector: Multi-Tenant Database Infrastructure]` `[Data Type: SQL migration files (*.sql), PostgreSQL DDL syntax]` `[Objective: Desarrollar un analizador estático que escanee scripts de migración SQL buscando operaciones que tomen bloqueos ACCESS EXCLUSIVE prolongados o causen reescrituras de tabla, bloqueando despliegues que pongan en riesgo la disponibilidad de la base de datos central multitenant]` `[Restrictions: Python stdlib, tiempo de ejecución < 500ms, aplicable en Fase 1 y Fase 4 del lifecycle]`.
 - **03 - PHASE 1 (ANALYSIS):**
-  - Home-Lab consolida todos los microservicios en una instancia única y endurecida de PostgreSQL LTS.
+  - proyecto consumidor consolida todos los microservicios en una instancia única y endurecida de PostgreSQL LTS.
   - Ciertas operaciones DDL (ej. `ALTER TABLE t ADD COLUMN c int NOT NULL DEFAULT now()`, `CREATE INDEX` sin `CONCURRENTLY`, cambios de tipo de columna incompatibles) adquieren bloqueos `ACCESS EXCLUSIVE` que congelan todas las lecturas y escrituras, provocando agotamiento del pool de conexiones en los microservicios.
 - **04 - PHASE 2 (STRATEGY):**
   - Clasificar las sentencias DDL en 3 categorías de riesgo:

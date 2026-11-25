@@ -23,4 +23,3 @@
 | :--- | :--- | :---: |
 | [**Plan de Documentación**](ADR_aagy_plan_documentacion_arquitectura_harness.md) | Plan de requisitos y diseño arquitectónico para la documentación integral del arnés | `accepted` |
 | [**Informe de Abstracción Multi-Proyecto**](ADR_aagy_informe_abstraccion_reutilizable_n_proyectos.md) | Análisis de desacoplamiento para reutilización en $N$ proyectos o clientes externos | `accepted` |
-| [**Informe de Funcionamiento AAGY**](ADR_aagy_informe_funcionamiento_aagy_homelab.md) | Especificación técnica previa del fork antes de su consolidación en `aagy` | `accepted` |

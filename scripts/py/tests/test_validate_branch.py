@@ -12,7 +12,7 @@ from validate_branch import (
 @pytest.mark.parametrize("branch", [
     "fix/SEC-001",
     "fix/auth-leak",
-    "fix/kakebo/issue-102",
+    "fix/app/issue-102",
     "fix/cluster/timeout-p99",
     "fix/login-redirect-302",
 ])
@@ -25,7 +25,7 @@ def test_valid_fix_branches(branch: str):
 @pytest.mark.parametrize("branch", [
     "feat/aagy/new-feature",
     "feat/cluster-portal",
-    "refactor/kakebo/signals",
+    "refactor/app/signals",
     "infra/cluster/traefik-v3",
     "chore/deps-update",
     "docs/adr-0012",

@@ -7,11 +7,11 @@
 
 ## Context
 
-Master, Claude Code y Antigravity trabajaban en la misma carpeta (`C:\Workspace\projects\home-lab`, `...\aagy`). Un cambio sin commit, un `checkout` o un `reset` de cualquiera afectaba a los otros dos. `backlog.py claim --worktree` ya creaba un worktree por tarea (`<repo>.wt/<id>`), pero la ruta cambiaba con cada tarea, Antigravity tenía que abrir una carpeta nueva cada vez y nada protegía el checkout de Master. Además, `complete-task-pr.ps1` terminaba con `git checkout -f main`, que falla dentro de un worktree (git no deja `main` en dos worktrees) y descarta cambios sin avisar.
+Master, Claude Code y Antigravity trabajaban en la misma carpeta (`<padre>\app`, `...\aagy`). Un cambio sin commit, un `checkout` o un `reset` de cualquiera afectaba a los otros dos. `backlog.py claim --worktree` ya creaba un worktree por tarea (`<repo>.wt/<id>`), pero la ruta cambiaba con cada tarea, Antigravity tenía que abrir una carpeta nueva cada vez y nada protegía el checkout de Master. Además, `complete-task-pr.ps1` terminaba con `git checkout -f main`, que falla dentro de un worktree (git no deja `main` en dos worktrees) y descarta cambios sin avisar.
 
 ## Decision
 
-1. **Carpetas fijas hermanas del mismo clon**: `<repo>` es de Master; `<repo>-aagy` de Antigravity; `<repo>-aagy-ecc` de Claude Code. Patrón genérico: vale para `home-lab`, `aagy` y cualquier repo consumidor. Los worktrees de agente nunca tienen `main` en checkout: reposan desacoplados en `origin/main`.
+1. **Carpetas fijas hermanas del mismo clon**: `<repo>` es de Master; `<repo>-aagy` de Antigravity; `<repo>-aagy-ecc` de Claude Code. Patrón genérico: vale para `app`, `aagy` y cualquier repo consumidor. Los worktrees de agente nunca tienen `main` en checkout: reposan desacoplados en `origin/main`.
 2. **CLI único** [`agent_worktree.py`](../../scripts/py/agent_worktree.py) (`init`, `where`, `status`, `recycle`, `guard`, `notice`), espejado en `aagy-ecc`.
 3. **Reciclado limpio en sitio**: tras comprobar con `gh` que la PR está fusionada (squash: no basta con ancestros), `git switch --detach origin/main` + `reset --hard` + `clean -ffdx`. Si Windows no deja borrar algo, se recrea el worktree. Así la carpeta abierta en el IDE sigue siendo válida.
 4. **Nunca se pierde trabajo**: si hay cambios sin commit, commits posteriores al último de la PR, commits sin push o stash de la rama, el reciclado se para y avisa (código 3).

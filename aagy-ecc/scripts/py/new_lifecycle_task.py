@@ -562,7 +562,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Instancia artefactos del Engineering Lifecycle desde cualquier punto de entrada (IDEAS, REQ, PLAN, TODO, ALL)."
     )
-    parser.add_argument("--task-id", default=None, help="ID o rama de la tarea (ej. feat/kakebo/export-csv)")
+    parser.add_argument("--task-id", default=None, help="ID o rama de la tarea (ej. feat/app/export-csv)")
     parser.add_argument("--issue", type=int, default=None, help="Número de GitHub Issue para auto-asignar y crear rama gh-<N>")
     parser.add_argument("--parent-issue", type=int, default=None, help="Crea una sub-issue nativa bajo la issue padre #<N>")
     parser.add_argument("--attach-issue", action="store_true", help="Adjunta resumen de artefactos REQ/PLAN/Mermaid a la issue")
