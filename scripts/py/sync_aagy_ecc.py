@@ -44,6 +44,7 @@ STATUS_SYNCED = "SYNCED"
 MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "self_improve.py",
     "aagy_config.py",
+    "ci_local.py",
     "local_model.py",
     "local_model_mcp.py",
     "local_model_ops.py",

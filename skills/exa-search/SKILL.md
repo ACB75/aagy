@@ -3,6 +3,7 @@ name: exa-search
 description: "Neural search via Exa MCP for web, code, and company research."
 metadata:
   origin: AAGY
+  cost: paid
 ---
 
 # Exa Search

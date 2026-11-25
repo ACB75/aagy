@@ -89,16 +89,20 @@ def run():
 
 def test_ci_workflow_references_valid_script_paths():
     repo_root = Path(__file__).resolve().parent.parent.parent.parent
-    workflow = repo_root / ".github" / "workflows" / "ci-quality-gate.yml"
+    workflow = repo_root / "templates" / "github-actions" / "ci-quality-gate.yml"
     assert workflow.is_file()
     content = workflow.read_text(encoding="utf-8")
     assert "scripts/aagy/" not in content
     assert "scripts/ecc-agy/" not in content
     assert "scripts/pwsh/" not in content
-    assert "scripts/py/tests/" in content
-    assert "scripts/ps1/tests/" in content
-    assert "scripts/sh/tests/" in content
-    assert "scripts/py/workspace_audit.py" in content
-    assert "scripts/py/sonar_audit.py" in content
-    assert "scripts/py/security_audit.py" in content
+    assert "scripts/py/ci_local.py run" in content
+    sys.path.insert(0, str(repo_root / "scripts" / "py"))
+    import ci_local  # noqa: PLC0415
+
+    pytest_step = next(s for s in ci_local.default_steps(repo_root) if s.name == "pytest")
+    for folder in ("scripts/py/tests", "scripts/ps1/tests", "scripts/sh/tests"):
+        assert folder in pytest_step.argv
+    assert any("workspace_audit.py" in arg for step in ci_local.default_steps(repo_root) for arg in step.argv)
+    assert any("sonar_audit.py" in arg for step in ci_local.default_steps(repo_root) for arg in step.argv)
+    assert any("security_audit.py" in arg for step in ci_local.default_steps(repo_root) for arg in step.argv)
 

@@ -103,13 +103,31 @@ def analyze_log(
             recommendations=(),
         )
 
-    api_key = os.environ.get(API_KEY_ENV_VAR, "").strip()
-    if mock or not api_key:
-        if not api_key and not mock:
-            logger.info("[INFO] %s no configurada. Ejecutando análisis heurístico local de alta fidelidad.", API_KEY_ENV_VAR)
-        return _heuristic_log_analysis(content)
+    report = _heuristic_log_analysis(content)
+    if mock:
+        return report
+    # Presupuesto 0 $: el resumen lo hace el modelo local (aagy-local) si está disponible; la API de Gemini no se usa.
+    local = _local_summary(log_path)
+    if not local:
+        return report
+    return DeepOpsReport(report.is_success, f"{report.summary} Resumen local: {local}", report.severity,
+                         report.recommendations, report.raw_details)
 
-    return _heuristic_log_analysis(content)
+
+def _local_summary(log_path: Path) -> str:
+    """Resumen con local_run(summarize, paths) si el modelo local está en modo tool; "" si no."""
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import local_model  # noqa: PLC0415
+
+        settings = local_model.load_settings(log_path.parent)
+        if local_model.get_status(settings).effective != local_model.MODE_TOOL:
+            return ""
+        result = local_model.run_task(settings, {"task": "summarize", "paths": [str(log_path.resolve())]},
+                                      log_path.resolve().parent)
+        return str(result.get("result", "")) if "error" not in result else ""
+    except Exception:  # noqa: BLE001 - el resumen local es opcional
+        return ""
 
 
 def generate_postmortem_summary(issue_id: str, log_path: Path) -> str:

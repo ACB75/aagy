@@ -34,8 +34,8 @@ def test_pull_request_template_has_development_and_parity_checklist() -> None:
 
 
 def test_project_auto_sync_workflow_exists_and_handles_projects_and_labels() -> None:
-    """Verifica el workflow .github/workflows/project-auto-sync.yml (GH #62)."""
-    wf_path = GITHUB_DIR / "workflows" / "project-auto-sync.yml"
+    """Verifica la plantilla opcional de Actions project-auto-sync.yml (GH #62; apagada por defecto, #105)."""
+    wf_path = GITHUB_DIR.parent / "templates" / "github-actions" / "project-auto-sync.yml"
     assert wf_path.is_file(), f"Falta workflow de sincronización: {wf_path}"
     text = wf_path.read_text(encoding="utf-8")
 

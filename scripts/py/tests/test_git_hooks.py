@@ -78,3 +78,10 @@ def test_hook_content_matches_requirements():
     assert "format_commit.py" in msg_text, "commit-msg debe invocar format_commit.py"
     assert "lint-markdown" in pre_text, "pre-commit debe invocar lint-markdown"
 
+
+
+def test_pre_push_runs_local_ci():
+    pre_push = (HOOKS_DIR / "pre-push").read_text(encoding="utf-8")
+    assert "GIT_HOOKS_BYPASS" in pre_push and "ci_local.py" in pre_push
+    for installer in (SCRIPTS_PS1_DIR / "install-git-hooks.ps1", SCRIPTS_SH_DIR / "install-git-hooks.sh"):
+        assert "pre-push" in installer.read_text(encoding="utf-8-sig")

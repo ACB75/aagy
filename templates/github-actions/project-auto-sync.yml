@@ -1,3 +1,6 @@
+# aagy-template: project-auto-sync (opcional; se activa con "python scripts/py/ci_local.py actions on")
+# Etiquetas de PR y sincronización con GitHub Projects. En local: backlog.py gh-sync.
+# En un repo privado, GitHub Actions gasta minutos de pago.
 name: GitHub Projects v2 & PR Auto-Sync
 
 on:

@@ -63,6 +63,14 @@ case "$PHASE" in
     echo "[+] Sincronizando catálogo completo optimizado..."
     cp -R "$REPO_ROOT/skills/"* "$TARGET_DIR/skills/"
     cp "$REPO_ROOT/agents/"*.md "$TARGET_DIR/agents/"
+    # Presupuesto 0 $: sin budget > 0 (AAGY_BUDGET), las skills con cost: paid no se instalan.
+    PYB="$(command -v python3 || command -v python)"
+    if [ -n "$PYB" ] && ! "$PYB" "$REPO_ROOT/scripts/py/aagy_config.py" paid-allowed >/dev/null 2>&1; then
+      for paid in $("$PYB" "$REPO_ROOT/scripts/py/aagy_config.py" paid-skills "$REPO_ROOT/skills"); do
+        rm -rf "$TARGET_DIR/skills/$paid"
+        echo "[-] Skill de pago omitida (presupuesto 0 \$): $paid"
+      done
+    fi
     echo "[OK] Catálogo completo optimizado sincronizado."
     write_install_manifest "$PHASE"
     exit 0
