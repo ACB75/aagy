@@ -1,7 +1,7 @@
 # Estado de Salud y Métricas Operacionales | AAGY / `aagy` Ecosystem
 
 > **Repositorio**: [ACB75/aagy](https://github.com/ACB75/aagy)
-> **Versión**: `5.1.0` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-25
+> **Versión**: `5.1.1` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-25
 > **Estado Operativo Global**: 🟢 **SALUDABLE (VERDE)**
 
 ---
@@ -14,7 +14,7 @@ activas: el presupuesto es 0 $ ([`MANUAL_ci_local.md`](04-operations/runbooks/MA
 | Paso de `ci_local.py` | Qué comprueba | Estado |
 | :--- | :--- | :---: |
 | `markdownlint` | `.markdownlint.json` en todo el repo | ✅ |
-| `pytest` | 474 tests de `scripts/py/tests/` | ✅ |
+| `pytest` | 475 tests de `scripts/py/tests/` | ✅ |
 | `workspace_audit` | Presupuesto de reglas, `docs-map.json`, descripciones ≤ 200 caracteres, esqueleto de workflows, `consumer_refs` | ✅ |
 | `sonar` | Reglas locales tipo SonarQube (`S1192`, `S3776`, `S108`...) | ✅ |
 | `security` | Secretos e inyecciones de comandos | ✅ |
