@@ -9,9 +9,9 @@ opcionales, están apagadas por defecto y solo existen como plantillas en
 así que no puede divergir de lo local (audit_plugin_parity.py lo comprueba).
 
 Pasos por defecto (cada uno se salta si su herramienta o su script no existen):
-markdownlint, pytest, workspace_audit, sonar_audit, security_audit, espejo de
-aagy-ecc y paridad de plugins. Un repo consumidor puede declarar los suyos en
-``ci.steps`` de ``.governance/aagy.json`` (lista de comandos).
+markdownlint, pytest, workspace_audit, sonar_audit, security_audit, esqueleto de
+plantillas, espejo de aagy-ecc y paridad de plugins. Un repo consumidor puede
+declarar los suyos en ``ci.steps`` de ``.governance/aagy.json`` (lista de comandos).
 
 Uso::
 
@@ -88,6 +88,7 @@ def default_steps(root: Path) -> List[Step]:
              needs=("scripts/py/workspace_audit.py",)),
         Step("sonar", (PY, _script(root, "sonar_audit.py")), needs=("scripts/py/sonar_audit.py",)),
         Step("security", (PY, _script(root, "security_audit.py")), needs=("scripts/py/security_audit.py",)),
+        Step("templates", (PY, _script(root, "doc_templates.py"), "check"), needs=("scripts/py/doc_templates.py",)),
         Step("mirror", (PY, _script(root, "sync_aagy_ecc.py"), "--check"), needs=("scripts/py/sync_aagy_ecc.py",)),
         Step("parity", (PY, _script(root, "audit_plugin_parity.py")), needs=("scripts/py/audit_plugin_parity.py",)),
     ]

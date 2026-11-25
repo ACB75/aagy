@@ -1,87 +1,57 @@
-# Fase 1: Toma de Requisitos, Análisis de Superficie e Impacto Home-Lab
+# Fase 1: Toma de requisitos e impacto
 
-> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / Home-Lab  
-> **ID de Tarea**: `<tipo>/<proyecto>/<id>` (ej. `feat/kakebo/export-csv`, `fix/cluster/oom-timeout`)  
-> **Fecha**: `YYYY-MM-DD` | **Autor/Rol**: `<Nombre / Rol>`  
-> **Estado**: `BORRADOR | EN REVISIÓN | APROBADO`  
-
----
-
-## 1. Contexto, Necesidad y Objetivos de Negocio
-
-- **Problema de Negocio / Técnico**: Descripción precisa del problema a resolver, cuello de botella o funcionalidad requerida.
-- **Objetivo Principal**: Resultado observable y medible en 1-2 líneas.
-- **Alcance (`In-Scope`)**: Qué incluye explícitamente esta intervención.
-- **Fuera de Alcance (`Out-of-Scope`)**: Qué queda explícitamente excluido para evitar *scope creep*.
+> **ID de Tarea**: `<id_tarea>`
+> **Fecha**: `YYYY-MM-DD` | **Autor/Rol**: `<autor / rol>`
+> **Estado**: `BORRADOR | EN REVISIÓN | APROBADO`
+> **Ubicación en el repo**: `<carpeta de planes>/REQ_<id_tarea>.md`
 
 ---
 
-## 2. Requisitos Funcionales (`RF`) y Criterios de Aceptación (`CA`)
+## 0. Estado actual
 
-### 2.1. Requisitos Funcionales
+| Pieza | Dónde | Hoy | Problema |
+| :--- | :--- | :--- | :--- |
+| `<componente>` | `<ruta>` | `<comportamiento actual>` | `<qué falla o falta>` |
 
-- **`RF-01`**: `<Descripción exacta de entradas, transformaciones, validaciones de negocio y salidas esperadas>`
-- **`RF-02`**: `<Flujos alternativos, validación de fronteras y manejo de anomalías de dominio>`
+## 1. Contexto y objetivos
 
-### 2.2. Criterios de Aceptación Verificables (Given / When / Then)
+- **Problema**: qué se resuelve y por qué ahora.
+- **Objetivo**: resultado observable en una o dos líneas.
+- **Alcance**: qué entra.
+- **Fuera de alcance**: qué no entra.
 
-- [ ] **`CA-01`**: Dado `<contexto inicial>`, cuando `<acción o llamada>`, entonces `<resultado observable y verificable>`.
-- [ ] **`CA-02`**: Manejo de casos límite: entradas nulas, vacías, fuera de rango o caracteres malformados.
-- [ ] **`CA-03`**: Cobertura de tests unitarios/integración $\ge 80\%$ sobre la nueva lógica.
+## 2. Requisitos funcionales
 
----
+- **RF-01**: entradas, transformaciones, validaciones y salidas esperadas.
+- **RF-02**: flujos alternativos, fronteras y errores.
 
-## 3. Matriz de Impacto en Arquitectura Home-Lab
+## 3. Requisitos no funcionales
 
-| Dimensión Arquitectónica | ¿Impactado? (`SÍ/NO`) | Nivel de Riesgo (`Bajo/Medio/Alto`) | Detalle de la Afectación y Mitigación |
-| :--- | :---: | :---: | :--- |
-| **Paridad `home-lab-sdk`** | `NO` | - | ¿Afecta DTOs, endpoints o modelos compartidos en `home-lab-sdk`? Listar clientes (Java, Go, Python, TS). |
-| **Persistencia PostgreSQL LTS** | `NO` | - | Migraciones DDL, tablas modificadas, volumen de datos o bloqueos (*locks*). |
-| **Ingress Único (`cluster-lb`)** | `NO` | - | Rutas en Traefik / Apache (`*.home.lab`), certificados TLS, red interna `cluster-net`. |
-| **Resolución Split-DNS** | `NO` | - | Nuevos hostnames en CoreDNS / WireGuard (`kakebo.home.lab`, `api.home.lab`). |
-| **Restricciones de Hardware** | `NO` | - | Impacto en CPU/RAM en FRACTAL / NEO. Throttling de memoria configurado. |
-| **Variables `.env` / Secretos** | `NO` | - | Nuevas variables de entorno requeridas en compose o secret manager. |
+- **Rendimiento**: latencia o coste objetivo y complejidad esperada.
+- **Seguridad**: entradas no confiables, secretos, permisos, rutas (amenaza y mitigación).
+- **Coste**: 0 $ por defecto; cualquier servicio de pago se declara aquí.
 
----
+## 4. Impacto y retrocompatibilidad
 
-## 4. Garantía Estricta de Retrocompatibilidad (Zero-Breaking Policy)
+- **Contratos afectados**: APIs, esquemas, ficheros de configuración, CLIs.
+- **¿Rompe algo?**: `NO` o `SÍ` con la ruta de transición (deprecación, doble lectura).
+- **Rollback**: cómo se vuelve atrás.
 
-> **Invariante Canónico**: Queda terminantemente prohibido introducir cambios destructivos o de ruptura en contratos públicos, esquemas de bases de datos compartidas o bibliotecas SDK, salvo autorización expresa justificada.
+<!-- aagy-extensions -->
 
-- **¿Introduce Breaking Changes?**: `[ ] NO (100% Retrocompatible) | [ ] SÍ (Excepción Aprobada)`
-- **Estrategia Aditiva (Non-Breaking)**:
-  - Cómo se asegura que consumidores actuales de la API y datos persistidos continúen operando sin modificación (ej. campos opcionales con valores predeterminados, endpoints v1 coexistiendo con v2).
-- **Si requiere Breaking Change (Ruta de Transición Obligatoria)**:
-  - **Justificación**: ¿Por qué no es viable una solución aditiva?
-  - **Estrategia de Migración Paralela**: Período de deprecación, soporte *dual-read / dual-write* y fechas de transición.
+## 5. Criterios de aceptación
 
----
+- [ ] **CA-01**: Dado `<contexto>`, cuando `<acción>`, entonces `<resultado verificable>`.
+- [ ] **CA-02**: Casos límite: entradas vacías, nulas, fuera de rango o malformadas.
 
-## 5. Compuertas SRE de Rendimiento y Persistencia Segura
+## 6. Paridad aagy ↔ aagy-ecc
 
-### 5.1. Rendimiento y Throttling de Recursos
+Cómo se comporta en los dos plugins. Si un harness no lo permite, declara la asimetría.
 
-- **Latencia Objetivo**: p95 $< 100\text{ ms}$, p99 $< 250\text{ ms}$.
-- **Complejidad Algorítmica**: Tiempo $O(\dots)$ y Espacio $O(\dots)$.
-- **Límites de Memoria Home-Lab**:
-  - *Go Services*: `GOMEMLIMIT=80%` del límite del contenedor (ej. 80MiB para 100MiB).
-  - *JVM (Spring Boot 4)*: `-XX:MaxRAMPercentage=75.0` y liveness/readiness probes $< 3\text{ s}$.
-- **Rotación de Logs en Docker**: `max-size: 10m`, `max-file: 3`.
+## 7. Preguntas abiertas
 
-### 5.2. Persistencia Segura en PostgreSQL LTS Compartido
+- **P-01**: `<pregunta>`. Por defecto: `<valor que se usa si nadie responde>`.
 
-- **Auditoría de Bloqueos DDL**: Prohibido ejecutar bloqueos exclusivos (`ACCESS EXCLUSIVE`) prolongados sobre tablas en producción.
-- **Creación de Índices**: Obligatorio usar `CREATE INDEX CONCURRENTLY` para evitar bloqueo de lecturas/escrituras concurrentes.
-- **Plan de Rollback DDL**: Disponibilidad garantizada de script `down-migration.sql` probado en entorno local.
+## 8. Referencias
 
----
-
-## 6. Threat Modeling y Bastionado de Seguridad
-
-| Vector de Ataque / Amenaza | Riesgo (`Bajo/Medio/Alto/N/A`) | Mitigación y Bastionado Aplicado |
-| :--- | :---: | :--- |
-| **Inyección (SQL, Command, Log)** | | Consultas 100% parametrizadas, APIs tipadas, validación estricta en frontera. |
-| **XSS / CSRF / Path Traversal** | | Sanitización de HTML/URLs, resolución canónica de rutas (`resolve().relative_to()`). |
-| **Autenticación y ReBAC/RBAC** | | Verificación de identidad y roles en capa de servicio contra `whoiam`. |
-| **Exposición de Secretos / Traza** | | Credenciales vía `.env`, mensajes de error genéricos al cliente sin stack traces. |
-| **Denegación de Servicio (DoS)** | | Límites de tamaño de payload, paginación obligatoria y timeouts en llamadas I/O (máx 2s-5s). |
+- `<rutas, ADR, issues>`

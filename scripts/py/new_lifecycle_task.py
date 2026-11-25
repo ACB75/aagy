@@ -21,6 +21,7 @@ _SCRIPT_DIR = str(Path(__file__).resolve().parent)
 if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
+import doc_templates  # noqa: E402
 from docs_map import DocsMap, load_docs_map  # noqa: E402
 from validate_branch import validate_branch_name  # noqa: E402
 
@@ -63,6 +64,7 @@ class ScaffoldContext:
     slug: str
     date_str: str
     templates_dir: Path
+    repo_root: Path
     output_dir: Path
     force: bool
     dry_run: bool
@@ -475,7 +477,7 @@ def _scaffold_todo_quick_entry(
 
 def _scaffold_phase_templates(ctx: ScaffoldContext, phase_key: str) -> List[Path]:
     """Instancia las plantillas de las fases seleccionadas hacia `output_dir`."""
-    if not ctx.templates_dir.exists():
+    if not ctx.templates_dir.exists() and not any(d.is_dir() for d in doc_templates.PLUGIN_TEMPLATE_DIRS):
         raise FileNotFoundError(f"Directorio de plantillas no encontrado: {ctx.templates_dir}")
 
     if not ctx.dry_run:
@@ -487,11 +489,11 @@ def _scaffold_phase_templates(ctx: ScaffoldContext, phase_key: str) -> List[Path
     for prefix, tmpl_filename in PHASE_TEMPLATES:
         if prefix not in selected_prefixes:
             continue
-        tmpl_path = ctx.templates_dir / tmpl_filename
+        tmpl_path = doc_templates.find_template(tmpl_filename, ctx.templates_dir)
         target_path = ctx.output_dir / f"{prefix}_{ctx.slug}.md"
 
-        if not tmpl_path.exists():
-            print(f"{MSG_WARN} Plantilla base no encontrada: {tmpl_path}", file=sys.stderr)
+        if tmpl_path is None:
+            print(f"{MSG_WARN} Plantilla base no encontrada: {ctx.templates_dir / tmpl_filename}", file=sys.stderr)
             continue
 
         if target_path.exists() and not ctx.force:
@@ -499,7 +501,8 @@ def _scaffold_phase_templates(ctx: ScaffoldContext, phase_key: str) -> List[Path
             continue
 
         content = tmpl_path.read_text(encoding=ENCODING_UTF8)
-        rendered = render_template_content(content, ctx.task_id, ctx.date_str)
+        rendered = doc_templates.apply_extensions(
+            render_template_content(content, ctx.task_id, ctx.date_str), prefix, ctx.repo_root)
 
         if ctx.dry_run:
             print(f"{MSG_DRY_RUN} Generaría: {target_path} (de {tmpl_filename})")
@@ -541,6 +544,7 @@ def scaffold_lifecycle_task(
         slug=slug,
         date_str=date_str,
         templates_dir=resolved_templates,
+        repo_root=repo_root,
         output_dir=resolved_output,
         force=force,
         dry_run=dry_run,

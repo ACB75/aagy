@@ -29,9 +29,6 @@
 
 > Que todos los workflows y documentos salgan de una plantilla genérica ampliable y que aagy y aagy-ecc se comporten igual. REQ: doc/06-backlog/plans/REQ_aagy_generic_templates.md
 
-- [ ] **Plantilla base genérica con puntos de extensión**
-  <!-- aagy-task: id=generic-template-base epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=92 -->
-
 - [ ] **Issues, PR y TODO con las mismas secciones y check de paridad issues ↔ TODO**
   <!-- aagy-task: id=generic-template-issues-todo epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=93 deps=92 -->
 

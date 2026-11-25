@@ -1,101 +1,50 @@
-# Fase 4: Propuesta de Commits Atómicos, Pre-Flight Review y Apertura de PR
+# Fase 4: Commits y PR
 
-> **Referencias Previas Verificadas**:  
->
-> - Requisitos & Impacto: [`doc/plan/REQ_<id_tarea>.md`](REQ_<id_tarea>.md)  
-> - Plan de Acción & TDD: [`doc/plan/PLAN_<id_tarea>.md`](PLAN_<id_tarea>.md)  
-> - Docs & Release Notes: [`doc/plan/DOCS_<id_tarea>.md`](DOCS_<id_tarea>.md)  
-> **Fecha**: `YYYY-MM-DD` | **Estado**: `LISTO PARA COMMIT Y PR`  
+> **ID de Tarea**: `<id_tarea>`
+> **Fecha**: `YYYY-MM-DD` | **Autor/Rol**: `<autor / rol>`
+> **Estado**: `BORRADOR | LISTO PARA PR`
+> **Ubicación en el repo**: `<carpeta de planes>/REVIEW_<id_tarea>.md`
 
 ---
 
-## 1. Identificación y Gobernanza de Ramas
+## 0. Estado actual
 
-- **Rama de Origen**: `<tipo>/<proyecto>/<nombre>` (ej. `feat/kakebo/export-csv`, `fix/cluster/oom-timeout`).
-  - *Validación Canónica*: Verificada con éxito mediante `python scripts/py/validate_branch.py --branch <nombre-rama>`.
-- **Rama Destino**: `main` (Trunk canónico).
+- **Rama**: `<tipo>/<proyecto>/<nombre>` (`validate_branch.py`). **Destino**: `main`.
+- **Ficheros**: salida de `git status -s`.
 
----
+## 1. Contexto y objetivos
 
-## 2. Propuesta de Título Estructurado del Commit
+- **Problema**: resumen del REQ.
+- **Objetivo**: integrar el cambio en un único squash reversible.
+- **Alcance**: ficheros de la rama.
+- **Fuera de alcance**: lo que va en otra tarea.
 
-Formato obligatorio: `[type]-[projects]: <título imperativo en minúsculas>`
+## 2. Título y cuerpo
 
-- **Título Propuesto**: `[feat]-[kakebo,sdk]: implementar exportacion de transacciones y sincronizar sdk`
+- **Título**: `[type]-[projects]: <título imperativo>`
+- **Cuerpo** (mismas secciones que la plantilla de PR): Motivación, Issues (`Closes #N`), Checklist, Rollback.
 
----
+## 3. Revisión previa (pre-flight)
 
-## 3. Cuerpo Explicativo Obligatorio (Commit Message & PR Body)
+- [ ] Tests en verde y cobertura ≥ 80 % en la lógica nueva.
+- [ ] Linters, Sonar Rating A y auditoría de seguridad sin hallazgos.
+- [ ] `python scripts/py/ci_local.py run` en verde.
+- [ ] Documentación de la fase 3 en la misma rama.
 
-```text
-Motivación y Contexto:
-- Justificación técnica de la intervención resolviendo la necesidad planteada en la Fase 1.
-- Satisface los criterios de aceptación CA-01, CA-02 y CA-03.
+<!-- aagy-extensions -->
 
-Garantía de Retrocompatibilidad e Impacto en Home-Lab:
-- [x] Zero Breaking Changes: Contratos, endpoints y schemas de PostgreSQL LTS 100% retrocompatibles.
-- [x] Paridad home-lab-sdk: Clientes sincronizados y verificados sin contract drift.
-- [x] SRE & Throttling: Configurado GOMEMLIMIT=80% / límites de memoria y rotación de logs.
+## 4. Criterios de aceptación
 
-Cambios Introducidos:
-- Lógica de negocio y controladores del servicio.
-- Modelos y clientes políglotas en home-lab-sdk/.
-- Tests unitarios e integración (cobertura >= 80%).
-- Notas de la versión en doc/ y espina documental actualizada.
+- [ ] **CA-01**: la PR cumple la plantilla y la fusiona una persona (sin auto-merge).
 
-Verificación de Compuertas de Calidad (Quality Gate Rating A):
-- [x] Tests unitarios pasando al 100%: XX tests superados (código 0).
-- [x] SonarQube Quality Gate: Rating A alcanzado (0 violaciones críticas, Cognitive Complexity <= 15).
-- [x] markdownlint DavidAnson: 100% compliant (--check-only).
-- [x] Auditoría de seguridad estática: 0 vulnerabilidades detectadas / 0 secretos.
+## 5. Paridad aagy ↔ aagy-ecc
 
-Estrategia Fast-Rollback:
-- Reversión atómica en caso de incidente: git revert <sha-del-squash-commit>.
-- Reversión de persistencia si aplica: down-migration.sql verificado.
-```
+`complete-task-pr` en los dos plugins; asimetrías si las hay.
 
----
+## 6. Preguntas abiertas
 
-## 4. Resumen de Archivos a Comprometer (`git status -s`)
+- **P-01**: `<pregunta>`. Por defecto: `<valor>`.
 
-*(Incluye código fuente, pruebas, documentación, notas de la versión y archivado de TODOs)*
+## 7. Referencias
 
-```text
-M  services/kakebo/src/main/java/TransactionController.java
-M  services/kakebo/src/main/java/TransactionService.java
-M  home-lab-sdk/java/src/main/java/TransactionClient.java
-A  services/kakebo/src/test/java/TransactionServiceTest.java
-M  doc/TODO.md
-A  doc/TODO_DONE/TODO_Tarea_export_csv_20261120.md
-A  doc/plan/REQ_kakebo_export_csv.md
-A  doc/plan/PLAN_kakebo_export_csv.md
-A  doc/plan/DOCS_kakebo_export_csv.md
-M  doc/STATUS.md
-M  doc/LOG.md
-```
-
----
-
-## 5. Invocación Estandarizada del Cierre y Promoción Multi-Tier
-
-### 5.1. Ejecución del Ciclo Automatizado de PR
-
-```powershell
-# 1. Modo de revisión previa sin mutaciones:
-pwsh -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly
-
-# 2. Confirmación y fusión atómica tras visto bueno del usuario:
-pwsh -File scripts/ps1/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
-```
-
-### 5.2. Promoción Multi-Tier Home-Lab (ADR-0006)
-
-Tras la fusión en `main` (entorno `LOCAL`), disparar la promoción hacia servidores FRACTAL y NEO:
-
-```powershell
-# Promoción a SANDBOX (Servidor FRACTAL):
-pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag vX.Y.Z-sandbox
-
-# Promoción a LIVE (Servidor NEO):
-pwsh -File scripts/ps1/git-flow-helper.ps1 -Action promote -Tag vX.Y.Z
-```
+- `REQ_<id_tarea>.md`, `PLAN_<id_tarea>.md`, `DOCS_<id_tarea>.md`
