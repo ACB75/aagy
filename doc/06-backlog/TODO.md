@@ -15,9 +15,6 @@
 
 > Que el plugin no lleve datos de ningún proyecto, usuario ni máquina, no cueste dinero y no duplique lógica ni tokens. Propuesta P1..P6 de la auditoría del 2026-11-24. P2 y P3 van en #100 y los hooks de P5 en #96.
 
-- [ ] **Presupuesto 0 $: CI local en pre-push y Actions opcionales apagadas (incluye la Idea 2)**
-  <!-- aagy-task: id=budget-zero epic=plugin-agnostico-presupuesto-0-y-sin-duplicar-103 issue=105 deps=81 -->
-
 - [ ] **Lanzador único y fuera duplicados (envoltorios, skills repetidas, nombres de usuario)**
   <!-- aagy-task: id=single-launcher epic=plugin-agnostico-presupuesto-0-y-sin-duplicar-103 issue=106 deps=95,96 -->
 

@@ -1,0 +1,34 @@
+#!/bin/sh
+# Git hook: pre-push
+# CI local de aagy (presupuesto 0 $): las mismas comprobaciones que la plantilla opcional
+# de GitHub Actions, ejecutadas en el equipo antes de publicar.
+# Saltar una vez: GIT_HOOKS_BYPASS=1 git push   (o AAGY_CI_SKIP=1)
+
+if [ "$GIT_HOOKS_BYPASS" = "1" ]; then
+    exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null)"
+if [ -z "$REPO_ROOT" ]; then
+    REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+fi
+
+SCRIPT="$REPO_ROOT/scripts/py/ci_local.py"
+if [ ! -f "$SCRIPT" ]; then
+    exit 0
+fi
+
+PY="$(command -v python3 || command -v python)"
+if [ -z "$PY" ]; then
+    echo "[PRE-PUSH] Python no encontrado; CI local omitida."
+    exit 0
+fi
+
+echo "[PRE-PUSH] CI local (scripts/py/ci_local.py run)..."
+"$PY" "$SCRIPT" run
+STATUS=$?
+if [ $STATUS -ne 0 ]; then
+    echo "[PRE-PUSH] La CI local falla: push cancelado. Corrige o usa GIT_HOOKS_BYPASS=1."
+    exit 1
+fi
+exit 0

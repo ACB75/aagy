@@ -64,8 +64,8 @@ EXIT_INVALID = 2
 
 # Claves de primer nivel que entiende cada capa. Una clave desconocida no rompe
 # nada, pero el doctor avisa (suele ser una errata).
-PROJECT_KEYS = frozenset({"projects", "sdk", "quality_gates", "ingress", "ci", "local_model"})
-ENV_KEYS = frozenset({"hosts", "domains", "paths", "local_model", "secrets_env"})
+PROJECT_KEYS = frozenset({"projects", "sdk", "quality_gates", "ingress", "ci", "local_model", "budget"})
+ENV_KEYS = frozenset({"hosts", "domains", "paths", "local_model", "secrets_env", "budget"})
 
 # Un valor con pinta de secreto no debe estar en el fichero de entorno.
 _SECRET_NAME_RE = re.compile(r"(token|secret|password|passwd|api[_-]?key|private[_-]?key)", re.IGNORECASE)
@@ -188,6 +188,33 @@ def get(key: str, default: Any = None, start: Optional[Path] = None, environ: Op
     return load(start, environ).get(key, default)
 
 
+def paid_allowed(start: Optional[Path] = None, environ: Optional[Mapping[str, str]] = None) -> bool:
+    """Presupuesto 0 $ por defecto: solo con ``budget`` (``AAGY_BUDGET``) mayor que 0 se activa algo de pago."""
+    raw = get("budget", 0, start, environ)
+    try:
+        return float(raw) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+_COST_RE = re.compile(r"^\s*cost:\s*['\"]?(free|paid)['\"]?\s*$", re.MULTILINE)
+
+
+def skill_cost(skill_md: Path) -> str:
+    """``free``, ``paid`` o ``""`` según el frontmatter ``cost:`` (en la raíz o en ``metadata``)."""
+    try:
+        text = skill_md.read_text(encoding=ENCODING, errors="replace")
+    except OSError:
+        return ""
+    head = text.split("---", 2)[1] if text.startswith("---") and text.count("---") >= 2 else ""
+    match = _COST_RE.search(head)
+    return match.group(1) if match else ""
+
+
+def paid_skills(skills_dir: Path) -> List[str]:
+    return sorted(p.parent.name for p in skills_dir.glob("*/SKILL.md") if skill_cost(p) == "paid")
+
+
 def _unknown_keys(layer: Layer, known: frozenset) -> List[str]:
     return sorted(k for k in layer.data if k not in known)
 
@@ -232,10 +259,20 @@ def _env_problems(cfg: Config) -> List[str]:
     return problems
 
 
+def _actions_problems(cfg: Config) -> List[str]:
+    """Workflows de Actions activos en un repo que declara ``ci.private``: gastan minutos de pago."""
+    if cfg.project.path is None or not cfg.get("ci.private", False):
+        return []
+    workflows = cfg.project.path.parent.parent / ".github" / "workflows"
+    if workflows.is_dir() and any(workflows.glob("*.y*ml")):
+        return [f"{workflows} tiene workflows y el repo es privado (ci.private): gastan minutos de pago. Usa ci_local.py actions off."]
+    return []
+
+
 def doctor_findings(start: Optional[Path] = None, environ: Optional[Mapping[str, str]] = None) -> Tuple[str, str, List[str]]:
     """Resultado del check de configuración externa para los dos doctors: (estado, mensaje, evidencias)."""
     cfg = load(start, environ)
-    problems = _layer_problems(cfg.project, PROJECT_KEYS) + _env_problems(cfg)
+    problems = _layer_problems(cfg.project, PROJECT_KEYS) + _env_problems(cfg) + _actions_problems(cfg)
     evidence = [
         f"Proyecto: {cfg.project.path or 'sin ' + PROJECT_FILE.as_posix()}",
         f"Entorno: {cfg.env.path or 'sin ' + ENV_DIR_VAR}",
@@ -286,6 +323,18 @@ def _cmd_check(args: argparse.Namespace, _cfg: Config) -> int:
     return EXIT_INVALID if status == STATUS_WARN else EXIT_OK
 
 
+def _cmd_paid_allowed(args: argparse.Namespace, _cfg: Config) -> int:
+    allowed = paid_allowed(args.start)
+    print("yes" if allowed else "no")
+    return EXIT_OK if allowed else EXIT_MISSING
+
+
+def _cmd_paid_skills(args: argparse.Namespace, _cfg: Config) -> int:
+    for name in paid_skills(args.skills_dir):
+        print(name)
+    return EXIT_OK
+
+
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Configuración externa de aagy (proyecto, entorno, variables AAGY_*).")
     parser.add_argument("--start", type=Path, default=None, help="Directorio desde el que buscar .governance/aagy.json.")
@@ -295,6 +344,9 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p_get.add_argument("--default", default=None, help="Valor si ninguna capa tiene la clave.")
     sub.add_parser("show", help="Muestra las capas cargadas.")
     sub.add_parser("check", help="Valida las capas (lo mismo que el check del doctor).")
+    sub.add_parser("paid-allowed", help="yes/no: ¿se puede activar algo de pago? (budget o AAGY_BUDGET > 0).")
+    p_paid = sub.add_parser("paid-skills", help="Skills con cost: paid en una carpeta de skills.")
+    p_paid.add_argument("skills_dir", type=Path)
     return parser.parse_args(argv)
 
 
@@ -304,7 +356,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
     try:
         cfg = load(args.start)
-        handler = {"get": _cmd_get, "show": _cmd_show, "check": _cmd_check}[args.command]
+        handler = {"get": _cmd_get, "show": _cmd_show, "check": _cmd_check,
+                   "paid-allowed": _cmd_paid_allowed, "paid-skills": _cmd_paid_skills}[args.command]
         return handler(args, cfg)
     except ConfigError as exc:
         print(f"[aagy-config] {exc}", file=sys.stderr)

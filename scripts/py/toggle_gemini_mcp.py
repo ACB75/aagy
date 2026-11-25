@@ -115,6 +115,13 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return 0
 
     if args.enable:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import aagy_config  # noqa: PLC0415
+
+        if not aagy_config.paid_allowed():
+            logger.error("[BUDGET] gemini-mcp usa la API de Gemini (de pago al pasar el nivel gratuito). Con presupuesto 0 $ "
+                         "no se activa: usa el modelo local (local_run del servidor aagy-local) o define AAGY_BUDGET>0.")
+            return 2
         success = toggle(config_file, enable=True)
         return 0 if success else 1
 

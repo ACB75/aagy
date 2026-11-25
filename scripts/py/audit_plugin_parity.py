@@ -210,6 +210,57 @@ def _check_claude_plugin(repo_root: Path, root_version: str, discrepancies: List
     return claude_name, _count_dirs(claude_dir / DIR_SKILLS), _count_md(claude_dir / DIR_AGENTS)
 
 
+CI_TEMPLATE = Path("templates") / "github-actions" / "ci-quality-gate.yml"
+_RUN_LINE = re.compile(r"^\s*(?:-\s*)?run:\s*(\|)?\s*(.*)$")
+_ALLOWED_RUN = re.compile(r"^(npm install|python -m pip install|pip install|python scripts/py/ci_local\.py run)")
+_PAID_HINT = re.compile(r"(EXA_API_KEY|FIRECRAWL_API_KEY|exa MCP|firecrawl)", re.IGNORECASE)
+
+
+def _template_commands(text: str) -> List[str]:
+    """Comandos de los pasos ``run:`` de un workflow (una línea o bloque ``|``)."""
+    commands: List[str] = []
+    lines = text.splitlines()
+    for idx, line in enumerate(lines):
+        match = _RUN_LINE.match(line)
+        if not match:
+            continue
+        if match.group(2):
+            commands.append(match.group(2).strip())
+            continue
+        indent = len(line) - len(line.lstrip())
+        for nxt in lines[idx + 1:]:
+            if nxt.strip() and len(nxt) - len(nxt.lstrip()) <= indent:
+                break
+            if nxt.strip():
+                commands.append(nxt.strip())
+    return commands
+
+
+def _check_ci_template(repo_root: Path, discrepancies: List[str]) -> None:
+    """La plantilla de Actions solo puede llamar a ci_local.py (paridad con el pre-push local)."""
+    template = repo_root / CI_TEMPLATE
+    if not template.is_file():
+        return
+    text = template.read_text(encoding="utf-8", errors="replace")
+    extra = [cmd for cmd in _template_commands(text) if not _ALLOWED_RUN.match(cmd)]
+    if extra:
+        discrepancies.append(f"'{CI_TEMPLATE.as_posix()}' ejecuta pasos que ci_local.py no ejecuta: {extra[0]}")
+    if "ci_local.py run" not in text:
+        discrepancies.append(f"'{CI_TEMPLATE.as_posix()}' no llama a 'python scripts/py/ci_local.py run'.")
+
+
+def _check_paid_skills(repo_root: Path, discrepancies: List[str]) -> None:
+    """Toda skill que dependa de una API de pago declara ``cost: paid`` (presupuesto 0 $)."""
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import aagy_config  # noqa: PLC0415
+
+    for skill_md in sorted((repo_root / DIR_SKILLS).glob("*/SKILL.md")):
+        name = skill_md.parent.name
+        head = skill_md.read_text(encoding="utf-8", errors="replace")[:600]
+        if _PAID_HINT.search(head) and aagy_config.skill_cost(skill_md) != "paid":
+            discrepancies.append(f"La skill '{name}' usa una API de pago y no declara 'cost: paid' en su frontmatter.")
+
+
 def audit_parity(repo_root: Path) -> ParityAuditResult:
     """
     Ejecuta la auditoría de paridad completa entre Anything Antigravity y Claude Code.
@@ -221,6 +272,8 @@ def audit_parity(repo_root: Path) -> ParityAuditResult:
     root_version = str(root_data.get("version", "")).strip()
     claude_name, claude_skills_count, claude_agents_count = _check_claude_plugin(repo_root, root_version, discrepancies)
     _check_doctor_parity(repo_root, discrepancies)
+    _check_ci_template(repo_root, discrepancies)
+    _check_paid_skills(repo_root, discrepancies)
 
     root_skills_count = _count_dirs(repo_root / DIR_SKILLS)
     root_agents_count = _count_md(repo_root / DIR_AGENTS)

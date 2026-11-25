@@ -1,0 +1,38 @@
+# aagy-template: ci-quality-gate (opcional; se activa con "python scripts/py/ci_local.py actions on")
+# Solo llama a scripts/py/ci_local.py, la misma CI que el hook pre-push. No añadas pasos aquí:
+# añádelos a ci_local.py (audit_plugin_parity.py falla si este fichero ejecuta otra cosa).
+# En un repo privado, GitHub Actions gasta minutos de pago.
+name: CI Quality Gate (aagy ci_local)
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  quality-gate:
+    name: Verify Linters, Quality Gate A & Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          npm install -g markdownlint-cli
+          python -m pip install --upgrade pip pytest
+
+      - name: Run local CI
+        run: python scripts/py/ci_local.py run

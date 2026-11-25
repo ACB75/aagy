@@ -1,6 +1,6 @@
 ﻿<#
 .SYNOPSIS
-    Instala o desinstala los Git hooks nativos (pre-commit, commit-msg) en .git/hooks/.
+    Instala o desinstala los Git hooks nativos (pre-commit, commit-msg, pre-push) en .git/hooks/.
 .DESCRIPTION
     Copia scripts/py/hooks/* a .git/hooks/, asegurando validación determinista
     de mensajes de commit y archivos Markdown staged en cada confirmación.
@@ -26,7 +26,7 @@ if (-not (Test-Path $GitHooksDir)) {
     exit 1
 }
 
-$HookNames = @("pre-commit", "commit-msg")
+$HookNames = @("pre-commit", "commit-msg", "pre-push")
 
 if ($Uninstall) {
     Write-Host "[+] Desinstalando Git hooks de aagy en $GitHooksDir..."
@@ -62,5 +62,5 @@ foreach ($name in $HookNames) {
     Write-Host "  [+] Instalado hook: $name"
 }
 
-Write-Host "[OK] Git hooks (pre-commit, commit-msg) instalados con éxito."
+Write-Host "[OK] Git hooks (pre-commit, commit-msg, pre-push) instalados con éxito."
 exit 0

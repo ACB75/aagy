@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Instala o desinstala los Git hooks nativos (pre-commit, commit-msg) en .git/hooks/
+# Instala o desinstala los Git hooks nativos (pre-commit, commit-msg, pre-push) en .git/hooks/
 
 set -e
 
@@ -13,7 +13,7 @@ if [ ! -d "$GIT_HOOKS_DIR" ]; then
     exit 1
 fi
 
-HOOKS="pre-commit commit-msg"
+HOOKS="pre-commit commit-msg pre-push"
 
 if [ "$1" = "--uninstall" ] || [ "$1" = "-u" ]; then
     echo "[+] Desinstalando Git hooks en $GIT_HOOKS_DIR..."
@@ -38,5 +38,5 @@ for name in $HOOKS; do
     fi
 done
 
-echo "[OK] Git hooks (pre-commit, commit-msg) instalados con éxito."
+echo "[OK] Git hooks (pre-commit, commit-msg, pre-push) instalados con éxito."
 exit 0

@@ -202,6 +202,17 @@ if ($Phase -eq "all") {
     Write-Host "[+] Sincronizando catálogo completo optimizado..." -ForegroundColor Cyan
     Copy-Item -Path (Join-Path $SkillsSource "*") -Destination (Join-Path $destRoot "skills") -Recurse -Force
     Copy-Item -Path (Join-Path $AgentsSource "*.md") -Destination (Join-Path $destRoot "agents") -Force
+    # Presupuesto 0 $: sin budget > 0 (AAGY_BUDGET), las skills con cost: paid no se instalan.
+    $configPy = Join-Path $RepoRoot "scripts\py\aagy_config.py"
+    & python $configPy paid-allowed *> $null
+    if ($LASTEXITCODE -ne 0) {
+        foreach ($paid in (& python $configPy paid-skills $SkillsSource)) {
+            if ($paid) {
+                Remove-Item -Path (Join-Path (Join-Path $destRoot "skills") $paid) -Recurse -Force -ErrorAction SilentlyContinue
+                Write-Host "[-] Skill de pago omitida (presupuesto 0 `$): $paid" -ForegroundColor Yellow
+            }
+        }
+    }
     Write-Host "[OK] Catálogo completo optimizado sincronizado en $destRoot." -ForegroundColor Green
     Write-InstallManifest -InstalledPhase $Phase
     exit 0
