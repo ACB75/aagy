@@ -110,7 +110,7 @@ Los dos plugins usan los mismos motores Python (`scripts/py/hook_safety.py`, `ho
 solo llaman al motor. En `aagy`, `hooks.json` usa `${AAGY_PLUGIN_ROOT}` y el instalador lo sustituye por
 la carpeta del plugin, como `${CLAUDE_PLUGIN_ROOT}` en `aagy-ecc`.
 
-Antigravity no tiene los eventos `SessionStart`, `PreCompact` ni `SessionEnd`. Así se cubren:
+Antigravity no tiene los eventos `SessionStart`, `PreCompact`, `SessionEnd` ni `Notification`. Así se cubren:
 
 | Momento | Claude Code | Antigravity |
 | :--- | :--- | :--- |
@@ -118,6 +118,7 @@ Antigravity no tiene los eventos `SessionStart`, `PreCompact` ni `SessionEnd`. A
 | Compactación | `PreCompact` (`checkpoint`) | `checkpoint` en cada `Stop` |
 | Fin de sesión | `SessionEnd` (`handoff`) | `checkpoint` en cada `Stop` y caducidad del claim (`AAGY_BACKLOG_TTL_HOURS`) |
 | Pregunta antes de leer un fichero privado | `ask` | Solo admite `allow` o `deny`: deniega y propone `local_run` |
+| Aviso de escritorio al pedir permiso | `Notification` (`aagy_notify.py`) | Sin evento: solo avisa en `Stop` (ver `MANUAL_ui.md`) |
 
 `audit_plugin_parity.py` falla si un evento compartido usa motores distintos o si aparece una asimetría
 no declarada (`HOOK_ASYMMETRY_EVENTS`).

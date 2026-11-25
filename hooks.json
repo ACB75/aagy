@@ -132,5 +132,19 @@
         ]
       }
     ]
+  },
+  "aagy-notify": {
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${AAGY_PLUGIN_ROOT}/scripts/py/aagy_notify.py\" --event stop --format agy",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }

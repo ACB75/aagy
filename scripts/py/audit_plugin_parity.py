@@ -264,8 +264,9 @@ def _check_paid_skills(repo_root: Path, discrepancies: List[str]) -> None:
 
 
 # Eventos de Claude Code sin equivalente en Antigravity (asimetría documentada en
-# MANUAL_aagy_ecc_parity_and_migration.md): se cubren con Stop + TTL y con `claim`.
-HOOK_ASYMMETRY_EVENTS = frozenset({"SessionStart", "PreCompact", "SessionEnd"})
+# MANUAL_aagy_ecc_parity_and_migration.md): se cubren con Stop + TTL y con `claim`. Notification
+# (avisos de permiso, MANUAL_ui.md) no tiene equivalente y no hace falta cubrirlo.
+HOOK_ASYMMETRY_EVENTS = frozenset({"SessionStart", "PreCompact", "SessionEnd", "Notification"})
 AGY_PLUGIN_ROOT_REF = "${AAGY_PLUGIN_ROOT}/"
 FILE_HOOKS = "hooks.json"
 DIR_SCRIPTS_PREFIX = "scripts/"

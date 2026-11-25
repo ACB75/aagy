@@ -15,9 +15,16 @@ y nunca bloquean por error propio (fail-open). En `aagy`, el instalador sustituy
 | Inicio | `SessionStart` | `scripts/hooks/session_start_rules.py`, `agent_worktree.py recycle` | Asimetría: sin evento |
 | Compactación | `PreCompact` | `backlog.py checkpoint --auto` | Asimetría: sin evento |
 | Fin de sesión | `SessionEnd` | `backlog.py handoff --auto` | Asimetría: sin evento |
+| Inicio (UI) | `SessionStart` `startup` | `aagy_ui.py --quiet repair` | Asimetría: Antigravity no tiene status line |
+| Fin de turno (UI) | `Stop` | `aagy_notify.py --event stop` | `Stop`, `--format agy` |
+| Permiso o espera | `Notification` | `aagy_notify.py --event notification` | Asimetría: sin evento |
 
-`audit_plugin_parity.py` comprueba que los eventos y los motores coinciden, salvo esas tres
+`audit_plugin_parity.py` comprueba que los eventos y los motores coinciden, salvo esas cuatro
 asimetrías, y que el `hooks.json` raíz no usa rutas relativas. Las asimetrías y cómo se cubren
 están en `doc/01-architecture/MANUAL_aagy_ecc_parity_and_migration.md`.
+
+- **UI**: `repair` actualiza la ruta de la status line de aagy si el plugin cambió de versión. `aagy_notify.py`
+  avisa en el escritorio al pedir permiso y al acabar un turno de más de `ui.notify_min_s` (30 s); se apaga con
+  `ui.notify=off` y no hace nada sin escritorio. Ver `doc/04-operations/runbooks/MANUAL_ui.md`.
 
 `scripts/py/` es una copia generada desde la raíz del repositorio; no se edita a mano.
