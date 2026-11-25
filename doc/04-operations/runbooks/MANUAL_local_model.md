@@ -40,6 +40,20 @@ El plugin no trae nombres de modelo. Se leen con `aagy_config` (DOC-17):
   `AAGY_LOCAL_MODEL_NAME`, `AAGY_LOCAL_AGENT_MODEL`, `AAGY_LOCAL_FIM_MODEL`,
   `AAGY_LOCAL_NUM_CTX`, `AAGY_LOCAL_TIMEOUT_S`.
 
+La forma rápida de configurar una máquina es `setup`. Escribe solo la sección `local_model` de
+`env.json` (el resto se conserva), comprueba qué modelos faltan en Ollama, los descarga con `--pull`
+y registra el servidor MCP en Antigravity con el Python actual:
+
+```text
+python scripts/py/local_model.py setup --tool <modelo> --only <modelo> --fim <modelo> [--pull]
+python scripts/py/local_model.py setup --env-dir <carpeta privada> ...   # si AAGY_ENV_DIR no está
+```
+
+Claude Code no necesita registro: `aagy-ecc` trae el servidor en su `.mcp.json`. Los dos harness
+lo leen de `AAGY_ENV_DIR`, así que esa variable tiene que estar en el entorno del usuario, no solo
+en una terminal. Con Ollama y el modelo de herramienta descargado, el modo `auto` pasa a `tool` sin
+más pasos; `local_model.py off` lo apaga.
+
 Tareas propias: `local_model.tasks` añade una tarea (`instruction`, `params`,
 `format` `text` o `json`, `max_chars`) o quita una con `null`.
 
@@ -51,6 +65,7 @@ python scripts/py/local_model.py on|off|auto   # guarda local_model.mode
 python scripts/py/local_model.py bench         # precisión y tokens/s
 python scripts/py/local_model.py usage         # llamadas registradas, sin contenido
 python scripts/py/local_model.py register-agy  # registra el servidor en Antigravity
+python scripts/py/local_model.py setup ...     # configura la máquina (sección 2)
 ```
 
 En Claude Code, `aagy-ecc` registra el servidor en su `.mcp.json`. Los ficheros de

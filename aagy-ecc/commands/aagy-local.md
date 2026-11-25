@@ -17,6 +17,7 @@ Para ver o cambiar el modo del modelo local, medirlo o revisar su uso.
 /aagy-local on|off|auto
 /aagy-local bench      # mide precisión y tokens/s de los modelos configurados
 /aagy-local usage      # resumen del registro de uso (sin contenido)
+/aagy-local setup --tool <m> --only <m> --fim <m> [--pull]   # configura la máquina
 ```
 
 ## Qué hacer
@@ -28,6 +29,8 @@ desde la carpeta del repo en el que trabajas.
 1. Sin argumentos: `local_model.py status` y resume en una línea.
 2. `on`, `off`, `auto`, `bench`, `usage`: `local_model.py <subcomando>`. Los modos se guardan como `local_model.mode` en
    `.governance/aagy.json`. Di que el cambio de herramientas MCP se ve en la próxima sesión.
+3. `setup`: `local_model.py setup --no-agy` con los argumentos del usuario (Antigravity se registra desde su
+   skill). Los modelos los elige el usuario; no los inventes.
 
 ## Reglas
 

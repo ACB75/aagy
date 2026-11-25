@@ -1,7 +1,7 @@
 # Estado de Salud y Métricas Operacionales | AAGY / `aagy` Ecosystem
 
 > **Repositorio**: [ACB75/aagy](https://github.com/ACB75/aagy)
-> **Versión**: `5.1.1` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-25
+> **Versión**: `5.2.0` (`/doc` v2) | **Fecha de Auditoría**: 2026-11-25
 > **Estado Operativo Global**: 🟢 **SALUDABLE (VERDE)**
 
 ---

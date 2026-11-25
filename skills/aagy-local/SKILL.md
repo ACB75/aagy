@@ -24,6 +24,7 @@ de Claude Code: los dos usan `scripts/py/local_model.py` y el mismo servidor MCP
 /aagy-local bench      # mide precisión y tokens/s de los modelos configurados
 /aagy-local usage      # resumen del registro de uso (sin contenido)
 /aagy-local register   # registra aagy-local en mcp_config.json de Antigravity
+/aagy-local setup --tool <m> --only <m> --fim <m> [--pull]   # configura la máquina
 ```
 
 ## Qué hacer
@@ -34,7 +35,8 @@ Ejecuta desde la carpeta del repo en el que trabajas.
 
 1. Sin argumentos: `local_model.py status` y resume en una línea.
 2. `on`, `off`, `auto`, `bench`, `usage`: `local_model.py <subcomando>`. Los modos se guardan como `local_model.mode` en `.governance/aagy.json`.
-3. `register`: `local_model.py register-agy` y pide reiniciar Antigravity para que cargue el servidor.
+3. `setup`: `local_model.py setup` con los argumentos del usuario. Los modelos los elige el usuario; no los inventes.
+4. `register`: `local_model.py register-agy` y pide reiniciar Antigravity para que cargue el servidor.
 
 ## Reglas
 
