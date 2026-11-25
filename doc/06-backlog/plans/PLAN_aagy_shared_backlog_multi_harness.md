@@ -85,7 +85,7 @@ Un corte por límite de uso puede llegar sin aviso, cuando ningún hook se ejecu
 
 ---
 
-## 3. Paridad `home-lab-sdk`
+## 3. Paridad `<repo>-sdk`
 
 No aplica.
 
@@ -118,7 +118,7 @@ No aplica.
 - [x] `pytest scripts/py/tests -q` (cobertura ≥ 80 % en `backlog.py`).
 - [x] `sync_aagy_ecc.py --check` y `audit-plugin-parity` en verde (`CA-05`).
 - [x] `lint-markdown` y `map-docs`.
-- [x] Prueba manual en FRACTAL (`CA-01`, `CA-02`, `CA-07`, `CA-09`): Claude reclama, corta sesión, agy arranca y continúa.
+- [x] Prueba manual en equipo local (`CA-01`, `CA-02`, `CA-07`, `CA-09`): Claude reclama, corta sesión, agy arranca y continúa.
 
 ### 4.5. Documentación
 

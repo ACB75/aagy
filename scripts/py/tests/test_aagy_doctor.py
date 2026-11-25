@@ -146,7 +146,7 @@ def test_catalog_detects_missing_phase_items_and_bad_frontmatter(tmp_path: Path,
 def test_expected_catalog_for_all_and_unknown_phase(repo: Path):
     skills, agents = doc.expected_catalog(repo, "all")
     assert skills == ("aagy-doctor", "extra", "s1") and agents == ("a1.md",)
-    assert doc.expected_catalog(repo, "kakebo") is None
+    assert doc.expected_catalog(repo, "app") is None
     assert doc.expected_catalog(None, "generic") is None
     assert doc.expected_catalog(repo, "generic") == (("s1", "aagy-doctor"), ("a1.md",))
 
@@ -293,7 +293,7 @@ def test_real_generic_install_from_this_repo(tmp_path: Path):
 
 
 def test_doc14_skips_outside_aagy_repo(tmp_path: Path, plugin: Path):
-    other = tmp_path / "home-lab"
+    other = tmp_path / "consumer"
     (other / ".git").mkdir(parents=True)
     result = _run(_ctx(tmp_path, plugin, repo=other), "DOC-14")
     assert result.status == core.STATUS_SKIP

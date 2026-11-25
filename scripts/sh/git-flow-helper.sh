@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
-# Asistente de ciclo de vida Git para el Monorepo Home-Lab (Trunk-Based Development con Promoción y PRs).
+# Asistente de ciclo de vida Git para cualquier repo consumidor (Trunk-Based Development con promoción y PRs).
+# Los hosts Live y Sandbox salen de aagy_config (hosts.live, hosts.sandbox); no hay valores por defecto.
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -40,9 +41,11 @@ if [ "$ACTION" = "promote" ]; then
     fi
 
     if [ "$DEPLOY" -eq 1 ]; then
-        TARGET_HOST="FRACTAL (192.168.1.100)"
-        if [ "$ENV" = "live" ]; then
-            TARGET_HOST="NEO (192.168.1.200)"
+        PYTHON="$(command -v python3 || command -v python)"
+        if ! TARGET_HOST="$("$PYTHON" "$SCRIPT_DIR/../py/aagy_config.py" get "hosts.$ENV" 2>/dev/null)" || [ -z "$TARGET_HOST" ]; then
+            ENV_UPPER="$(printf '%s' "$ENV" | tr '[:lower:]' '[:upper:]')"
+            echo "Falta el host de '$ENV'. Declara 'hosts.$ENV' en <AAGY_ENV_DIR>/aagy/env.json o exporta AAGY_HOSTS_$ENV_UPPER." >&2
+            exit 1
         fi
 
         echo "[+] Iniciando pipeline de despliegue automatizado hacia entorno '$ENV' ($TARGET_HOST)..."

@@ -9,9 +9,9 @@
 
 | Carpeta | Quién | Estado en reposo |
 | :--- | :--- | :--- |
-| `C:\Workspace\projects\home-lab` | Master | `main` |
-| `C:\Workspace\projects\home-lab-aagy` | Antigravity | desacoplado en `origin/main` |
-| `C:\Workspace\projects\home-lab-aagy-ecc` | Claude Code | desacoplado en `origin/main` |
+| `<padre>\app` | Master | `main` |
+| `<padre>\app-aagy` | Antigravity | desacoplado en `origin/main` |
+| `<padre>\app-aagy-ecc` | Claude Code | desacoplado en `origin/main` |
 
 Lo mismo para `aagy` (`aagy-aagy`, `aagy-aagy-ecc`) y cualquier repo. Los tres
 checkouts son el mismo clon: comparten ramas, `git fetch` y el estado del backlog.
@@ -19,14 +19,14 @@ checkouts son el mismo clon: comparten ramas, `git fetch` y el estado del backlo
 ## 2. Puesta en marcha (una vez por repo)
 
 ```powershell
-cd C:\Workspace\projects\home-lab
+cd <padre>\app
 pwsh -File scripts/ps1/agent-worktree.ps1 init
 pwsh -File scripts/ps1/agent-worktree.ps1 status
 ```
 
 Antes, cierra o entrega (`backlog.py handoff`) las sesiones de agente que estén
-trabajando en el principal. Después abre `home-lab-aagy` en Antigravity y
-`home-lab-aagy-ecc` en Claude Code.
+trabajando en el principal. Después abre `app-aagy` en Antigravity y
+`app-aagy-ecc` en Claude Code.
 
 ## 3. Ciclo de una tarea
 

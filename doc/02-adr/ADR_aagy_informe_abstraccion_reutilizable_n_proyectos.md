@@ -7,9 +7,9 @@
 
 ## 1. Motivación y Objetivo
 
-El conjunto de reglas, subagentes, skills y automatizaciones desarrolladas en el marco del Home-Lab ha alcanzado un grado de madurez y rigor de nivel industrial (SRE Baseline, SonarQube Rating A, Trunk-Based PRs, 7-phase meta-prompts).
+El conjunto de reglas, subagentes, skills y automatizaciones desarrolladas en el marco del proyecto consumidor ha alcanzado un grado de madurez y rigor de nivel industrial (SRE Baseline, SonarQube Rating A, Trunk-Based PRs, 7-phase meta-prompts).
 
-Sin embargo, para poder **utilizar este sistema en cualquier empresa externa, cliente o nuevo proyecto independiente**, es imprescindible desacoplar todas las dependencias específicas del Home-Lab (nombres de servicios, servidores locales, dominios DNS domésticos y reglas de portal), garantizando que:
+Sin embargo, para poder **utilizar este sistema en cualquier empresa externa, cliente o nuevo proyecto independiente**, es imprescindible desacoplar todas las dependencias específicas del proyecto consumidor (nombres de servicios, servidores locales, dominios DNS domésticos y reglas de portal), garantizando que:
 
 1. No exista **fuga de datos personales ni infraestructura privada**.
 2. Las reglas globales sean **100% agnósticas** al dominio de negocio.
@@ -19,12 +19,12 @@ Sin embargo, para poder **utilizar este sistema en cualquier empresa externa, cl
 
 ## 2. Matriz de Acoplamientos Previos vs. Solución Agnóstica
 
-| Área / Componente | Acoplamiento Previo (Home-Lab) | Solución Agnóstica (`aagy` para $N$ Proyectos) |
+| Área / Componente | Acoplamiento Previo (proyecto consumidor) | Solución Agnóstica (`aagy` para $N$ Proyectos) |
 | ----------------- | ------------------------------ | ------------------------------------------------- |
-| **Scopes de Commits** | `[cluster]`, `[kakebo]`, `[whoiam]`, `[net]` hardcodeados en validadores y reglas. | Formato parametrizado `[type]-[scope]: <title>`, donde `[scope]` se autodescubre o se configura en `.agents/config.json`. |
-| **Rutas del Monorepo** | Rutas fijas `C:\Workspace\projects\home-lab\` en scripts Python y PowerShell. | Detección dinámica de la raíz del proyecto (`git rev-parse --show-toplevel` o variable `WORKSPACE_ROOT`). |
-| **Reglas de Portal Web** | Invariante de sincronización de `/portal` en `cmd/server/main.go`. | Trasladado exclusivamente al nivel de proyecto (`home-lab/.agents/rules/portal.md`). El core agnóstico desconoce `/portal`. |
-| **Topología y Servidores** | Referencias explícitas a servidores `FRACTAL`, `NEO` y dominios `*.asuscomm.com`. | Eliminación total. Los entornos se parametrizan como `LOCAL`, `STAGING`/`SANDBOX` y `PRODUCTION`/`LIVE`. |
+| **Scopes de Commits** | `[cluster]`, `[app]`, `[auth]`, `[net]` hardcodeados en validadores y reglas. | Formato parametrizado `[type]-[scope]: <title>`, donde `[scope]` se autodescubre o se configura en `.agents/config.json`. |
+| **Rutas del Monorepo** | Rutas fijas `<padre>\app\` en scripts Python y PowerShell. | Detección dinámica de la raíz del proyecto (`git rev-parse --show-toplevel` o variable `WORKSPACE_ROOT`). |
+| **Reglas de Portal Web** | Invariante de sincronización de `/portal` en `cmd/server/main.go`. | Trasladado exclusivamente al nivel de proyecto (`app/.agents/rules/portal.md`). El core agnóstico desconoce `/portal`. |
+| **Topología y Servidores** | Referencias explícitas a servidores `equipo local`, `servidor Live` y dominios `*.asuscomm.com`. | Eliminación total. Los entornos se parametrizan como `LOCAL`, `STAGING`/`SANDBOX` y `PRODUCTION`/`LIVE`. |
 | **Gobernanza Documental** | Dependencia de roles fijos en `.governance/docs-map.json` del laboratorio. | Estructura adaptable basada en la especificación genérica de `docs-governance` (Spine: AGENTS, INDEX, STATUS, LOG, adr/). |
 
 ---
@@ -44,7 +44,7 @@ flowchart TD
     subgraph Tier2["Nivel 2: Scaffolding Local por Proyecto (<project>/.agents/)"]
         direction TB
         ProjA["Proyecto A (Empresa BCN - Fintech):<br/>.agents/rules/banking-security.md<br/>Scopes: [billing, ledger, auth]"]
-        ProjB["Proyecto B (Home-Lab Monorepo):<br/>.agents/rules/portal-sync.md<br/>Scopes: [cluster, whoiam, kakebo]"]
+        ProjB["Proyecto B (proyecto consumidor Monorepo):<br/>.agents/rules/portal-sync.md<br/>Scopes: [cluster, auth, app]"]
         ProjN["Proyecto N (SaaS E-Commerce):<br/>.agents/rules/pci-compliance.md<br/>Scopes: [cart, checkout, catalog]"]
     end
 
@@ -87,11 +87,11 @@ flowchart TD
 ┌────────────────────────────────────────────────────────────────────────┐
 │                        ECOSISTEMA REUTILIZABLE                         │
 ├───────────────────────────────────┬────────────────────────────────────┤
-│ VIAJA EN `aagy` (Agnóstico)    │ PERMANECE EN `aagy-homelab`     │
+│ VIAJA EN `aagy` (Agnóstico)    │ PERMANECE EN `aagy-consumer`     │
 ├───────────────────────────────────┼────────────────────────────────────┤
 │ • 16 Skills Globales              │ • Sincronización de /portal        │
-│ • 12 Subagentes de Contexto       │ • Scopes: cluster, whoiam, kakebo  │
-│ • SRE Baseline (ADR-0008)         │ • Topología FRACTAL / NEO          │
+│ • 12 Subagentes de Contexto       │ • Scopes: cluster, auth, app  │
+│ • SRE Baseline (ADR-0008)         │ • Topología equipo local / servidor Live          │
 │ • Trunk-Based PRs (ADR-0006)      │ • Configuración Split-DNS local    │
 │ • Quality Gate SonarQube (A)      │ • WireGuard / OpenVPN doméstico    │
 │ • DavidAnson markdownlint         │ • Dependencias multi-cloud locales │
@@ -109,7 +109,7 @@ Para iniciar cualquier nuevo proyecto (ej. en una empresa en Barcelona):
 ### Paso 1: Instalar el Plugin Agnóstico
 
 ```powershell
-pwsh -File C:\Workspace\projects\aagy\install.ps1 -Target agy
+pwsh -File <padre>\aagy\install.ps1 -Target agy
 ```
 
 ### Paso 2: Inicializar el Scaffolding del Proyecto

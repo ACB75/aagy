@@ -1,6 +1,6 @@
-# Fase 1: Toma de Requisitos, Análisis de Superficie e Impacto Home-Lab
+# Fase 1: Toma de Requisitos, Análisis de Superficie e Impacto proyecto consumidor
 
-> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / Home-Lab  
+> **Referencia de Gobernanza**: Fase 1 del Workflow de Ingeniería AAGY / proyecto consumidor  
 > **ID de Tarea**: `feat/aagy/unified-self-improvement` (`Tarea 0.3`)  
 > **Fecha**: `2026-11-20` | **Autor/Rol**: `Autonomous Agent Reliability & Self-Improvement Systems Architect`  
 > **Estado**: `APROBADO`
@@ -9,7 +9,7 @@
 
 ## 1. Contexto, Necesidad y Objetivos de Negocio
 
-- **Problema de Negocio / Técnico**: El repositorio contiene piezas desconectadas para autodescubrimiento y aprendizaje continuo (`scripts/ps1/auto-evolve.ps1/.sh` acoplado a `home-lab`, `scripts/py/instinct_manager.py`, y skills heredadas `continuous-learning`, `continuous-learning-v2`, `agent-self-evaluation`, `eval-harness`, `prompt-optimizer`) que no comparten un ciclo unificado ni están conectadas a los hooks de Antigravity (`hooks.json` `Stop`) ni al hard gate de presupuesto de tokens.
+- **Problema de Negocio / Técnico**: El repositorio contiene piezas desconectadas para autodescubrimiento y aprendizaje continuo (`scripts/ps1/auto-evolve.ps1/.sh` acoplado a `app`, `scripts/py/instinct_manager.py`, y skills heredadas `continuous-learning`, `continuous-learning-v2`, `agent-self-evaluation`, `eval-harness`, `prompt-optimizer`) que no comparten un ciclo unificado ni están conectadas a los hooks de Antigravity (`hooks.json` `Stop`) ni al hard gate de presupuesto de tokens.
 - **Objetivo Principal**: Unificar y optimizar todas las capacidades de autodescubrimiento y automejora en un motor único agnóstico para `aagy` (con paridad en `aagy` y ejecución manual CLI), operando con captura híbrida (`Stop` hook `0` tokens + CLI bajo demanda), almacenamiento a doble nivel (proyecto + `PLUGIN_DATA`) y promoción controlada por confirmación explícita, *smoke-test* y *budget gate*.
 - **Alcance (`In-Scope`)**:
   - Unificación de `auto-evolve`, `instinct_manager` y evaluación/aprendizaje continuo en un único motor modular bajo `scripts/{py,sh,pwsh}/` (con sus `/tests`).
@@ -29,14 +29,14 @@
 
 - **`RF-01` (Captura Híbrida Zero-Overhead)**: El hook `Stop` en `hooks.json` captura métricas de sesión/errores/comandos repetidos de forma pasiva y sub-segundo (`0` tokens en prompt), complementado con ejecución manual (`--discover`, `--review`, `--promote`) desde terminal.
 - **`RF-02` (Persistencia a Doble Nivel)**:
-  - Nivel Proyecto: `<repo>/.agents/instincts/` (patrones específicos del repositorio, ej. `home-lab`).
+  - Nivel Proyecto: `<repo>/.agents/instincts/` (patrones específicos del repositorio, ej. `app`).
   - Nivel Global Plugin: `$PLUGIN_DATA/instincts/` (patrones transversales reutilizables en `aagy` / `aagy`).
 - **`RF-03` (Detección y Consolidación de Patrones)**: El motor unificado analiza instintos, fallos recurrentes y tareas repetitivas ($\ge 2$ ocurrencias) deduplicando candidatos similares antes de proponer artefactos nuevos.
 - **`RF-04` (Promoción Controlada con Confirmación y Gates)**: Ningún candidato se promueve automáticamente a `skills/`, `rules/` o `scripts/`; se genera un borrador/propuesta que debe superar:
   1. Hard gate de presupuesto (`rules` $\le 24\text{ KB}$ / $\le 20.000$ tokens, `MAX_SKILL_DESC = 140`, `MAX_AGENT_DESC = 120`, preferencia por Tier 2 o `hooks.json` `0` tokens).
   2. *Smoke-test* automático (exit code `0`).
   3. Confirmación explícita del usuario.
-- **`RF-05` (Desacoplamiento Agnóstico)**: Eliminar referencias hardcodeadas a `home-lab` en `auto-evolve`; el motor debe operar sobre cualquier repositorio objetivo (`--repo-root`).
+- **`RF-05` (Desacoplamiento Agnóstico)**: Eliminar referencias hardcodeadas a `app` en `auto-evolve`; el motor debe operar sobre cualquier repositorio objetivo (`--repo-root`).
 
 ### 2.2. Criterios de Aceptación Verificables (Given / When / Then)
 
@@ -47,16 +47,16 @@
 
 ---
 
-## 3. Matriz de Impacto en Arquitectura Home-Lab
+## 3. Matriz de Impacto en Arquitectura proyecto consumidor
 
 | Dimensión Arquitectónica | ¿Impactado? (`SÍ/NO`) | Nivel de Riesgo (`Bajo/Medio/Alto`) | Detalle de la Afectación y Mitigación |
 | :--- | :---: | :---: | :--- |
-| **Paridad `home-lab-sdk`** | `NO` | - | No modifica contratos de microservicios ni DTOs. |
+| **Paridad `<repo>-sdk`** | `NO` | - | No modifica contratos de microservicios ni DTOs. |
 | **Persistencia PostgreSQL LTS** | `NO` | - | Persistencia local en JSON/Markdown. |
-| **Ingress Único (`cluster-lb`)** | `NO` | - | Sin cambios en Traefik/CoreDNS. |
+| **Ingress Único (`lb`)** | `NO` | - | Sin cambios en Traefik/CoreDNS. |
 | **Resolución Split-DNS** | `NO` | - | Sin impacto. |
 | **Restricciones de Hardware** | `NO` | - | Ejecución sub-segundo en Python stdlib; `0` overhead en prompt. |
-| **Instintos en `home-lab/.agents/instincts/`** | `SÍ` | `Bajo` | Mantiene compatibilidad con `.agents/instincts/` en `home-lab` separando lo global en `PLUGIN_DATA`. |
+| **Instintos en `app/.agents/instincts/`** | `SÍ` | `Bajo` | Mantiene compatibilidad con `.agents/instincts/` en `app` separando lo global en `PLUGIN_DATA`. |
 
 ---
 

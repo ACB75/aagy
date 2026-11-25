@@ -22,7 +22,7 @@ completed_at: "2026-11-20 21:30:30"
   - *Enfoque A (In-Place Rename)*: Renombrar carpeta y editar archivos en sitio, arriesgando romper rutas activas antes de validar.
   - *Enfoque B (History-Preserving Cutover & Dual-Plugin Parity - Recomendado)*:
       1. Verificar que todas las tareas previas (`2.3` a `4.4`) estén archivadas en `TODO_DONE/` y en verde (`audit-workspace.ps1` + `pytest`).
-      2. Migrar `c:\Workspace\projects\aagy` hacia `c:\Workspace\projects\aagy` (*Anything Antigravity*) **conservando el historial Git completo** y renombrar el remoto (`gh repo rename aagy`), aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, rutas y `~/.gemini/config/plugins/aagy`).
+      2. Migrar `<padre>\aagy` hacia `<padre>\aagy` (*Anything Antigravity*) **conservando el historial Git completo** y renombrar el remoto (`gh repo rename aagy`), aplicando *full rename* a `aagy` (`plugin.json`, `package.json`, rutas y `~/.gemini/config/plugins/aagy`).
       3. Estructurar y sincronizar dentro de `aagy/aagy/` el plugin para Claude Code llamado **`aagy`** (con chequeo de paridad automatizado `aagy` $\leftrightarrow$ `aagy` para operar de forma idéntica en multiagentes).
       4. Validar integridad completa en `/aagy` (`pytest`, `audit-workspace.ps1`, `lint-markdown.ps1`, smoke-test de ambos plugins) y, solo tras confirmación explícita del usuario, eliminar el antiguo directorio `/aagy`.
 - **05 - PHASE 3 (EXECUTION):**
@@ -32,7 +32,7 @@ completed_at: "2026-11-20 21:30:30"
     4. Validar `pytest`, `audit-workspace.ps1` y `lint-markdown.ps1` con código de salida `0`.
     5. Actualizar el plugin instalado a `~/.gemini/config/plugins/aagy`, obtener confirmación final del usuario y retirar `/aagy`.
 - **06 - PHASE 4 (CRITIC):**
-  - *Auditoría*: Riesgo crítico de pérdida irreversible si se borra `/aagy` antes de validar el 100% de tests, git remote y enlaces en `home-lab` o `~/.gemini/`. Mitigación: cutover en dos pasos con verificación integral en `/aagy` y confirmación explícita antes de borrar `/aagy`.
+  - *Auditoría*: Riesgo crítico de pérdida irreversible si se borra `/aagy` antes de validar el 100% de tests, git remote y enlaces en `app` o `~/.gemini/`. Mitigación: cutover en dos pasos con verificación integral en `/aagy` y confirmación explícita antes de borrar `/aagy`.
 - **07 - PHASE 5 (FORMAT):**
   - Repositorio `/aagy` operativo con historial íntegro, remoto renombrado, `aagy/aagy/` sincronizado, tests y `audit-workspace.ps1` en verde (exit `0`).
 - **MODELO & AGENTE ASIGNADO:** **Argon ($Ar_{18}$) / Gemini 3.8 Pro Thinking** (~6.000 tokens) para la auditoría de cutover y paridad; **Carbon ($C_6$)** para *full rename* y validación.

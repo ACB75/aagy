@@ -327,7 +327,7 @@ def test_add_rejects_duplicates_and_unknown_epic(repo: Path):
 
 
 def test_init_creates_structure_in_empty_repo(tmp_path: Path):
-    root = tmp_path / "homelab-app"
+    root = tmp_path / "consumer-app"
     root.mkdir()
     git(root, "init", "-q")
     ctx = ctx_for(root)

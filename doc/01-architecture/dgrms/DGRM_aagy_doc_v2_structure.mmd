@@ -2,7 +2,7 @@ flowchart TD
     Root["Repositorio Consumidor"] --> CheckMap{".governance/docs-map.json existe?"}
     CheckMap -- "Sí (schema_version: 2)" --> V2["Esquema /doc v2 Numerado"]
     CheckMap -- "Sí (v1 parcial)" --> V1["Overrides v1 + Fallback Clásico"]
-    CheckMap -- "No (ej. home-lab clásico)" --> Legacy["Fallback Clásico doc/TODO.md, doc/TODO_DONE/"]
+    CheckMap -- "No (ej. app clásico)" --> Legacy["Fallback Clásico doc/TODO.md, doc/TODO_DONE/"]
 
     V2 --> SecGuard["validate_repo_relative_path()\nBloqueo Path Traversal & Absolutas"]
     V1 --> SecGuard

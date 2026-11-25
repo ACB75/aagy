@@ -12,7 +12,7 @@ El ciclo de vida no impone burocracia lineal rígida cuando el alcance ya está 
 | Punto de Entrada | Flag CLI (`-Phase` / `--phase`) | Artefactos Generados | Cuándo Usarlo |
 | :--- | :---: | :--- | :--- |
 | **1. Ideas** | `IDEAS` | Registra bloque `## Idea ...` en `IDEAS.md` | Propuesta exploratoria pendiente de maduración o priorización. |
-| **2. Requisitos** | `REQ` / `ALL` | `REQ_`, `PLAN_`, `DOCS_`, `REVIEW_` en `plans/` | Features complejas, cambios transversales o impacto Home-Lab/SDK. |
+| **2. Requisitos** | `REQ` / `ALL` | `REQ_`, `PLAN_`, `DOCS_`, `REVIEW_` en `plans/` | Features complejas, cambios transversales o impacto proyecto consumidor/SDK. |
 | **3. Plan Técnico** | `PLAN` | `PLAN_`, `DOCS_`, `REVIEW_` en `plans/` (omite `REQ_`) | Requisitos ya aprobados externamente o refactors acotados. |
 | **4. Tarea Directa** | `TODO` | Tarea 7-fases en `TODO.md` + `quick/QUICK_<slug>.md` | Cambios atómicos, hotfixes pequeños o tareas ya definidas sin ceremonia. |
 | **Docs / Review** | `DOCS` / `REVIEW` | `DOCS_`+`REVIEW_` o solo `REVIEW_` | Cierre de documentación y preparación de PR tras implementación previa. |
@@ -27,7 +27,7 @@ pwsh -NoProfile -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/aagy/mi-i
 pwsh -NoProfile -File scripts/ps1/sync-ideas-todo.ps1
 
 # Entrada 2: Ciclo completo 4 fases (REQ + PLAN + DOCS + REVIEW)
-pwsh -NoProfile -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/kakebo/export-csv" -Phase REQ
+pwsh -NoProfile -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/app/export-csv" -Phase REQ
 
 # Entrada 3: Saltar REQ e iniciar directo en PLAN
 pwsh -NoProfile -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "refactor/scripts/cache" -Phase PLAN

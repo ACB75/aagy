@@ -52,7 +52,7 @@
 1. **Núcleo ligero**: [`sync_aagy_ecc.py`](../scripts/py/sync_aagy_ecc.py) solo copia al plugin `aagy-ecc` el perfil `generic` (22 skills, 12 agentes); cada perfil de stack se publica como plugin opcional `aagy-ecc-<perfil>` en `aagy-ecc/packs/` y lo que no está en ningún perfil va a `aagy-ecc-extras`. Antes el núcleo cargaba 169 skills, 49 agentes y 47 comandos en cada sesión (~8-10k tokens).
 2. **Comandos repartidos**: los comandos que dependen de skills o agentes de un paquete viajan con él; se elimina el alias `/prp-pr` y `/code-review` pasa a `extras` (Claude Code ya trae uno).
 3. **Reglas Tier 1**: el hook `SessionStart` inyecta un índice de `rules/AGENTS.md` (~2,3 KB en vez de 10 KB, que Claude Code recortaba) con la ruta del texto completo, y ya no se dispara en `resume`.
-4. **Desacople**: se elimina `agents/sdk-synchronizer.md` (específico de `home-lab`, que mantiene su propia copia) y `lifecycle-coordinator` deja de nombrar `home-lab`.
+4. **Desacople**: se elimina `agents/sdk-synchronizer.md` (específico de `app`, que mantiene su propia copia) y `lifecycle-coordinator` deja de nombrar `app`.
 
 ---
 
@@ -60,7 +60,7 @@
 
 ### Hitos y Decisiones Materiales
 
-1. **Plugin desacoplado de `home-lab`**: `aagy-sync.{ps1,sh}` sustituye las fases `infra`/`kakebo`/`cluster`/`token-hill` por perfiles de stack (`network-infra`, `java-spring`, `angular`, `go`, `python`) y retira `-TargetProject`; se elimina `netmiko-ssh-automation` (no existía en `skills/`).
+1. **Plugin desacoplado de `app`**: `aagy-sync.{ps1,sh}` sustituye las fases `infra`/`app`/`cluster`/`web` por perfiles de stack (`network-infra`, `java-spring`, `angular`, `go`, `python`) y retira `-TargetProject`; se elimina `netmiko-ssh-automation` (no existía en `skills/`).
 2. **Modo repositorio**: `aagy-sync -Repo <repo>` / `--repo` delega en [`repo_profiles.py`](../scripts/py/repo_profiles.py), que lee `<repo>/.governance/aagy-profiles.json`, instala la unión de perfiles (sin `generic`) en `<repo>/.agents/`, registra un lock y mantiene un bloque gestionado en `.agents/.gitignore` para no versionar copias.
 3. **ADR**: [ADR-0004](02-adr/ADR_aagy_0004_stack_profiles_declared_by_consumer_repo.md) reemplaza el Nivel 2 de ADR-0001. Pruebas en [`test_repo_profiles.py`](../scripts/py/tests/test_repo_profiles.py).
 
@@ -96,8 +96,8 @@
 1. **Nuevo `README.md` Raíz y Sincronización `aagy-ecc/`**:
    - Regenerado [`README.md`](../README.md) de raíz reflejando la arquitectura definitiva (`aagy` + `aagy-ecc/`, `/doc` v2 con `.governance/docs-map.json`, `scripts/{py,ps1,sh}/tests/`, motor `self_improve.py`, instalación manual `install.ps1` / `install.sh` y paridad CLI 1-a-1).
    - Sincronizados [`aagy-ecc/README.md`](../aagy-ecc/README.md) y [`aagy-ecc/project-template/CLAUDE.md`](../aagy-ecc/project-template/CLAUDE.md) con paridad verificada al 100% mediante [`audit_plugin_parity.py`](../scripts/py/audit_plugin_parity.py).
-2. **Cutover a `c:\Workspace\projects\aagy` Conservando Historial Git y Reinstalación Limpia del Plugin**:
-   - Construido y sincronizado `c:\Workspace\projects\aagy` conservando el historial Git íntegro y el remoto renombrado `https://github.com/ACB75/aagy.git`.
+2. **Cutover a `<padre>\aagy` Conservando Historial Git y Reinstalación Limpia del Plugin**:
+   - Construido y sincronizado `<padre>\aagy` conservando el historial Git íntegro y el remoto renombrado `https://github.com/ACB75/aagy.git`.
    - Reinstalado limpiamente el plugin global en `~/.gemini/config/plugins/aagy` mediante `install.ps1 -Target agy -Profile minimal` y superadas todas las compuertas (`pytest` 154/154, `audit-workspace.ps1 -Clean`, `audit-plugin-parity.ps1`, `map-docs.ps1`, `audit-docs.py`, `lint-markdown.ps1 -CheckOnly`, SonarQube Rating A).
 
 ---
@@ -123,7 +123,7 @@
 ### Hitos y Decisiones Materiales
 
 1. **Motor Unificado y Agnóstico (`scripts/py/self_improve.py` + `instinct_manager.py`)**:
-   - Unificación de `auto-evolve.ps1`/`.sh`, `instinct_manager.py` y `agent-self-evaluation` en [`scripts/py/self_improve.py`](../scripts/py/self_improve.py) eliminando todo acoplamiento hardcodeado a `home-lab` (`RF-05`).
+   - Unificación de `auto-evolve.ps1`/`.sh`, `instinct_manager.py` y `agent-self-evaluation` en [`scripts/py/self_improve.py`](../scripts/py/self_improve.py) eliminando todo acoplamiento hardcodeado a `app` (`RF-05`).
    - Captura híbrida zero-overhead (`RF-01`): hook pasivo `Stop` en [`hooks.json`](../hooks.json) (`< 500 ms`, timeout `5s`, `0` tokens en prompt, retorno `{}` con aislamiento de fallos) y CLI manual (`--discover`, `--review`, `--promote`, `--capture-stop`, `--evaluate`).
    - Persistencia a doble nivel (`RF-02`): `<repo>/.agents/instincts/` (nivel proyecto) y `$PLUGIN_DATA/instincts/` (resuelto vía `AGY_PLUGIN_DATA`, `CLAUDE_PLUGIN_DATA` o `~/.gemini/config/plugins/aagy/.data`).
 2. **Sanitización AgentShield, Redacción de Secretos y Promoción por 4 Compuertas (`RF-03` & `RF-04`)**:
@@ -143,8 +143,8 @@
    - Raíz de [`doc/`](INDEX.md) saneada a 4 archivos vivos (`INDEX.md`, [`CONTEXT.md`](CONTEXT.md), [`STATUS.md`](STATUS.md), [`LOG.md`](LOG.md)), eliminando la duplicidad de `doc/README.md`.
    - Creación de jerarquía numerada (`00-governance/` a `06-backlog/`) y convención transversal `<folder>/dgrms/` separando `.mmd`, `.puml` ([`UC_aagy_lifecycle_parity.puml`](03-domain-and-flows/dgrms/UC_aagy_lifecycle_parity.puml)) y `.bpmn` ([`BP_aagy_task_delivery.bpmn`](03-domain-and-flows/dgrms/BP_aagy_task_delivery.bpmn)).
    - Consolidación de `TEMPLATE_ADR.md` y `TEMPLATE_POSTMORTEM.md` en [`00-governance/templates/`](00-governance/templates/README.md), preservación de [`the-security-guide.md`](00-governance/references/the-security-guide.md) y renombre de `STACK_MODERNO_GOOGLE.md` a [`google-modern-stack.md`](00-governance/references/google-modern-stack.md).
-2. **Resolvedor Parametrizado `docs_map.py` y Retrocompatibilidad `home-lab`**:
-   - Implementado [`scripts/py/docs_map.py`](../scripts/py/docs_map.py) con esquema `.governance/docs-map.json` v2, bloqueo estricto contra *path traversal* y *fallback* automático transparente hacia rutas heredadas de `home-lab`.
+2. **Resolvedor Parametrizado `docs_map.py` y Retrocompatibilidad `app`**:
+   - Implementado [`scripts/py/docs_map.py`](../scripts/py/docs_map.py) con esquema `.governance/docs-map.json` v2, bloqueo estricto contra *path traversal* y *fallback* automático transparente hacia rutas heredadas de `app`.
    - Parametrizados todos los scripts (`archive_todo.py`, `sync_ideas_todo.py`, `new_lifecycle_task.py`, `generate_postmortem.py`, `map_docs.py`, `workspace_audit.py`, `complete-task-pr.ps1`/`.sh` y wrappers `.ps1`/`.sh`).
 3. **Flujo Flexible y Paridad Manual 1-a-1 (`MANUAL_WORKFLOW.md`)**:
    - Habilitados los 4 puntos de entrada `[IDEAS -> REQ -> PLAN -> TODO]` en `new_lifecycle_task.py --phase` y completados wrappers Linux faltantes (`sync-ideas-todo.sh`, `generate-postmortem.sh`, `map-docs.sh`).
@@ -188,7 +188,7 @@
 
 1. **Pipeline de Despliegue Multi-Tier (`git-flow-helper.ps1` y `git-flow-helper.sh`)**:
    - Integración de los parámetros `-Deploy`, `-Environment [sandbox|live]` y `-DryRun` en la acción `promote`.
-   - Soporte para despliegue físico desatendido en los hosts de Home-Lab: FRACTAL (`192.168.1.100`) para SANDBOX y NEO (`192.168.1.200`) para LIVE.
+   - Soporte para despliegue físico desatendido en los hosts de proyecto consumidor: equipo local (`<ip>`) para SANDBOX y servidor Live (`<ip>`) para LIVE.
    - Verificación de sondas de salud (liveness probes con 3 reintentos x 5s) sobre contenedores recién recreados.
    - Protocolo de rollback automático desatendido en $< 2\text{ minutos}$ hacia el commit/tag anterior ante fallos en sondas.
 2. **Ergonomía y Calidad**:
@@ -244,9 +244,9 @@
 
 1. **Analizador Estático de Paridad (`audit_sdk_parity.py`)**:
    - Extracción léxica de endpoints REST en controladores backend: Go (Gin, Chi, gorilla/mux), Python (FastAPI/Flask) y Java (Spring Boot `@GetMapping`, `@PostMapping`, etc.).
-   - Extracción de rutas y métodos en clientes polyglot de `home-lab-sdk/` (TypeScript, Go, Python, Java).
+   - Extracción de rutas y métodos en clientes polyglot de `<repo>-sdk/` (TypeScript, Go, Python, Java).
    - Exclusión automática de endpoints internos de infraestructura (`/metrics`, `/health`, `/livez`, `/readyz`, `/debug/*`, `/ping`, `/favicon.ico`).
-   - Omisión elegante (`SKIPPED`, exit code 0) en repositorios sin carpetas `services/` ni `home-lab-sdk/`.
+   - Omisión elegante (`SKIPPED`, exit code 0) en repositorios sin carpetas `services/` ni `<repo>-sdk/`.
 2. **Ergonomía CLI e Integración en Lifecycle**:
    - Wrappers multiplataforma [`scripts/ps1/audit-sdk-parity.ps1`](../scripts/ps1/audit-sdk-parity.ps1) y `audit-sdk-parity.sh` con flags `--json` y `--no-strict`.
    - Integración como compuerta de validación previa en el paso 7.3 de [`complete-task-pr.ps1`](../scripts/ps1/complete-task-pr.ps1).
@@ -396,12 +396,12 @@
 
 ---
 
-## 2026-11-20: Formalización del Workflow de Ingeniería de 4 Fases y Acoplamiento Home-Lab
+## 2026-11-20: Formalización del Workflow de Ingeniería de 4 Fases y Acoplamiento proyecto consumidor
 
 ### Hitos y Decisiones Materiales
 
 1. **Plantillas Estandarizadas de 4 Fases (`doc/templates/`)**:
-   - Fase 1: [`01_TOMA_REQUISITOS_E_IMPACTO.md`](00-governance/templates/01_TOMA_REQUISITOS_E_IMPACTO.md): Requisitos funcionales, criterios de aceptación (Given/When/Then), matriz de impacto en Home-Lab (paridad `home-lab-sdk`, PostgreSQL LTS lock safety, Ingress único `cluster-lb` y Split-DNS, SRE memory throttling) y política estricta de *Zero-Breaking Changes*.
+   - Fase 1: [`01_TOMA_REQUISITOS_E_IMPACTO.md`](00-governance/templates/01_TOMA_REQUISITOS_E_IMPACTO.md): Requisitos funcionales, criterios de aceptación (Given/When/Then), matriz de impacto en proyecto consumidor (paridad `<repo>-sdk`, PostgreSQL LTS lock safety, Ingress único `lb` y Split-DNS, SRE memory throttling) y política estricta de *Zero-Breaking Changes*.
    - Fase 2: [`02_PLAN_ACCION_ARQUITECTURA.md`](00-governance/templates/02_PLAN_ACCION_ARQUITECTURA.md): Inventario DRY de reutilización, sincronización previa del SDK, topología Mermaid, TDD (`RED` -> `GREEN` -> `REFACTOR` -> `VERIFY`) y plan de Fast-Rollback (<2 min: `git revert` y `down-migration.sql`).
    - Fase 3: [`03_DOCUMENTACION_Y_RELEASE_NOTES.md`](00-governance/templates/03_DOCUMENTACION_Y_RELEASE_NOTES.md): Generación previa de Notas de la Versión SemVer (`vX.Y.Z`), matriz de promoción multi-tier (`LOCAL` -> `SANDBOX` -> `LIVE`), actualización de espina documental (`STATUS.md`, `LOG.md`, ADRs) y autopsia 5W para incidentes.
    - Fase 4: [`04_PROPUESTA_COMMITS_PR.md`](00-governance/templates/04_PROPUESTA_COMMITS_PR.md): Commits atómicos convencionales `[type]-[projects]: <title>`, Pre-Flight Review Notice con diff completo de código + docs, compuertas de calidad SonarQube Rating A y orquestación de PR con squash-automerge.

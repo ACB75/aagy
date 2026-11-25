@@ -24,7 +24,7 @@ Estados: `todo`, `in_progress`, `review`, `handoff`, `blocked`, `done`. Un claim
 Ejecuta desde la carpeta del repo en el que trabajas. Indica el agente con `--agent claude|agy|human` o `AAGY_AGENT`.
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 init                              # repo nuevo del home-lab
+pwsh -NoProfile -File scripts/ps1/backlog.ps1 init                              # repo nuevo del app
 pwsh -NoProfile -File scripts/ps1/backlog.ps1 list                              # en curso, relevos y pendientes
 pwsh -NoProfile -File scripts/ps1/backlog.ps1 next --agent agy --claim          # siguiente libre (relevos primero)
 pwsh -NoProfile -File scripts/ps1/backlog.ps1 claim mi-tarea --agent claude --worktree

@@ -33,7 +33,7 @@ flowchart TD
 
     subgraph DeploymentTargets["Casos de Uso Finales"]
         TargetCorp["Empresas y Startups Externas<br/>(Proyectos Agnósticos en Barcelona)"]
-        TargetHomeLab["Laboratorios y Monorepos Complejos<br/>(Home-Lab / Microservicios Políglotas)"]
+        Targetproyecto consumidor["Laboratorios y Monorepos Complejos<br/>(proyecto consumidor / Microservicios Políglotas)"]
     end
 
     AAGYJson -->|"Target: claude"| ClaudeDist
@@ -44,7 +44,7 @@ flowchart TD
 
     ClaudeCLI --> TargetCorp
     AGYIDE --> TargetCorp
-    AGYIDE --> TargetHomeLab
+    AGYIDE --> Targetproyecto consumidor
 
     classDef master fill:#f3e5f5,stroke:#4a148c,stroke-width:2px;
     classDef harness fill:#e1f5fe,stroke:#0277bd,stroke-width:1px;
@@ -54,7 +54,7 @@ flowchart TD
     class AAGYMaster,RootOrchestrator,AAGYJson master;
     class ClaudeDist,AGYDist harness;
     class ClaudeCLI,AGYIDE surf;
-    class TargetCorp,TargetHomeLab target;
+    class TargetCorp,Targetproyecto consumidor target;
 ```
 
 ### 1.1. Distribuciones Integradas
@@ -352,7 +352,7 @@ Conforme al **ADR-0006**, el repositorio utiliza desarrollo basado en tronco (*T
 | Caso de Uso | Harness Recomendado | Configuración de Despliegue | Salvaguardas Críticas |
 | :--- | :---: | :--- | :--- |
 | **1. Empresa / Cliente Externo (ej. Barcelona)** | `aagy` (Nivel 1) | `pwsh -File install.ps1 -Target agy`<br/>Reglas locales en `.agents/rules/` | Cero fuga de secretos, validación de dependencias oficiales únicamente, SonarQube A. |
-| **2. Laboratorio Complejo Monorepo (`home-lab`)** | `aagy` (Niveles 1 y 2) | Sincronización vía `aagy-sync.ps1`<br/>Reglas de clúster en `home-lab/.agents/rules/` | SRE Error Budgets, GOMEMLIMIT=80% en Go, límites de memoria Docker, probes de salud. |
+| **2. Laboratorio Complejo Monorepo (`app`)** | `aagy` (Niveles 1 y 2) | Sincronización vía `aagy-sync.ps1`<br/>Reglas de clúster en `app/.agents/rules/` | SRE Error Budgets, GOMEMLIMIT=80% en Go, límites de memoria Docker, probes de salud. |
 | **3. Entorno de Terminal Rápido con Claude** | `aagy-ecc` | `pwsh -File install.ps1 -Target claude -Destination <repo>` | Hooks bash nativos, comandos slash en `.claude/commands/`. |
 | **4. Bucle Autónomo de Generador-Evaluador (GAN)** | `aagy` con Subagentes | Subagente Generador (`gan-generator`) + Subagente Evaluador (`gan-evaluator`) | Workspace aislado en modo `branch`, límite estricto de 3 iteraciones antes de congelación. |
 

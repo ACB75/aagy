@@ -40,19 +40,19 @@ case "$PHASE" in
     AGENTS=(planner.md architect.md tdd-guide.md code-reviewer.md security-reviewer.md build-error-resolver.md silent-failure-hunter.md refactor-cleaner.md doc-updater.md todo-archiver.md sync-aligner.md lifecycle-coordinator.md)
     ;;
   network-infra)
-    SKILLS=(docker-patterns deployment-patterns kubernetes-patterns homelab-network-readiness homelab-network-setup homelab-pihole-dns homelab-vlan-segmentation homelab-wireguard-vpn network-config-validation network-interface-health security-scan safety-guard sre-reliability)
-    AGENTS=(homelab-architect.md network-architect.md network-config-reviewer.md network-troubleshooter.md)
+    SKILLS=(docker-patterns deployment-patterns kubernetes-patterns network-config-validation network-interface-health security-scan safety-guard sre-reliability)
+    AGENTS=(network-architect.md network-config-reviewer.md network-troubleshooter.md)
     ;;
   java-spring)
-    SKILLS=(springboot-patterns springboot-security springboot-tdd springboot-verification java-coding-standards postgres-patterns database-migrations api-design sonarqube-quality-gate sync-microservice-sdk)
+    SKILLS=(springboot-patterns springboot-security springboot-tdd springboot-verification java-coding-standards postgres-patterns database-migrations api-design sonarqube-quality-gate)
     AGENTS=(java-reviewer.md java-build-resolver.md database-reviewer.md)
     ;;
   angular)
-    SKILLS=(angular-developer e2e-testing sonarqube-quality-gate sync-microservice-sdk)
+    SKILLS=(angular-developer e2e-testing sonarqube-quality-gate)
     AGENTS=(typescript-reviewer.md e2e-runner.md)
     ;;
   go)
-    SKILLS=(golang-patterns golang-testing docker-patterns kubernetes-patterns postgres-patterns latency-critical-systems data-throughput-accelerator benchmark-optimization-loop sonarqube-quality-gate sync-microservice-sdk sre-reliability)
+    SKILLS=(golang-patterns golang-testing docker-patterns kubernetes-patterns postgres-patterns latency-critical-systems data-throughput-accelerator benchmark-optimization-loop sonarqube-quality-gate sre-reliability)
     AGENTS=(go-reviewer.md go-build-resolver.md performance-optimizer.md database-reviewer.md)
     ;;
   python)
@@ -75,7 +75,7 @@ case "$PHASE" in
     SKILLS=()
     AGENTS=()
     ;;
-  infra|kakebo|cluster|token-hill)
+  infra)
     echo "[!] La fase '$PHASE' se retiró: usa los perfiles de stack (network-infra, java-spring, angular, go, python)." >&2
     exit 1
     ;;

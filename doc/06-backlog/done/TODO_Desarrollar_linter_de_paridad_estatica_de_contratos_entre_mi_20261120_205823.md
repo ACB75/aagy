@@ -1,10 +1,10 @@
 ---
-title: "**Desarrollar linter de paridad estática de contratos entre microservicios (`services/`, `cluster/`) y `home-lab-sdk`**"
+title: "**Desarrollar linter de paridad estática de contratos entre microservicios (`services/`, `cluster/`) y `<repo>-sdk`**"
 status: COMPLETED
 completed_at: "2026-11-20 20:58:23"
 ---
 
-# TODO: **Desarrollar linter de paridad estática de contratos entre microservicios (`services/`, `cluster/`) y `home-lab-sdk`**
+# TODO: **Desarrollar linter de paridad estática de contratos entre microservicios (`services/`, `cluster/`) y `<repo>-sdk`**
 
 ## 1. Descripción de la Tarea
 
@@ -17,9 +17,9 @@ completed_at: "2026-11-20 20:58:23"
 - **02 - CONTEXT:** `[Sector: Microservices Contract Parity & Type Safety]` `[Data Type: Go structs/routes (Gin/chi/mux), TypeScript interfaces, Python models]` `[Objective: Implementar un validador estático automatizado que inspeccione las rutas y modelos expuestos por los microservicios y certifique que el SDK cliente polyglot (Go/TS/Python) contiene los métodos y tipos correspondientes, bloqueando PRs con divergencia]` `[Restrictions: Sin dependencias pesadas de terceros; análisis determinista con Python stdlib (ast, regex)]`.
 - **03 - PHASE 1 (ANALYSIS):**
   - La regla "Mandatory Microservice & SDK Contract Parity" es un pilar crítico para evitar errores 404/400 en tiempo de ejecución entre microservicios.
-  - Actualmente la sincronización depende de la disciplina del desarrollador. Si se añade un endpoint en Go sin actualizar el cliente en TypeScript de `home-lab-sdk`, la compilación local no siempre falla hasta las pruebas E2E.
+  - Actualmente la sincronización depende de la disciplina del desarrollador. Si se añade un endpoint en Go sin actualizar el cliente en TypeScript de `<repo>-sdk`, la compilación local no siempre falla hasta las pruebas E2E.
 - **04 - PHASE 2 (STRATEGY):**
-  - Parser estático en Python que extraiga endpoints declarados en controladores Go (`r.GET(...)`, `r.POST(...)`) y los contraste contra los métodos cliente en `home-lab-sdk/`.
+  - Parser estático en Python que extraiga endpoints declarados en controladores Go (`r.GET(...)`, `r.POST(...)`) y los contraste contra los métodos cliente en `<repo>-sdk/`.
   - Reporte de diferencias: endpoints sin cliente, modelos con campos desalineados.
 - **05 - PHASE 3 (EXECUTION):**
     1. Desarrollar `scripts/aagy/audit_sdk_parity.py` y wrapper `scripts/bin/aagy/audit-sdk-parity.ps1`.

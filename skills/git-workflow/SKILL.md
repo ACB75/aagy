@@ -20,7 +20,7 @@ Best practices for Git version control, branching strategies, and collaborative 
 
 ### Trunk-Based Development with Environment Promotion (Monorepo Standard - ADR-0006)
 
-Standard strategy for Google-aligned monorepos and multi-tier homelab environments:
+Standard strategy for Google-aligned monorepos and multi-tier environments (Local, Sandbox, Live):
 
 ```text
 main (trunk / LOCAL - always deployable)
@@ -39,9 +39,10 @@ main (trunk / LOCAL - always deployable)
 - **Branch Naming**: `<type>/<project>/<short-description>` where type is `feat`, `fix`, `refactor`, `infra`, `chore`, `docs` or `test` (`scripts/py/validate_branch.py`). Never push a branch named by the environment (`claude/*`, `worktree-*`): rename it or push `HEAD:<type>/<project>/<name>`.
 - **Merge Strategy**: Fast-Forward or Squash and Merge only (linear history, zero merge bubbles).
 - **Environment Promotion**:
-  - `LOCAL` (FRACTAL Dev): continuous from trunk `main`.
-  - `SANDBOX` (FRACTAL QA): annotated tag `vX.Y.Z-sandbox` or `vX.Y.Z-rc.N`.
-  - `LIVE` (NEO Producción): immutable semantic tag `vX.Y.Z` validated in Sandbox.
+  - `LOCAL` (development): continuous from trunk `main`.
+  - `SANDBOX` (QA): annotated tag `vX.Y.Z-sandbox` or `vX.Y.Z-rc.N`.
+  - `LIVE` (production): immutable semantic tag `vX.Y.Z` validated in Sandbox.
+  - The Sandbox and Live hosts come from the environment layer of `aagy_config` (`hosts.sandbox`, `hosts.live`); the plugin has no defaults.
 - **Automation**: `scripts/ps1/git-flow-helper.ps1` and `git-flow-helper.sh`.
 
 ### GitHub Flow (Simple)

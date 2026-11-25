@@ -69,7 +69,7 @@ Toda carpeta que almacene diagramas organiza sus fuentes dentro de una subcarpet
 Todos los scripts de automatización (`scripts/py/`, `scripts/ps1/`, `scripts/sh/`) consumen [`scripts/py/docs_map.py`](../../scripts/py/docs_map.py) en lugar de concatenar rutas fijas a `doc/`.
 
 1. **Esquema v2 (`schema_version: 2`)**: Declara tanto roles estándar en nivel superior (`constitution`, `map`, `context`, `status`, `history`, `adr_dir`, `adr_index`) como el mapa granular `"paths"` (`todo`, `todo_done`, `ideas`, `plans`, `quick`, `templates`, `postmortems`, `postmortem_template`, `adr_template`, etc.).
-2. **Fallback Clásico Automático (`home-lab`)**: Si `.governance/docs-map.json` no existe o declara esquema v1, `docs_map.py` resuelve automáticamente las rutas heredadas (`doc/TODO.md`, `doc/TODO_DONE/`, `doc/IDEAS.md`, `doc/plan/`, `doc/templates/`, `doc/post-mortem/`, `doc/adr/`), garantizando **Zero-Breaking Changes** en repositorios consumidores.
+2. **Fallback Clásico Automático (`app`)**: Si `.governance/docs-map.json` no existe o declara esquema v1, `docs_map.py` resuelve automáticamente las rutas heredadas (`doc/TODO.md`, `doc/TODO_DONE/`, `doc/IDEAS.md`, `doc/plan/`, `doc/templates/`, `doc/post-mortem/`, `doc/adr/`), garantizando **Zero-Breaking Changes** en repositorios consumidores.
 3. **Bastionado Anti Path-Traversal**: `validate_repo_relative_path()` rechaza cadenas vacías, bytes nulos, rutas absolutas (POSIX/Windows), unidades de disco o secuencias `../` que resuelvan fuera de `RepoRoot`.
 
 ---

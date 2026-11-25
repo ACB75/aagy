@@ -14,7 +14,7 @@
   - **Tier 2 (Lazy / Por Proyecto)**: Skills especializadas, manuales y plantillas cargadas bajo demanda desde el repositorio.
 - **Resolución Parametrizada (`.governance/docs-map.json`)**: Contrato en dos esquemas mantenido por [scripts/py/docs_map.py](../scripts/py/docs_map.py):
   - **Esquema v2**: Estructura numerada bajo `doc/` (`doc/00-governance/` hasta `doc/06-backlog/`).
-  - **Fallback Clásico v1**: Rutas heredadas para mantener retrocompatibilidad total con consumidores existentes como `home-lab`.
+  - **Fallback Clásico v1**: Rutas heredadas para mantener retrocompatibilidad total con consumidores existentes como `app`.
 
 ---
 

@@ -16,7 +16,7 @@ from generate_postmortem import (
 
 def test_slugify_branch_name():
     assert slugify_branch_name("fix/SEC-001") == "fix_sec_001"
-    assert slugify_branch_name("fix/kakebo/issue-102") == "fix_kakebo_issue_102"
+    assert slugify_branch_name("fix/app/issue-102") == "fix_app_issue_102"
     assert slugify_branch_name("fix/cluster/timeout_p99") == "fix_cluster_timeout_p99"
 
 def test_format_postmortem_markdown():
@@ -50,17 +50,17 @@ def test_generate_postmortem_file_creates_file_in_dir():
         created_file = generate_postmortem_file(
             output_dir=out_dir,
             template_path=tpl,
-            branch_name="fix/kakebo/jwt-leak",
+            branch_name="fix/app/jwt-leak",
             author="DevOps",
             diff_stat="1 file changed"
         )
 
         assert created_file.is_file()
-        assert created_file.name.startswith("PM_fix_kakebo_jwt_leak_")
+        assert created_file.name.startswith("PM_fix_app_jwt_leak_")
         assert created_file.name.endswith(".md")
 
         content = created_file.read_text(encoding="utf-8")
-        assert "fix/kakebo/jwt-leak" in content
+        assert "fix/app/jwt-leak" in content
         assert "DevOps" in content
 
 

@@ -1,0 +1,4 @@
+{
+  "projects": ["aagy", "aagy-ecc", "scripts", "doc", "docs", "infra", "all"],
+  "consumer_refs": ["home-lab", "homelab", "home.lab", "kakebo", "whoiam", "token-hill", "cluster-lb", "fractal", "C:\\Workspace"]
+}

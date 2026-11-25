@@ -14,7 +14,7 @@ El sistema unifica `auto-evolve`, `instinct_manager` y `agent-self-evaluation` e
    - **Pasiva (`hooks.json` `Stop`)**: Ejecuta `python scripts/py/self_improve.py --capture-stop` al cierre de sesión en $< 500\text{ ms}$ (timeout `5s`), consume `0` tokens en el prompt y devuelve `{}` incluso ante errores o entradas vacías.
    - **Manual CLI**: Invocable desde terminal mediante `auto-evolve.ps1` / `auto-evolve.sh` / `self_improve.py`.
 2. **Persistencia a Doble Nivel (`RF-02`)**:
-   - **Nivel Proyecto (`project`)**: `<repo>/.agents/instincts/` (archivos `<id>.md` y `observations.jsonl`). Mantiene retrocompatibilidad 100% con `home-lab`.
+   - **Nivel Proyecto (`project`)**: `<repo>/.agents/instincts/` (archivos `<id>.md` y `observations.jsonl`). Mantiene retrocompatibilidad 100% con `app`.
    - **Nivel Global Plugin (`global`)**: `$PLUGIN_DATA/instincts/` (resuelto por `--plugin-data`, `AGY_PLUGIN_DATA`, `CLAUDE_PLUGIN_DATA` o `~/.gemini/config/plugins/aagy/.data/instincts/`).
 3. **Sanitización AgentShield y Redacción de Secretos (`RF-03`)**:
    - Filtra tokens `Bearer`, `API_KEY`, `password`, claves GitHub (`ghp_`), AWS (`AKIA`) y Google (`AIza`) reemplazándolas por `[REDACTED]` antes de escribir en disco.
