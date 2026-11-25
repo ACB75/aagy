@@ -30,9 +30,6 @@
 - [ ] **Validar la UI en Windows 11 (status line, toast y CI local)**
   <!-- aagy-task: id=ui-windows-validation epic=ui-de-claude-code-y-antigravity-116 issue=122 deps=116 -->
 
-- [ ] **Cerrar las asimetrías de UI de Antigravity cuando la plataforma lo permita**
-  <!-- aagy-task: id=ui-agy-asymmetries epic=ui-de-claude-code-y-antigravity-116 issue=124 deps=116,122 -->
-
 ## Cierre del backlog (última tarea de todo el backlog)
 
 > Va después de todas las épicas. Si se abre una épica o tarea nueva, su issue se añade a `deps=` de esta tarea y al cuerpo de #97.

@@ -43,5 +43,6 @@ carpeta del repo en el que trabajas.
 ## Paridad
 
 Antigravity: skill `aagy-ui` de `aagy`, con los mismos subcomandos, claves `ui.*` y variables `AAGY_UI_*`.
-Asimetrías: allí no hay status line nativa (el estado sale con `/aagy-ui`), ni evento `Notification`, y
-`ccusage` no lee sus transcripts.
+Asimetrías: el editor de Antigravity no tiene status line (su CLI sí, con `statusline on --harness agy`), no hay
+evento `Notification` (la status line del CLI lo suple) y `ccusage` no lee sus transcripts (`usage --harness agy`
+da tokens estimados).

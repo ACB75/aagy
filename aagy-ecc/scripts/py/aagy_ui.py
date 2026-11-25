@@ -7,6 +7,7 @@ Uso::
 
     python aagy_ui.py status [--harness claude|agy]
     python aagy_ui.py statusline on|off [--scope user|project|local] [--force]
+    python aagy_ui.py statusline on|off --harness agy   # CLI de Antigravity (~/.gemini/antigravity-cli)
     python aagy_ui.py repair              # hook SessionStart: ruta nueva tras actualizar el plugin
     python aagy_ui.py notify auto|on|off  # ui.notify en .governance/aagy.json
     python aagy_ui.py ccusage on|off      # ui.ccusage en .governance/aagy.json
@@ -48,6 +49,7 @@ KEY_COMMAND = "command"
 CCUSAGE = "ccusage"
 SCOPES = ("user", "project", "local")
 HARNESSES = ("claude", "agy")
+AGY_AGENT_FLAG = "--agent agy"
 USAGE_REPORTS = ("daily", "monthly", "session", "blocks")
 AGY_REPORTS = ("daily", "monthly", "session")
 AGY_DATE_FORMATS = {"daily": "%Y-%m-%d", "monthly": "%Y-%m"}
@@ -87,8 +89,20 @@ def settings_path(scope: str, start: Optional[Path] = None, environ: Optional[Ma
     return repo_root(start) / ".claude" / name
 
 
-def statusline_command(script: Optional[Path] = None) -> str:
+def agy_settings_path(home: Optional[Path] = None) -> Path:
+    """settings.json del CLI de Antigravity (allí vive su ``statusLine``)."""
+    return (home or Path.home()) / ".gemini" / "antigravity-cli" / "settings.json"
+
+
+def _quoted(path: str) -> str:
+    return f'"{path}"' if " " in path else path
+
+
+def statusline_command(script: Optional[Path] = None, harness: str = HARNESSES[0]) -> str:
     target = (script or _HERE / SCRIPT_NAME).resolve().as_posix()
+    if harness == HARNESSES[1]:
+        # El CLI de Antigravity usa sh -c o cmd /c: el intérprete va con ruta absoluta y sin sintaxis de shell.
+        return f"{_quoted(Path(sys.executable).as_posix())} {_quoted(target)} {AGY_AGENT_FLAG}"
     return f'P=$(command -v python || command -v python3); "$P" "{target}"'
 
 
@@ -110,13 +124,13 @@ def is_ours(entry: Any) -> bool:
     return isinstance(entry, dict) and SCRIPT_NAME in str(entry.get(KEY_COMMAND, ""))
 
 
-def statusline_on(path: Path, force: bool = False, script: Optional[Path] = None) -> bool:
+def statusline_on(path: Path, force: bool = False, script: Optional[Path] = None, harness: str = HARNESSES[0]) -> bool:
     """Escribe la status line de aagy. Devuelve True si cambió algo."""
     data = _read_json(path)
     current = data.get(KEY_STATUSLINE)
     if current and not is_ours(current) and not force:
         raise UiError(f"{path} ya tiene otra statusLine; usa --force para sustituirla.")
-    wanted = {"type": KEY_COMMAND, KEY_COMMAND: statusline_command(script), "padding": 0}
+    wanted = {"type": KEY_COMMAND, KEY_COMMAND: statusline_command(script, harness), "padding": 0}
     if current == wanted:
         return False
     data[KEY_STATUSLINE] = wanted
@@ -157,7 +171,8 @@ def repair(paths: Sequence[Path], script: Optional[Path] = None) -> List[Path]:
         old = _script_in(str(entry.get(KEY_COMMAND, "")))
         if old is not None and old.is_file():
             continue
-        entry[KEY_COMMAND] = statusline_command(script)
+        harness = HARNESSES[1] if AGY_AGENT_FLAG in str(entry.get(KEY_COMMAND, "")) else HARNESSES[0]
+        entry[KEY_COMMAND] = statusline_command(script, harness)
         _write_json(path, data)
         fixed.append(path)
     return fixed
@@ -201,7 +216,7 @@ def merge_recommendations(path: Path, ids: Sequence[str]) -> Tuple[bool, List[st
 # --------------------------------------------------------------------------- comandos
 
 def _scope_paths(start: Optional[Path] = None) -> List[Path]:
-    return [settings_path(scope, start) for scope in SCOPES]
+    return [*(settings_path(scope, start) for scope in SCOPES), agy_settings_path()]
 
 
 def cmd_status(args: argparse.Namespace) -> int:
@@ -209,7 +224,8 @@ def cmd_status(args: argparse.Namespace) -> int:
     cfg = aagy_config.load()
     agy = getattr(args, "harness", HARNESSES[0]) == HARNESSES[1]
     if agy:
-        print(f"{PREFIX} statusline: no aplica en Antigravity; estado con aagy_statusline.py --plain --agent agy")
+        cli = "instalada" if is_ours(_safe_entry(agy_settings_path())) else "no instalada"
+        print(f"{PREFIX} statusline (CLI de Antigravity): {cli} · en el editor, aagy_statusline.py --plain --agent agy")
     else:
         installed = [scope for scope in SCOPES if is_ours(_safe_entry(settings_path(scope)))]
         print(f"{PREFIX} statusline: {'instalada en ' + ', '.join(installed) if installed else 'no instalada'}"
@@ -232,8 +248,9 @@ def _safe_entry(path: Path) -> Any:
 
 
 def cmd_statusline(args: argparse.Namespace) -> int:
-    path = settings_path(args.scope)
-    changed = statusline_on(path, args.force) if args.state == "on" else statusline_off(path)
+    harness = getattr(args, "harness", HARNESSES[0])
+    path = agy_settings_path() if harness == HARNESSES[1] else settings_path(args.scope)
+    changed = statusline_on(path, args.force, harness=harness) if args.state == "on" else statusline_off(path)
     verb = "instalada" if args.state == "on" else "quitada"
     print(f"{PREFIX} statusline {verb if changed else 'sin cambios'} en {path}. Se ve en la próxima respuesta.")
     return 0
@@ -331,6 +348,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p_sl.add_argument("state", choices=("on", "off"))
     p_sl.add_argument("--scope", choices=SCOPES, default="user")
     p_sl.add_argument("--force", action="store_true")
+    p_sl.add_argument("--harness", choices=HARNESSES, default=HARNESSES[0])
     sub.add_parser("repair")
     p_nt = sub.add_parser("notify")
     p_nt.add_argument("state", choices=(aagy_notify.NOTIFY_AUTO, aagy_notify.NOTIFY_ON, aagy_notify.NOTIFY_OFF))
