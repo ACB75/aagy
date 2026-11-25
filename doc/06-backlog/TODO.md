@@ -29,9 +29,6 @@
 
 > Que todos los workflows y documentos salgan de una plantilla genérica ampliable y que aagy y aagy-ecc se comporten igual. REQ: doc/06-backlog/plans/REQ_aagy_generic_templates.md
 
-- [ ] **Hard sync con lista de ficheros instalados**
-  <!-- aagy-task: id=hard-sync-manifest epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=101 -->
-
 ## Cierre del backlog (última tarea de todo el backlog)
 
 > Va después de todas las épicas. Si se abre una épica o tarea nueva, su issue se añade a `deps=` de esta tarea y al cuerpo de #97.

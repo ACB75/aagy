@@ -36,7 +36,7 @@ if _SCRIPT_DIR not in sys.path:
     sys.path.insert(0, _SCRIPT_DIR)
 
 import doctor_core as core  # noqa: E402
-from install_manifest import InstallManifest, read_manifest  # noqa: E402
+from install_manifest import InstallManifest, drift_problems, read_manifest  # noqa: E402
 
 TARGET_NAME = "aagy-ecc (Claude Code)"
 PLUGIN_NAME = "aagy-ecc"
@@ -260,6 +260,8 @@ def check_version(ctx: EccContext) -> core.CheckResult:
     problems: List[str] = []
     if ctx.manifest is None:
         problems.append(f"Falta {core.MANIFEST_FILE} en la copia instalada (instala con install.ps1 / install.sh).")
+    elif ctx.install_path is not None:
+        problems.extend(drift_problems(ctx.install_path, ctx.manifest, "Reinstala el plugin (install.ps1 / install.sh)."))
     current = manifest_version(ctx.install_path)
     repo_version = manifest_version(ctx.repo_plugin)
     if repo_version and current != repo_version:

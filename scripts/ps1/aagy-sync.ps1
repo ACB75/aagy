@@ -22,6 +22,12 @@
     actualiza el plugin global aagy. El plugin nunca conoce nombres de proyectos consumidores.
 .PARAMETER Clean
     Si se especifica, limpia previamente las carpetas skills/ y agents/ del destino antes de sincronizar.
+.PARAMETER Hard
+    Sincronización dura: borra los ficheros que el perfil ya no trae (según .aagy-install.json).
+.PARAMETER Force
+    Pisa también los ficheros del plugin editados a mano (por defecto se avisa y no se tocan).
+.PARAMETER DryRun
+    Muestra qué cambiaría sin tocar nada.
 .EXAMPLE
     pwsh -File scripts/ps1/aagy-sync.ps1 -Phase generic -Clean
 .EXAMPLE
@@ -31,7 +37,10 @@ param(
     [ValidateSet("generic", "network-infra", "java-spring", "angular", "go", "python", "all", "status")]
     [string]$Phase = "status",
     [string]$Repo = "",
-    [switch]$Clean
+    [switch]$Clean,
+    [switch]$Hard,
+    [switch]$Force,
+    [switch]$DryRun
 )
 
 $ErrorActionPreference = "Stop"
@@ -39,7 +48,9 @@ Set-StrictMode -Version Latest
 
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $RepoRoot = (Resolve-Path (Join-Path $ScriptDir "..\..")).Path
-$GlobalPluginDir = Join-Path $HOME ".gemini\config\plugins\aagy"
+$DestDir = Join-Path $HOME ".gemini\config\plugins\aagy"
+# La copia nueva se prepara en un temporal; Complete-Install la aplica en $DestDir (install_manifest.py apply).
+$GlobalPluginDir = $DestDir
 
 $SkillsSource = Join-Path $RepoRoot "skills"
 $AgentsSource = Join-Path $RepoRoot "agents"
@@ -113,18 +124,24 @@ $PhaseConfig = @{
 }
 
 
-function Write-InstallManifest {
-    # Deja .aagy-install.json en el plugin global para /aagy-doctor. Nunca aborta la sincronización.
+function Complete-Install {
+    # Lleva la copia nueva al destino y deja .aagy-install.json con la lista de ficheros y sus hashes.
     param([string]$InstalledPhase)
-    $manifestScript = Join-Path $RepoRoot "scripts\py\install_manifest.py"
-    if (-not (Test-Path $manifestScript)) { return }
-    $py = Get-Command python -ErrorAction SilentlyContinue
-    if (-not $py) { $py = Get-Command python3 -ErrorAction SilentlyContinue }
-    if (-not $py) {
-        Write-Host "[!] Python no disponible: se omite el manifiesto de instalación." -ForegroundColor Yellow
-        return
+    $manifestScript = Join-Path $RepoRoot "scripts/py/install_manifest.py"
+    $py = Get-Command python3 -ErrorAction SilentlyContinue
+    if (-not $py) { $py = Get-Command python -ErrorAction SilentlyContinue }
+    if (-not $py) { throw "Python es necesario para aplicar la sincronización." }
+    New-Item -ItemType Directory -Force -Path (Join-Path $DestDir ".data/instincts") | Out-Null
+    $applyArgs = @("apply", "--stage", $GlobalPluginDir, "--dest", $DestDir, "--harness", "agy", "--profile", $InstalledPhase, "--repo-root", $RepoRoot)
+    if ($Hard) { $applyArgs += "--hard" }
+    if ($Force) { $applyArgs += "--force" }
+    if ($DryRun) { $applyArgs += "--dry-run" }
+    try {
+        & $py.Source $manifestScript @applyArgs
+        if ($LASTEXITCODE -ne 0) { throw "install_manifest.py apply falló ($LASTEXITCODE)." }
+    } finally {
+        Remove-Item -Path $GlobalPluginDir -Recurse -Force -ErrorAction SilentlyContinue
     }
-    & $py.Source $manifestScript write --dest $GlobalPluginDir --harness agy --profile $InstalledPhase --repo-root $RepoRoot
 }
 
 if ($Repo) {
@@ -155,13 +172,15 @@ if ($Phase -eq "status") {
     exit 0
 }
 
-$destRoot = $GlobalPluginDir
-if ($Clean) {
-    Write-Host "[+] Limpiando directorio destino: $destRoot" -ForegroundColor Cyan
-    if (Test-Path "$destRoot\skills") { Remove-Item -Path "$destRoot\skills" -Recurse -Force }
-    if (Test-Path "$destRoot\agents") { Remove-Item -Path "$destRoot\agents" -Recurse -Force }
-    if (Test-Path "$destRoot\rules") { Remove-Item -Path "$destRoot\rules" -Recurse -Force }
+if ($Clean -and -not $DryRun) {
+    Write-Host "[+] Limpiando directorio destino: $DestDir" -ForegroundColor Cyan
+    foreach ($sub in @("skills", "agents", "rules")) {
+        $old = Join-Path $DestDir $sub
+        if (Test-Path $old) { Remove-Item -Path $old -Recurse -Force }
+    }
 }
+$GlobalPluginDir = Join-Path ([System.IO.Path]::GetTempPath()) ("aagy-sync-" + [guid]::NewGuid().ToString("N"))
+$destRoot = $GlobalPluginDir
 New-Item -ItemType Directory -Force -Path "$destRoot\skills" | Out-Null
 New-Item -ItemType Directory -Force -Path "$destRoot\agents" | Out-Null
 
@@ -178,12 +197,11 @@ if (Test-Path $pluginJsonSrc) {
 $hooksJsonSrc = Join-Path $RepoRoot "hooks.json"
 if (Test-Path $hooksJsonSrc) {
     # Los hooks llaman a los .py del plugin con ruta absoluta (como ${CLAUDE_PLUGIN_ROOT} en aagy-ecc).
-    $pluginRootFwd = $GlobalPluginDir -replace '\\', '/'
+    $pluginRootFwd = $DestDir -replace '\\', '/'
     $hooksText = (Get-Content -Raw -Encoding utf8 $hooksJsonSrc).Replace('${AAGY_PLUGIN_ROOT}', $pluginRootFwd)
     [System.IO.File]::WriteAllText((Join-Path $GlobalPluginDir "hooks.json"), $hooksText, [System.Text.UTF8Encoding]::new($false))
 }
 
-New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\.data\instincts" | Out-Null
 New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\scripts\ps1" | Out-Null
 New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\scripts\sh" | Out-Null
 New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\scripts\py" | Out-Null
@@ -215,8 +233,8 @@ if ($Phase -eq "all") {
             }
         }
     }
-    Write-Host "[OK] Catálogo completo optimizado sincronizado en $destRoot." -ForegroundColor Green
-    Write-InstallManifest -InstalledPhase $Phase
+    Complete-Install -InstalledPhase $Phase
+    Write-Host "[OK] Catálogo completo optimizado sincronizado en $DestDir." -ForegroundColor Green
     exit 0
 }
 
@@ -240,5 +258,5 @@ foreach ($a in $cfg.Agents) {
     }
 }
 
-Write-Host "[OK] Sincronización finalizada para fase '$Phase' en $destRoot." -ForegroundColor Green
-Write-InstallManifest -InstalledPhase $Phase
+Complete-Install -InstalledPhase $Phase
+Write-Host "[OK] aagy-sync terminado para la fase '$Phase' ($DestDir)." -ForegroundColor Green
