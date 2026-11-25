@@ -1,7 +1,17 @@
 # Registro Histórico de Decisiones y Cambios Materiales | AAGY / `aagy` Ecosystem
 
 > **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión Canónica**: `5.1.1`
+> **Versión Canónica**: `5.2.0`
+
+---
+
+## 2026-11-25: 5.2.0 Configurar los modelos locales de una máquina en un paso
+
+1. **`local_model.py setup`**: guarda `local_model.*` (URL y modelos `tool`, `only`, `fim`) en el `env.json` de la
+   máquina (`AAGY_ENV_DIR` o `--env-dir`) sin tocar el resto, avisa de los modelos que faltan en Ollama y los
+   descarga con `--pull`, y registra `aagy-local` en Antigravity con el Python actual. Disponible en `/aagy-local`
+   y en la skill `aagy-local`. El plugin sigue sin nombres de modelo.
+2. **Backlog**: la reinstalación de aagy-ecc y los doctores quedan apuntados en la tarea de #122, sin ejecutar.
 
 ---
 

@@ -17,5 +17,8 @@
 
 - [ ] **Validar la UI en Windows 11 (status line, toast y CI local)**
   <!-- aagy-task: id=ui-windows-validation epic=ui-de-claude-code-y-antigravity-116 issue=122 deps=116 -->
+  - Pendiente, no se hace todavía: cerrar las sesiones de Claude, `git pull --ff-only origin main`,
+    `aagy-sync.ps1 generic -Hard`, reinstalar aagy-ecc (sale de la caché 4.4.0), abrir una sesión nueva y
+    pasar `/aagy-doctor` y `/aagy-ecc-doctor` antes de revisar los criterios.
 
 ## Épica: Flujo GitHub Issues y Projects v2 (cerrada 2026-11-21 por agy)

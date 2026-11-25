@@ -12,7 +12,7 @@
       "name": "aagy-ecc",
       "source": "./",
       "description": "Skills, subagentes, reglas y hooks de aagy para Claude Code, con paridad verificada por audit_plugin_parity.py.",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "author": {
         "name": "ACB75",
         "url": "https://github.com/ACB75"
@@ -25,7 +25,7 @@
     },
     {
       "name": "aagy-ecc-network-infra",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'network-infra'. Requiere aagy-ecc.",
       "author": {
         "name": "ACB75",
@@ -40,7 +40,7 @@
     },
     {
       "name": "aagy-ecc-java-spring",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'java-spring'. Requiere aagy-ecc.",
       "author": {
         "name": "ACB75",
@@ -55,7 +55,7 @@
     },
     {
       "name": "aagy-ecc-angular",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'angular'. Requiere aagy-ecc.",
       "author": {
         "name": "ACB75",
@@ -70,7 +70,7 @@
     },
     {
       "name": "aagy-ecc-go",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'go'. Requiere aagy-ecc.",
       "author": {
         "name": "ACB75",
@@ -85,7 +85,7 @@
     },
     {
       "name": "aagy-ecc-python",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'python'. Requiere aagy-ecc.",
       "author": {
         "name": "ACB75",
@@ -100,7 +100,7 @@
     },
     {
       "name": "aagy-ecc-shared",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'shared'. Requiere aagy-ecc.",
       "author": {
         "name": "ACB75",
@@ -115,7 +115,7 @@
     },
     {
       "name": "aagy-ecc-extras",
-      "version": "5.1.1",
+      "version": "5.2.0",
       "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'extras'. Requiere aagy-ecc.",
       "author": {
         "name": "ACB75",

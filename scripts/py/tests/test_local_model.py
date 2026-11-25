@@ -45,6 +45,9 @@ class _FakeOllama(BaseHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", "0"))
         payload = json.loads(self.rfile.read(length))
         _FakeOllama.requests.append(payload)
+        if self.path.endswith("/api/pull"):
+            self._send({"status": "success"})
+            return
         user = payload["messages"][1]["content"]
         self._send({"message": {"content": f"OK:{len(user)}"}})
 
@@ -174,6 +177,39 @@ def test_register_agy(tmp_path: Path) -> None:
     assert lm.register_agy(config) is False
     data = json.loads(config.read_text(encoding="utf-8"))
     assert "other" in data["mcpServers"] and data["mcpServers"]["aagy-local"]["args"][0].endswith("local_model_mcp.py")
+
+
+def test_write_env_settings_merges_and_is_idempotent(tmp_path: Path) -> None:
+    env = tmp_path / "aagy" / "env.json"
+    env.parent.mkdir()
+    env.write_text(json.dumps({"hosts": {"a": 1}, "local_model": {"num_ctx": 4096}}), encoding="utf-8")
+    assert lm.write_env_settings(env, {"tool": MODEL, "fim": "", "num_ctx": None}) is True
+    assert lm.write_env_settings(env, {"tool": MODEL}) is False
+    data = json.loads(env.read_text(encoding="utf-8"))
+    assert data == {"hosts": {"a": 1}, "local_model": {"num_ctx": 4096, "tool": MODEL}}
+
+
+def test_setup_writes_env_pulls_and_registers(repo: Path, ollama: str, tmp_path: Path,
+                                               monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    env_dir = tmp_path / "machine"
+    agy = tmp_path / "mcp_config.json"
+    for var in ("AAGY_ENV_DIR", "AAGY_OLLAMA_URL", "AAGY_LOCAL_MODEL_NAME", "AAGY_LOCAL_MODEL"):
+        monkeypatch.delenv(var, raising=False)
+    monkeypatch.chdir(repo)
+    code = lm.main(["setup", "--env-dir", str(env_dir), "--url", ollama, "--tool", MODEL,
+                    "--only", "agent:9b", "--pull", "--agy-config", str(agy), "--python", "py"])
+    assert code == 0
+    data = json.loads((env_dir / "aagy" / "env.json").read_text(encoding="utf-8"))
+    assert data["local_model"] == {"url": ollama, "tool": MODEL, "only": "agent:9b"}
+    assert [r["model"] for r in _FakeOllama.requests] == ["agent:9b"]
+    assert json.loads(agy.read_text(encoding="utf-8"))["mcpServers"]["aagy-local"]["command"] == "py"
+    out = capsys.readouterr().out
+    assert "efectivo=tool" in out and "AAGY_ENV_DIR" in out
+
+
+def test_setup_without_env_dir_fails(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("AAGY_ENV_DIR", raising=False)
+    assert lm.main(["setup", "--tool", MODEL, "--no-agy"]) == 2
 
 
 def _rpc(server: mcp.Server, *messages: Dict[str, Any]) -> List[Dict[str, Any]]:

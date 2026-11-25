@@ -40,6 +40,7 @@ Uso::
     python local_model.py bench [--models a,b]   # precisión y tokens/s
     python local_model.py usage                  # resumen del registro de uso
     python local_model.py register-agy [--config <mcp_config.json>]
+    python local_model.py setup --tool <m> --only <m> --fim <m> [--pull]  # configura la máquina
 
 Se espeja en aagy-ecc/scripts/py/ mediante sync_aagy_ecc.py.
 """
@@ -482,6 +483,78 @@ def default_agy_config() -> Path:
     return Path.home() / ".gemini" / "antigravity" / "mcp_config.json"
 
 
+# --------------------------------------------------------------------------- setup de la máquina
+
+SETUP_KEYS = ("url", "tool", "only", "fim", K_NUM_CTX)
+PULL_TIMEOUT_S = 3600
+
+
+def write_env_settings(env_path: Path, values: Mapping[str, Any]) -> bool:
+    """Funde ``values`` en ``local_model`` de env.json sin tocar el resto. True si cambió algo."""
+    data: Dict[str, Any] = {}
+    if env_path.is_file():
+        data = json.loads(env_path.read_text(encoding=ENCODING) or "{}")
+    section = data.setdefault(KEY_ROOT, {})
+    wanted = {k: v for k, v in values.items() if v not in (None, "")}
+    if all(section.get(k) == v for k, v in wanted.items()):
+        return False
+    section.update(wanted)
+    env_path.parent.mkdir(parents=True, exist_ok=True)
+    env_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding=ENCODING)
+    return True
+
+
+def missing_models(settings: Settings, models: Sequence[str]) -> List[str]:
+    """Modelos configurados (tool, only, fim) que Ollama no tiene descargados."""
+    wanted = [m for m in (settings.tool_model, settings.only_model, settings.fim_model) if m]
+    return [m for m in dict.fromkeys(wanted) if not _model_present(m, models)]
+
+
+def pull_model(settings: Settings, model: str) -> None:
+    """``ollama pull`` por la API (sin streaming). Lanza LocalModelError si falla."""
+    data = _http_json(f"{settings.url}/api/pull", {"model": model, "stream": False}, PULL_TIMEOUT_S)
+    if data.get("status") != "success":
+        raise LocalModelError(f"No se pudo descargar {model}: {data.get('error') or data}")
+
+
+def _setup_env_path(args: argparse.Namespace) -> Path:
+    if args.env_dir:
+        return Path(args.env_dir).expanduser() / aagy_config.ENV_FILE
+    path = aagy_config.env_file()
+    if path is None:
+        raise LocalModelError(
+            f"Falta {aagy_config.ENV_DIR_VAR}: define la carpeta privada de la máquina o pasa --env-dir."
+        )
+    return path
+
+
+def _cmd_setup(args: argparse.Namespace, _settings: Settings) -> int:
+    env_path = _setup_env_path(args)
+    values = {k: getattr(args, k) for k in SETUP_KEYS}
+    changed = write_env_settings(env_path, values)
+    print(f"[aagy-local] {'actualizado' if changed else 'sin cambios'}: {env_path}")
+    if args.env_dir and aagy_config.env_file() != env_path:
+        print(f"  Aviso: define {aagy_config.ENV_DIR_VAR}={Path(args.env_dir).expanduser()} para que el plugin lo lea.")
+    environ = {**os.environ, aagy_config.ENV_DIR_VAR: str(env_path.parent.parent)}
+    settings = load_settings(environ=environ)
+    try:
+        missing = missing_models(settings, list_models(settings))
+    except LocalModelError as exc:
+        print(f"  {exc}. Sin Ollama, el modo auto se queda en off.")
+        missing = []
+    for model in missing:
+        if not args.pull:
+            print(f"  Falta {model}: ollama pull {model} (o repite con --pull).")
+            continue
+        print(f"  Descargando {model}...")
+        pull_model(settings, model)
+    if not args.no_agy:
+        config = args.agy_config or default_agy_config()
+        reg = register_agy(config, args.python)
+        print(f"  Antigravity: {'registrado' if reg else 'ya estaba registrado'} en {config} (reinicia Antigravity).")
+    return _cmd_status(argparse.Namespace(json=False), load_settings(environ=environ))
+
+
 # --------------------------------------------------------------------------- CLI
 
 def _cmd_status(args: argparse.Namespace, settings: Settings) -> int:
@@ -577,6 +650,17 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p_reg = sub.add_parser("register-agy", help="Registra aagy-local en el mcp_config.json de Antigravity.")
     p_reg.add_argument("--config", type=Path, default=None)
     p_reg.add_argument("--python", default="python")
+    p_setup = sub.add_parser("setup", help="Guarda los modelos en env.json de la máquina, comprueba Ollama y registra Antigravity.")
+    p_setup.add_argument("--env-dir", default="", help=f"Carpeta privada de la máquina (por defecto, {aagy_config.ENV_DIR_VAR}).")
+    p_setup.add_argument("--url", default="")
+    p_setup.add_argument("--tool", default="", help="Modelo para tareas sencillas (local_run).")
+    p_setup.add_argument("--only", default="", help="Modelo con llamadas a herramientas para el modo solo local.")
+    p_setup.add_argument("--fim", default="", help="Modelo de autocompletado (Tab).")
+    p_setup.add_argument("--num-ctx", dest="num_ctx", type=int, default=None)
+    p_setup.add_argument("--pull", action="store_true", help="Descarga con Ollama los modelos que falten.")
+    p_setup.add_argument("--no-agy", action="store_true", help="No registra el servidor en Antigravity.")
+    p_setup.add_argument("--agy-config", type=Path, default=None)
+    p_setup.add_argument("--python", default=sys.executable or "python", help="Intérprete para el servidor MCP (por defecto, el actual).")
     args = parser.parse_args(argv)
     if args.command == "on":
         args.command = MODE_TOOL
@@ -588,7 +672,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         sys.stdout.reconfigure(encoding=ENCODING)
     args = parse_args(argv)
     settings = load_settings()
-    handlers = {"status": _cmd_status, "run": _cmd_run, "bench": _cmd_bench, "only": _cmd_only, "usage": _cmd_usage, "register-agy": _cmd_register}
+    handlers = {"status": _cmd_status, "run": _cmd_run, "bench": _cmd_bench, "only": _cmd_only, "usage": _cmd_usage, "register-agy": _cmd_register, "setup": _cmd_setup}
     try:
         return handlers.get(args.command, _cmd_set)(args, settings)
     except (LocalModelError, ValueError, OSError) as exc:
