@@ -2,10 +2,8 @@
 """
 Modelo local con Ollama para aagy y aagy-ecc (local_model.py).
 
-Librería del modelo local para el comando ``/aagy-local``, la skill, el doctor y
-el servidor MCP ``aagy-local``. El servidor no va en el plugin: lo instala cada
-equipo en su repo de configuración y lo registra a nivel de usuario
-(MANUAL_local_model.md). Solo stdlib de Python. Sin Ollama, todo sigue
+Núcleo común del servidor MCP ``aagy-local`` (local_model_mcp.py), del comando
+``/aagy-local`` y del doctor. Solo stdlib de Python. Sin Ollama, todo sigue
 igual que sin este módulo: el modo ``auto`` se queda en ``off`` sin avisos.
 
 Modos (``local_model.mode`` o ``AAGY_LOCAL_MODEL``):
@@ -41,6 +39,7 @@ Uso::
     python local_model.py only --harness claude|agy   # sesión solo local
     python local_model.py bench [--models a,b]   # precisión y tokens/s
     python local_model.py usage                  # resumen del registro de uso
+    python local_model.py register-agy [--config <mcp_config.json>]
 
 Se espeja en aagy-ecc/scripts/py/ mediante sync_aagy_ecc.py.
 """
@@ -460,23 +459,27 @@ def _repo_root(start: Optional[Path] = None) -> Path:
     return current
 
 
-def server_registered(config_path: Path) -> bool:
-    """True si ``config_path`` (mcp_config.json, ~/.claude.json o .mcp.json) registra ``aagy-local``."""
-    try:
+def server_entry(python: str = "python") -> Dict[str, Any]:
+    return {"command": python, "args": [str(_HERE / "local_model_mcp.py")]}
+
+
+def register_agy(config_path: Path, python: str = "python") -> bool:
+    """Añade aagy-local al mcp_config.json de Antigravity. Devuelve True si cambió algo."""
+    data: Dict[str, Any] = {}
+    if config_path.is_file():
         data = json.loads(config_path.read_text(encoding=ENCODING) or "{}")
-    except (OSError, ValueError):
+    servers = data.setdefault("mcpServers", {})
+    entry = server_entry(python)
+    if servers.get(SERVER_NAME) == entry:
         return False
-    servers = data.get("mcpServers") if isinstance(data, dict) else None
-    return isinstance(servers, dict) and SERVER_NAME in servers
+    servers[SERVER_NAME] = entry
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    config_path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding=ENCODING)
+    return True
 
 
 def default_agy_config() -> Path:
     return Path.home() / ".gemini" / "antigravity" / "mcp_config.json"
-
-
-def claude_user_config() -> Path:
-    """Configuración de usuario de Claude Code, donde ``claude mcp add --scope user`` registra servidores."""
-    return Path.home() / ".claude.json"
 
 
 # --------------------------------------------------------------------------- CLI
@@ -546,6 +549,13 @@ def _cmd_usage(_args: argparse.Namespace, _settings: Settings) -> int:
     return 0
 
 
+def _cmd_register(args: argparse.Namespace, _settings: Settings) -> int:
+    path = args.config or default_agy_config()
+    changed = register_agy(path, args.python)
+    print(f"[aagy-local] {'registrado' if changed else 'ya estaba registrado'} en {path}")
+    return 0
+
+
 def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Modelo local con Ollama (aagy-local).")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -564,6 +574,9 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p_bench = sub.add_parser("bench", help="Mide precisión y tokens/s de los modelos con ficheros del repo.")
     p_bench.add_argument("--models", default="", help="Lista separada por comas (por defecto, los configurados).")
     sub.add_parser("usage", help="Resumen del registro de uso local (sin contenido).")
+    p_reg = sub.add_parser("register-agy", help="Registra aagy-local en el mcp_config.json de Antigravity.")
+    p_reg.add_argument("--config", type=Path, default=None)
+    p_reg.add_argument("--python", default="python")
     args = parser.parse_args(argv)
     if args.command == "on":
         args.command = MODE_TOOL
@@ -575,7 +588,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         sys.stdout.reconfigure(encoding=ENCODING)
     args = parse_args(argv)
     settings = load_settings()
-    handlers = {"status": _cmd_status, "run": _cmd_run, "bench": _cmd_bench, "only": _cmd_only, "usage": _cmd_usage}
+    handlers = {"status": _cmd_status, "run": _cmd_run, "bench": _cmd_bench, "only": _cmd_only, "usage": _cmd_usage, "register-agy": _cmd_register}
     try:
         return handlers.get(args.command, _cmd_set)(args, settings)
     except (LocalModelError, ValueError, OSError) as exc:

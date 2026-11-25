@@ -559,13 +559,10 @@ def check_external_config(ctx) -> core.CheckResult:
 
 
 def _ecc_local_registered(ctx: EccContext) -> Optional[bool]:
-    """El servidor aagy-local lo registra el equipo (usuario) o el proyecto, no el plugin."""
-    try:
-        import local_model  # noqa: PLC0415 - mismo directorio que el doctor
-    except ImportError:
+    if not ctx.installed:
         return None
-    paths = (local_model.claude_user_config(), Path(ctx.project_dir) / ".mcp.json")
-    return any(local_model.server_registered(path) for path in paths)
+    mcp = ctx.install_path / ".mcp.json"
+    return mcp.is_file() and "aagy-local" in core.read_text(mcp)
 
 
 def check_local_model(ctx) -> core.CheckResult:

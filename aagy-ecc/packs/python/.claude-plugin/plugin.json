@@ -1,6 +1,6 @@
 {
   "name": "aagy-ecc-python",
-  "version": "5.1.0",
+  "version": "5.1.1",
   "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'python'. Requiere aagy-ecc.",
   "author": {
     "name": "ACB75",

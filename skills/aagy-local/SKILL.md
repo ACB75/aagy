@@ -8,12 +8,13 @@ metadata:
 # aagy-local
 
 Modelo local con Ollama en Antigravity. Es el equivalente del comando `/aagy-local`
-de Claude Code: los dos usan `scripts/py/local_model.py`. El servidor MCP `aagy-local` no va en el
-plugin: lo instala y registra cada equipo (`MANUAL_local_model.md` §3).
+de Claude Code: los dos usan `scripts/py/local_model.py` y el mismo servidor MCP
+`aagy-local` (`scripts/py/local_model_mcp.py`).
 
 ## Cuándo usarla
 
 - El usuario pide "modelo local", "Ollama", `/aagy-local`, encenderlo, apagarlo o ver su estado.
+- Después de instalar `aagy`, para registrar el servidor MCP en Antigravity.
 
 ## Uso
 
@@ -22,6 +23,7 @@ plugin: lo instala y registra cada equipo (`MANUAL_local_model.md` §3).
 /aagy-local on|off|auto
 /aagy-local bench      # mide precisión y tokens/s de los modelos configurados
 /aagy-local usage      # resumen del registro de uso (sin contenido)
+/aagy-local register   # registra aagy-local en mcp_config.json de Antigravity
 ```
 
 ## Qué hacer
@@ -32,6 +34,7 @@ Ejecuta desde la carpeta del repo en el que trabajas.
 
 1. Sin argumentos: `local_model.py status` y resume en una línea.
 2. `on`, `off`, `auto`, `bench`, `usage`: `local_model.py <subcomando>`. Los modos se guardan como `local_model.mode` en `.governance/aagy.json`.
+3. `register`: `local_model.py register-agy` y pide reiniciar Antigravity para que cargue el servidor.
 
 ## Reglas
 
@@ -43,4 +46,4 @@ Ejecuta desde la carpeta del repo en el que trabajas.
 
 ## Paridad
 
-Claude Code: comando `/aagy-local` de `aagy-ecc`. Mismo script; el servidor MCP lo registra el equipo en los dos harnesses.
+Claude Code: comando `/aagy-local` de `aagy-ecc`. Mismo script y mismo servidor MCP.

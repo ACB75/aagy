@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Pruebas de local_model.py con un Ollama simulado."""
+"""Pruebas de local_model.py y local_model_mcp.py con un Ollama simulado."""
 
 from __future__ import annotations
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import io
 import json
 from pathlib import Path
 import sys
@@ -18,6 +19,7 @@ if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
 
 import local_model as lm  # noqa: E402
+import local_model_mcp as mcp  # noqa: E402
 
 MODEL = "fake-model:1b"
 
@@ -165,12 +167,43 @@ def test_set_mode_is_idempotent(repo: Path) -> None:
         lm.set_mode("x", settings, repo)
 
 
-def test_server_registered(tmp_path: Path) -> None:
+def test_register_agy(tmp_path: Path) -> None:
     config = tmp_path / "mcp_config.json"
-    assert lm.server_registered(config) is False
     config.write_text(json.dumps({"mcpServers": {"other": {"command": "x"}}}), encoding="utf-8")
-    assert lm.server_registered(config) is False
-    config.write_text(json.dumps({"mcpServers": {"aagy-local": {"command": "python"}}}), encoding="utf-8")
-    assert lm.server_registered(config) is True
-    config.write_text("no es json", encoding="utf-8")
-    assert lm.server_registered(config) is False
+    assert lm.register_agy(config) is True
+    assert lm.register_agy(config) is False
+    data = json.loads(config.read_text(encoding="utf-8"))
+    assert "other" in data["mcpServers"] and data["mcpServers"]["aagy-local"]["args"][0].endswith("local_model_mcp.py")
+
+
+def _rpc(server: mcp.Server, *messages: Dict[str, Any]) -> List[Dict[str, Any]]:
+    out = io.StringIO()
+    mcp.serve(io.StringIO("\n".join(json.dumps(m) for m in messages) + "\n"), out, server)
+    return [json.loads(line) for line in out.getvalue().splitlines()]
+
+
+def test_mcp_empty_tools_without_ollama(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    for key, value in _env(_dead_url()).items():
+        monkeypatch.setenv(key, value)
+    replies = _rpc(mcp.Server(repo),
+                   {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05"}},
+                   {"jsonrpc": "2.0", "method": "notifications/initialized"},
+                   {"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
+    assert replies[0]["result"]["serverInfo"]["name"] == "aagy-local"
+    assert replies[1]["result"]["tools"] == []
+
+
+def test_mcp_tools_and_call(repo: Path, ollama: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    for key, value in _env(ollama).items():
+        monkeypatch.setenv(key, value)
+    replies = _rpc(mcp.Server(repo),
+                   {"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
+                   {"jsonrpc": "2.0", "id": 2, "method": "tools/call",
+                    "params": {"name": "local_run", "arguments": {"task": "complete", "text": "hola"}}},
+                   {"jsonrpc": "2.0", "id": 3, "method": "tools/call", "params": {"name": "nope"}},
+                   {"jsonrpc": "2.0", "id": 4, "method": "nope"})
+    assert [t["name"] for t in replies[0]["result"]["tools"]] == ["local_status", "local_run"]
+    payload = json.loads(replies[1]["result"]["content"][0]["text"])
+    assert payload["result"] == "OK:4" and replies[1]["result"]["isError"] is False
+    assert replies[2]["error"]["code"] == mcp.ERR_PARAMS
+    assert replies[3]["error"]["code"] == mcp.ERR_METHOD

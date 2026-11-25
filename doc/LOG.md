@@ -1,17 +1,15 @@
 # Registro Histórico de Decisiones y Cambios Materiales | AAGY / `aagy` Ecosystem
 
 > **Espina Dorsal de Gobernanza Documental**: [ACB75/aagy](https://github.com/ACB75/aagy) (`aagy` -> `aagy`)  
-> **Versión Canónica**: `5.1.0`
+> **Versión Canónica**: `5.1.1`
 
 ---
 
-## 2026-11-25: 5.1.0 El servidor MCP del modelo local sale del plugin
+## 2026-11-25: 5.1.1 El servidor MCP del modelo local vuelve al plugin
 
-1. **Deshace #110 en su parte de instalación**: el plugin ya no trae `local_model_mcp.py`, ni `aagy-ecc/.mcp.json`,
-   ni `local_model.py register-agy`. El servidor lo instala y registra cada equipo, desde su repo de configuración
-   ([`MANUAL_local_model.md`](04-operations/runbooks/MANUAL_local_model.md) §3). `/aagy-local`, la guarda de
-   ficheros privados, el bench, el modo solo local y DOC-16 siguen en el plugin. DOC-16 busca el registro en
-   `~/.claude.json`, en el `.mcp.json` del proyecto y en el `mcp_config.json` de Antigravity.
+1. **Revierte 5.1.0 (#131)**: el servidor `aagy-local` es código genérico y depende de `local_model.py`, así que
+   vuelve al plugin (`aagy-ecc/.mcp.json` y `local_model.py register-agy`). La configuración del equipo
+   (modelos, URL, `local_model.mode`) sigue en la capa de entorno; con `auto` y sin Ollama no expone herramientas.
 
 ---
 

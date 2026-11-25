@@ -124,7 +124,7 @@ def doctor_findings(start: Optional[Path] = None, registered: Optional[bool] = N
         problems.append(f"Modelo de autocompletado sin descargar: {settings.fim_model} (ollama pull {settings.fim_model}).")
         missing.append(settings.fim_model)
     if registered is False:
-        problems.append(f"El servidor MCP {SERVER_NAME} no está registrado en el equipo (MANUAL_local_model.md §3).")
+        problems.append(f"El servidor MCP {SERVER_NAME} no está registrado en el harness.")
     unmeasured = [m for m in wanted if m not in measured_models(settings, start) and m not in missing]
     if unmeasured:
         problems.append(f"Modelos sin medir: {', '.join(unmeasured)} (local_model.py bench).")
