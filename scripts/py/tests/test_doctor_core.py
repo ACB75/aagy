@@ -315,3 +315,9 @@ def test_manifest_cli_write_show_and_never_abort(tmp_path: Path, capsys):
     blocker.write_text("x", encoding="utf-8")
     assert im.main(["write", "--dest", str(blocker / "sub"), "--repo-root", str(repo)]) == 0
     assert "No se pudo escribir" in capsys.readouterr().err
+
+
+def test_repo_check_gets_a_longer_timeout():
+    assert core.check_timeout("DOC-14", 5.0) == core.REPO_CHECK_TIMEOUT_S
+    assert core.check_timeout("DOC-01", 5.0) == 5.0
+    assert core.check_timeout("DOC-14", 60.0) == 60.0
