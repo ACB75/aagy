@@ -508,6 +508,19 @@ def _audit_docs_map_integrity(root: Path) -> List[str]:
     return validate_docs_map_targets(root)
 
 
+def _audit_workflow_skeleton(root: Path) -> int:
+    try:
+        import workflow_skeleton  # noqa: PLC0415 - opcional en instalaciones antiguas
+    except ImportError:
+        return 0
+    findings = workflow_skeleton.audit(root)
+    fails = [f for f in findings if f.level == workflow_skeleton.LEVEL_FAIL]
+    for item in fails:
+        logger.warning("  [SKELETON] %s: %s", item.key, "; ".join(item.problems))
+    logger.info(workflow_skeleton.summary_line(findings))
+    return len(fails)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
     root = args.root.resolve() if args.root else Path(__file__).resolve().parent.parent.parent
@@ -543,6 +556,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     for dm_issue in docs_map_issues:
         total_violations += 1
         logger.warning("  [DOCS-MAP] %s", dm_issue)
+
+    # 2.6 Esqueleto común de workflows (RF-05; los propios fallan, los heredados avisan)
+    skeleton = _audit_workflow_skeleton(root)
+    total_violations += skeleton
 
     # 3. Artefactos muertos
     logger.info("\n=== [3/4] ARTEFACTOS MUERTOS O HUÉRFANOS ===")

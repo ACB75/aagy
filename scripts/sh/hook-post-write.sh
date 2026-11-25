@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
-# Hook determinista ejecutado tras write_file y edit_file (PostToolUse).
+# Linter Markdown (PostToolUse): envoltorio fino de scripts/py/hook_post_write.py --format agy.
 set -euo pipefail
-
-TARGET_PATH="${1:-}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
-
-if [[ -n "$TARGET_PATH" && "$TARGET_PATH" == *.md && -f "$TARGET_PATH" ]]; then
-    LINTER="$REPO_ROOT/scripts/sh/lint-markdown.sh"
-    if [[ -f "$LINTER" ]]; then
-        bash "$LINTER" --fix "$TARGET_PATH" >/dev/null 2>&1 || true
-    fi
+PYTHON="$(command -v python3 || command -v python)"
+if [[ $# -gt 0 ]]; then
+    "$PYTHON" -c 'import json,sys; print(json.dumps({"toolCall": {"args": {"Path": sys.argv[1]}}}))' "$1" \
+        | "$PYTHON" "$SCRIPT_DIR/../py/hook_post_write.py" --format agy
+else
+    "$PYTHON" "$SCRIPT_DIR/../py/hook_post_write.py" --format agy
 fi
-exit 0

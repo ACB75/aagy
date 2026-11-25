@@ -72,8 +72,8 @@ case "$PHASE" in
       done
     fi
     echo "[OK] Catálogo completo optimizado sincronizado."
-    write_install_manifest "$PHASE"
-    exit 0
+    SKILLS=()
+    AGENTS=()
     ;;
   infra|kakebo|cluster|token-hill)
     echo "[!] La fase '$PHASE' se retiró: usa los perfiles de stack (network-infra, java-spring, angular, go, python)." >&2
@@ -86,7 +86,7 @@ case "$PHASE" in
     ;;
 esac
 
-for s in "${SKILLS[@]}"; do
+for s in ${SKILLS[@]+"${SKILLS[@]}"}; do
   if [ -d "$REPO_ROOT/skills/$s" ]; then
     rm -rf "$TARGET_DIR/skills/$s"
     cp -R "$REPO_ROOT/skills/$s" "$TARGET_DIR/skills/"
@@ -94,7 +94,7 @@ for s in "${SKILLS[@]}"; do
   fi
 done
 
-for a in "${AGENTS[@]}"; do
+for a in ${AGENTS[@]+"${AGENTS[@]}"}; do
   if [ -f "$REPO_ROOT/agents/$a" ]; then
     cp "$REPO_ROOT/agents/$a" "$TARGET_DIR/agents/"
     echo "[+] Agente instalado ($PHASE): $a"
@@ -109,7 +109,8 @@ if [ -f "$REPO_ROOT/plugin.json" ]; then
   cp "$REPO_ROOT/plugin.json" "$TARGET_DIR/plugin.json"
 fi
 if [ -f "$REPO_ROOT/hooks.json" ]; then
-  cp "$REPO_ROOT/hooks.json" "$TARGET_DIR/hooks.json"
+  # Los hooks llaman a los .py del plugin con ruta absoluta (como ${CLAUDE_PLUGIN_ROOT} en aagy-ecc).
+  sed "s|\${AAGY_PLUGIN_ROOT}|$TARGET_DIR|g" "$REPO_ROOT/hooks.json" > "$TARGET_DIR/hooks.json"
 fi
 
 mkdir -p "$TARGET_DIR/.data/instincts" "$TARGET_DIR/scripts/ps1" "$TARGET_DIR/scripts/sh" "$TARGET_DIR/scripts/py"
@@ -119,9 +120,10 @@ done
 for sh in safety-check.sh hook-post-write.sh lint-markdown.sh auto-evolve.sh manage-instincts.sh backlog.sh new-lifecycle-task.sh complete-task-pr.sh archive-todo.sh format-commit.sh; do
   [ -f "$REPO_ROOT/scripts/sh/$sh" ] && cp "$REPO_ROOT/scripts/sh/$sh" "$TARGET_DIR/scripts/sh/$sh"
 done
-for pyf in self_improve.py instinct_manager.py security_audit.py workspace_audit.py docs_map.py backlog.py archive_todo.py new_lifecycle_task.py sync_ideas_todo.py format_commit.py validate_branch.py aagy_doctor.py doctor_core.py install_manifest.py; do
-  [ -f "$REPO_ROOT/scripts/py/$pyf" ] && cp "$REPO_ROOT/scripts/py/$pyf" "$TARGET_DIR/scripts/py/$pyf"
-done
+# Todos los motores Python (los hooks, el doctor y la fase 4 los usan desde el plugin).
+cp "$REPO_ROOT/scripts/py/"*.py "$TARGET_DIR/scripts/py/"
+mkdir -p "$TARGET_DIR/templates/lifecycle"
+cp -R "$REPO_ROOT/doc/00-governance/templates/"* "$TARGET_DIR/templates/lifecycle/"
 
 echo "[OK] Sincronización completada exitosamente."
 write_install_manifest "$PHASE"

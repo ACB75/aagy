@@ -4,9 +4,12 @@ description: Claude's fixed git worktree (<repo>-aagy-ecc) - status, init and re
 
 # aagy-worktree
 
-Worktree fijo de Claude Code. Es el equivalente de la skill `agent-worktrees` de
-`aagy`: Claude trabaja solo en `<repo>-aagy-ecc`, Antigravity en `<repo>-aagy` y el
-checkout principal `<repo>` es de Master.
+Worktree fijo de Claude Code: Claude trabaja solo en `<repo>-aagy-ecc`, Antigravity en
+`<repo>-aagy` y el checkout principal `<repo>` es del usuario.
+
+## Cuándo usarlo
+
+Al empezar en un repo con worktrees por agente, o para reciclar el worktree tras fusionarse la PR.
 
 ## Uso
 
@@ -25,13 +28,18 @@ también vale `scripts/py/agent_worktree.py`). Usa `python3`, o `python` si no e
 1. Sin argumentos: `agent_worktree.py where --json` y `agent_worktree.py status`.
    Resume en español dónde está la sesión y en qué rama está cada checkout. Si la
    sesión no está en `<repo>-aagy-ecc`, dilo y trabaja con `cd` a esa carpeta.
-2. `init`: ejecútalo solo si Master lo pide. Crea `<repo>-aagy` y `<repo>-aagy-ecc`
+2. `init`: ejecútalo solo si el usuario lo pide. Crea `<repo>-aagy` y `<repo>-aagy-ecc`
    desacoplados en `origin/main`, copia los `.env` y regenera dependencias.
 3. `recycle`: `agent_worktree.py recycle --agent claude [--hard-recreate]`.
-   - Código 3: hay trabajo sin guardar. Enséñale a Master la lista y no borres nada.
+   - Código 3: hay trabajo sin guardar. Enseña la lista al usuario y no borres nada.
    - Código 4: la PR no está fusionada. No hagas nada más.
    - Código 5: falta `gh`.
-4. Nunca uses `git worktree add/remove`, `EnterWorktree` ni `claude --worktree`:
-   el hook los bloquea.
 
-Manual: `doc/04-operations/runbooks/MANUAL_agent_worktrees.md`.
+## Reglas
+
+- Nunca uses `git worktree add/remove`, `EnterWorktree` ni `claude --worktree`: el hook los bloquea.
+- Manual: `doc/04-operations/runbooks/MANUAL_agent_worktrees.md`.
+
+## Paridad
+
+Antigravity: skill `agent-worktrees`. Mismo script (`agent_worktree.py`).

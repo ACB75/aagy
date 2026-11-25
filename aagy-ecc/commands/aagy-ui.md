@@ -7,6 +7,10 @@ description: UI - status line (model, branch, context, cost, local mode, task), 
 UI de Claude Code. Es el equivalente de la skill `aagy-ui` de `aagy`: los dos usan
 `scripts/py/aagy_ui.py`, `aagy_statusline.py` y `aagy_notify.py`.
 
+## Cuándo usarlo
+
+- El usuario pide la status line, avisos de escritorio, `ccusage`, `/aagy-ui` o extensiones recomendadas.
+
 ## Uso
 
 ```text

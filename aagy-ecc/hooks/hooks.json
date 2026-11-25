@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/safety_check.py\"",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/hook_safety.py\" --format claude",
             "timeout": 5
           }
         ]
@@ -49,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/worktree_guard.py\"",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/agent_worktree.py\" guard --agent claude --format claude",
             "timeout": 5
           }
         ]
@@ -71,7 +71,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/post_write_lint.py\"",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/hook_post_write.py\" --format claude",
             "timeout": 30
           }
         ]

@@ -50,6 +50,8 @@ def _make_plugin(root: Path, version: str = "1.0.0") -> Path:
     _write(root / "scripts" / "py" / "local_private_guard.py", "print('{}')\n")
     _write(root / "scripts" / "py" / "aagy_ui.py", "print('ui')\n")
     _write(root / "scripts" / "py" / "aagy_notify.py", "print('notify')\n")
+    for engine in ("hook_safety.py", "hook_post_write.py", "validate_branch.py"):
+        shutil.copy2(_ECC / "scripts" / "py" / engine, root / "scripts" / "py" / engine)
     return root
 
 
@@ -204,17 +206,17 @@ def test_commands_checks(tmp_path: Path, repo: Path, claude_home: Path):
 
 def test_hook_targets(tmp_path: Path, repo: Path, claude_home: Path):
     install = _install(claude_home)
-    (install / "scripts" / "hooks" / "safety_check.py").unlink()
+    (install / "scripts" / "py" / "hook_safety.py").unlink()
     result = _run(_ctx(tmp_path, claude_home, repo), "DOC-09")
-    assert result.status == core.STATUS_FAIL and "scripts/hooks/safety_check.py" in result.evidence
+    assert result.status == core.STATUS_FAIL and "scripts/py/hook_safety.py" in result.evidence
     (install / "hooks" / "hooks.json").write_text("{roto", encoding="utf-8")
     assert _run(_ctx(tmp_path, claude_home, repo), "DOC-09").status == core.STATUS_FAIL
 
 
 def test_smoke_test_detects_broken_hook(tmp_path: Path, repo: Path, claude_home: Path):
-    (_install(claude_home) / "scripts" / "hooks" / "safety_check.py").write_text("print('{}')\n", encoding="utf-8")
+    (_install(claude_home) / "scripts" / "py" / "hook_safety.py").write_text("print('{}')\n", encoding="utf-8")
     result = _run(_ctx(tmp_path, claude_home, repo), "DOC-11")
-    assert result.status == core.STATUS_FAIL and "safety_check.py" in result.message
+    assert result.status == core.STATUS_FAIL and "hook_safety.py" in result.message
 
 
 def test_interpreters(tmp_path: Path, claude_home: Path, monkeypatch):

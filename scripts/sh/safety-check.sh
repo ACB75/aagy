@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# Hook de seguridad determinista ejecutado antes de run_command (PreToolUse).
+# Safety gate (PreToolUse): envoltorio fino de scripts/py/hook_safety.py --format agy.
+# Sin argumentos lee el payload de Antigravity por stdin; con un argumento, prueba ese comando.
 set -euo pipefail
-
-CMD="${1:-}"
-
-if [[ -n "$CMD" ]]; then
-    if echo "$CMD" | grep -Ei -q "rm[[:space:]]+-rf[[:space:]]+/[^a-zA-Z0-9_]?|mkfs|DROP[[:space:]]+DATABASE|dd[[:space:]]+if=.*of=/dev/sd"; then
-        echo "[SAFETY-GUARD] Comando bloqueado por regla de seguridad: $CMD" >&2
-        exit 1
-    fi
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PYTHON="$(command -v python3 || command -v python)"
+if [[ $# -gt 0 ]]; then
+    "$PYTHON" -c 'import json,sys; print(json.dumps({"toolCall": {"args": {"CommandLine": sys.argv[1]}}}))' "$1" \
+        | "$PYTHON" "$SCRIPT_DIR/../py/hook_safety.py" --format agy
+else
+    "$PYTHON" "$SCRIPT_DIR/../py/hook_safety.py" --format agy
 fi
-exit 0

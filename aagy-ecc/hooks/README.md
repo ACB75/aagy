@@ -1,32 +1,30 @@
 # Hooks de aagy-ecc
 
-`hooks/hooks.json` replica en Claude Code los tres hooks deterministas del plugin
-raíz `aagy` (`../../hooks.json`). Todos son Python 3 stdlib pura, se ejecutan
-desde `${CLAUDE_PLUGIN_ROOT}` y nunca bloquean por error propio (fail-open).
+`hooks/hooks.json` cubre en Claude Code los mismos momentos que el `hooks.json` raíz de
+`aagy`, con **un solo motor Python** para los dos plugins (`scripts/py/`, copiado por
+`sync_aagy_ecc.py`). Todos son Python 3 stdlib, se ejecutan desde `${CLAUDE_PLUGIN_ROOT}`
+y nunca bloquean por error propio (fail-open). En `aagy`, el instalador sustituye
+`${AAGY_PLUGIN_ROOT}` por la carpeta del plugin, así que los hooks funcionan en cualquier repo.
 
-| Evento Claude Code | Matcher | Script | Equivalente en `aagy` |
+| Momento | Evento Claude Code | Motor (`scripts/py/`) | En `aagy` (Antigravity) |
 | :--- | :--- | :--- | :--- |
-| `PreToolUse` | `Bash\|PowerShell` | `scripts/hooks/safety_check.py` | `scripts/ps1/safety-check.ps1` (`run_command`) |
-| `PostToolUse` | `Write\|Edit\|MultiEdit` | `scripts/hooks/post_write_lint.py` | `scripts/ps1/hook-post-write.ps1` (`write_file` / `edit_file`) |
-| `Stop` | (todos) | `scripts/py/self_improve.py --capture-stop` | `scripts/py/self_improve.py --capture-stop` |
-| `PreToolUse` | `Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|EnterWorktree` | `scripts/hooks/worktree_guard.py` | `scripts/ps1/agent-worktree.ps1 guard --agent agy` (`run_command` / `write_file` / `edit_file`) |
-| `SessionStart` | `startup` | `scripts/py/agent_worktree.py --quiet recycle --agent claude --if-merged` | (sin equivalente: Antigravity recicla en `claim` y en `complete-task-pr`) |
-| `SessionStart` | `startup` | `scripts/py/aagy_ui.py --quiet repair` | (sin equivalente: Antigravity no tiene status line) |
-| `Stop` | (todos) | `scripts/py/aagy_notify.py --event stop` | `scripts/py/aagy_notify.py --event stop --format agy` |
-| `Notification` | (todos) | `scripts/py/aagy_notify.py --event notification` | (sin equivalente) |
+| Antes de un comando | `PreToolUse` `Bash\|PowerShell` | `hook_safety.py --format claude` | `run_command`, `--format agy` |
+| Antes de escribir | `PreToolUse` | `agent_worktree.py guard`, `local_private_guard.py` | `run_command`, `write_file`, `edit_file`, `view_file` |
+| Después de escribir | `PostToolUse` | `hook_post_write.py --format claude` | `write_file`, `edit_file`, `--format agy` |
+| Fin de turno | `Stop` | `self_improve.py --capture-stop`, `backlog.py checkpoint --auto` | `Stop` |
+| Inicio | `SessionStart` | `scripts/hooks/session_start_rules.py`, `agent_worktree.py recycle` | Asimetría: sin evento |
+| Compactación | `PreCompact` | `backlog.py checkpoint --auto` | Asimetría: sin evento |
+| Fin de sesión | `SessionEnd` | `backlog.py handoff --auto` | Asimetría: sin evento |
+| Inicio (UI) | `SessionStart` `startup` | `aagy_ui.py --quiet repair` | Asimetría: Antigravity no tiene status line |
+| Fin de turno (UI) | `Stop` | `aagy_notify.py --event stop` | `Stop`, `--format agy` |
+| Permiso o espera | `Notification` | `aagy_notify.py --event notification` | Asimetría: sin evento |
 
-- **Safety gate**: deniega `rm -rf /`, `mkfs`, `DROP DATABASE` y escrituras directas a
-  `/dev/sd*` con `permissionDecision: deny`.
-- **Linter Markdown**: si existe un `.markdownlint.json` subiendo desde el archivo y
-  `markdownlint` está en el `PATH`, ejecuta `markdownlint --fix`; si no, no hace nada.
-- **Self-improve**: captura pasiva del evento Stop (devuelve `{}`).
-- **Worktree por agente**: si el repo activó `agent_worktree.py init`, deniega que Claude escriba en el
-  checkout principal de Master o en el worktree de Antigravity, y el worktree nativo de Claude Code. Al
-  iniciar sesión recicla `<repo>-aagy-ecc` si su PR ya está fusionada. Sin marcador no hace nada.
+`audit_plugin_parity.py` comprueba que los eventos y los motores coinciden, salvo esas cuatro
+asimetrías, y que el `hooks.json` raíz no usa rutas relativas. Las asimetrías y cómo se cubren
+están en `doc/01-architecture/MANUAL_aagy_ecc_parity_and_migration.md`.
 
 - **UI**: `repair` actualiza la ruta de la status line de aagy si el plugin cambió de versión. `aagy_notify.py`
   avisa en el escritorio al pedir permiso y al acabar un turno de más de `ui.notify_min_s` (30 s); se apaga con
   `ui.notify=off` y no hace nada sin escritorio. Ver `doc/04-operations/runbooks/MANUAL_ui.md`.
 
-`scripts/py/` es una copia generada desde la raíz del repositorio por
-`scripts/py/sync_aagy_ecc.py`; no se edita a mano.
+`scripts/py/` es una copia generada desde la raíz del repositorio; no se edita a mano.

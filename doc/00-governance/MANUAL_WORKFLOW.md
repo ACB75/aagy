@@ -65,7 +65,7 @@ bash scripts/sh/sync-ideas-todo.sh
 | **Paridad `aagy` $\leftrightarrow$ `aagy`** | `scripts/ps1/audit-plugin-parity.ps1` | `scripts/sh/audit-plugin-parity.sh` | [`audit_plugin_parity.py`](../../scripts/py/audit_plugin_parity.py) |
 | **Autodescubrimiento y automejora** | `scripts/ps1/auto-evolve.ps1` | `scripts/sh/auto-evolve.sh` | [`self_improve.py`](../../scripts/py/self_improve.py) |
 | **Gestión de instintos doble nivel** | `scripts/ps1/manage-instincts.ps1` | `scripts/sh/manage-instincts.sh` | [`instinct_manager.py`](../../scripts/py/instinct_manager.py) |
-| **Revisión previa e integración PR** | `scripts/ps1/complete-task-pr.ps1` | `scripts/sh/complete-task-pr.sh` | *(Orquestador TBD + `gh` CLI)* |
+| **Revisión previa e integración PR** | `scripts/ps1/complete-task-pr.ps1` | `scripts/sh/complete-task-pr.sh` | [`complete_task_pr.py`](../../scripts/py/complete_task_pr.py) |
 | **Promoción Multi-Tier / CD** | `scripts/ps1/git-flow-helper.ps1` | `scripts/sh/git-flow-helper.sh` | *(Tags `vX.Y.Z-sandbox` / `vX.Y.Z`)* |
 
 ---
@@ -86,14 +86,10 @@ pwsh -NoProfile -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/aagy/mi-c
 # 3. Implementar siguiendo TDD (RED -> GREEN -> REFACTOR) y verificar suites completas
 python -m pytest scripts/py/tests scripts/ps1/tests scripts/sh/tests -q
 
-# 4. Ejecutar todas las compuertas de calidad antes de PR
-pwsh -NoProfile -File scripts/ps1/lint-markdown.ps1 -Fix
-pwsh -NoProfile -File scripts/ps1/lint-markdown.ps1 -CheckOnly
-pwsh -NoProfile -File scripts/ps1/map-docs.ps1
-pwsh -NoProfile -File scripts/ps1/audit-workspace.ps1 -Clean
-pwsh -NoProfile -File scripts/ps1/audit-plugin-parity.ps1
+# 4. Gate de calidad (el mismo que corre en pre-push)
+python scripts/py/ci_local.py run
 
-# 5. Pre-Flight Review obligatorio y squash-automerge tras verificación
-pwsh -NoProfile -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly -Title "[feat]-[aagy]: descripcion concisa"
-pwsh -NoProfile -File scripts/ps1/complete-task-pr.ps1 -Yes -Title "[feat]-[aagy]: descripcion concisa"
+# 5. Revisión previa y PR (sin auto-merge: la fusiona una persona)
+python scripts/py/complete_task_pr.py --review-only --title "[feat]-[aagy]: descripcion concisa"
+python scripts/py/complete_task_pr.py --yes --title "[feat]-[aagy]: descripcion concisa"
 ```

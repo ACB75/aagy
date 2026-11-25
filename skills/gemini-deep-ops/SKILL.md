@@ -1,59 +1,39 @@
 ---
 name: gemini-deep-ops
-description: "Multimodal diagnostics, context caching, and large log analysis with Gemini. Zero overhead in resting state. Use for 5W postmortems."
+description: "Large log analysis and 5W postmortem sections on demand, with the local model first. Zero tokens at rest."
+metadata:
+  origin: AAGY
 ---
 
-# Gemini Deep Ops & Multimodal Diagnostics (Zero-Overhead)
+# gemini-deep-ops
 
-> **Invariante de Presupuesto Antigravity**: Esta skill opera bajo demanda en Tier 2 (0 tokens en reposo en el catálogo global).
+Análisis bajo demanda de logs grandes y secciones de postmortem. No gasta tokens en reposo.
 
----
+## Cuándo usarlo
 
-## Cuándo Utilizar Esta Skill
+- Logs de más de 10.000 líneas o volcados de memoria que saturarían el contexto.
+- La sección analítica de un postmortem 5W en una rama `fix/*`.
+- No para desarrollo normal, edición de código ni búsquedas web.
 
-- Diagnosticar volcados de logs masivos ($> 10.000$ líneas) o volcados de memoria (OOMKilled, heap dumps) que sobrecargarían el contexto del chat.
-- Producir secciones analíticas asistidas para autopsias SRE y Post-Mortems 5W en ramas `fix/*`.
-- Aprovechar *Context Caching* de Gemini para análisis recurrentes de grandes bases de código.
-- **Límites Negativos**: NO utilizar para tareas rutinarias de desarrollo, edición de código ni para ejecutar consultas web estándar (usa `search_web` nativo).
-
----
-
-## Flujo de Trabajo Operativo
-
-### 1. Diagnóstico de Volcados de Logs
-
-Ejecuta el CLI determinista de apoyo sobre el archivo de log sospechoso:
-
-```powershell
-pwsh -File scripts/ps1/gemini-deep-ops.ps1 analyze-log --file path/to/crash.log
-```
-
-En Linux/WSL:
+## Uso
 
 ```bash
-scripts/sh/gemini-deep-ops.sh analyze-log --file path/to/crash.log
+python scripts/py/gemini_deep_ops.py analyze-log --file <ruta/al.log>
+python scripts/py/gemini_deep_ops.py postmortem --issue fix/<proyecto>/<id> --file <ruta/al.log>
 ```
 
-### 2. Generación de Sección Post-Mortem 5W
+Envoltorios: `scripts/ps1/gemini-deep-ops.ps1` y `scripts/sh/gemini-deep-ops.sh`.
 
-Para integrar el análisis en una autopsia formal SRE:
+## Qué hacer
 
-```powershell
-pwsh -File scripts/ps1/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log
-```
+1. `analyze-log` resume el log con una heurística y, si el modelo local está activo, con `local_run`.
+2. `postmortem` genera el bloque para `PM_<rama>_<fecha>.md` en la carpeta de postmortems.
 
-El bloque generado se incorpora directamente en el artefacto `doc/post-mortem/PM_<branch>_<timestamp>.md`.
+## Reglas
 
----
+1. Presupuesto 0 $: el servidor MCP de Gemini es de pago. `toggle_gemini_mcp.py --enable` se niega salvo que `budget` lo permita.
+2. Si lo activas, desactívalo al acabar (`toggle_gemini_mcp.py --disable`).
 
-## Habilitación Opcional del Plugin MCP
+## Paridad
 
-Si requieres interacción interactiva directa con las herramientas completas de `RLabs-Inc/gemini-mcp` durante una sesión:
-
-```powershell
-# 1. Habilitar temporalmente:
-pwsh -File scripts/ps1/toggle-gemini-mcp.ps1 -Enable
-
-# 2. Tras finalizar la sesión, restaurar el arnés a 0 tokens en reposo:
-pwsh -File scripts/ps1/toggle-gemini-mcp.ps1 -Disable
-```
+Claude Code: la skill viaja en el paquete `extras` de `aagy-ecc`. Mismo script.

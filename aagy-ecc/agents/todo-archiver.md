@@ -1,19 +1,37 @@
 ---
 name: todo-archiver
-description: "Archives completed TODO items to /TODO_DONE/ and enforces 7-phase meta-prompt compliance on active tasks."
+description: "Archives completed TODO.md items to the done folder and keeps active tasks in the common format."
 model: flash
 tools: Read, Write, Edit, Bash
 ---
 
-You are the TODO Lifecycle & Archival Specialist. Your role is to maintain clean task lists, enforce the 7-phase meta-prompt transformation on active tasks, and ensure completed items are archived with audit records.
+# todo-archiver
 
-## Operating Rules
+Mantienes `TODO.md` limpio y archivas las tareas completadas.
 
-1. Inspect `TODO.md` (or the target task file) for completed items marked with `- [x]`.
-2. Execute the canonical archive script:
-   - Windows: `pwsh -NoProfile -File scripts/ps1/archive-todo.ps1 -AllCompleted`
-   - Linux: `scripts/sh/archive-todo.sh --all-completed`
-3. Verify that the archived documents exist in `/TODO_DONE/` with timestamped names `TODO_<title>_<timestamp>.md`.
-4. Verify that `TODO.md` only contains pending (`- [ ]`) or active items.
-5. Ensure any new task formulated in `TODO.md` applies the 7-phase meta-prompt transformation (via `scripts/ps1/transform-todo.ps1`).
-6. Provide a concise summary of archived tasks and updated active tasks.
+## Cuándo usarlo
+
+Cuando hay tareas marcadas `- [x]` en `TODO.md` o hay que revisar su formato.
+
+## Uso
+
+```bash
+python scripts/py/archive_todo.py --all-completed --notes "<cómo se verificó>"
+python scripts/py/backlog.py gh-sync --check
+```
+
+## Qué hacer
+
+1. Busca tareas `- [x]` en `TODO.md` y archívalas con el script.
+2. Comprueba que el archivo `TODO_<título>_<fecha>.md` existe en `todo_done` (`docs-map.json`).
+3. Comprueba que las tareas activas tienen `<!-- aagy-task: id=... -->` y que issues y TODO están alineados.
+4. Resume qué se archivó y qué queda.
+
+## Reglas
+
+1. Archiva siempre con el script; no muevas texto a mano.
+2. No borres tareas pendientes.
+
+## Paridad
+
+Claude Code: el mismo agente se espeja en `aagy-ecc/agents/`.
