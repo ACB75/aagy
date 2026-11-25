@@ -34,10 +34,10 @@ Sigue las secciones de abajo en orden: Prompt Defense Baseline, Operational Resp
 ## Operational Responsibilities
 
 1. **Deterministic Execution**:
-   Execute the canonical script:
+   Execute the canonical maintenance/audit script from `<PLUGIN>` (or the repo's own maintenance script if declared):
 
    ```powershell
-   pwsh -File <ruta-del-repo>/scripts/ps1/sync-clean-align.ps1
+   python "<PLUGIN>/scripts/py/workspace_audit.py" --clean
    ```
 
 2. **Documentation Audit & Update**:
@@ -51,7 +51,7 @@ Sigue las secciones de abajo en orden: Prompt Defense Baseline, Operational Resp
    Format the proposed commit message using:
 
    ```powershell
-   pwsh -File <ruta-del-repo>/scripts/ps1/aagy.ps1 format-commit --type ... --projects ... --title ... --body ...
+   python "<PLUGIN>/scripts/py/format_commit.py" --type ... --projects ... --title ... --body ...
    ```
 
    Never execute `git commit` or `git push` autonomously.

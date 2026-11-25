@@ -147,7 +147,7 @@ empty or unreadable without loading a substitute.
 ## Example Output
 
 ```
-SESSION LOADED: /Users/you/.claude/session-data/2024-01-15-abc123de-session.tmp
+SESSION LOADED: ~/.claude/session-data/2024-01-15-abc123de-session.tmp
 ════════════════════════════════════════════════
 
 PROJECT: my-app — JWT Authentication

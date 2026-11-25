@@ -19,19 +19,19 @@ Ciclo de vida de 4 fases para cualquier cambio no trivial:
 ## Uso
 
 ```bash
-python scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase REQ
-python scripts/py/new_lifecycle_task.py --issue <N> --phase REQ --attach-issue
-python scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase TODO   # sin ceremonia
+python <PLUGIN>/scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase REQ
+python <PLUGIN>/scripts/py/new_lifecycle_task.py --issue <N> --phase REQ --attach-issue
+python <PLUGIN>/scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase TODO   # sin ceremonia
 ```
 
-Envoltorios: `scripts/ps1/aagy.ps1 new-lifecycle-task` y `scripts/sh/aagy.sh new-lifecycle-task`. Las rutas salen de `.governance/docs-map.json`.
+Envoltorios: `<PLUGIN>/scripts/ps1/aagy.ps1 new-lifecycle-task` y `<PLUGIN>/scripts/sh/aagy.sh new-lifecycle-task`. Las rutas salen de `.governance/docs-map.json`.
 
 ## Qué hacer
 
 1. **Requisitos** (`01_TOMA_REQUISITOS_E_IMPACTO.md`): RF, CA verificables (dado/cuando/entonces), impacto y retrocompatibilidad. Sin cambios que rompan contratos salvo aprobación.
 2. **Plan** (`02_PLAN_ACCION_ARQUITECTURA.md`): reutiliza antes de escribir código nuevo, diseño, TDD (`RED` -> `GREEN` -> `REFACTOR` -> `VERIFY`) y rollback.
 3. **Documentación** (`03_DOCUMENTACION_Y_RELEASE_NOTES.md`): notas de versión, ADR si la decisión es difícil de revertir, manuales, `STATUS.md`, `LOG.md` y postmortem en ramas `fix/*`. Va antes de la fase 4 para que viaje en el mismo squash.
-4. **PR** (`04_PROPUESTA_COMMITS_PR.md`): rama `<tipo>/<proyecto>/<nombre>`, título `[type]-[projects]: <título>`, `python scripts/py/ci_local.py run` en verde y `complete-task-pr`.
+4. **PR** (`04_PROPUESTA_COMMITS_PR.md`): rama `<tipo>/<proyecto>/<nombre>`, título `[type]-[projects]: <título>`, `python <PLUGIN>/scripts/py/ci_local.py run` en verde y `complete-task-pr`.
 
 ## Reglas
 

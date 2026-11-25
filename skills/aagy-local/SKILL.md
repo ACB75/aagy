@@ -8,8 +8,8 @@ metadata:
 # aagy-local
 
 Modelo local con Ollama en Antigravity. Es el equivalente del comando `/aagy-local`
-de Claude Code: los dos usan `scripts/py/local_model.py` y el mismo servidor MCP
-`aagy-local` (`scripts/py/local_model_mcp.py`).
+de Claude Code: los dos usan `<PLUGIN>/scripts/py/local_model.py` y el mismo servidor MCP
+`aagy-local` (`<PLUGIN>/scripts/py/local_model_mcp.py`).
 
 ## Cuándo usarla
 
@@ -30,7 +30,7 @@ de Claude Code: los dos usan `scripts/py/local_model.py` y el mismo servidor MCP
 ## Qué hacer
 
 Script: `<source_repo>/scripts/py/local_model.py`, con `source_repo` de
-`~/.gemini/config/plugins/aagy/.aagy-install.json` (en el repo aagy, `scripts/py/local_model.py`).
+`~/.gemini/config/plugins/aagy/.aagy-install.json` (en el repo aagy, `<PLUGIN>/scripts/py/local_model.py`).
 Ejecuta desde la carpeta del repo en el que trabajas.
 
 1. Sin argumentos: `local_model.py status` y resume en una línea.

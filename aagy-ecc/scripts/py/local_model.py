@@ -271,6 +271,7 @@ def chat_raw(settings: Settings, system: str, user: str, json_format: bool, mode
         "model": model or settings.tool_model,
         "messages": [{"role": "system", K_CONTENT: system}, {"role": "user", K_CONTENT: user}],
         "stream": False,
+        "think": False,
         "options": {K_NUM_CTX: settings.num_ctx},
     }
     if json_format:

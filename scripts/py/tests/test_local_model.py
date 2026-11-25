@@ -141,6 +141,7 @@ def test_run_requires_params_and_json_format(repo: Path, ollama: str) -> None:
     assert "labels" in lm.run_task(settings, {"task": "classify", "text": "a"}, repo)["error"]
     ok = lm.run_task(settings, {"task": "extract", "text": "a", "params": {"fields": ["x", "y"]}}, repo)
     assert "error" not in ok and _FakeOllama.requests[-1]["format"] == "json"
+    assert _FakeOllama.requests[-1]["think"] is False
 
 
 def test_run_truncates(repo: Path, ollama: str) -> None:

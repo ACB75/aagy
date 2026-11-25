@@ -18,11 +18,11 @@ Análisis bajo demanda de logs grandes y secciones de postmortem. No gasta token
 ## Uso
 
 ```bash
-python scripts/py/gemini_deep_ops.py analyze-log --file <ruta/al.log>
-python scripts/py/gemini_deep_ops.py postmortem --issue fix/<proyecto>/<id> --file <ruta/al.log>
+python <PLUGIN>/scripts/py/gemini_deep_ops.py analyze-log --file <ruta/al.log>
+python <PLUGIN>/scripts/py/gemini_deep_ops.py postmortem --issue fix/<proyecto>/<id> --file <ruta/al.log>
 ```
 
-Envoltorios: `scripts/ps1/aagy.ps1 gemini-deep-ops` y `scripts/sh/aagy.sh gemini-deep-ops`.
+Envoltorios: `<PLUGIN>/scripts/ps1/aagy.ps1 gemini-deep-ops` y `<PLUGIN>/scripts/sh/aagy.sh gemini-deep-ops`.
 
 ## Qué hacer
 

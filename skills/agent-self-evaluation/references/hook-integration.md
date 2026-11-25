@@ -11,7 +11,7 @@ The unified self-improvement engine wires a passive `Stop` hook in [`hooks.json`
         "hooks": [
           {
             "type": "command",
-            "command": "python scripts/py/self_improve.py --capture-stop",
+            "command": "python <PLUGIN>/scripts/py/self_improve.py --capture-stop",
             "timeout": 5
           }
         ]
@@ -34,7 +34,7 @@ The unified self-improvement engine wires a passive `Stop` hook in [`hooks.json`
 python3 skills/agent-self-evaluation/scripts/evaluate.py --task task.txt --output response.txt
 
 # Unified discovery and budget-gated promotion
-python3 scripts/py/self_improve.py --discover --repo-root .
-python3 scripts/py/self_improve.py --review <candidate-id> --repo-root .
-python3 scripts/py/self_improve.py --promote <candidate-id> --confirm --repo-root .
+python3 <PLUGIN>/scripts/py/self_improve.py --discover --repo-root .
+python3 <PLUGIN>/scripts/py/self_improve.py --review <candidate-id> --repo-root .
+python3 <PLUGIN>/scripts/py/self_improve.py --promote <candidate-id> --confirm --repo-root .
 ```
