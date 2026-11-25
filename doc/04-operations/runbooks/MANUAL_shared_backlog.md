@@ -24,18 +24,18 @@ Estados: `todo`, `in_progress`, `review`, `handoff`, `blocked`, `done`. Un claim
 Ejecuta desde la carpeta del repo en el que trabajas. Indica el agente con `--agent claude|agy|human` o `AAGY_AGENT`.
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 init                              # repo nuevo del app
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 list                              # en curso, relevos y pendientes
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 next --agent agy --claim          # siguiente libre (relevos primero)
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 claim mi-tarea --agent claude --worktree
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 checkpoint --agent claude --note "tests en verde, falta doc"
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 handoff --agent claude --note "falta X; siguiente: pytest -k y"
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 done mi-tarea --agent agy --note "verificado con pytest"
-pwsh -NoProfile -File scripts/ps1/backlog.ps1 release mi-tarea --agent human --force   # liberar a mano
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog init                              # repo nuevo del app
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog list                              # en curso, relevos y pendientes
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog next --agent agy --claim          # siguiente libre (relevos primero)
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog claim mi-tarea --agent claude --worktree
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog checkpoint --agent claude --note "tests en verde, falta doc"
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog handoff --agent claude --note "falta X; siguiente: pytest -k y"
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog done mi-tarea --agent agy --note "verificado con pytest"
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 backlog release mi-tarea --agent human --force   # liberar a mano
 ```
 
 ```bash
-bash scripts/sh/backlog.sh list --brief
+bash scripts/sh/aagy.sh backlog list --brief
 python3 scripts/py/backlog.py --json list --all
 ```
 

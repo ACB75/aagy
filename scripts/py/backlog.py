@@ -530,7 +530,7 @@ def op_next(ctx: Context, agent: str, epic: Optional[str]) -> Optional[Task]:
 
 
 def main_root(repo: Repo) -> Path:
-    """Checkout principal del clon (el de Master), aunque se ejecute desde un worktree."""
+    """Checkout principal del clon, aunque se ejecute desde un worktree."""
     return repo.state_dir.parent.parent if repo.state_dir.parent.name == ".git" else repo.root
 
 
@@ -764,7 +764,7 @@ def op_transition(ctx: Context, task_id: str, agent: str, status: str, note: Opt
         entry = entry_for(state, task.task_id)
         owner = entry.get("owner")
         if owner and owner != agent and not force and not is_stale(entry):
-            raise BacklogError(f"La tarea '{task.task_id}' es de {owner}; usa --force si eres Master.")
+            raise BacklogError(f"La tarea '{task.task_id}' es de {owner}; usa --force si la tomas desde el checkout principal.")
         entry["status"] = status
         if status == ST_TODO:
             entry.pop("owner", None)

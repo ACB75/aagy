@@ -56,19 +56,19 @@ Para verificar que no exista deriva ni discrepancias entre ambos plugins:
 
 ```powershell
 # En Windows 11 con PowerShell 7
-pwsh -File scripts/ps1/audit-plugin-parity.ps1
+pwsh -File scripts/ps1/aagy.ps1 audit-plugin-parity
 
 # Solo verificación (retorna código 0 o 1)
-pwsh -File scripts/ps1/audit-plugin-parity.ps1 -CheckOnly
+pwsh -File scripts/ps1/aagy.ps1 audit-plugin-parity --check-only
 
 # Salida estructurada JSON para pipelines CI/CD
-pwsh -File scripts/ps1/audit-plugin-parity.ps1 -Json
+pwsh -File scripts/ps1/aagy.ps1 audit-plugin-parity --json
 ```
 
 En entornos Linux / WSL (POSIX LF):
 
 ```bash
-bash scripts/sh/audit-plugin-parity.sh --check-only
+bash scripts/sh/aagy.sh audit-plugin-parity --check-only
 ```
 
 ---
@@ -97,7 +97,7 @@ pwsh -File install.ps1 -Target aagy-ecc -Destination C:\Ruta\A\Proyecto
 Tras editar skills, agentes, reglas o motores Python en la raíz:
 
 ```powershell
-pwsh -File scripts/ps1/sync-aagy-ecc.ps1
+pwsh -File scripts/ps1/aagy.ps1 sync-aagy-ecc
 ```
 
 ---

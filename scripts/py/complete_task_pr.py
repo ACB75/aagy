@@ -2,8 +2,9 @@
 """
 Fase 4 (complete_task_pr.py): revisión previa, gate de calidad, commit, push y PR.
 
-Motor único de los dos plugins. ``complete-task-pr.ps1`` y ``.sh`` son envoltorios
-finos y ``aagy-ecc`` lo trae en ``scripts/py/`` (sync_aagy_ecc.py), así que
+Motor único de los dos plugins. Se lanza con ``aagy complete-task-pr`` (lanzador
+``scripts/ps1/aagy.ps1`` o ``scripts/sh/aagy.sh``) y ``aagy-ecc`` lo trae en
+``scripts/py/`` (sync_aagy_ecc.py), así que
 funciona en cualquier repo con solo los scripts del plugin (CA-06).
 
 1. Valida la rama (``<tipo>/<proyecto>/<nombre>``) y detecta la issue

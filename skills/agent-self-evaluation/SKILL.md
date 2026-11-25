@@ -42,7 +42,7 @@ Every score below `5` MUST cite concrete evidence (**"Show the gap, don't just n
 Session / CLI Activity
   │
   ├─► Passive Stop Hook (hooks.json -> self_improve.py --capture-stop, <500ms, 0 tokens, returns {})
-  └─► Manual CLI (auto-evolve.ps1/.sh | manage-instincts.ps1/.sh | self_improve.py)
+  └─► Manual CLI (aagy self-improve | aagy instinct-manager | self_improve.py)
         │
         ▼
   Sanitization Layer (AgentShield Prompt-Injection Check + Secret Redaction [REDACTED])
@@ -65,17 +65,17 @@ Session / CLI Activity
 
 ```powershell
 # 1. Discover recurring patterns (>= 2 occurrences) across project + global scopes
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --discover
 
 # 2. Review candidate against AgentShield, Budget Gate, and Smoke-Test (no write)
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Review "pg-lock-safety" -Tier skill
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --review "pg-lock-safety" --tier skill
 
 # 3. Promote candidate ONLY with explicit confirmation after passing all gates
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Promote "pg-lock-safety" -Tier skill -Confirm
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --promote "pg-lock-safety" --tier skill --confirm
 
 # 4. Manage instincts directly at project or global ($PLUGIN_DATA) scope
-pwsh -NoProfile -File scripts/ps1/manage-instincts.ps1 list --scope all
-pwsh -NoProfile -File scripts/ps1/manage-instincts.ps1 save --id pg-lock --trigger "DDL migration" --learning "Use CONCURRENTLY" --scope project
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 instinct-manager list --scope all
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 instinct-manager save --id pg-lock --trigger "DDL migration" --learning "Use CONCURRENTLY" --scope project
 
 # 5. Run 5-axis output evaluation via CLI
 python scripts/py/self_improve.py --evaluate "All 146 tests passed (exit code 0)." --task "Verify suite"

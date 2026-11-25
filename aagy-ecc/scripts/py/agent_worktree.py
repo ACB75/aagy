@@ -2,7 +2,7 @@
 """
 Un git worktree fijo por agente (Claude Code / aagy-ecc y Antigravity / aagy).
 
-Para un clon principal `<padre>/<repo>` (el de Master) se mantienen dos worktrees
+Para un clon principal `<padre>/<repo>` (el de la persona) se mantienen dos worktrees
 hermanos del mismo clon:
 
 - `<padre>/<repo>-aagy`      → Antigravity (agy)
@@ -136,7 +136,7 @@ def op_init(layout: Layout, install: bool = True, fetch: bool = True) -> List[st
             messages.append(f"{label}: creado {path} en {_origin(base)}.")
             messages.extend(provision(layout.main, path, config, install))
         write_marker(layout, base)
-    messages.append(f"Activado. El checkout principal {layout.main} queda para Master.")
+    messages.append(f"Activado. El checkout principal {layout.main} queda para la persona; los agentes trabajan en sus worktrees.")
     return messages
 
 

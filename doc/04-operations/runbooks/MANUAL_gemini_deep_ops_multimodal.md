@@ -12,8 +12,8 @@ El ecosistema proyecto consumidor y Antigravity prioriza la economía estricta d
 Para combinar la máxima potencia analítica con coste cero en reposo, se implementa una arquitectura en tres capas:
 
 1. **Plantilla Aislada (`skills/gemini-deep-ops/templates/gemini-mcp/`)**: Contiene `"disabled": true` por defecto y referencias seguras `${GEMINI_API_KEY}`.
-2. **Utilidad de Alternancia (`toggle-gemini-mcp.ps1`)**: Permite conmutar el estado del plugin en segundos para sesiones específicas.
-3. **Skill Tier 2 y CLI Nativo (`gemini-deep-ops.ps1`)**: Provee capacidades diagnósticas sobre logs masivos y volcados de memoria sin requerir la inyección de esquemas MCP en el contexto del modelo.
+2. **Utilidad de Alternancia (`aagy toggle-gemini-mcp`)**: Permite conmutar el estado del plugin en segundos para sesiones específicas.
+3. **Skill Tier 2 y CLI Nativo (`aagy gemini-deep-ops`)**: Provee capacidades diagnósticas sobre logs masivos y volcados de memoria sin requerir la inyección de esquemas MCP en el contexto del modelo.
 
 ---
 
@@ -24,16 +24,16 @@ Cuando un servicio del clúster experimenta una degradación crítica (ej. `OOMK
 ```mermaid
 flowchart LR
     Outage["Caída de Servicio (OOM / Timeout)"] --> DumpLog["Captura de Log / Crash Dump"]
-    DumpLog --> DeepOps["gemini-deep-ops.ps1 analyze-log"]
+    DumpLog --> DeepOps["aagy gemini-deep-ops analyze-log"]
     DeepOps --> Diagnosis["Diagnóstico Causal y Heurísticas SRE"]
-    Diagnosis --> PostMortem["generate-postmortem.ps1 (PM_5W.md)"]
-    PostMortem --> PR["complete-task-pr.ps1"]
+    Diagnosis --> PostMortem["aagy generate-postmortem (PM_5W.md)"]
+    PostMortem --> PR["aagy complete-task-pr"]
 ```
 
 ### Ejemplo de Diagnóstico de Crash Dump
 
 ```powershell
-pwsh -File scripts/ps1/gemini-deep-ops.ps1 analyze-log --file /var/log/cluster/service.log
+pwsh -File scripts/ps1/aagy.ps1 gemini-deep-ops analyze-log --file /var/log/cluster/service.log
 ```
 
 Salida estructurada:
@@ -52,8 +52,8 @@ Recomendaciones SRE:
 
 ## 3. Integración con Post-Mortem 5W
 
-Al ejecutar `generate-postmortem.ps1` en cualquier rama `fix/*`, la sección diagnóstica de `gemini-deep-ops` puede insertarse automáticamente mediante:
+Al ejecutar `aagy generate-postmortem` en cualquier rama `fix/*`, la sección diagnóstica de `gemini-deep-ops` puede insertarse automáticamente mediante:
 
 ```powershell
-pwsh -File scripts/ps1/gemini-deep-ops.ps1 postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log >> doc/post-mortem/PM_fix_cluster_oom_timeout.md
+pwsh -File scripts/ps1/aagy.ps1 gemini-deep-ops postmortem --issue fix/cluster/oom-timeout --file path/to/crash.log >> doc/post-mortem/PM_fix_cluster_oom_timeout.md
 ```

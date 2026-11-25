@@ -12,53 +12,32 @@ El sistema de agentes y herramientas Anything Antigravity (`aagy`) requiere oper
 
 ---
 
-## 2. Nueva Estructura Modular de `scripts/`
+## 2. Estructura de `scripts/` y lanzador único
 
-A partir de la versión `2.2.0`, los scripts se organizan estrictamente por entorno de ejecución (*runtime*), alojando sus pruebas unitarias en subdirectorios `tests/` dedicados:
+Toda la lógica vive en `scripts/py/` (Python 3 stdlib). PowerShell y Bash solo tienen un
+lanzador, más los pocos scripts que hacen trabajo propio del shell:
 
 ```text
 scripts/
-├── py/                  # Scripts en Python 3.11+
-│   ├── workspace_audit.py
-│   ├── sonar_audit.py
-│   ├── ...
-│   └── tests/           # 16 suites unitarias de Python (pytest)
-├── pwsh/                # Scripts en PowerShell 7 para Windows 11
-│   ├── complete-task-pr.ps1
-│   ├── audit-workspace.ps1
-│   ├── sonar-audit.ps1
-│   ├── ...
-│   └── tests/           # Suites de verificación para PowerShell
-├── sh/                  # Scripts POSIX Bash (LF estricto) para Linux/WSL
-│   ├── complete-task-pr.sh
-│   ├── audit-workspace.sh
-│   ├── ...
-│   └── tests/           # Suites de verificación para Bash
-├── bin/aagy/         # Proxies de retrocompatibilidad (.ps1, .sh)
-└── aagy/             # Proxies de retrocompatibilidad (.py)
+├── py/        # motores (workspace_audit.py, complete_task_pr.py, backlog.py, ...) y tests/
+├── ps1/       # aagy.ps1 (lanzador), aagy-sync.ps1, git-flow-helper.ps1, install-git-hooks.ps1, lint-markdown.ps1
+└── sh/        # aagy.sh (lanzador), aagy-sync.sh, git-flow-helper.sh, install-git-hooks.sh, lint-markdown.sh
 ```
 
-### Garantía de Retrocompatibilidad (Zero-Breaking Changes)
-
-Cualquier invocación heredada a:
-
-```powershell
-pwsh -File scripts/ps1/sonar-audit.ps1
-```
-
-o en Linux:
+`aagy <comando> [args]` ejecuta `scripts/py/<comando>.py` (guiones a guion bajo) con los
+mismos argumentos, que son los flags de Python:
 
 ```bash
-bash scripts/sh/sonar-audit.sh
+bash scripts/sh/aagy.sh help                              # lista los comandos
+bash scripts/sh/aagy.sh complete-task-pr --review-only
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit --clean
 ```
 
-se delega de forma transparente e inmediata a:
-
-```powershell
-pwsh -File scripts/ps1/sonar-audit.ps1
-```
-
-manteniendo códigos de salida, paso de argumentos (`$@`) y rendimiento idéntico.
+Los antiguos envoltorios (`complete-task-pr.ps1`, `audit-workspace.ps1`, `safety-check.ps1`...)
+se retiraron. Equivalencias con otro nombre: `audit-workspace` → `workspace-audit`,
+`auto-evolve` → `self-improve`, `manage-instincts` → `instinct-manager`, `safety-check` →
+`hook-safety`, `enable-skill` / `disable-skill` → `skill-promotion --promote` / `--demote`,
+`hook-stop-capture` → `self-improve --capture-stop`.
 
 ---
 

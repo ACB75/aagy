@@ -48,7 +48,7 @@ Delimitador canónico obligatorio:
 Este bloque se sitúa al final de las reglas del sistema y aloja las directivas operativas que pueden requerir adaptación o contexto dinámico específico de la interacción:
 
 1. Mandatory 4-Phase Engineering Lifecycle (`doc/templates/`).
-2. Git Commit Formatting & Automated Task Integration (`complete-task-pr.ps1`).
+2. Git Commit Formatting & Automated Task Integration (`aagy complete-task-pr`).
 3. Task Lifecycle, Archival & 7-Phase Meta-Prompt Transformation.
 4. Tooling Synthesis, Automation & Skill Optimization.
 5. Documentation, Diagrams & Write-Time Markdown Linting.

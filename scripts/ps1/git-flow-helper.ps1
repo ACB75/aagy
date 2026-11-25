@@ -176,9 +176,9 @@ try {
                 throw "Debe proporcionar un título para la PR (-Title '[type]-[projects]: <title>')."
             }
             Write-Host "[+] Verificando pre-merge Quality Gate en rama '$currentBranch'..." -ForegroundColor Cyan
-            $auditScript = Join-Path $PSScriptRoot "audit-workspace.ps1"
+            $auditScript = Join-Path $PSScriptRoot "aagy.ps1"
             if (Test-Path $auditScript) {
-                pwsh -NoProfile -File $auditScript -Clean
+                pwsh -NoProfile -File $auditScript workspace-audit --clean
                 if ($LASTEXITCODE -ne 0) {
                     throw "Quality Gate falló. Corrija los errores antes de abrir la PR."
                 }
@@ -198,7 +198,7 @@ $Title
 - Tarea aislada en rama efímera '$currentBranch'.
 
 ## Verificación Fast-Failure
-- [x] audit-workspace.ps1 superado (Quality Gate Rating A, 0 violaciones).
+- [x] aagy workspace-audit superado (Quality Gate Rating A, 0 violaciones).
 - [x] markdownlint 100% compliant.
 
 ## Estrategia Fast-Rollback
@@ -225,12 +225,12 @@ $Title
         }
 
         "complete-task" {
-            $completeScript = Join-Path $PSScriptRoot "complete-task-pr.ps1"
-            $cmdArgs = @()
-            if ($Title) { $cmdArgs += @("-Title", $Title) }
-            if ($Body) { $cmdArgs += @("-Body", $Body) }
-            if ($ReviewOnly) { $cmdArgs += "-ReviewOnly" }
-            if ($Yes) { $cmdArgs += "-Yes" }
+            $completeScript = Join-Path $PSScriptRoot "aagy.ps1"
+            $cmdArgs = @("complete-task-pr")
+            if ($Title) { $cmdArgs += @("--title", $Title) }
+            if ($Body) { $cmdArgs += @("--body", $Body) }
+            if ($ReviewOnly) { $cmdArgs += "--review-only" }
+            if ($Yes) { $cmdArgs += "--yes" }
             pwsh -NoProfile -File $completeScript @cmdArgs
         }
     }

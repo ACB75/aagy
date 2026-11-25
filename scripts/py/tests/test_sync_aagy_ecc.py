@@ -104,9 +104,8 @@ def test_safety_gate_is_one_engine_for_both_plugins():
     ecc_hooks = (_REPO_ROOT / "aagy-ecc" / "hooks" / "hooks.json").read_text(encoding="utf-8")
     assert "scripts/py/hook_safety.py\\\" --format agy" in agy_hooks
     assert "scripts/py/hook_safety.py\\\" --format claude" in ecc_hooks
-    for wrapper in ("scripts/ps1/safety-check.ps1", "scripts/sh/safety-check.sh"):
-        text = (_REPO_ROOT / wrapper).read_text(encoding="utf-8-sig")
-        assert "hook_safety.py" in text and "DROP" not in text
+    for launcher in ("scripts/ps1/aagy.ps1", "scripts/sh/aagy.sh"):
+        assert "DROP" not in (_REPO_ROOT / launcher).read_text(encoding="utf-8-sig")
     mirrored = _REPO_ROOT / "aagy-ecc" / "scripts" / "py" / "hook_safety.py"
     assert mirrored.read_bytes() == (_SCRIPTS_DIR / "hook_safety.py").read_bytes()
 
@@ -294,3 +293,16 @@ def test_session_start_keeps_branch_rule_in_full():
     context = session_start_rules.build_response()["hookSpecificOutput"]["additionalContext"]
     assert "`fix/<id>` or `fix/<project>/<id>`" in context
     assert "git push -u origin HEAD:<tipo>/<proyecto>/<nombre>" in context
+
+
+def test_real_packs_have_one_copy_of_each_skill_and_agent():
+    """#106: una sola copia; lo que comparten varios stacks va al paquete shared."""
+    from sync_aagy_ecc import PACK_SHARED, plan_packs
+    packs = plan_packs(_REPO_ROOT)
+    for kind in (0, 1):
+        seen = {}
+        for pack, catalog in packs.items():
+            for name in catalog[kind]:
+                assert name not in seen, f"{name} está en '{seen.get(name)}' y en '{pack}'"
+                seen[name] = pack
+    assert "sre-reliability" in packs[PACK_SHARED][0]

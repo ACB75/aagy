@@ -17,7 +17,7 @@
 | Comandos de Claude Code | `aagy-ecc/commands/*.md` (26) | `Uso`, `Qué hacer`, `Reglas` en los propios; formato ECC en los heredados | Dos formatos mezclados. |
 | Subagentes | `agents/*.md` | Formato libre | Igual. |
 | Issues, PR y TODO | `.github/ISSUE_TEMPLATE/*`, `pull_request_template.md`, `TODO.md` (7 fases) | Tres esquemas de secciones distintos | Una issue y su tarea en `TODO.md` no comparten estructura, y nada comprueba que estén alineadas. |
-| Fase 4 en `aagy-ecc` | `aagy-ecc/scripts/py/` | No incluye `complete-task-pr`, `generate_postmortem`, `sonar_audit`, `format_commit` ni `git-flow-helper` | Las reglas de `aagy-ecc` mandan a `scripts/ps1/complete-task-pr.ps1`, que no existe al instalar el plugin en otro proyecto. |
+| Fase 4 en `aagy-ecc` | `aagy-ecc/scripts/py/` | No incluye `complete-task-pr`, `generate_postmortem`, `sonar_audit`, `format_commit` ni `git-flow-helper` | Las reglas de `aagy-ecc` mandan a `scripts/ps1/aagy.ps1 complete-task-pr`, que no existe al instalar el plugin en otro proyecto. |
 | Hooks | `hooks.json` y `aagy-ecc/hooks/hooks.json` | `aagy-ecc` tiene `SessionStart`, `PreCompact` y `SessionEnd`; `aagy` solo `Stop` | Antigravity no deja relevo (`handoff`) automático. |
 | Docs desfasados | `aagy-ecc/hooks/README.md`, `aagy-ecc/commands/aagy-ecc-doctor.md`, directiva de `TODO.md` | "tres hooks"; "DOC-01..14"; "auto-merge continuo" | No reflejan el código (5 hooks, DOC-15, sin auto-merge y presupuesto 0 €). |
 

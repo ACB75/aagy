@@ -34,11 +34,11 @@ Para alternar el estado del plugin sin editar manualmente JSON:
 
 ```powershell
 # Activar temporalmente para una sesión interactiva:
-pwsh -File scripts/ps1/toggle-gemini-mcp.ps1 -Enable
+pwsh -File scripts/ps1/aagy.ps1 toggle-gemini-mcp --enable
 
 # Desactivar tras concluir el análisis (retorno a 0 tokens):
-pwsh -File scripts/ps1/toggle-gemini-mcp.ps1 -Disable
+pwsh -File scripts/ps1/aagy.ps1 toggle-gemini-mcp --disable
 
 # Comprobar estado:
-pwsh -File scripts/ps1/toggle-gemini-mcp.ps1 -Status
+pwsh -File scripts/ps1/aagy.ps1 toggle-gemini-mcp --status
 ```

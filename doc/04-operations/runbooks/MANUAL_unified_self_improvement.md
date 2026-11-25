@@ -12,7 +12,7 @@ El sistema unifica `auto-evolve`, `instinct_manager` y `agent-self-evaluation` e
 
 1. **Captura Híbrida Zero-Overhead (`RF-01`)**:
    - **Pasiva (`hooks.json` `Stop`)**: Ejecuta `python scripts/py/self_improve.py --capture-stop` al cierre de sesión en $< 500\text{ ms}$ (timeout `5s`), consume `0` tokens en el prompt y devuelve `{}` incluso ante errores o entradas vacías.
-   - **Manual CLI**: Invocable desde terminal mediante `auto-evolve.ps1` / `auto-evolve.sh` / `self_improve.py`.
+   - **Manual CLI**: Invocable desde terminal mediante `aagy self-improve` / `aagy self-improve` / `self_improve.py`.
 2. **Persistencia a Doble Nivel (`RF-02`)**:
    - **Nivel Proyecto (`project`)**: `<repo>/.agents/instincts/` (archivos `<id>.md` y `observations.jsonl`). Mantiene retrocompatibilidad 100% con `app`.
    - **Nivel Global Plugin (`global`)**: `$PLUGIN_DATA/instincts/` (resuelto por `--plugin-data`, `AGY_PLUGIN_DATA`, `CLAUDE_PLUGIN_DATA` o `~/.gemini/config/plugins/aagy/.data/instincts/`).
@@ -33,34 +33,34 @@ El sistema unifica `auto-evolve`, `instinct_manager` y `agent-self-evaluation` e
 
 ```powershell
 # Windows 11 (PowerShell 7)
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover -RepoRoot . -Scope all
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --discover --repo-root . --scope all
 
 # Salida JSON estructurada
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Discover -Json
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --discover --json
 ```
 
 ```bash
 # Linux / WSL / macOS (Bash)
-bash scripts/sh/auto-evolve.sh --discover --repo-root . --scope all
+bash scripts/sh/aagy.sh self-improve --discover --repo-root . --scope all
 ```
 
 ### 2.2. Revisión de Compuertas y Promoción Segura (`--review` / `--promote`)
 
 ```powershell
 # Revisar candidato (ejecuta AgentShield + Budget Gate + Smoke-Test sin promover)
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Review "pg-lock-safety" -Tier skill
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --review "pg-lock-safety" --tier skill
 
 # Promover candidato tras confirmación explícita del usuario
-pwsh -NoProfile -File scripts/ps1/auto-evolve.ps1 -Promote "pg-lock-safety" -Tier skill -Confirm
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 self-improve --promote "pg-lock-safety" --tier skill --confirm
 ```
 
 ### 2.3. Gestión Directa de Instintos (`manage-instincts`) y Autoevaluación 5 Ejes (`--evaluate`)
 
 ```powershell
 # Guardar, listar y exportar instintos (project | global | all)
-pwsh -NoProfile -File scripts/ps1/manage-instincts.ps1 save --id pg-ddl --trigger "PostgreSQL DDL" --learning "Usar CREATE INDEX CONCURRENTLY" --scope project
-pwsh -NoProfile -File scripts/ps1/manage-instincts.ps1 list --scope all
-pwsh -NoProfile -File scripts/ps1/manage-instincts.ps1 export --scope all
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 instinct-manager save --id pg-ddl --trigger "PostgreSQL DDL" --learning "Usar CREATE INDEX CONCURRENTLY" --scope project
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 instinct-manager list --scope all
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 instinct-manager export --scope all
 
 # Evaluar salida del agente en los 5 ejes (Accuracy, Completeness, Clarity, Actionability, Conciseness)
 python scripts/py/self_improve.py --evaluate "All 154 tests passed (exit code 0)." --task "Run verification suite" --json

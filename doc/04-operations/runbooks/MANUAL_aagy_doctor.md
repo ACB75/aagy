@@ -24,17 +24,17 @@ falla. Así los dos doctors van separados, pero no pueden comprobar cosas distin
 
 ```powershell
 # Antigravity (desde el repo aagy)
-pwsh -NoProfile -File scripts/ps1/aagy-doctor.ps1           # informe legible
-pwsh -NoProfile -File scripts/ps1/aagy-doctor.ps1 -Json     # JSON
-pwsh -NoProfile -File scripts/ps1/aagy-doctor.ps1 -Fix      # arreglos con confirmación
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor           # informe legible
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor --json     # JSON
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor --fix      # arreglos con confirmación
 
 # Claude Code (fuera de una sesión)
-pwsh -NoProfile -File scripts/ps1/aagy-ecc-doctor.ps1
+pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-ecc-doctor
 ```
 
 ```bash
-scripts/sh/aagy-doctor.sh [--json] [--fix] [--yes] [--strict] [--only DOC-05,DOC-09]
-scripts/sh/aagy-ecc-doctor.sh [--json] [--fix] [--yes] [--strict] [--only DOC-05,DOC-09]
+scripts/sh/aagy.sh aagy-doctor [--json] [--fix] [--yes] [--strict] [--only DOC-05,DOC-09]
+scripts/sh/aagy.sh aagy-ecc-doctor [--json] [--fix] [--yes] [--strict] [--only DOC-05,DOC-09]
 ```
 
 Dentro de Claude Code basta con `/aagy-ecc-doctor` (o `/aagy-ecc-doctor --fix`).
@@ -68,7 +68,7 @@ Dentro de Claude Code basta con `/aagy-ecc-doctor` (o `/aagy-ecc-doctor --fix`).
 | `DOC-08` | Puntos de entrada | Skill `aagy-doctor` instalada | Comandos con `description`, sin colisiones con otros plugins |
 | `DOC-09` | Destinos de los hooks | Intérpretes y scripts de `hooks.json` | Destinos `${CLAUDE_PLUGIN_ROOT}/...` |
 | `DOC-10` | Intérpretes | Python ≥ 3.10 y `pwsh` ≥ 7 | `bash` y un Python real ≥ 3.10 (no el alias de la Store) |
-| `DOC-11` | Smoke test de hooks | `safety-check.ps1` con entrada sintética | Los tres hooks Python con stdin sintético |
+| `DOC-11` | Smoke test de hooks | `aagy hook-safety` con entrada sintética | Los tres hooks Python con stdin sintético |
 | `DOC-12` | Datos y legado | `.data` escribible, sin plugins `ecc` ni huérfanos | Directorio de datos escribible, sin plugins `ecc` |
 | `DOC-13` | Proyecto | `.agents/` del proyecto | `CLAUDE.md` / `.claude/` frente a `project-template/` |
 | `DOC-14` | Repo | Paridad y git hooks | Espejo `IN_SYNC` y paridad |

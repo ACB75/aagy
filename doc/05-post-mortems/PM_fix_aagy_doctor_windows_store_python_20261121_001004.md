@@ -31,8 +31,8 @@
  doc/LOG.md                                         |  11 +
  install.ps1                                        |   3 +
  install.sh                                         |   1 +
- scripts/ps1/aagy-doctor.ps1                        |  43 ++
- scripts/ps1/aagy-ecc-doctor.ps1                    |  43 ++
+ scripts/ps1/aagy.ps1 aagy-doctor                        |  43 ++
+ scripts/ps1/aagy.ps1 aagy-ecc-doctor                    |  43 ++
  scripts/ps1/aagy-sync.ps1                          |  20 +-
  scripts/ps1/tests/test_scripts_ps1.py              |   2 +
  scripts/py/aagy_doctor.py                          | 501 ++++++++++++++++++
@@ -44,8 +44,8 @@
  scripts/py/tests/test_aagy_ecc_doctor.py           | 292 +++++++++++
  scripts/py/tests/test_doctor_core.py               | 302 +++++++++++
  scripts/py/tests/test_doctor_parity.py             |  75 +++
- scripts/sh/aagy-doctor.sh                          |  19 +
- scripts/sh/aagy-ecc-doctor.sh                      |  19 +
+ scripts/sh/aagy.sh aagy-doctor                          |  19 +
+ scripts/sh/aagy.sh aagy-ecc-doctor                      |  19 +
  scripts/sh/aagy-sync.sh                            |  14 +-
  scripts/sh/tests/test_scripts_sh.py                |   2 +
  skills/aagy-doctor/SKILL.md                        |  58 +++

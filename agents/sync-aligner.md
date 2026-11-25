@@ -34,12 +34,12 @@ You are a specialized maintenance agent. Your mission is to execute the recurrin
    - Ensure `INDEX.md` and `scripts/doc/README.md` index all newly created files under `<project>/doc/`.
 3. **Quality & Zero-Drift Verification**:
    - Verify that `/portal` synchronization passes with 0 drift.
-   - Verify that `audit-workspace.ps1` passes all 4 phases (Hygiene, Token Budget, Docs Governance, SonarQube Rating A).
+   - Verify that `aagy workspace-audit` passes all 4 phases (Hygiene, Token Budget, Docs Governance, SonarQube Rating A).
 4. **Structured Commit Proposal**:
    Format the proposed commit message using:
 
    ```powershell
-   pwsh -File <ruta-del-repo>/scripts/ps1/format-commit.ps1 -Type ... -Projects ... -Title ... -Body ...
+   pwsh -File <ruta-del-repo>/scripts/ps1/aagy.ps1 format-commit --type ... --projects ... --title ... --body ...
    ```
 
    Never execute `git commit` or `git push` autonomously.
