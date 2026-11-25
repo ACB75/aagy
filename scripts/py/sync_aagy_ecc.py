@@ -54,6 +54,7 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "security_audit.py",
     "workspace_audit.py",
     "docs_map.py",
+    "doc_templates.py",
     "doctor_core.py",
     "install_manifest.py",
     "backlog.py",
@@ -73,8 +74,24 @@ MIRROR_EXCLUDED: Dict[str, Tuple[str, ...]] = {
     "skills": ("aagy-doctor", "aagy-local"),
 }
 
+# Plantillas del lifecycle: el plugin las trae por si el repo consumidor no tiene las suyas.
+LIFECYCLE_TEMPLATES_SRC = "doc/00-governance/templates"
+LIFECYCLE_TEMPLATES_DST = "templates/lifecycle"
+LIFECYCLE_TEMPLATES: Tuple[str, ...] = (
+    "TEMPLATE_BASE.md",
+    "01_TOMA_REQUISITOS_E_IMPACTO.md",
+    "02_PLAN_ACCION_ARQUITECTURA.md",
+    "03_DOCUMENTACION_Y_RELEASE_NOTES.md",
+    "04_PROPUESTA_COMMITS_PR.md",
+    "TEMPLATE_ADR.md",
+    "TEMPLATE_POSTMORTEM.md",
+    "extensions/EXAMPLE_impact_matrix.md",
+)
+
 MIRRORED_FILES: Tuple[Tuple[str, str], ...] = tuple(
     (f"scripts/py/{name}", f"scripts/py/{name}") for name in MIRRORED_PY_MODULES
+) + tuple(
+    (f"{LIFECYCLE_TEMPLATES_SRC}/{name}", f"{LIFECYCLE_TEMPLATES_DST}/{name}") for name in LIFECYCLE_TEMPLATES
 ) + (
     ("rules/AGENTS.md", "rules/AGENTS.md"),
     ("CLAUDE.md", "project-template/CLAUDE.md"),

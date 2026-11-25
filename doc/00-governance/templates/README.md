@@ -1,45 +1,60 @@
-# Plantillas del Workflow de Ingeniería AAGY / `aagy` (`00-governance/templates/`)
+# Plantillas del ciclo de vida (`00-governance/templates/`)
 
-> **Espina Dorsal del Ciclo de Vida**: Gobernanza, Retrocompatibilidad, Rendimiento y Calidad  
-> **Flujo Canónico**: `1. Requisitos & Impacto` -> `2. Plan de Acción & TDD` -> `3. Documentación & Release Notes` -> `4. Commits & PR`  
-> **Flujo Flexible CLI**: Ver [`MANUAL_WORKFLOW.md`](../MANUAL_WORKFLOW.md) (`IDEAS` | `REQ` | `PLAN` | `TODO`)
-
----
-
-## 1. Justificación del Orden del Flujo (1 -> 2 -> 3 -> 4)
-
-El ciclo de desarrollo en `aagy` y `home-lab` sitúa la **Fase 3 (Documentación y Release Notes)** antes de la **Fase 4 (Propuesta de Commits y PR)** para garantizar:
-
-1. **Inclusión Atómica de la Documentación**: Notas de versión, manuales, diagramas y espina documental (`STATUS.md`, `LOG.md`, ADRs) viajan en el mismo árbol de trabajo que el código.
-2. **Revisión Pre-Flight Exhaustiva**: [`complete-task-pr.ps1`](../../../scripts/ps1/complete-task-pr.ps1) evalúa el conjunto completo (código, tests, SDK y documentación) antes de abrir o fusionar la PR.
-3. **Cero Deriva Contractual**: El squash-merge integra implementación y trazabilidad documental en un único commit atómico reversible.
+> **Flujo**: `1. Requisitos e impacto` -> `2. Plan y TDD` -> `3. Documentación y notas de versión` -> `4. Commits y PR`
+> **Entradas flexibles**: ver [`MANUAL_WORKFLOW.md`](../MANUAL_WORKFLOW.md) (`IDEAS` | `REQ` | `PLAN` | `TODO`)
 
 ---
 
-## 2. Índice de Plantillas Estandarizadas
+## 1. Plantilla base
 
-| Plantilla | Propósito y Contenido Principal |
+Todas las plantillas heredan [`TEMPLATE_BASE.md`](TEMPLATE_BASE.md). Llevan la misma cabecera (ID de tarea, fecha, autor/rol, estado, ubicación) y estas secciones, en este orden:
+
+1. `0. Estado actual`
+2. `1. Contexto y objetivos`
+3. el cuerpo propio del tipo
+4. el marcador `<!-- aagy-extensions -->`
+5. `Criterios de aceptación`
+6. `Paridad aagy ↔ aagy-ecc`
+7. `Preguntas abiertas`
+8. `Referencias`
+
+`python scripts/py/doc_templates.py check` comprueba el esqueleto y forma parte de `ci_local.py run`. Las plantillas no llevan nombres de proyectos, hosts, dominios ni usuarios.
+
+La fase 3 va antes que la 4 para que la documentación viaje en el mismo squash que el código.
+
+## 2. Índice
+
+| Plantilla | Cuerpo propio |
 | :--- | :--- |
-| [`01_TOMA_REQUISITOS_E_IMPACTO.md`](01_TOMA_REQUISITOS_E_IMPACTO.md) | Requisitos (`RF`), criterios `CA`, matriz Home-Lab y política *Zero-Breaking Changes*. |
-| [`02_PLAN_ACCION_ARQUITECTURA.md`](02_PLAN_ACCION_ARQUITECTURA.md) | Inventario DRY, topología Mermaid, paridad SDK, TDD (`RED` $\rightarrow$ `GREEN` $\rightarrow$ `REFACTOR`) y rollback < 2 min. |
-| [`03_DOCUMENTACION_Y_RELEASE_NOTES.md`](03_DOCUMENTACION_Y_RELEASE_NOTES.md) | Release Notes SemVer, promoción multi-tier (`LOCAL`/`SANDBOX`/`LIVE`) y espina documental. |
-| [`04_PROPUESTA_COMMITS_PR.md`](04_PROPUESTA_COMMITS_PR.md) | Ramas canónicas, formato `[type]-[projects]: <title>`, Pre-Flight Review y automerge. |
-| [`TEMPLATE_ADR.md`](TEMPLATE_ADR.md) | Plantilla canónica unificada para Architecture Decision Records (`doc/02-adr/`). |
-| [`TEMPLATE_POSTMORTEM.md`](TEMPLATE_POSTMORTEM.md) | Plantilla canónica SRE 5W (*blameless*) para ramas `fix/*` (`doc/05-post-mortems/`). |
+| [`TEMPLATE_BASE.md`](TEMPLATE_BASE.md) | Esqueleto común. |
+| [`01_TOMA_REQUISITOS_E_IMPACTO.md`](01_TOMA_REQUISITOS_E_IMPACTO.md) | Requisitos funcionales y no funcionales, impacto y retrocompatibilidad. |
+| [`02_PLAN_ACCION_ARQUITECTURA.md`](02_PLAN_ACCION_ARQUITECTURA.md) | Diseño, pasos TDD, decisiones y costes, riesgos y rollback. |
+| [`03_DOCUMENTACION_Y_RELEASE_NOTES.md`](03_DOCUMENTACION_Y_RELEASE_NOTES.md) | Notas de versión y espina documental. |
+| [`04_PROPUESTA_COMMITS_PR.md`](04_PROPUESTA_COMMITS_PR.md) | Título y cuerpo del commit y la PR, revisión previa. |
+| [`TEMPLATE_ADR.md`](TEMPLATE_ADR.md) | Opciones, decisión y consecuencias. |
+| [`TEMPLATE_POSTMORTEM.md`](TEMPLATE_POSTMORTEM.md) | 5W, causa raíz y acciones (sin culpables). |
 
----
+## 3. Puntos de extensión
 
-## 3. Guía Rápida de Uso
+Un repo consumidor añade sus propias secciones sin tocar el plugin. Las declara en `.governance/docs-map.json`:
 
-1. Instancia desde cualquier punto de entrada (`IDEAS`, `REQ`, `PLAN`, `TODO` o `ALL`):
+```json
+{
+  "template_extensions": {
+    "REQ": ["doc/00-governance/extensions/impact_matrix.md"],
+    "*": ["doc/00-governance/extensions/common.md"]
+  }
+}
+```
 
-   ```powershell
-   pwsh -NoProfile -File scripts/ps1/new-lifecycle-task.ps1 -TaskId "feat/<proyecto>/<id>" -Phase PLAN
-   ```
+Al instanciar una plantilla, `new_lifecycle_task.py` inserta esos ficheros en el marcador `<!-- aagy-extensions -->`. Las claves son `REQ`, `PLAN`, `DOCS` y `REVIEW`, y `*` vale para todas. Las rutas que salen del repo se ignoran. [`extensions/EXAMPLE_impact_matrix.md`](extensions/EXAMPLE_impact_matrix.md) es un ejemplo genérico.
 
-2. Tras implementar y validar (`pytest`, `lint-markdown`, `map-docs`, `audit-workspace`), ejecuta Pre-Flight Review y squash-automerge:
+Si el repo no tiene una plantilla, se usa la del plugin. En `aagy-ecc` las plantillas están en `templates/lifecycle/`, copiadas por `sync_aagy_ecc.py`.
 
-   ```powershell
-   pwsh -NoProfile -File scripts/ps1/complete-task-pr.ps1 -ReviewOnly
-   pwsh -NoProfile -File scripts/ps1/complete-task-pr.ps1 -Yes -Title "[type]-[projects]: <título>"
-   ```
+## 4. Uso
+
+```bash
+python scripts/py/new_lifecycle_task.py --task-id "feat/<proyecto>/<id>" --phase REQ
+```
+
+Tras implementar y validar con `python scripts/py/ci_local.py run`, cierra la tarea con `complete-task-pr`.

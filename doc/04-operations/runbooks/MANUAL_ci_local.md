@@ -24,7 +24,7 @@ scripts/sh/install-git-hooks.sh
 ## 3. Uso
 
 ```text
-python scripts/py/ci_local.py run            # todo (markdownlint, pytest, auditorías, espejo, paridad)
+python scripts/py/ci_local.py run            # todo (markdownlint, pytest, auditorías, plantillas, espejo, paridad)
 python scripts/py/ci_local.py run --fast     # sin la suite de tests
 python scripts/py/ci_local.py run --only pytest,sonar
 python scripts/py/ci_local.py list           # pasos configurados
