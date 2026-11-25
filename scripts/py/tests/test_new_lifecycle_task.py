@@ -210,7 +210,9 @@ def test_flexible_entry_ideas_and_todo_with_v2_docs_map(tmp_path: Path) -> None:
     quick_path = tmp_path / "doc" / "06-backlog" / "quick" / "QUICK_aagy_quick_fix.md"
     assert todo_path in todo_files
     assert quick_path in todo_files
-    assert "**Tarea: feat/aagy/quick-fix**" in todo_path.read_text(encoding="utf-8")
+    todo_text = todo_path.read_text(encoding="utf-8")
+    assert "**feat/aagy/quick-fix**" in todo_text
+    assert "<!-- aagy-task: id=aagy-quick-fix -->" in todo_text
     assert quick_path.is_file()
 
 

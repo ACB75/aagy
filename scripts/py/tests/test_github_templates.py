@@ -26,11 +26,12 @@ def test_issue_templates_exist_and_have_frontmatter() -> None:
 def test_pull_request_template_has_development_and_parity_checklist() -> None:
     assert PR_TEMPLATE.is_file(), "Falta .github/pull_request_template.md"
     text = PR_TEMPLATE.read_text(encoding="utf-8")
-    assert "## 2. Development" in text
+    assert "## 2. Issues" in text
     assert "Closes #" in text
-    assert "aagy <-> aagy-ecc" in text
+    assert "aagy ↔ aagy-ecc" in text
     assert "sync_aagy_ecc.py --check" in text
-    assert "audit-plugin-parity.ps1" in text
+    assert "audit_plugin_parity.py" in text
+    assert "ci_local.py run" in text
 
 
 def test_project_auto_sync_workflow_exists_and_handles_projects_and_labels() -> None:

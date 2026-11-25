@@ -73,6 +73,7 @@ META_COMMENT = re.compile(r"<!--\s*aagy-task:(?P<body>[^>]*)-->")
 META_PAIR = re.compile(r"([a-z_]+)=([^\s]+)")
 TITLE_PREFIX = re.compile(r"^(?:\*\*)?(?:Tarea\s*:\s*)?", re.IGNORECASE)
 GH_ID_RE = re.compile(r"^gh-(\d+)(?:-|$)")
+EPIC_ISSUE_RE = re.compile(r"\(#(\d+)\)")
 GH_REF_RE = re.compile(r"(?:GH\s*#|issues/)(\d+)", re.IGNORECASE)
 
 
@@ -916,7 +917,7 @@ def sync_gh_done(cwd: Path, issue_number: Optional[int], agent: str, note: Optio
 
 
 def _fetch_gh_issues(cwd: Path) -> List[Dict[str, Any]]:
-    raw = run_gh(cwd, "issue", "list", "--state", "all", "--limit", "100", "--json", "number,title,state,url")
+    raw = run_gh(cwd, "issue", "list", "--state", "all", "--limit", "500", "--json", "number,title,state,url")
     if not raw:
         return []
     try:
@@ -926,8 +927,53 @@ def _fetch_gh_issues(cwd: Path) -> List[Dict[str, Any]]:
     return data if isinstance(data, list) else []
 
 
+def issue_body_for(task: Task, todo_name: str) -> str:
+    """Cuerpo de issue con las secciones comunes de issues, PR y TODO (#93)."""
+    return (
+        f"## 1. Motivación\n\nTarea `{task.task_id}` de `{todo_name}`.\n\n"
+        "## 2. Criterios de aceptación\n\n- [ ] `python scripts/py/ci_local.py run` en verde.\n\n"
+        "## 3. Paridad aagy ↔ aagy-ecc\n\n- [ ] Comportamiento igual en los dos plugins o asimetría declarada.\n\n"
+        "## 4. Artefactos\n\n- `<rutas>`\n"
+    )
+
+
+def parity_diff(backlog: Backlog, gh_issues: Sequence[Dict[str, Any]], epic_text: str = "") -> Dict[str, List[str]]:
+    """
+    Diferencias issues ↔ TODO.md sin cambiar nada (RF-08/RF-09).
+
+    - ``issue_without_task``: issue abierta sin tarea ``issue=N`` ni épica ``(#N)``.
+    - ``task_on_closed_issue``: tarea abierta cuya issue está cerrada o no existe.
+    - ``done_task_open_issue``: tarea marcada ``[x]`` con la issue aún abierta.
+    """
+    states = {int(i["number"]): str(i.get("state", "")).upper() for i in gh_issues if i.get("number")}
+    epic_nums = {int(n) for n in EPIC_ISSUE_RE.findall(epic_text)}
+    linked = {t.issue for t in backlog.tasks if t.issue}
+    diff: Dict[str, List[str]] = {"issue_without_task": [], "task_on_closed_issue": [], "done_task_open_issue": []}
+    for num, state in sorted(states.items()):
+        if state == "OPEN" and num not in linked and num not in epic_nums:
+            diff["issue_without_task"].append(f"#{num}")
+    for task in backlog.tasks:
+        if not task.issue:
+            continue
+        state = states.get(task.issue)
+        if not task.done_mark and state != "OPEN":
+            diff["task_on_closed_issue"].append(f"{task.task_id} (#{task.issue})")
+        elif task.done_mark and state == "OPEN":
+            diff["done_task_open_issue"].append(f"{task.task_id} (#{task.issue})")
+    return diff
+
+
+def op_gh_check(ctx: Context) -> Dict[str, List[str]]:
+    gh_issues = _fetch_gh_issues(ctx.cwd)
+    if not gh_issues:
+        raise BacklogError("No pude leer las issues de GitHub (gh no está o no hay sesión).")
+    text = ctx.repo.todo_path.read_text(encoding=ENCODING) if ctx.repo.todo_path.exists() else ""
+    epic_text = "\n".join(line for line in text.splitlines() if EPIC_HEADER.match(line))
+    return parity_diff(parse_backlog(text), gh_issues, epic_text)
+
+
 def _create_gh_issue_for_task(ctx: Context, task: Task) -> Optional[int]:
-    body = f"Tarea sincronizada desde `{ctx.repo.todo_path.name}` (id: `{task.task_id}`)."
+    body = issue_body_for(task, ctx.repo.todo_path.name)
     out = run_gh(ctx.cwd, "issue", "create", "--title", task.title, "--body", body, "--label", "enhancement,harness:both")
     if not out:
         return None
@@ -1145,6 +1191,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--close-done", action="store_true", help="Cierra issues completadas y marca [x] issues cerradas.")
     p.add_argument("--import-open", action="store_true", help="Importa GitHub Issues abiertas hacia TODO.md.")
     p.add_argument("--epic", default=None, help="Épica destino al importar issues abiertas.")
+    p.add_argument("--check", action="store_true", help="Solo informa de las diferencias issues ↔ TODO.md (exit 1 si hay).")
 
     epic = sub.add_parser("epic", help="Épicas: add, sync, close.")
     esub = epic.add_subparsers(dest="epic_cmd", required=True)
@@ -1196,6 +1243,12 @@ def _dispatch_simple(args: argparse.Namespace, ctx: Context) -> Tuple[Any, List[
         agent = validate_agent(args.agent) if args.mine else None
         rows = op_list(ctx, args.epic, agent, args.all)
         return rows, _render_rows(rows)
+    if cmd == CMD_GH_SYNC and args.check:
+        diff = op_gh_check(ctx)
+        lines = [f"{key}: {', '.join(items)}" for key, items in diff.items() if items]
+        if lines:
+            raise BacklogError("Issues y TODO.md no están alineados:\n  " + "\n  ".join(lines))
+        return diff, ["GH Sync check: issues y TODO.md alineados."]
     if cmd == CMD_GH_SYNC:
         res = op_gh_sync(ctx, args.create_missing, args.close_done, args.import_open, args.epic)
         msg = (

@@ -60,6 +60,7 @@ Dentro del repo aagy puedes usar `python scripts/py/backlog.py` o los wrappers
 | Terminar y archivar | `backlog.py done <id> --agent agy --note "verificado con ..." [--gh]` |
 | Añadir tarea | `backlog.py add "<título>" [--epic <id>] [--issue <N>] [--detail "<7 fases>"]` |
 | Sincronizar GitHub Issues | `backlog.py gh-sync [--create-missing] [--close-done] [--import-open] [--epic <id>]` |
+| Comprobar paridad issues ↔ TODO (sin cambiar nada) | `backlog.py gh-sync --check` |
 
 ## Modo simultáneo y modo relevo
 

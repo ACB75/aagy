@@ -5,7 +5,7 @@
 > 1. **Orden Topológico:** Resuelve las tareas en el orden de este fichero y respeta `deps=` (números de issue que tienen que estar cerrados antes). Orden de épicas: #103 → #80 → #91 → cierre (#97).
 > 2. **Flujo Git:** Una rama `<type>/<project>/<name>` y un PR por tarea, con tests unitarios/e2e en verde. Sin `auto-merge`: el merge lo hace una persona.
 > 3. **Tarea Final Obligatoria:** La última tarea de todo el backlog es #97 (revisar y actualizar toda la documentación y actualizar o borrar lo desfasado). Depende de todas las demás: cualquier épica o tarea nueva se añade a su `deps=`.
-> 4. **Paridad issues ↔ TODO:** Toda issue abierta tiene aquí su tarea con `issue=<N>`, y toda tarea con `issue=` apunta a una issue abierta. Las ideas en `Draft` de `IDEAS.md` no necesitan issue.
+> 4. **Paridad issues ↔ TODO:** Toda issue abierta tiene aquí su tarea con `issue=<N>`, y toda tarea con `issue=` apunta a una issue abierta. Las ideas en `Draft` de `IDEAS.md` no necesitan issue. Lo comprueba `python scripts/py/backlog.py gh-sync --check`; issues, PR y tareas comparten secciones (Motivación, Criterios de aceptación, Paridad, Artefactos).
 
 ---
 
@@ -28,9 +28,6 @@
 ## Épica: Plantilla genérica ampliable y paridad entre plugins (#91)
 
 > Que todos los workflows y documentos salgan de una plantilla genérica ampliable y que aagy y aagy-ecc se comporten igual. REQ: doc/06-backlog/plans/REQ_aagy_generic_templates.md
-
-- [ ] **Issues, PR y TODO con las mismas secciones y check de paridad issues ↔ TODO**
-  <!-- aagy-task: id=generic-template-issues-todo epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=93 deps=92 -->
 
 - [ ] **Esqueleto común de workflows (skills, comandos, agentes) y su check**
   <!-- aagy-task: id=generic-template-workflows epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=94 deps=92 -->

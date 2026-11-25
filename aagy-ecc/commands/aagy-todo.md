@@ -18,6 +18,7 @@ el mismo estado (`.git/aagy-backlog/state.json`, común a todos los worktrees).
 /aagy-todo handoff "<nota>"      # dejarla para que la continúe agy
 /aagy-todo done <id> "<cómo se verificó>" [--gh]
 /aagy-todo gh-sync [--create-missing] [--close-done] [--import-open]
+/aagy-todo gh-sync --check       # solo informa de diferencias issues ↔ TODO (exit 1)
 /aagy-todo init                  # crear el backlog en un repo que no lo tiene
 ```
 
