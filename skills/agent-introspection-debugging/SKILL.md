@@ -154,7 +154,7 @@ Good pattern:
 ## Integration with AAGY
 
 - Use `verification-loop` after recovery if code was changed.
-- Use `agent-self-evaluation` (`scripts/py/self_improve.py`) when the failure pattern is worth turning into an instinct or later skill.
+- Use `agent-self-evaluation` (`<PLUGIN>/scripts/py/self_improve.py`) when the failure pattern is worth turning into an instinct or later skill.
 - Use `council` when the issue is not technical failure but decision ambiguity.
 - Use `workspace-surface-audit` if the failure came from conflicting local state or repo drift.
 

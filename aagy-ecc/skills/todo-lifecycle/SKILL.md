@@ -18,12 +18,12 @@ Formato de las tareas de `TODO.md` y archivado de las completadas en `todo_done`
 ## Uso
 
 ```bash
-python scripts/py/archive_todo.py --all-completed --notes "<cómo se verificó>"
-python scripts/py/archive_todo.py --complete "<título>" --notes "<entregable>"
-python scripts/py/backlog.py gh-sync --check
+python <PLUGIN>/scripts/py/archive_todo.py --all-completed --notes "<cómo se verificó>"
+python <PLUGIN>/scripts/py/archive_todo.py --complete "<título>" --notes "<entregable>"
+python <PLUGIN>/scripts/py/backlog.py gh-sync --check
 ```
 
-Envoltorios: `scripts/ps1/aagy.ps1 archive-todo` y `scripts/sh/aagy.sh archive-todo`.
+Envoltorios: `<PLUGIN>/scripts/ps1/aagy.ps1 archive-todo` y `<PLUGIN>/scripts/sh/aagy.sh archive-todo`.
 
 ## Qué hacer
 

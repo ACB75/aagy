@@ -9,7 +9,7 @@ metadata:
 # aagy-ui
 
 UI de Antigravity. Es el equivalente del comando `/aagy-ui` de Claude Code: los dos
-usan `scripts/py/aagy_ui.py`, `aagy_statusline.py` y `aagy_notify.py`.
+usan `<PLUGIN>/scripts/py/aagy_ui.py`, `aagy_statusline.py` y `aagy_notify.py`.
 
 ## Cuándo usarla
 

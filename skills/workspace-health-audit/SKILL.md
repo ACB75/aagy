@@ -1,6 +1,6 @@
 ---
 name: workspace-health-audit
-description: "Audit workspace hygiene, token budget, redundant skills, rules and docs governance. Delegates to scripts/py/workspace-audit.py."
+description: "Audit workspace hygiene, token budget, redundant skills, rules and docs governance. Delegates to <PLUGIN>/scripts/py/workspace-audit.py."
 metadata:
   origin: AAGY
 ---
@@ -24,7 +24,7 @@ Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su n
 
 ## Non-Negotiable Rules
 
-1. **Delegate Deterministic Work**: Always run the canonical wrapper `scripts/ps1/aagy.ps1 workspace-audit` (or `scripts/py/workspace-audit.py`) rather than writing ad-hoc find/grep commands.
+1. **Delegate Deterministic Work**: Always run the canonical wrapper `<PLUGIN>/scripts/ps1/aagy.ps1 workspace-audit` (or `<PLUGIN>/scripts/py/workspace-audit.py`) rather than writing ad-hoc find/grep commands.
 2. **Safe Cleanup**: Pass `-Clean` / `--clean` to remove confirmed temporary files (`.bak`, `.tmp`, `__pycache__`, `.pytest_cache`). Pass `-Optimize` / `--optimize` to safely prune redundant local skills shadowed by the global plugin.
 3. **Never Swallow Failures**: If any phase reports a violation, state the exact file path and violation reason.
 
@@ -35,7 +35,7 @@ Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su n
 Run the audit script in inspection mode:
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit
+pwsh -NoProfile -File <PLUGIN>/scripts/ps1/aagy.ps1 workspace-audit
 ```
 
 ### 2. Inspect the Six Audit Phases
@@ -52,7 +52,7 @@ pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit
 When the user asks to clean up or optimize workspace hygiene:
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit --clean --optimize
+pwsh -NoProfile -File <PLUGIN>/scripts/ps1/aagy.ps1 workspace-audit --clean --optimize
 ```
 
 ## Paridad

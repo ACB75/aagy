@@ -30,13 +30,13 @@ Si no hay manifiesto (instalación anterior a esta versión), ejecútalo desde e
 repo aagy o con el wrapper:
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor          # informe legible
-pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor --json    # JSON
-pwsh -NoProfile -File scripts/ps1/aagy.ps1 aagy-doctor --fix     # arreglos con confirmación
+pwsh -NoProfile -File <PLUGIN>/scripts/ps1/aagy.ps1 aagy-doctor          # informe legible
+pwsh -NoProfile -File <PLUGIN>/scripts/ps1/aagy.ps1 aagy-doctor --json    # JSON
+pwsh -NoProfile -File <PLUGIN>/scripts/ps1/aagy.ps1 aagy-doctor --fix     # arreglos con confirmación
 ```
 
 ```bash
-scripts/sh/aagy.sh aagy-doctor [--json] [--fix] [--only DOC-05,DOC-09]
+<PLUGIN>/scripts/sh/aagy.sh aagy-doctor [--json] [--fix] [--only DOC-05,DOC-09]
 ```
 
 ## Qué hacer

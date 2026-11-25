@@ -1,6 +1,6 @@
 ---
 name: shared-backlog
-description: "Share TODO.md across Claude Code and Antigravity via scripts/py/backlog.py."
+description: "Share TODO.md across Claude Code and Antigravity via <PLUGIN>/scripts/py/backlog.py."
 metadata:
   origin: AAGY
 ---
@@ -34,8 +34,8 @@ ejecuta siempre **desde la carpeta del repo en el que trabajas**:
 python "<source_repo>/scripts/py/backlog.py" list --brief --agent agy
 ```
 
-Dentro del repo aagy puedes usar `python scripts/py/backlog.py` o los wrappers
-`scripts/ps1/aagy.ps1 backlog` / `scripts/sh/aagy.sh backlog`. Exporta `AAGY_AGENT=agy`
+Dentro del repo aagy puedes usar `python <PLUGIN>/scripts/py/backlog.py` o los wrappers
+`<PLUGIN>/scripts/ps1/aagy.ps1 backlog` / `<PLUGIN>/scripts/sh/aagy.sh backlog`. Exporta `AAGY_AGENT=agy`
 (o pasa `--agent agy`) en cada orden que lo pida.
 
 | Acción | Orden |

@@ -61,13 +61,13 @@ Sigue las secciones de abajo en orden: When to Use, Quality Gate Thresholds (`A`
 ### 1. Run Multi-Language Static Audit (Windows 11 `pwsh`)
 
 ```powershell
-pwsh -NoProfile -File scripts/ps1/aagy.ps1 sonar-audit
+pwsh -NoProfile -File <PLUGIN>/scripts/ps1/aagy.ps1 sonar-audit
 ```
 
 ### 2. Run Multi-Language Static Audit (Debian 12 / WSL2 `bash`)
 
 ```bash
-scripts/sh/aagy.sh sonar-audit
+<PLUGIN>/scripts/sh/aagy.sh sonar-audit
 ```
 
 ### 3. Fix & Re-Verify

@@ -166,7 +166,7 @@ claim those profiles map to Codex.
 If the AAGY marketplace is missing, add it. Otherwise refresh its snapshot:
 
 ```bash
-codex plugin marketplace add ACB75/aagy
+codex plugin marketplace add <owner>/<plugin-repo>
 codex plugin marketplace upgrade aagy --json
 ```
 

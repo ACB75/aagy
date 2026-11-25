@@ -46,7 +46,7 @@ created on an unmerged branch are not visible elsewhere until that branch is mer
 ## Boundary with shared-backlog coordination
 
 AAGY's `epic-*` commands and the `shared-backlog` skill own **multi-agent** coordination:
-`TODO.md` plus the live state of `scripts/py/backlog.py` are the authority, and Claude
+`TODO.md` plus the live state of `<PLUGIN>/scripts/py/backlog.py` are the authority, and Claude
 Code and Antigravity claim, check-point and hand off work there.
 `.stories/` is deliberately smaller: a local, single-repo planning ledger with no
 synchronization. Never run both systems as parallel authorities for the same work.

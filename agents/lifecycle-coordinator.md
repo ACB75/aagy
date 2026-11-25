@@ -23,7 +23,7 @@ Recibe el id de la tarea y la fase. Los documentos están en la carpeta de plane
 1. **Fase 1**: rechaza CA vagos o impacto sin rellenar.
 2. **Fase 2**: exige tests primero y un rollback inmediato.
 3. **Fase 3**: comprueba notas de versión, ADR si hace falta, `STATUS.md` y `LOG.md`.
-4. **Fase 4**: revisa el pre-flight de `complete-task-pr` y que `python scripts/py/ci_local.py run` esté en verde.
+4. **Fase 4**: revisa el pre-flight de `complete-task-pr` y que `python "<PLUGIN>/scripts/py/ci_local.py" run` esté en verde.
 
 ## Reglas
 

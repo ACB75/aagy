@@ -166,10 +166,26 @@ def find_project_file(start: Optional[Path] = None) -> Optional[Path]:
     return None
 
 
+def _user_env_dir() -> str:
+    """En Windows lee AAGY_ENV_DIR del registro de usuario si la sesión no lo heredó (salvo en pytest)."""
+    if sys.platform != "win32" or "PYTEST_CURRENT_TEST" in os.environ:
+        return ""
+    try:
+        import winreg  # noqa: PLC0415 - solo Windows
+
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment") as key:
+            value, _ = winreg.QueryValueEx(key, ENV_DIR_VAR)
+            return str(value).strip()
+    except OSError:
+        return ""
+
+
 def env_file(environ: Optional[Mapping[str, str]] = None) -> Optional[Path]:
     """Ruta de env.json según AAGY_ENV_DIR, o None si la variable no está."""
     env = os.environ if environ is None else environ
     raw = env.get(ENV_DIR_VAR, "").strip()
+    if not raw and environ is None:
+        raw = _user_env_dir()
     if not raw:
         return None
     return Path(raw).expanduser() / ENV_FILE
@@ -178,6 +194,10 @@ def env_file(environ: Optional[Mapping[str, str]] = None) -> Optional[Path]:
 def load(start: Optional[Path] = None, environ: Optional[Mapping[str, str]] = None) -> Config:
     """Carga las tres capas. Nunca lanza por un fichero roto: lo deja en ``Layer.error``."""
     env = dict(os.environ if environ is None else environ)
+    if environ is None and not env.get(ENV_DIR_VAR, "").strip():
+        user_dir = _user_env_dir()
+        if user_dir:
+            env[ENV_DIR_VAR] = user_dir
     project = _load_layer(LAYER_PROJECT, find_project_file(start))
     environment = _load_layer(LAYER_ENV, env_file(env))
     return Config(env, project, environment)

@@ -16,8 +16,8 @@ Cuando hay tareas marcadas `- [x]` en `TODO.md` o hay que revisar su formato.
 ## Uso
 
 ```bash
-python scripts/py/archive_todo.py --all-completed --notes "<cómo se verificó>"
-python scripts/py/backlog.py gh-sync --check
+python "<PLUGIN>/scripts/py/archive_todo.py" --all-completed --notes "<cómo se verificó>"
+python "<PLUGIN>/scripts/py/backlog.py" gh-sync --check
 ```
 
 ## Qué hacer
