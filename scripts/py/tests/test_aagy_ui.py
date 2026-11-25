@@ -273,14 +273,14 @@ def test_usage_without_ccusage(monkeypatch: pytest.MonkeyPatch, capsys: pytest.C
 def test_plain_agy_context_from_monitor(monkeypatch: pytest.MonkeyPatch) -> None:
     import session_token_monitor as stm
     report = stm.SessionTokenReport("t", 3, 1000, 40000, 45000, False)
-    monkeypatch.setattr(stm, "analyze_transcript", lambda: report)
+    monkeypatch.setattr(stm, "analyze_transcript", lambda _path=None: report)
     assert sl.segment_context(sl.agy_context(), _ui()) == "ctx 40k/45k 89% /compact"
 
 
 def test_status_per_harness(capsys: pytest.CaptureFixture) -> None:
     assert ui.main(["status", "--harness", "agy"]) == 0
     out = capsys.readouterr().out
-    assert "statusline: no aplica" in out and "ccusage: no aplica" in out
+    assert "statusline (CLI de Antigravity)" in out and "ccusage: no aplica" in out
 
 
 # --------------------------------------------------------------------------- usage en Antigravity (#123)
@@ -317,3 +317,38 @@ def test_agy_usage_without_transcripts(tmp_path: Path, capsys: pytest.CaptureFix
 def test_agy_usage_blocks_not_applicable(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     assert ui.cmd_usage_agy("blocks", tmp_path) == 0
     assert "no aplica" in capsys.readouterr().out
+
+
+# --------------------------------------------------------------------------- asimetrías de Antigravity (#124)
+
+def test_agy_statusline_command_and_settings(tmp_path: Path) -> None:
+    path = ui.agy_settings_path(tmp_path)
+    assert path == tmp_path / ".gemini" / "antigravity-cli" / "settings.json"
+    assert ui.statusline_on(path, harness="agy")
+    command = json.loads(path.read_text(encoding="utf-8"))["statusLine"]["command"]
+    assert command.endswith("aagy_statusline.py --agent agy") and "$(" not in command
+    assert not ui.statusline_on(path, harness="agy")
+    assert ui.statusline_off(path)
+
+
+def test_agy_observe_marks_turn_start_and_confirmation(tmp_path: Path) -> None:
+    base = {"conversation_id": "c-1"}
+    assert nt.agy_observe({**base, "agent_state": "idle"}, now=100.0, tmp=tmp_path) is None
+    assert nt.agy_observe({**base, "agent_state": "working"}, now=110.0, tmp=tmp_path) is None
+    assert nt.agy_observe({**base, "agent_state": "tool_use"}, now=120.0, tmp=tmp_path) is None
+    pending = {**base, "agent_state": "tool_use", "tool_confirmation_pending": True}
+    assert nt.agy_observe(pending, now=125.0, tmp=tmp_path) == nt.EVENT_NOTIFICATION
+    assert nt.agy_observe(pending, now=126.0, tmp=tmp_path) is None
+    now = datetime.fromtimestamp(150.0, tz=timezone.utc)
+    assert nt.agy_turn_seconds({"conversationId": "c-1"}, now, tmp=tmp_path) == 40.0
+    assert nt.agy_turn_seconds({"conversationId": "otra"}, now, tmp=tmp_path) is None
+    assert nt.agy_state_path("", tmp_path) is None
+
+
+def test_agy_statusline_cost_and_estimated_context(tmp_path: Path) -> None:
+    transcript = tmp_path / "transcript.jsonl"
+    transcript.write_text(json.dumps({"content": "x" * 3800}) + "\n", encoding="utf-8")
+    data = sl.agy_cli_data({"transcript_path": str(transcript), "cost": {"total_usd": 0.5}})
+    assert sl.context_usage(data)[0] == 1000
+    line = sl.render(data, _ui(segments=("cost", "context")), agent="agy", cwd=tmp_path)
+    assert line.startswith("$0.50")

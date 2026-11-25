@@ -48,6 +48,7 @@ import aagy_config  # noqa: E402
 ENCODING = "utf-8"
 SEG_CONTEXT = "context"
 KEY_CONTEXT_WINDOW = "context_window"
+AGENT_AGY = "agy"
 KEY_WINDOW_SIZE = "context_window_size"
 DEFAULT_SEGMENTS = ("model", "branch", SEG_CONTEXT, "cost", "local", "task", "usage")
 PLAIN_SEGMENTS = ("branch", SEG_CONTEXT, "local", "task")
@@ -278,7 +279,8 @@ def _seg_model(ctx: _Ctx) -> Optional[str]:
 
 
 def _seg_cost(ctx: _Ctx) -> Optional[str]:
-    cost = _section(ctx.data, "cost").get("total_cost_usd")
+    section = _section(ctx.data, "cost")
+    cost = section.get("total_cost_usd", section.get("total_usd"))  # Claude Code / CLI de Antigravity
     return f"${float(cost):.2f}" if isinstance(cost, (int, float)) and cost > 0 else None
 
 
@@ -309,17 +311,27 @@ def render(data: Mapping[str, Any], ui: UiSettings, agent: str = "claude", cwd: 
     return SEP.join(part for part in parts if part)
 
 
-def agy_context() -> Dict[str, Any]:
+def agy_context(transcript: Optional[str] = None) -> Dict[str, Any]:
     """Contexto de Antigravity estimado por session_token_monitor (tokens frente a su umbral de /compact)."""
     try:
         import session_token_monitor as stm  # noqa: WPS433 (solo existe en aagy)
-        report = stm.analyze_transcript()
+        report = stm.analyze_transcript(Path(transcript) if transcript else None)
     except Exception:  # noqa: BLE001 (sin transcript ni monitor: sin segmento)
         return {}
     if not report.steps:
         return {}
     return {KEY_CONTEXT_WINDOW: {"current_usage": {"input_tokens": report.estimated_tokens},
                                KEY_WINDOW_SIZE: report.threshold}}
+
+
+def agy_cli_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    """Status line del CLI de Antigravity: avisos por cambio de estado y contexto estimado si falta."""
+    import aagy_notify  # noqa: WPS433 (importa este módulo; aquí no hay ciclo)
+
+    aagy_notify.agy_status_changed(data)
+    if context_usage(data) is None:
+        data = {**data, **agy_context(data.get("transcript_path"))}
+    return data
 
 
 def read_stdin() -> Dict[str, Any]:
@@ -343,7 +355,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     args = parse_args(argv)
     try:
         ui = load_ui()
-        data = read_stdin() if not args.plain else agy_context() if args.agent == "agy" else {}
+        data = read_stdin() if not args.plain else agy_context() if args.agent == AGENT_AGY else {}
+        if args.agent == AGENT_AGY and not args.plain:
+            data = agy_cli_data(data)
         if args.plain:
             ui = UiSettings(True, tuple(s for s in ui.segments if s in PLAIN_SEGMENTS),
                             ui.warn_pct, ui.crit_pct, False, False)

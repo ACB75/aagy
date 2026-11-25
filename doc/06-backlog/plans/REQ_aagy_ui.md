@@ -63,9 +63,9 @@
 | Pieza | Claude Code | Antigravity |
 | :--- | :--- | :--- |
 | Comando, subcomandos, `ui.*` y `AAGY_UI_*` | `/aagy-ui` | Skill `aagy-ui` (iguales) |
-| Status line nativa | Sí (`statusLine`) | No existe: estado con la skill `aagy-ui` (`--plain`, contexto estimado por `session_token_monitor.py`) |
-| Avisos de escritorio | `Stop` y `Notification` | `Stop` (sin duración del turno, avisa siempre que `ui.notify` lo permita) |
-| `ccusage` | Sí (lee los transcripts de Claude Code) | No aplica (no lee Antigravity) |
+| Status line nativa | Sí (`statusLine`) | CLI: sí, `statusline on --harness agy` (#124). Editor: no existe; estado con la skill `aagy-ui` |
+| Avisos de escritorio | `Stop` y `Notification` | Con la status line del CLI: confirmación pendiente y `Stop` con duración (#124). Sin ella: `Stop`, siempre |
+| `ccusage` | Sí (lee los transcripts de Claude Code) | No aplica; `usage --harness agy` da tokens estimados sin coste (#123) |
 | Extensiones recomendadas | Sí | Sí (Open VSX) |
 
 ## 5. Decisiones

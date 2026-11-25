@@ -2,7 +2,7 @@
 
 > **Requisitos**: [REQ_aagy_ui.md](../../06-backlog/plans/REQ_aagy_ui.md) | **Plan**: [PLAN_aagy_ui.md](../../06-backlog/plans/PLAN_aagy_ui.md)
 > **Motor**: [`aagy_ui.py`](../../../scripts/py/aagy_ui.py), [`aagy_statusline.py`](../../../scripts/py/aagy_statusline.py), [`aagy_notify.py`](../../../scripts/py/aagy_notify.py)
-> **Claude Code**: `/aagy-ui` | **Antigravity**: skill `aagy-ui` | **Issue**: #116
+> **Claude Code**: `/aagy-ui` | **Antigravity**: skill `aagy-ui` | **Issues**: #116, #123, #124
 
 ---
 
@@ -12,8 +12,8 @@
 | :--- | :--- | :--- |
 | Comando | `/aagy-ui` (mismos subcomandos) | Skill `aagy-ui` (mismos subcomandos) |
 | Configuración | `ui.*` / `AAGY_UI_*` | Igual |
-| Status line | Línea fija con modelo, rama, contexto, coste, modo local, épica y tarea, `ccusage` opcional | **Asimetría**: no hay status line nativa. `/aagy-ui` da rama, contexto (estimado por `session_token_monitor.py`), modo local, épica y tarea con los mismos umbrales |
-| Avisos de escritorio | Al pedir permiso o quedar a la espera (`Notification`) y al terminar un turno largo (`Stop`) | **Asimetría**: solo `Stop` y sin medir la duración del turno (no hay evento de permiso ni marca de inicio) |
+| Status line | Línea fija con modelo, rama, contexto, coste, modo local, épica y tarea, `ccusage` opcional | CLI: la misma línea con `statusline on --harness agy` (sección 2.1). **Asimetría** en el editor: no tiene status line; `/aagy-ui` da el estado en una línea |
+| Avisos de escritorio | Al pedir permiso o quedar a la espera (`Notification`) y al terminar un turno largo (`Stop`) | Con la status line del CLI: aviso de confirmación pendiente y `Stop` con `ui.notify_min_s`. **Asimetría** en el editor o sin ella: solo `Stop`, siempre (sección 4.1) |
 | `ccusage` / `usage` | Opcional (`ccusage`, con coste en $) | **Asimetría**: `ccusage` solo lee transcripts de Claude Code. `/aagy-ui usage [daily\|monthly\|session]` da tokens estimados con `session_token_monitor.py`, sin coste en $ |
 | Extensiones recomendadas | `aagy_ui.py vscode --apply` | Igual (Open VSX) |
 
@@ -42,6 +42,22 @@ Opus | feat/aagy/ui-statusline-notify | ctx 120k/200k 60% | $0.42 | local:auto |
 - El comando solo toca la `statusLine` de aagy. Si ya tienes otra, pide `--force`.
 - Al actualizar el plugin cambia su carpeta; el hook `SessionStart` (`aagy_ui.py repair`) corrige la ruta.
 
+### 2.1. Status line del CLI de Antigravity
+
+El CLI de Antigravity tiene `statusLine` en `~/.gemini/antigravity-cli/settings.json`, con el mismo
+formato que Claude Code: ejecuta el comando (con `sh -c`, o `cmd /c` en Windows) en cada cambio de estado del
+agente, como mucho cada 300 ms, y le pasa la sesión en JSON por `stdin`. Si tarda más de 5 s lo corta.
+
+```bash
+python scripts/py/aagy_ui.py statusline on --harness agy    # o off
+```
+
+- El comando usa la ruta absoluta del Python que lo instala, sin sintaxis de shell, para que valga con `sh` y con `cmd`.
+- Coste: `cost.total_usd` del CLI. Contexto: el de `context_window` si lo trae; si no, la estimación de
+  `session_token_monitor.py` sobre `transcript_path`.
+- El editor de Antigravity no tiene status line: allí el estado sale con `/aagy-ui` (`--plain --agent agy`).
+- Fuente: [Status line del CLI](https://antigravity.google/docs/cli/statusline/).
+
 ## 3. Configuración (`ui.*`)
 
 Se lee con `aagy_config` (proyecto `.governance/aagy.json`, entorno `<AAGY_ENV_DIR>/aagy/env.json`
@@ -64,6 +80,24 @@ o variables `AAGY_UI_*`). Los avisos son una preferencia personal: lo normal es 
 - Windows 10/11: toast con `powershell.exe` (Windows PowerShell 5.1, viene con el sistema; no hace falta `pwsh`
   ni módulos). macOS: `osascript`. Linux: `notify-send` (paquete `libnotify`).
 - El texto del aviso va como dato (variables o argumentos), nunca dentro del código que se ejecuta.
+
+### 4.1. Antigravity: qué da la plataforma
+
+Antigravity documenta estos eventos de hook: `SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`,
+`PostInvocation` y `Stop` ([Hooks](https://antigravity.google/docs/hooks/)). El JSON de entrada trae
+`conversationId`, `workspacePaths`, `transcriptPath`, `artifactDirectoryPath` y `modelName`. `Stop` añade
+`executionNum`, `terminationReason` y `fullyIdle`. No hay evento de permiso ni de mensaje del usuario, y ni los
+eventos ni el transcript traen marcas de tiempo.
+
+La status line del CLI sí da el estado: `agent_state` (`idle`, `working`, `tool_use`...) y
+`tool_confirmation_pending`. `aagy_notify.agy_observe` lo aprovecha:
+
+- Guarda en `<tmp>/aagy-agy-turn-<conversationId>.json` cuándo el agente sale de `idle`. Esa es la marca de inicio
+  del turno, y `Stop` la usa para respetar `ui.notify_min_s`, como en Claude Code.
+- Cuando `tool_confirmation_pending` pasa a `true`, avisa «Antigravity espera tu confirmación». Es el equivalente
+  de `Notification`.
+- Sin la status line del CLI (en el editor, por ejemplo), `Stop` avisa siempre y no hay aviso de confirmación.
+  `Notification` sigue en `HOOK_ASYMMETRY_EVENTS` de `audit_plugin_parity.py`, porque no es un evento de hook.
 - Probar sin lanzar nada: `echo '{"message":"prueba"}' | python scripts/py/aagy_notify.py --event notification --dry-run`.
 
 ## 5. `ccusage` (opcional)
