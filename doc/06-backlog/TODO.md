@@ -49,6 +49,6 @@
 > Va después de todas las épicas. Si se abre una épica o tarea nueva, su issue se añade a `deps=` de esta tarea y al cuerpo de #97.
 
 - [ ] **REVISAR Y ACTUALIZAR TODA LA DOCUMENTACIÓN Y ACTUALIZAR O BORRAR LO DESFASADO (última tarea)**
-  <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 deps=81,82,83,84,85,86,87,88,89,92,93,94,95,96,100,101,105,106,107 -->
+  <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 deps=81,82,83,84,85,86,87,88,89,92,93,94,95,96,100,101,105,106,107,116 -->
 
 ## Épica: Flujo GitHub Issues y Projects v2 (cerrada 2026-11-21 por agy)

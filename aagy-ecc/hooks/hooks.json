@@ -1,5 +1,5 @@
 {
-  "description": "Hooks de aagy-ecc: mismos guardarrailes que el plugin aagy (reglas Tier 1, safety gate, linter Markdown y captura Stop de self-improve) y backlog compartido con Antigravity (checkpoint en Stop y PreCompact, relevo en SessionEnd), y worktree fijo por agente (guarda de escritura y reciclado tras el merge), y guarda de ficheros privados del modelo local (aviso y pregunta antes de leerlos).",
+  "description": "Hooks de aagy-ecc: mismos guardarrailes que el plugin aagy (reglas Tier 1, safety gate, linter Markdown y captura Stop de self-improve) y backlog compartido con Antigravity (checkpoint en Stop y PreCompact, relevo en SessionEnd), y worktree fijo por agente (guarda de escritura y reciclado tras el merge), y guarda de ficheros privados del modelo local (aviso y pregunta antes de leerlos), y UI (reparación de la status line al iniciar y avisos de escritorio en Stop y Notification).",
   "hooks": {
     "SessionStart": [
       {
@@ -19,6 +19,16 @@
             "type": "command",
             "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/agent_worktree.py\" --quiet recycle --agent claude --if-merged",
             "timeout": 300
+          }
+        ]
+      },
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/aagy_ui.py\" --quiet repair",
+            "timeout": 5
           }
         ]
       }
@@ -79,6 +89,11 @@
             "type": "command",
             "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/backlog.py\" --quiet checkpoint --agent claude --auto",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/aagy_notify.py\" --event stop",
+            "timeout": 5
           }
         ]
       }
@@ -101,6 +116,17 @@
             "type": "command",
             "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/backlog.py\" --quiet handoff --agent claude --auto",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/aagy_notify.py\" --event notification",
+            "timeout": 5
           }
         ]
       }

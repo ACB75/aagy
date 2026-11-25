@@ -11,6 +11,9 @@ desde `${CLAUDE_PLUGIN_ROOT}` y nunca bloquean por error propio (fail-open).
 | `Stop` | (todos) | `scripts/py/self_improve.py --capture-stop` | `scripts/py/self_improve.py --capture-stop` |
 | `PreToolUse` | `Bash\|PowerShell\|Write\|Edit\|MultiEdit\|NotebookEdit\|EnterWorktree` | `scripts/hooks/worktree_guard.py` | `scripts/ps1/agent-worktree.ps1 guard --agent agy` (`run_command` / `write_file` / `edit_file`) |
 | `SessionStart` | `startup` | `scripts/py/agent_worktree.py --quiet recycle --agent claude --if-merged` | (sin equivalente: Antigravity recicla en `claim` y en `complete-task-pr`) |
+| `SessionStart` | `startup` | `scripts/py/aagy_ui.py --quiet repair` | (sin equivalente: Antigravity no tiene status line) |
+| `Stop` | (todos) | `scripts/py/aagy_notify.py --event stop` | `scripts/py/aagy_notify.py --event stop --format agy` |
+| `Notification` | (todos) | `scripts/py/aagy_notify.py --event notification` | (sin equivalente) |
 
 - **Safety gate**: deniega `rm -rf /`, `mkfs`, `DROP DATABASE` y escrituras directas a
   `/dev/sd*` con `permissionDecision: deny`.
@@ -20,6 +23,10 @@ desde `${CLAUDE_PLUGIN_ROOT}` y nunca bloquean por error propio (fail-open).
 - **Worktree por agente**: si el repo activó `agent_worktree.py init`, deniega que Claude escriba en el
   checkout principal de Master o en el worktree de Antigravity, y el worktree nativo de Claude Code. Al
   iniciar sesión recicla `<repo>-aagy-ecc` si su PR ya está fusionada. Sin marcador no hace nada.
+
+- **UI**: `repair` actualiza la ruta de la status line de aagy si el plugin cambió de versión. `aagy_notify.py`
+  avisa en el escritorio al pedir permiso y al acabar un turno de más de `ui.notify_min_s` (30 s); se apaga con
+  `ui.notify=off` y no hace nada sin escritorio. Ver `doc/04-operations/runbooks/MANUAL_ui.md`.
 
 `scripts/py/` es una copia generada desde la raíz del repositorio por
 `scripts/py/sync_aagy_ecc.py`; no se edita a mano.

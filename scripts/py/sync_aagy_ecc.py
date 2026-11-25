@@ -44,6 +44,9 @@ STATUS_SYNCED = "SYNCED"
 MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "self_improve.py",
     "aagy_config.py",
+    "aagy_statusline.py",
+    "aagy_notify.py",
+    "aagy_ui.py",
     "ci_local.py",
     "local_model.py",
     "local_model_mcp.py",
@@ -69,9 +72,10 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
 )
 
 # Entradas propias de Antigravity que no deben llegar a Claude Code (relativas al directorio espejo).
-# skills/aagy-doctor y skills/aagy-local son de Antigravity; Claude Code usa /aagy-ecc-doctor y /aagy-local.
+# skills/aagy-doctor, skills/aagy-local y skills/aagy-ui son de Antigravity; Claude Code usa
+# /aagy-ecc-doctor, /aagy-local y /aagy-ui.
 MIRROR_EXCLUDED: Dict[str, Tuple[str, ...]] = {
-    "skills": ("aagy-doctor", "aagy-local"),
+    "skills": ("aagy-doctor", "aagy-local", "aagy-ui"),
 }
 
 # Plantillas del lifecycle: el plugin las trae por si el repo consumidor no tiene las suyas.
