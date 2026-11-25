@@ -36,6 +36,7 @@ Envoltorios: `<PLUGIN>/scripts/ps1/aagy.ps1 archive-todo` y `<PLUGIN>/scripts/sh
 1. Nunca dejes tareas `[x]` en `TODO.md`.
 2. Archiva siempre con el script (`TODO_<título>_<fecha>.md`), que resuelve las rutas con `docs_map.py`.
 3. Toda issue abierta tiene su tarea y al revés (`gh-sync --check`).
+4. **Una sesión nueva por tarea y repositorio**: cada tarea de `TODO.md` o issue se ejecuta en una sesión nueva abierta en su repositorio propietario (`<repo>`), sin encadenar varias tareas en la misma conversación ni mezclar repositorios.
 
 ## Paridad
 

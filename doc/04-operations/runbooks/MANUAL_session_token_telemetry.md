@@ -57,7 +57,18 @@ Si el transcript supera los 45.000 tokens acumulados, el arnés emite una advert
 
 ---
 
-## 4. Métricas de Rendimiento y Rendimiento SRE
+## 4. Página viva de telemetría y memoria (`live_status.py`)
+
+El módulo [`scripts/py/live_status.py`](../../../scripts/py/live_status.py) (espejado en `aagy-ecc/scripts/py/`) consolida en una vista viva el estado del repositorio, el catálogo real (`aagy` ↔ `aagy-ecc`), la telemetría de sesiones de **Antigravity** (`session_token_monitor` / `aagy_ui`) y **Claude Code** (`aagy_statusline`), y la trazabilidad arquitectónica desde Two-Tier ([ADR-0001](../../02-adr/ADR_aagy_0001_two_tier_global_plugin_and_project_scaffolding.md) → [ADR-0004](../../02-adr/ADR_aagy_0004_stack_profiles_declared_by_consumer_repo.md)):
+
+- **Hooks `SessionStart` y `Stop`** (`live_status.py --hook`): actualizan `.agents/LIVE_TELEMETRY.md` (gitignored) dentro del worktree del agente (`<repo>-aagy` o `<repo>-aagy-ecc`) en `< 150 ms` gracias a la caché incremental `.agents/telemetry-cache.json` por hash SHA-256 + `mtime/size`. Así el estado vivo nunca ensucia git ni bloquea `agent_worktree.py recycle` ni `backlog.py handoff`.
+- **Sincronización de `doc/STATUS.md`**: `python scripts/py/live_status.py sync` actualiza la versión, el catálogo, la trazabilidad y la instantánea de telemetría en [`doc/STATUS.md`](../../STATUS.md); `live_status.py check` verifica coherencia de catálogo y marcadores sin fallar por variación entre turnos.
+- **Privacidad y `consumer_refs`**: todas las etiquetas de workspace y textos renderizados se sanitizan contra `consumer_refs` de `.governance/aagy.json` para no filtrar rutas locales ni nombres de repositorios consumidores.
+- **Disciplina de sesión por tarea (`1 tarea TODO / issue = 1 sesión nueva en su <repo>`)**: cada tarea de `TODO.md` o issue se abre en una sesión nueva dentro de su repositorio propietario (`rules/AGENTS.md`, `shared-backlog`, `todo-lifecycle`), evitando sesiones largas con contextos mezclados y manteniendo la telemetría atribuible 1:1.
+
+---
+
+## 5. Métricas de Rendimiento y Rendimiento SRE
 
 - **Tiempo de Parseo**: $< 120\text{ ms}$ para transcripts de más de 2.000 pasos.
 - **Tolerancia a Concurrencia**: Manejo de lecturas en caliente con reintentos defensivos ante bloqueos transitorios de I/O.

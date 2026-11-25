@@ -9,6 +9,11 @@
             "type": "command",
             "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/hooks/session_start_rules.py\"",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/live_status.py\" --hook --event session_start --agent claude",
+            "timeout": 5
           }
         ]
       },
@@ -93,6 +98,11 @@
           {
             "type": "command",
             "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/aagy_notify.py\" --event stop",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "P=$(command -v python || command -v python3); \"$P\" \"${CLAUDE_PLUGIN_ROOT}/scripts/py/live_status.py\" --hook --event stop --agent claude",
             "timeout": 5
           }
         ]

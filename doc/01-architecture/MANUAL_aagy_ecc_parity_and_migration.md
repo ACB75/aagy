@@ -105,7 +105,7 @@ pwsh -File scripts/ps1/aagy.ps1 sync-aagy-ecc
 ## 4. Paridad de hooks y asimetrías
 
 Los dos plugins usan los mismos motores Python (`scripts/py/hook_safety.py`, `hook_post_write.py`,
-`agent_worktree.py guard`, `local_private_guard.py`, `self_improve.py`, `backlog.py`) con
+`agent_worktree.py guard`, `local_private_guard.py`, `self_improve.py`, `backlog.py`, `live_status.py`) con
 `--format claude` o `--format agy`; los hooks llaman directamente al `.py`, sin envoltorios. En `aagy`, `hooks.json` usa `${AAGY_PLUGIN_ROOT}` y el instalador lo sustituye por
 la carpeta del plugin, como `${CLAUDE_PLUGIN_ROOT}` en `aagy-ecc`.
 
@@ -114,9 +114,10 @@ Antigravity tiene `SessionStart`, `PreToolUse`, `PostToolUse`, `PreInvocation`, 
 
 | Momento | Claude Code | Antigravity |
 | :--- | :--- | :--- |
-| Inicio (reglas, reciclado del worktree, ruta de la status line) | `SessionStart` | `SessionStart`: mismos motores (`agent_worktree.py recycle`, `aagy_ui.py repair`); las reglas las lee de forma nativa (`AGENTS.md`) |
+| Inicio (reglas, reciclado del worktree, ruta de la status line) | `SessionStart` | `SessionStart`: mismos motores (`agent_worktree.py recycle`, `aagy_ui.py repair`, `live_status.py --hook`); las reglas las lee de forma nativa (`AGENTS.md`) |
 | Compactación | `PreCompact` (`checkpoint`) | `checkpoint` en cada `Stop` |
 | Fin de sesión | `SessionEnd` (`handoff`) | `checkpoint` en cada `Stop` y caducidad del claim (`AAGY_BACKLOG_TTL_HOURS`) |
+| Telemetría viva de sesiones y catálogo | `SessionStart` / `Stop` (`live_status.py --hook`) | Mismos eventos y motor (`live_status.py --hook --agent agy`) |
 | Pregunta antes de leer un fichero privado | `ask` | `force_ask` (pregunta aunque haya un "Always Allow" guardado) |
 | Aviso de escritorio al pedir permiso | `Notification` (`aagy_notify.py`) | Con la status line del CLI, por `tool_confirmation_pending`; sin ella, solo `Stop` (ver `MANUAL_ui.md` §4.1) |
 

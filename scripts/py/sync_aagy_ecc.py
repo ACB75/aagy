@@ -76,6 +76,9 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "agent_worktree_base.py",
     "agent_worktree_guard.py",
     "agent_worktree_provision.py",
+    "live_status.py",
+    "live_status_collect.py",
+    "live_status_render.py",
 )
 
 # Entradas propias de Antigravity que no deben llegar a Claude Code (relativas al directorio espejo).
