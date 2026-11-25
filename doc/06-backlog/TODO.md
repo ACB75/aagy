@@ -2,7 +2,7 @@
 
 > **Directiva de Agente Autónomo:**
 >
-> 1. **Orden Topológico:** Resuelve las tareas en el orden de este fichero y respeta `deps=` (números de issue que tienen que estar cerrados antes). Orden de épicas: #103 → #80 → #91 → cierre (#97).
+> 1. **Orden Topológico:** Resuelve las tareas en el orden de este fichero y respeta `deps=` (números de issue que tienen que estar cerrados antes). Orden de épicas: #103 → #80 → #91 → UI (#116) → cierre (#97).
 > 2. **Flujo Git:** Una rama `<type>/<project>/<name>` y un PR por tarea, con tests unitarios/e2e en verde. Sin `auto-merge`: el merge lo hace una persona.
 > 3. **Tarea Final Obligatoria:** La última tarea de todo el backlog es #97 (revisar y actualizar toda la documentación y actualizar o borrar lo desfasado). Depende de todas las demás: cualquier épica o tarea nueva se añade a su `deps=`.
 > 4. **Paridad issues ↔ TODO:** Toda issue abierta tiene aquí su tarea con `issue=<N>`, y toda tarea con `issue=` apunta a una issue abierta. Las ideas en `Draft` de `IDEAS.md` no necesitan issue. Lo comprueba `python scripts/py/backlog.py gh-sync --check`; issues, PR y tareas comparten secciones (Motivación, Criterios de aceptación, Paridad, Artefactos).
@@ -35,11 +35,24 @@
 - [ ] **Hard sync con lista de ficheros instalados**
   <!-- aagy-task: id=hard-sync-manifest epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=101 -->
 
+## Épica: UI de Claude Code y Antigravity (#116)
+
+> Status line, avisos de escritorio, `ccusage` opcional y extensiones de VS Code (#116, PR #119), con paridad hasta donde Antigravity lo permite. Runbook: doc/04-operations/runbooks/MANUAL_ui.md
+
+- [ ] **Validar la UI en Windows 11 (status line, toast y CI local en FRACTAL)**
+  <!-- aagy-task: id=ui-windows-validation epic=ui-de-claude-code-y-antigravity-116 issue=122 deps=116 -->
+
+- [ ] **Uso de tokens en Antigravity con /aagy-ui usage (equivalente a ccusage)**
+  <!-- aagy-task: id=ui-agy-usage epic=ui-de-claude-code-y-antigravity-116 issue=123 deps=116 -->
+
+- [ ] **Cerrar las asimetrías de UI de Antigravity cuando la plataforma lo permita**
+  <!-- aagy-task: id=ui-agy-asymmetries epic=ui-de-claude-code-y-antigravity-116 issue=124 deps=116,122 -->
+
 ## Cierre del backlog (última tarea de todo el backlog)
 
 > Va después de todas las épicas. Si se abre una épica o tarea nueva, su issue se añade a `deps=` de esta tarea y al cuerpo de #97.
 
 - [ ] **REVISAR Y ACTUALIZAR TODA LA DOCUMENTACIÓN Y ACTUALIZAR O BORRAR LO DESFASADO (última tarea)**
-  <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 deps=81,82,83,84,85,86,87,88,89,92,93,94,95,96,100,101,105,106,107,116 -->
+  <!-- aagy-task: id=docs-full-review epic=plantilla-generica-ampliable-y-paridad-entre-plugins-91 issue=97 deps=81,82,83,84,85,86,87,88,89,92,93,94,95,96,100,101,105,106,107,116,122,123,124 -->
 
 ## Épica: Flujo GitHub Issues y Projects v2 (cerrada 2026-11-21 por agy)
