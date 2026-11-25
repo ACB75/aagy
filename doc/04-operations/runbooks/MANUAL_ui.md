@@ -14,7 +14,7 @@
 | Configuración | `ui.*` / `AAGY_UI_*` | Igual |
 | Status line | Línea fija con modelo, rama, contexto, coste, modo local, épica y tarea, `ccusage` opcional | **Asimetría**: no hay status line nativa. `/aagy-ui` da rama, contexto (estimado por `session_token_monitor.py`), modo local, épica y tarea con los mismos umbrales |
 | Avisos de escritorio | Al pedir permiso o quedar a la espera (`Notification`) y al terminar un turno largo (`Stop`) | **Asimetría**: solo `Stop` y sin medir la duración del turno (no hay evento de permiso ni marca de inicio) |
-| `ccusage` | Opcional | **Asimetría**: solo lee transcripts de Claude Code |
+| `ccusage` / `usage` | Opcional (`ccusage`, con coste en $) | **Asimetría**: `ccusage` solo lee transcripts de Claude Code. `/aagy-ui usage [daily\|monthly\|session]` da tokens estimados con `session_token_monitor.py`, sin coste en $ |
 | Extensiones recomendadas | `aagy_ui.py vscode --apply` | Igual (Open VSX) |
 
 Todo corre fuera del contexto del modelo: no gasta tokens. Sin git, sin backlog o sin
@@ -79,6 +79,14 @@ python scripts/py/aagy_ui.py usage monthly
 
 El segmento lee una caché de 5 minutos (`<tmp>/aagy-ccusage-<fecha>.json`) que se refresca en segundo plano con
 `ccusage daily --json --offline`, así que nunca frena la status line.
+
+En Antigravity, `ccusage` no sirve. `usage --harness agy` suma los tokens estimados de cada transcript de
+`~/.gemini/antigravity/brain/` con `session_token_monitor.py` (3,8 caracteres por token). No llama a ninguna API y
+no da coste en $:
+
+```bash
+python scripts/py/aagy_ui.py usage daily --harness agy     # también monthly o session
+```
 
 ## 6. Extensión de Claude Code en VS Code y Antigravity
 

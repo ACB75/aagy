@@ -11,6 +11,7 @@ Uso::
     python aagy_ui.py notify auto|on|off  # ui.notify en .governance/aagy.json
     python aagy_ui.py ccusage on|off      # ui.ccusage en .governance/aagy.json
     python aagy_ui.py usage [daily|monthly|session|blocks]
+    python aagy_ui.py usage [daily|monthly|session] --harness agy   # tokens estimados de Antigravity
     python aagy_ui.py vscode [--apply]    # extensiones recomendadas en .vscode/extensions.json
 
 El plugin no puede fijar ``statusLine`` por sí mismo: este script lo escribe en el
@@ -22,6 +23,7 @@ Solo stdlib. Se espeja en aagy-ecc/scripts/py/ mediante sync_aagy_ecc.py.
 from __future__ import annotations
 
 import argparse
+from datetime import datetime
 import json
 import os
 from pathlib import Path
@@ -45,7 +47,10 @@ KEY_STATUSLINE = "statusLine"
 KEY_COMMAND = "command"
 CCUSAGE = "ccusage"
 SCOPES = ("user", "project", "local")
+HARNESSES = ("claude", "agy")
 USAGE_REPORTS = ("daily", "monthly", "session", "blocks")
+AGY_REPORTS = ("daily", "monthly", "session")
+AGY_DATE_FORMATS = {"daily": "%Y-%m-%d", "monthly": "%Y-%m"}
 CCUSAGE_HINT = "ccusage no está en el PATH. Es gratuito (MIT): npm install -g ccusage (o bun/pnpm). aagy no lo descarga."
 EXTENSIONS_REL = Path(".vscode") / "extensions.json"
 
@@ -202,7 +207,7 @@ def _scope_paths(start: Optional[Path] = None) -> List[Path]:
 def cmd_status(args: argparse.Namespace) -> int:
     ui = aagy_statusline.load_ui()
     cfg = aagy_config.load()
-    agy = getattr(args, "harness", "claude") == "agy"
+    agy = getattr(args, "harness", HARNESSES[0]) == HARNESSES[1]
     if agy:
         print(f"{PREFIX} statusline: no aplica en Antigravity; estado con aagy_statusline.py --plain --agent agy")
     else:
@@ -213,7 +218,7 @@ def cmd_status(args: argparse.Namespace) -> int:
     print(f"{PREFIX} avisos: ui.notify={aagy_notify.notify_mode(cfg)} · activos aquí="
           f"{aagy_notify.enabled(cfg, os.environ, sys.platform)}")
     if agy:
-        print(f"{PREFIX} ccusage: no aplica (solo lee transcripts de Claude Code)")
+        print(f"{PREFIX} ccusage: no aplica; tokens estimados con aagy_ui.py usage --harness agy")
     else:
         print(f"{PREFIX} ccusage: ui.ccusage={ui.ccusage} · en PATH={shutil.which(CCUSAGE) is not None}")
     return 0
@@ -247,7 +252,55 @@ def cmd_set(key: str, value: Any) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------- uso en Antigravity
+
+def _token_monitor() -> Any:
+    """session_token_monitor solo existe en aagy (Antigravity); aagy-ecc no lo espeja."""
+    import session_token_monitor  # noqa: WPS433
+
+    return session_token_monitor
+
+
+def agy_usage_rows(report: str, transcripts: Sequence[Path]) -> List[Tuple[str, int, int]]:
+    """(clave, sesiones, tokens estimados) por día, mes o sesión; lo más reciente primero."""
+    totals: Dict[str, List[int]] = {}
+    for path in transcripts:
+        tokens = _token_monitor().analyze_transcript(path).estimated_tokens
+        if report == "session":
+            key = path.parents[2].name
+        else:
+            key = datetime.fromtimestamp(path.stat().st_mtime).strftime(AGY_DATE_FORMATS[report])
+        row = totals.setdefault(key, [0, 0])
+        row[0] += 1
+        row[1] += tokens
+    if report == "session":
+        return [(key, n, tok) for key, (n, tok) in totals.items()]
+    return [(key, n, tok) for key, (n, tok) in sorted(totals.items(), reverse=True)]
+
+
+def cmd_usage_agy(report: str, home: Optional[Path] = None) -> int:
+    if report not in AGY_REPORTS:
+        print(f"{PREFIX} usage {report}: no aplica en Antigravity (usa {', '.join(AGY_REPORTS)}).")
+        return 0
+    stm = _token_monitor()
+    transcripts = stm.find_transcripts(home)
+    if not transcripts:
+        print(f"{PREFIX} No hay transcripts de Antigravity en ~/.gemini/antigravity/brain/.")
+        return 0
+    rows = agy_usage_rows(report, transcripts)
+    label = "sesión" if report == "session" else ("día" if report == "daily" else "mes")
+    print(f"  {label:<38} {'sesiones':>8} {'tokens (est.)':>14}")
+    for key, sessions, tokens in rows:
+        print(f"  {key:<38} {sessions:>8} {tokens:>14,}")
+    total = sum(tokens for _key, _n, tokens in rows)
+    print(f"{PREFIX} Total: {total:,} tokens estimados ({stm.CHARS_PER_TOKEN} caracteres/token). "
+          "Antigravity no da coste en $.")
+    return 0
+
+
 def cmd_usage(args: argparse.Namespace) -> int:
+    if getattr(args, "harness", HARNESSES[0]) == HARNESSES[1]:
+        return cmd_usage_agy(args.report)
     exe = shutil.which(CCUSAGE)
     if exe is None:
         print(f"{PREFIX} {CCUSAGE_HINT}")
@@ -273,7 +326,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     parser.add_argument("--quiet", action="store_true")
     sub = parser.add_subparsers(dest="command")
     p_st = sub.add_parser("status")
-    p_st.add_argument("--harness", choices=("claude", "agy"), default="claude")
+    p_st.add_argument("--harness", choices=HARNESSES, default=HARNESSES[0])
     p_sl = sub.add_parser("statusline")
     p_sl.add_argument("state", choices=("on", "off"))
     p_sl.add_argument("--scope", choices=SCOPES, default="user")
@@ -285,6 +338,7 @@ def parse_args(argv: Optional[Sequence[str]] = None) -> argparse.Namespace:
     p_cu.add_argument("state", choices=("on", "off"))
     p_us = sub.add_parser("usage")
     p_us.add_argument("report", nargs="?", choices=USAGE_REPORTS, default="daily")
+    p_us.add_argument("--harness", choices=HARNESSES, default=HARNESSES[0])
     p_vs = sub.add_parser("vscode")
     p_vs.add_argument("--apply", action="store_true")
     return parser.parse_args(argv)
