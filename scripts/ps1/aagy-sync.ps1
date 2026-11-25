@@ -178,7 +178,10 @@ if (Test-Path $pluginJsonSrc) {
 }
 $hooksJsonSrc = Join-Path $RepoRoot "hooks.json"
 if (Test-Path $hooksJsonSrc) {
-    Copy-Item -Path $hooksJsonSrc -Destination "$GlobalPluginDir\hooks.json" -Force
+    # Los hooks llaman a los .py del plugin con ruta absoluta (como ${CLAUDE_PLUGIN_ROOT} en aagy-ecc).
+    $pluginRootFwd = $GlobalPluginDir -replace '\\', '/'
+    $hooksText = (Get-Content -Raw -Encoding utf8 $hooksJsonSrc).Replace('${AAGY_PLUGIN_ROOT}', $pluginRootFwd)
+    [System.IO.File]::WriteAllText((Join-Path $GlobalPluginDir "hooks.json"), $hooksText, [System.Text.UTF8Encoding]::new($false))
 }
 
 New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\.data\instincts" | Out-Null
@@ -193,10 +196,10 @@ foreach ($sh in @("safety-check.sh", "hook-post-write.sh", "lint-markdown.sh", "
     $srcSh = Join-Path $RepoRoot "scripts\sh\$sh"
     if (Test-Path $srcSh) { Copy-Item -Path $srcSh -Destination "$GlobalPluginDir\scripts\sh\$sh" -Force }
 }
-foreach ($py in @("self_improve.py", "instinct_manager.py", "security_audit.py", "workspace_audit.py", "docs_map.py", "backlog.py", "archive_todo.py", "new_lifecycle_task.py", "sync_ideas_todo.py", "format_commit.py", "validate_branch.py", "aagy_doctor.py", "doctor_core.py", "install_manifest.py")) {
-    $srcPy = Join-Path $RepoRoot "scripts\py\$py"
-    if (Test-Path $srcPy) { Copy-Item -Path $srcPy -Destination "$GlobalPluginDir\scripts\py\$py" -Force }
-}
+# Todos los motores Python (los hooks, el doctor y la fase 4 los usan desde el plugin).
+Copy-Item -Path (Join-Path $RepoRoot "scripts\py\*.py") -Destination "$GlobalPluginDir\scripts\py\" -Force
+New-Item -ItemType Directory -Force -Path "$GlobalPluginDir\templates\lifecycle" | Out-Null
+Copy-Item -Path (Join-Path $RepoRoot "doc\00-governance\templates\*") -Destination "$GlobalPluginDir\templates\lifecycle\" -Recurse -Force
 
 if ($Phase -eq "all") {
     Write-Host "[+] Sincronizando catálogo completo optimizado..." -ForegroundColor Cyan

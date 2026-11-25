@@ -19,8 +19,8 @@ for _p in (_SCRIPTS_DIR, _HOOKS_DIR):
         sys.path.insert(0, str(_p))
 
 from sync_aagy_ecc import compare, main, sync  # noqa: E402
-import post_write_lint  # noqa: E402
-import safety_check  # noqa: E402
+import hook_post_write as post_write_lint  # noqa: E402
+import hook_safety as safety_check  # noqa: E402
 
 
 @pytest.fixture
@@ -98,18 +98,29 @@ def test_safety_check_allows_safe(command: str):
     assert safety_check.build_response(command) == {}
 
 
-def test_safety_patterns_match_agy_safety_check():
-    """Paridad: el safety gate de aagy (safety-check.ps1) bloquea los mismos patrones que aagy-ecc."""
-    ps1 = (_REPO_ROOT / "scripts" / "ps1" / "safety-check.ps1").read_text(encoding="utf-8-sig")
-    block = re.search(r"\$Dangerous = @\((.*?)\)\s*\n\s*foreach", ps1, flags=re.S)
-    assert block, "No se encontró la lista $Dangerous en safety-check.ps1"
-    agy_patterns = tuple(re.findall(r'"([^"]+)"', block.group(1)))
-    assert agy_patterns == safety_check.DANGEROUS_PATTERNS
+def test_safety_gate_is_one_engine_for_both_plugins():
+    """Paridad (#108, #96): los dos plugins llaman al mismo hook_safety.py; los envoltorios no llevan patrones."""
+    agy_hooks = (_REPO_ROOT / "hooks.json").read_text(encoding="utf-8")
+    ecc_hooks = (_REPO_ROOT / "aagy-ecc" / "hooks" / "hooks.json").read_text(encoding="utf-8")
+    assert "scripts/py/hook_safety.py\\\" --format agy" in agy_hooks
+    assert "scripts/py/hook_safety.py\\\" --format claude" in ecc_hooks
+    for wrapper in ("scripts/ps1/safety-check.ps1", "scripts/sh/safety-check.sh"):
+        text = (_REPO_ROOT / wrapper).read_text(encoding="utf-8-sig")
+        assert "hook_safety.py" in text and "DROP" not in text
+    mirrored = _REPO_ROOT / "aagy-ecc" / "scripts" / "py" / "hook_safety.py"
+    assert mirrored.read_bytes() == (_SCRIPTS_DIR / "hook_safety.py").read_bytes()
+
+
+def test_safety_gate_agy_format():
+    assert safety_check.build_response("rm -rf /", "agy")["decision"] == "deny"
+    assert safety_check.build_response("ls", "agy") == {"decision": "allow"}
+    payload = {"toolCall": {"args": {"CommandLine": "mkfs.ext4 /dev/sda1"}}}
+    assert safety_check.extract_command(payload, "agy") == "mkfs.ext4 /dev/sda1"
 
 
 def test_safety_check_cli_contract():
     payload = json.dumps({"tool_name": "Bash", "tool_input": {"command": "rm -rf /"}})
-    proc = subprocess.run([sys.executable, str(_HOOKS_DIR / "safety_check.py")], input=payload,
+    proc = subprocess.run([sys.executable, str(_SCRIPTS_DIR / "hook_safety.py"), "--format", "claude"], input=payload,
                           capture_output=True, text=True, check=False)
     assert proc.returncode == 0
     assert json.loads(proc.stdout)["hookSpecificOutput"]["permissionDecision"] == "deny"
@@ -130,7 +141,7 @@ def test_post_write_lint_finds_nearest_config(tmp_path: Path):
 
 def test_post_write_lint_cli_never_fails():
     payload = json.dumps({"tool_name": "Write", "tool_input": {"file_path": "/no/existe.md"}})
-    proc = subprocess.run([sys.executable, str(_HOOKS_DIR / "post_write_lint.py")], input=payload,
+    proc = subprocess.run([sys.executable, str(_SCRIPTS_DIR / "hook_post_write.py"), "--format", "claude"], input=payload,
                           capture_output=True, text=True, check=False)
     assert proc.returncode == 0
 

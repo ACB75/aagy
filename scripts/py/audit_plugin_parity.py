@@ -17,7 +17,7 @@ import logging
 from pathlib import Path
 import re
 import sys
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 
 _SCRIPT_DIR = str(Path(__file__).resolve().parent)
 if _SCRIPT_DIR not in sys.path:
@@ -137,7 +137,7 @@ def _check_marketplace(claude_dir: Path, discrepancies: List[str]) -> None:
 
 def _check_hook_targets(claude_dir: Path, discrepancies: List[str]) -> None:
     """Cada script referenciado con ${CLAUDE_PLUGIN_ROOT} en hooks.json debe existir dentro del plugin."""
-    hooks_file = claude_dir / "hooks" / "hooks.json"
+    hooks_file = claude_dir / "hooks" / FILE_HOOKS
     if not hooks_file.is_file():
         discrepancies.append(f"No se encontró '{DIR_AAGY_ECC}/hooks/hooks.json'.")
         return
@@ -262,6 +262,42 @@ def _check_paid_skills(repo_root: Path, discrepancies: List[str]) -> None:
             discrepancies.append(f"La skill '{name}' usa una API de pago y no declara 'cost: paid' en su frontmatter.")
 
 
+# Eventos de Claude Code sin equivalente en Antigravity (asimetría documentada en
+# MANUAL_aagy_ecc_parity_and_migration.md): se cubren con Stop + TTL y con `claim`.
+HOOK_ASYMMETRY_EVENTS = frozenset({"SessionStart", "PreCompact", "SessionEnd"})
+AGY_PLUGIN_ROOT_REF = "${AAGY_PLUGIN_ROOT}/"
+FILE_HOOKS = "hooks.json"
+_HOOK_PY = re.compile(r"scripts/py/([A-Za-z0-9_]+\.py)")
+
+
+def hook_coverage(repo_root: Path) -> Tuple[Dict[str, Set[str]], Dict[str, Set[str]]]:
+    """{evento: scripts de scripts/py} de aagy (hooks.json raíz) y de aagy-ecc."""
+    agy: Dict[str, Set[str]] = {}
+    for group in (_load_json_file(repo_root / FILE_HOOKS) or {}).values():
+        for event, entries in (group.items() if isinstance(group, dict) else ()):
+            agy.setdefault(event, set()).update(_HOOK_PY.findall(json.dumps(entries)))
+    ecc_hooks = (_load_json_file(repo_root / DIR_AAGY_ECC / "hooks" / FILE_HOOKS) or {}).get("hooks") or {}
+    ecc = {event: set(_HOOK_PY.findall(json.dumps(entries))) for event, entries in ecc_hooks.items()}
+    return agy, ecc
+
+
+def _check_hook_parity(repo_root: Path, discrepancies: List[str]) -> None:
+    """RF-11: mismos momentos y mismos motores Python en los dos plugins, salvo la asimetría declarada."""
+    agy, ecc = hook_coverage(repo_root)
+    if not agy or not ecc:
+        return
+    shared = set(ecc) - HOOK_ASYMMETRY_EVENTS
+    if set(agy) != shared:
+        discrepancies.append(f"Eventos de hooks distintos: aagy={sorted(agy)}, aagy-ecc sin asimetrías={sorted(shared)}.")
+    for event in sorted(shared & set(agy)):
+        if agy[event] != ecc[event]:
+            discrepancies.append(f"Hooks '{event}' con motores distintos: aagy={sorted(agy[event])}, aagy-ecc={sorted(ecc[event])}.")
+    agy_file = repo_root / FILE_HOOKS
+    raw = agy_file.read_text(encoding="utf-8") if agy_file.is_file() else ""
+    if "scripts/" in raw.replace(AGY_PLUGIN_ROOT_REF + "scripts/", ""):
+        discrepancies.append(f"hooks.json usa rutas relativas: usa '{AGY_PLUGIN_ROOT_REF}scripts/py/...'.")
+
+
 def _check_workflow_skeleton(repo_root: Path, discrepancies: List[str]) -> None:
     """RF-05/RF-06: los workflows propios cumplen el esqueleto; los heredados solo avisan."""
     findings = workflow_skeleton.audit(repo_root)
@@ -287,6 +323,7 @@ def audit_parity(repo_root: Path) -> ParityAuditResult:
     _check_ci_template(repo_root, discrepancies)
     _check_paid_skills(repo_root, discrepancies)
     _check_workflow_skeleton(repo_root, discrepancies)
+    _check_hook_parity(repo_root, discrepancies)
 
     root_skills_count = _count_dirs(repo_root / DIR_SKILLS)
     root_agents_count = _count_md(repo_root / DIR_AGENTS)

@@ -55,6 +55,8 @@ MIRRORED_PY_MODULES: Tuple[str, ...] = (
     "workspace_audit.py",
     "docs_map.py",
     "doc_templates.py",
+    "hook_safety.py",
+    "hook_post_write.py",
     "workflow_skeleton.py",
     "doctor_core.py",
     "install_manifest.py",

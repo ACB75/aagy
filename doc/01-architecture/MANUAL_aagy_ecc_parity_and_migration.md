@@ -99,3 +99,25 @@ Tras editar skills, agentes, reglas o motores Python en la raíz:
 ```powershell
 pwsh -File scripts/ps1/sync-aagy-ecc.ps1
 ```
+
+---
+
+## 4. Paridad de hooks y asimetrías
+
+Los dos plugins usan los mismos motores Python (`scripts/py/hook_safety.py`, `hook_post_write.py`,
+`agent_worktree.py guard`, `local_private_guard.py`, `self_improve.py`, `backlog.py`) con
+`--format claude` o `--format agy`. Los envoltorios `safety-check` y `hook-post-write` (`.ps1`/`.sh`)
+solo llaman al motor. En `aagy`, `hooks.json` usa `${AAGY_PLUGIN_ROOT}` y el instalador lo sustituye por
+la carpeta del plugin, como `${CLAUDE_PLUGIN_ROOT}` en `aagy-ecc`.
+
+Antigravity no tiene los eventos `SessionStart`, `PreCompact` ni `SessionEnd`. Así se cubren:
+
+| Momento | Claude Code | Antigravity |
+| :--- | :--- | :--- |
+| Inicio (reglas, resumen del backlog, reciclado del worktree) | `SessionStart` | Lee `AGENTS.md` de forma nativa; recicla en `backlog.py claim` y en `complete_task_pr.py --merge` |
+| Compactación | `PreCompact` (`checkpoint`) | `checkpoint` en cada `Stop` |
+| Fin de sesión | `SessionEnd` (`handoff`) | `checkpoint` en cada `Stop` y caducidad del claim (`AAGY_BACKLOG_TTL_HOURS`) |
+| Pregunta antes de leer un fichero privado | `ask` | Solo admite `allow` o `deny`: deniega y propone `local_run` |
+
+`audit_plugin_parity.py` falla si un evento compartido usa motores distintos o si aparece una asimetría
+no declarada (`HOOK_ASYMMETRY_EVENTS`).
