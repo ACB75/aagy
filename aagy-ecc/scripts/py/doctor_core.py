@@ -44,6 +44,7 @@ EXIT_FAILED = 1
 EXIT_INTERNAL = 2
 
 DEFAULT_CHECK_TIMEOUT_S = 5.0
+REPO_CHECK_TIMEOUT_S = 30.0
 MANIFEST_FILE = ".aagy-install.json"
 MAX_SKILL_DESC = 140
 MAX_AGENT_DESC = 120
@@ -69,10 +70,15 @@ _RESET = "\033[0m"
 
 @dataclass(frozen=True)
 class CheckSpec:
-    """Entrada del catálogo común: igual en los dos doctors."""
+    """Entrada del catálogo común: igual en los dos doctors.
+
+    ``min_timeout_s`` sube el límite de los checks que recorren el repo entero (en
+    Windows, leer todos los ficheros tarda bastante más que en Linux).
+    """
     check_id: str
     name: str
     scope: str
+    min_timeout_s: float = 0.0
 
 
 DOC_CATALOG: Tuple[CheckSpec, ...] = (
@@ -89,7 +95,7 @@ DOC_CATALOG: Tuple[CheckSpec, ...] = (
     CheckSpec("DOC-11", "Smoke test de hooks", SCOPE_INSTALL),
     CheckSpec("DOC-12", "Datos y legado", SCOPE_INSTALL),
     CheckSpec("DOC-13", "Proyecto", SCOPE_PROJECT),
-    CheckSpec("DOC-14", "Repo", SCOPE_REPO),
+    CheckSpec("DOC-14", "Repo", SCOPE_REPO, min_timeout_s=REPO_CHECK_TIMEOUT_S),
     CheckSpec("DOC-15", "Worktrees de agente", SCOPE_REPO),
     CheckSpec("DOC-16", "Modelo local", SCOPE_PROJECT),
     CheckSpec("DOC-17", "Configuración externa", SCOPE_PROJECT),
@@ -216,7 +222,13 @@ def run_checks(
     """Ejecuta los checks seleccionados en el orden del catálogo, cada uno con su límite de tiempo."""
     validate_registry(registry)
     selected = CATALOG_IDS if ids is None else tuple(ids)
-    return tuple(_run_one(cid, registry[cid], ctx, timeout_s) for cid in selected)
+    return tuple(_run_one(cid, registry[cid], ctx, check_timeout(cid, timeout_s)) for cid in selected)
+
+
+def check_timeout(check_id: str, timeout_s: float = DEFAULT_CHECK_TIMEOUT_S) -> float:
+    """Límite de un check: el pedido, o el mínimo de su entrada del catálogo si es mayor."""
+    spec = _CATALOG_BY_ID.get(check_id)
+    return max(timeout_s, spec.min_timeout_s if spec else 0.0)
 
 
 def exit_code(report: Report, strict: bool = False) -> int:

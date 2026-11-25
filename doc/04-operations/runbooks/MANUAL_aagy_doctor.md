@@ -75,6 +75,9 @@ Dentro de Claude Code basta con `/aagy-ecc-doctor` (o `/aagy-ecc-doctor --fix`).
 
 Los smoke tests usan una cadena que coincide con el patrón bloqueado; nunca se ejecuta un comando destructivo.
 
+Cada check tiene un límite de 5 s (`--timeout`). `DOC-14` recorre el repo entero (paridad, esqueleto y
+`consumer_refs`), así que tiene como mínimo 30 s: en Windows tarda bastante más que en Linux.
+
 ---
 
 ## 4. Manifiesto de Instalación (`.aagy-install.json`)
