@@ -1,6 +1,6 @@
 {
   "name": "aagy-ecc-network-infra",
-  "version": "5.0.0",
+  "version": "5.1.0",
   "description": "Paquete opcional de aagy-ecc con las skills y subagentes del perfil 'network-infra'. Requiere aagy-ecc.",
   "author": {
     "name": "ACB75",

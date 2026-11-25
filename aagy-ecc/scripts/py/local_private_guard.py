@@ -4,7 +4,8 @@ Guarda de ficheros privados (local_private_guard.py), hook PreToolUse.
 
 Si el agente va a leer un fichero que casa con ``local_model.private_globs``
 (``.governance/aagy.json``), avisa de que es privado y propone ``local_run`` con
-``paths`` del servidor ``aagy-local``, para que el contenido no salga del equipo.
+``paths`` del servidor ``aagy-local`` (si el equipo lo tiene registrado), para que el
+contenido no salga del equipo.
 
 - Claude Code (``--format claude``): decisión ``ask``; el usuario confirma o no.
 - Antigravity (``--format agy``): decisión ``force_ask``, que pregunta siempre aunque

@@ -1,10 +1,11 @@
 ---
-description: Local model (Ollama) - status, on/off/auto and delegate simple tasks through the aagy-local MCP server.
+description: Local model (Ollama) - status, on/off/auto, bench and usage; tasks go through the aagy-local MCP server the machine registers.
 ---
 
 # aagy-local
 
-Modelo local con Ollama mediante el servidor MCP `aagy-local`, que el plugin registra en `.mcp.json`.
+Modelo local con Ollama. Las tareas pasan por el servidor MCP `aagy-local`, que no va en el plugin: lo instala
+y registra cada equipo a nivel de usuario (`MANUAL_local_model.md` §3).
 
 ## Cuándo usarlo
 
@@ -39,4 +40,4 @@ desde la carpeta del repo en el que trabajas.
 
 ## Paridad
 
-Antigravity: skill `aagy-local` de `aagy`. Mismo script y mismo servidor MCP.
+Antigravity: skill `aagy-local` de `aagy`. Mismo script; el servidor MCP lo registra el equipo en los dos harnesses.

@@ -50,10 +50,19 @@ python scripts/py/local_model.py status        # modo pedido y efectivo
 python scripts/py/local_model.py on|off|auto   # guarda local_model.mode
 python scripts/py/local_model.py bench         # precisión y tokens/s
 python scripts/py/local_model.py usage         # llamadas registradas, sin contenido
-python scripts/py/local_model.py register-agy  # registra el servidor en Antigravity
 ```
 
-En Claude Code, `aagy-ecc` registra el servidor en su `.mcp.json`. Los ficheros de
+El servidor MCP `aagy-local` (`local_model_mcp.py`) no va en el plugin: vive en el repo de configuración del
+equipo (la capa de entorno, `AAGY_ENV_DIR`) y usa la librería `local_model.py` del plugin instalado
+(`AAGY_PLUGIN_PY`, por defecto `~/.gemini/config/plugins/aagy/scripts/py`). Se registra una vez por equipo:
+
+```powershell
+claude mcp add --scope user aagy-local -- python <ruta>/local_model_mcp.py   # Claude Code
+# Antigravity: entrada "aagy-local" en ~/.gemini/antigravity/mcp_config.json
+```
+
+DOC-16 avisa si no está registrado (en `~/.claude.json`, en el `.mcp.json` del proyecto o en `mcp_config.json`).
+Los ficheros de
 `local_model.private_globs` pasan por la guarda `local_private_guard.py`: Claude Code
 pregunta antes de leerlos (`ask`) y Antigravity también (`force_ask`, que no se salta con un "Always Allow"
 guardado). En los dos casos el motivo propone `local_run` con `paths`.
