@@ -10,6 +10,11 @@ judgment and should keep the operator informed internally. This skill defines
 the contract: every outbound draft is filed as an obligation, an operator
 decides on the exact text, and a delivery ledger proves what went out.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - An agent drafts replies to customers, suppliers, investors, or partners in
@@ -236,3 +241,7 @@ approved by operator-a · receipt 118 · draft sha256 9f2c8a1b2d3e4f50
 - Active claims block re-file; only pre-dispatch cancellation can release that hold.
 - Gate unavailable stamps the marker; gate signed refuses without force.
 - Auto-ttl never fires against text the operator has since re-filed.
+
+## Paridad
+
+Claude Code: el mismo skill `operator-approval-loop` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

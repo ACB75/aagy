@@ -8,6 +8,14 @@ subtask: true
 
 Run AgentShield against the current project or a target path, then turn the findings into a prioritized remediation plan.
 
+## Cuándo usarlo
+
+Run AgentShield against agent, hook, MCP, permission and secret surfaces. In conversation, prefer the security-scan skill.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Usage, Deterministic Engine, Review Checklist, Output Contract, CI Pattern, Links.
+
 ## Usage
 
 `/security-scan [path] [--format text|json|markdown|html] [--min-severity low|medium|high|critical] [--fix]`
@@ -91,3 +99,7 @@ $ARGUMENTS:
 
 - optional target path
 - optional AgentShield flags
+
+## Paridad
+
+Antigravity: skill `security-scan` de `aagy`, con el mismo flujo.

@@ -9,6 +9,14 @@ metadata:
 
 Use this skill when a coding agent can generate or adapt a task-local harness instead of only following a static command flow. The goal is to turn dynamic workflow mode into a disciplined system: temporary harnesses for one-off work, shared skill extraction for repeated work, and observable control pane checkpoints for teams.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `dynamic-workflow-mode`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When To Activate, Core Contract, Dynamic Harness Decision Tree, Task-Local Harness Template, Shared Skill Extraction, Control Pane Checkpoints.
+
 ## When To Activate
 
 - The user mentions dynamic workflows, custom harnesses, harness-per-task, adaptive workflows, or Claude Code dynamic workflow mode.
@@ -122,3 +130,7 @@ Finish with:
 - The eval commands and results.
 - The control pane or handoff artifact path.
 - The next reusable extraction candidate.
+
+## Paridad
+
+Claude Code: el mismo skill `dynamic-workflow-mode` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -7,6 +7,15 @@ metadata:
 
 # Canary Watch — Post-Deploy Monitoring
 
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `canary-watch`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## When to Use
 
 - After deploying to production or staging
@@ -111,3 +120,7 @@ Pair with:
 - `/browser-qa` for pre-deploy verification
 - Hooks: add as a PostToolUse hook on `git push` to auto-check after deploys
 - CI: run in GitHub Actions after deploy step
+
+## Paridad
+
+Claude Code: el mismo skill `canary-watch` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

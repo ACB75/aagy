@@ -3,7 +3,7 @@
 **Date**: 2026-11-22
 **Status**: accepted
 **Deciders**: Master
-**Requisitos**: [`REQ_aagy_agent_worktrees.md`](../06-backlog/plans/REQ_aagy_agent_worktrees.md) · **Plan**: [`PLAN_aagy_agent_worktrees.md`](../06-backlog/plans/PLAN_aagy_agent_worktrees.md)
+**Runbook**: [`MANUAL_agent_worktrees.md`](../04-operations/runbooks/MANUAL_agent_worktrees.md)
 
 ## Context
 

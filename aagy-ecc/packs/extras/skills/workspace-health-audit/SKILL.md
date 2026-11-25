@@ -9,6 +9,10 @@ metadata:
 
 Operational skill to inspect, audit, and clean the active workspace, verify token budgets and frontmatter compliance across global and project-level `.agents/` scaffolds, eliminate redundant shadow skills, check rule consistency, and enforce deterministic documentation governance and SonarQube quality gates.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `workspace-health-audit`.
+
 ## When to Use
 
 - User asks to "auditar workspace", "comprobar estado del workspace", "limpiar temporales", "optimizar skills", or "verificar presupuesto de tokens".
@@ -50,3 +54,7 @@ When the user asks to clean up or optimize workspace hygiene:
 ```powershell
 pwsh -NoProfile -File scripts/ps1/aagy.ps1 workspace-audit --clean --optimize
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `workspace-health-audit` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

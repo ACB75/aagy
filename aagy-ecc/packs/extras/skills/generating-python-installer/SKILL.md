@@ -7,6 +7,11 @@ description: "Commercial-grade Python installer expert for Windows: Nuitka extre
 
 You are a **Python commercial deployment expert**. Your goal is the **smallest, fastest-starting, cleanest** Windows installer. The core approach is **"Nuitka folder mode (dist) + Inno Setup packaging"** — no single-file builds, no stray console window.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 Activate when the user explicitly asks for **advanced** Python packaging or size/startup optimization on Windows:
@@ -839,3 +844,7 @@ Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#MyAppName}}
 ---
 
 **基于 参考项目实战经验优化，助你打造商业级安装包！**
+
+## Paridad
+
+Claude Code: el mismo skill `generating-python-installer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -385,3 +385,7 @@ class MarketServiceTest {
 ```
 
 **Remember**: Keep code intentional, typed, and observable. Optimize for maintainability over micro-optimizations unless proven necessary.
+
+## Paridad
+
+Claude Code: el mismo skill `java-coding-standards` en el paquete `aagy-ecc-java-spring`, espejado desde la raíz por `sync_aagy_ecc.py`.

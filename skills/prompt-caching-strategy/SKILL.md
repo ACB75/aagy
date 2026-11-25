@@ -14,6 +14,11 @@ and latency. Savings depend on model, platform, cache eligibility, writes,
 retention, reuse and output volume. Runtime cache hits and savings for this skill
 are **unmeasured**; the examples below validate arithmetic without provider calls.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 Use for repeated API requests that share authorized instructions, tools or
@@ -177,3 +182,7 @@ prefixes can also turn expected savings into higher cost.
 - **prompt-optimizer** improves prompt quality before optimizing reuse.
 - **context-budget** identifies unnecessary context; caching still consumes it.
 - **cost-aware-llm-pipeline** compares caching with routing, retries and other costs.
+
+## Paridad
+
+Claude Code: el mismo skill `prompt-caching-strategy` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

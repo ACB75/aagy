@@ -11,10 +11,10 @@
 Para mantener una experiencia de desarrollo ágil con bajo consumo de tokens en reposo y a la vez disponer de un catálogo amplio de especialización técnica, el ecosistema adopta una estructura de dos niveles:
 
 1. **Tier 1 (Always-On Global Plugin `~/.gemini/config/plugins/aagy/skills/`)**:
-   - Aloja exclusivamente las 22 skills transversales esenciales (como `engineering-lifecycle`, `sre-reliability`, `verification-loop`, `tdd-workflow`).
+   - Aloja solo las 17 skills del perfil `generic` (como `engineering-lifecycle`, `sre-reliability`, `verification-loop`, `tdd-workflow`).
    - Mantiene una huella ligera de ~945 tokens en reposo en la ventana del sistema.
 2. **Tier 2 (Repositorio Base `skills/` en `ACB75/aagy`)**:
-   - Alberga 171 skills hiper-especializadas (diagnóstico BGP, depuración de memoria, optimizaciones Postgres, devtools).
+   - Alberga las 168 skills del catálogo (diagnóstico BGP, depuración de memoria, optimizaciones Postgres, devtools).
    - Coste de 0 tokens en reposo mientras permanezcan en el repositorio.
 
 ---

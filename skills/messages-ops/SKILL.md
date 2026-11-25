@@ -9,6 +9,10 @@ metadata:
 
 Use this when the task is live-message retrieval: iMessage, DMs, recent one-time codes, or thread inspection before a follow-up.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `messages-ops`.
+
 This is not email work. If the dominant surface is a mailbox, use `email-ops`.
 
 ## Skill Stack
@@ -103,3 +107,7 @@ STATUS
 - the response names the message source
 - the response includes a sender, service, thread, or clear blocker
 - the final state is explicit and bounded
+
+## Paridad
+
+Claude Code: el mismo skill `messages-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

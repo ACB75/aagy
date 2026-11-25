@@ -69,3 +69,7 @@ Use this skill when stable domain language needs one evidence-backed home, or wh
 ## Scheduling and Task Boundary
 
 Keep tasks, status, blockers, and schedules in the project's existing tracker, such as GitHub Issues or Linear, as the single source of truth. Use local `.scratch/` only when no external tracker exists and the project explicitly adopts it. Do not put schedules in `CONTEXT.md`, ADRs, PROJECT_STATUS, or the history index database.
+
+## Paridad
+
+Claude Code: el mismo skill `context-and-decisions` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

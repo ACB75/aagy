@@ -7,6 +7,14 @@ metadata:
 
 # Module Regression Ledger
 
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `module-regression`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Anti-Patterns, Related Skills, Problem, Three Required Fields per Module, Connection to TESTS.md.
 ## When to Activate
 
 - The repository has at least three interdependent modules, or a previous change to A has broken B.
@@ -96,3 +104,7 @@ Invoke `module-regression` through the host's skill entry point, such as `$modul
 - Fewer than three modules, or no cross-module references, and no prior cross-module break: do not create a ledger.
 - First “A broke B” incident: establish the ledger that day.
 - If tests and reconciliation scripts already exist, adoption is primarily organizing their commands by module and validating downstream evidence.
+
+## Paridad
+
+Claude Code: el mismo skill `module-regression` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

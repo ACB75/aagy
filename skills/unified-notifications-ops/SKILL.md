@@ -9,6 +9,10 @@ metadata:
 
 Use this skill when the real problem is not a missing ping. The real problem is a fragmented notification system.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `unified-notifications-ops`.
+
 The job is to turn scattered events into one operator surface with:
 
 - clear severity
@@ -196,3 +200,7 @@ NEXT AAGY MOVE
 - `github-ops`
 - `knowledge-ops`
 - `customer-billing-ops` when the notification pain is billing/customer operations rather than engineering
+
+## Paridad
+
+Claude Code: el mismo skill `unified-notifications-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

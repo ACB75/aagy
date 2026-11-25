@@ -9,6 +9,19 @@ metadata:
 
 Modern frontend patterns for React, Next.js, and performant user interfaces.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `frontend-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Component Patterns, Custom Hooks Patterns, State Management Patterns, Performance Optimization, Form Handling Patterns.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Building React components (composition, props, rendering)
@@ -655,3 +668,7 @@ export function Modal({ isOpen, onClose, children }: ModalProps) {
 ```
 
 **Remember**: Modern frontend patterns enable maintainable, performant user interfaces. Choose patterns that fit your project complexity.
+
+## Paridad
+
+Claude Code: el mismo skill `frontend-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

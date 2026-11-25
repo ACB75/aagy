@@ -10,6 +10,19 @@ metadata:
 
 A **Stop hook** that checks three things before Claude can finish a session, using only **deterministic checks** — file modification timestamps, disk usage, and regex patterns on the transcript text. No AI inference.
 
+## Cuándo usarlo
+
+Stop hook that blocks Claude from finishing until quality checks pass. Detects rationalization patterns (surface text heuristics)...
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: What It Checks, Why, Install, Learning Libraries, Configuration, Examples.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 This is distinct from reasoning gates (like `self-audit`): delivery-gate checks machine-verifiable facts; self-audit checks output quality across four reasoning dimensions. Together they form defense in depth:
 
 - **delivery-gate**: "Was the learning library touched today? Is disk space safe?"
@@ -133,3 +146,7 @@ This code went through 4 rounds of automated code review (CodeRabbit + Greptile)
 - `self-audit` — Reasoning quality gate (completeness/consistency/groundedness/honesty)
 - `verification-loop` — Code quality checks (build/type/lint/test)
 - `gateguard` — PreToolUse safety gate
+
+## Paridad
+
+Claude Code: el mismo skill `delivery-gate` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

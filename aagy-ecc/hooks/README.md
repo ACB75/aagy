@@ -12,15 +12,15 @@ y nunca bloquean por error propio (fail-open). En `aagy`, el instalador sustituy
 | Antes de escribir | `PreToolUse` | `agent_worktree.py guard`, `local_private_guard.py` | `run_command`, `write_file`, `edit_file`, `view_file` |
 | Después de escribir | `PostToolUse` | `hook_post_write.py --format claude` | `write_file`, `edit_file`, `--format agy` |
 | Fin de turno | `Stop` | `self_improve.py --capture-stop`, `backlog.py checkpoint --auto` | `Stop` |
-| Inicio | `SessionStart` | `scripts/hooks/session_start_rules.py`, `agent_worktree.py recycle` | Asimetría: sin evento |
+| Inicio | `SessionStart` | `scripts/hooks/session_start_rules.py`, `agent_worktree.py recycle` | `SessionStart` con `agent_worktree.py recycle --agent agy`; las reglas las lee de forma nativa |
 | Compactación | `PreCompact` | `backlog.py checkpoint --auto` | Asimetría: sin evento |
 | Fin de sesión | `SessionEnd` | `backlog.py handoff --auto` | Asimetría: sin evento |
-| Inicio (UI) | `SessionStart` `startup` | `aagy_ui.py --quiet repair` | Asimetría: Antigravity no tiene status line |
+| Inicio (UI) | `SessionStart` `startup` | `aagy_ui.py --quiet repair` | `SessionStart` (repara la status line del CLI) |
 | Fin de turno (UI) | `Stop` | `aagy_notify.py --event stop` | `Stop`, `--format agy` |
-| Permiso o espera | `Notification` | `aagy_notify.py --event notification` | Asimetría: sin evento |
+| Permiso o espera | `Notification` | `aagy_notify.py --event notification` | Asimetría: sin evento; la status line del CLI lo suple con `tool_confirmation_pending` |
 
-`audit_plugin_parity.py` comprueba que los eventos y los motores coinciden, salvo esas cuatro
-asimetrías, y que el `hooks.json` raíz no usa rutas relativas. Las asimetrías y cómo se cubren
+`audit_plugin_parity.py` comprueba que los eventos y los motores coinciden, salvo las tres
+asimetrías (`PreCompact`, `SessionEnd`, `Notification`), y que el `hooks.json` raíz no usa rutas relativas. Las asimetrías y cómo se cubren
 están en `doc/01-architecture/MANUAL_aagy_ecc_parity_and_migration.md`.
 
 - **UI**: `repair` actualiza la ruta de la status line de aagy si el plugin cambió de versión. `aagy_notify.py`

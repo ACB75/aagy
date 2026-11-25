@@ -12,6 +12,11 @@ metadata:
 > shapes change. Verify the configured MCP tools and current API docs before
 > promising coverage or quoting live source counts.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 Produce thorough, cited research reports from multiple web sources using firecrawl and exa MCP tools.
 
 ## When to Activate
@@ -177,3 +182,7 @@ Each agent searches, reads sources, and returns findings. The main session synth
 "What's happening with the US housing market right now?"
 "Investigate the competitive landscape for AI code editors"
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `deep-research` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -9,6 +9,19 @@ metadata:
 
 Conventions and best practices for designing consistent, developer-friendly REST APIs.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `api-design`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Resource Design, HTTP Methods and Status Codes, Response Format, Pagination, Filtering, Sorting, and Search.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Designing new API endpoints
@@ -522,3 +535,7 @@ Before shipping a new endpoint:
 - [ ] Response does not leak internal details (stack traces, SQL errors)
 - [ ] Consistent naming with existing endpoints (camelCase vs snake_case)
 - [ ] Documented (OpenAPI/Swagger spec updated)
+
+## Paridad
+
+Claude Code: el mismo skill `api-design` en el paquete `aagy-ecc-java-spring`, espejado desde la raíz por `sync_aagy_ecc.py`.

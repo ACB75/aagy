@@ -10,6 +10,15 @@ tools: Read, Bash
 
 Measures whether coding agents actually follow skills, rules, or agent definitions by:
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Supported Targets, When to Activate, Usage, Key Concept: Prompt Independence, Report Contents.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 1. Auto-generating expected behavioral sequences (specs) from any .md file
 2. Auto-generating scenarios with decreasing prompt strictness (supportive → neutral → competing)
 3. Running `claude -p` and capturing tool call traces via stream-json
@@ -59,3 +68,7 @@ Reports are self-contained and include:
 ### Advanced (optional)
 
 For users familiar with hooks, reports also include hook promotion recommendations for steps with low compliance. This is informational — the main value is the compliance visibility itself.
+
+## Paridad
+
+Claude Code: el mismo skill `skill-comply` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

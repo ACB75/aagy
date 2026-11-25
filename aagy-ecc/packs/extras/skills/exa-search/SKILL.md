@@ -12,6 +12,15 @@ metadata:
 > change. Confirm the exposed tool surface and current Exa docs before relying
 > on a specific search mode, category, or livecrawl behavior.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, MCP Requirement, Untrusted Results, Core Tools, Usage Patterns, Tips.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 Neural search for web content, code, companies, and people via the Exa MCP server.
 
 ## When to Activate
@@ -122,3 +131,7 @@ get_code_context_exa(query: "WebAssembly component model examples", tokensNum: 4
 
 - `deep-research` — Full research workflow using firecrawl + exa together
 - `market-research` — Business-oriented research with decision frameworks
+
+## Paridad
+
+Claude Code: el mismo skill `exa-search` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

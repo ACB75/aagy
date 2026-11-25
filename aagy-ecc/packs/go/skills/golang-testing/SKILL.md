@@ -9,6 +9,14 @@ metadata:
 
 Comprehensive Go testing patterns for writing reliable, maintainable tests following TDD methodology.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `golang-testing`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, TDD Workflow for Go, Table-Driven Tests, Subtests and Sub-benchmarks, Test Helpers, Golden Files.
+
 ## When to Activate
 
 - Writing new Go functions or methods
@@ -721,3 +729,7 @@ test:
 ```
 
 **Remember**: Tests are documentation. They show how your code is meant to be used. Write them clearly and keep them up to date.
+
+## Paridad
+
+Claude Code: el mismo skill `golang-testing` en el paquete `aagy-ecc-go`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -1,6 +1,5 @@
 # Manual: UI de Claude Code y Antigravity (`MANUAL_ui.md`)
 
-> **Requisitos**: [REQ_aagy_ui.md](../../06-backlog/plans/REQ_aagy_ui.md) | **Plan**: [PLAN_aagy_ui.md](../../06-backlog/plans/PLAN_aagy_ui.md)
 > **Motor**: [`aagy_ui.py`](../../../scripts/py/aagy_ui.py), [`aagy_statusline.py`](../../../scripts/py/aagy_statusline.py), [`aagy_notify.py`](../../../scripts/py/aagy_notify.py)
 > **Claude Code**: `/aagy-ui` | **Antigravity**: skill `aagy-ui` | **Issues**: #116, #123, #124
 

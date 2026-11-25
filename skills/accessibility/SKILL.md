@@ -144,3 +144,7 @@ Switch(
 - `design-system`
 - `liquid-glass-design`
 - `swiftui-patterns`
+
+## Paridad
+
+Claude Code: el mismo skill `accessibility` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -7,6 +7,10 @@ description: "Manage trunk-based branches, rebases, PR hygiene, and release tags
 
 Best practices for Git version control, branching strategies, and collaborative development.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Branching Strategies, Commit Messages, Merge vs Rebase, Pull Request Workflow, Conflict Resolution.
+
 ## When to Activate
 
 - Setting up Git workflow for a new project
@@ -742,3 +746,7 @@ git add node_modules/
 | Stash | `git stash push -m "message"` |
 | Undo last commit | `git reset --soft HEAD~1` |
 | Revert commit | `git revert HEAD` |
+
+## Paridad
+
+Claude Code: el mismo skill `git-workflow` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

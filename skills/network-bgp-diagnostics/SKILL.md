@@ -12,6 +12,14 @@ routes, or advertising unexpected prefixes. The default workflow is read-only
 evidence collection; policy and reset actions belong in a reviewed change
 window.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `network-bgp-diagnostics`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Use, Read-Only Triage Flow, State Interpretation, Transport Checks, Route Policy Checks, AS Path And Prefix Review.
+
 ## When to Use
 
 - BGP neighbors are stuck in Idle, Connect, Active, OpenSent, or OpenConfirm.
@@ -166,3 +174,7 @@ supported by the platform and document exactly why it is safe.
 - Skill: `cisco-ios-patterns`
 - Skill: `network-config-validation`
 - Skill: `network-interface-health`
+
+## Paridad
+
+Claude Code: el mismo skill `network-bgp-diagnostics` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

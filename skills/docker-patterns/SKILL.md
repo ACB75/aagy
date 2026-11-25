@@ -7,6 +7,18 @@ description: "Docker & Compose best practices for multi-stage builds, non-root c
 
 Docker and Docker Compose best practices for containerized development.
 
+## Cuándo usarlo
+
+Docker & Compose best practices for multi-stage builds, non-root containers, healthchecks, and networking. Not for K8s.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `docker-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Docker Compose for Local Development, Networking, Volume Strategies, Container Security, Hardened CLI Installer Harnesses, .dockerignore.
+
 ## Docker Compose for Local Development
 
 ### Standard Web App Stack
@@ -558,3 +570,7 @@ docker network inspect <project>_default
 # BAD: Putting secrets in docker-compose.yml
 # Use .env files (gitignored) or Docker secrets
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `docker-patterns` en el paquete `aagy-ecc-shared`, espejado desde la raíz por `sync_aagy_ecc.py`.

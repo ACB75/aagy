@@ -11,6 +11,19 @@ The `orch-*` skills are thin wrappers. They do not re-implement any work — the
 classify the request, choose which phases of *this* pipeline run, and delegate
 each phase to an existing AAGY agent or command. This file is that pipeline.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `orch-pipeline`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Use, The operation family, Step 0 — Classify size (right-sizing), The phases, The two gates, Agent / command map.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 > Invoke an operation skill (`orch-add-feature`, `orch-fix-defect`, …) rather
 > than this engine directly. This file is the reference they point at.
 
@@ -119,3 +132,7 @@ The pipeline carries no hidden state — the planning docs *are* the handoff:
 - `security-reviewer` ran iff a security trigger was touched
 - commits are conventional and scoped to one logical change
 - new / changed behavior has tests; coverage ≥ 80% per `rules/common/testing.md`
+
+## Paridad
+
+Claude Code: el mismo skill `orch-pipeline` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

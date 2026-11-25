@@ -9,6 +9,14 @@ metadata:
 
 Solves the "context problem" in multi-agent workflows where subagents don't know what context they need until they start working.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `iterative-retrieval`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, The Problem, The Solution: Iterative Retrieval, Practical Examples, Integration with Agents, Best Practices.
+
 ## When to Activate
 
 - Spawning subagents that need codebase context they cannot predict upfront
@@ -213,3 +221,7 @@ When retrieving context for this task:
 - [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) - Subagent orchestration section
 - `agent-self-evaluation` skill - For instinct patterns that improve over time
 - Agent definitions bundled with AAGY (manual install path: `agents/`)
+
+## Paridad
+
+Claude Code: el mismo skill `iterative-retrieval` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

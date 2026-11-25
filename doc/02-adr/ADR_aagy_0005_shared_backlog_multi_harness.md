@@ -3,7 +3,7 @@
 **Date**: 2026-11-21
 **Status**: accepted
 **Deciders**: Master
-**Requisitos**: [`REQ_aagy_shared_backlog_multi_harness.md`](../06-backlog/plans/REQ_aagy_shared_backlog_multi_harness.md) · **Plan**: [`PLAN_aagy_shared_backlog_multi_harness.md`](../06-backlog/plans/PLAN_aagy_shared_backlog_multi_harness.md)
+**Runbook**: [`MANUAL_shared_backlog.md`](../04-operations/runbooks/MANUAL_shared_backlog.md)
 
 ## Context
 

@@ -9,6 +9,15 @@ metadata:
 
 TDD guidance for Spring Boot services with 80%+ coverage (unit + integration).
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `springboot-tdd`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - New features or endpoints
@@ -159,3 +168,7 @@ class MarketBuilder {
 - Gradle: `./gradlew test jacocoTestReport`
 
 **Remember**: Keep tests fast, isolated, and deterministic. Test behavior, not implementation details.
+
+## Paridad
+
+Claude Code: el mismo skill `springboot-tdd` en el paquete `aagy-ecc-java-spring`, espejado desde la raíz por `sync_aagy_ecc.py`.

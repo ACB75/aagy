@@ -8,6 +8,15 @@ metadata:
 
 # Benchmark — Performance Baseline & Regression Detection
 
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `benchmark`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## When to Use
 
 - Before and after a PR to measure performance impact
@@ -94,3 +103,7 @@ Stores baselines in `.aagy/benchmarks/` as JSON. Git-tracked so the team shares 
 - CI: run `/benchmark compare` on every PR
 - Pair with `/canary-watch` for post-deploy monitoring
 - Pair with `/browser-qa` for full pre-ship checklist
+
+## Paridad
+
+Claude Code: el mismo skill `benchmark` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

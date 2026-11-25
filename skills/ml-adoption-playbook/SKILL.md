@@ -8,6 +8,19 @@ origin: AAGY
 
 This skill provides an adaptive methodology for implementing machine learning models into existing software engineering projects. It bridges the gap between traditional SWE and MLOps by structuring how ML should be researched, decoupled, trained, and integrated.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `ml-adoption-playbook`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Phase 1: Problem Framing & Feasibility, Phase 2: Data Readiness, Phase 3: Architectural Integration & Decoupling, Phase 4: Model Implementation & Training, Phase 5: Handoff to MLOps.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - A user asks to "add ML" or "add an algorithm" to their existing codebase.
@@ -61,3 +74,7 @@ When assisting a user via this playbook, agents should:
 2. **Draft a data contract** in Phase 2 for user approval.
 3. **Write the decoupling interface** (API/Service) in Phase 3 *before* writing the training loop.
 4. **Deliver a reproducible script** in Phase 4 that trains the model and saves the artifact.
+
+## Paridad
+
+Claude Code: el mismo skill `ml-adoption-playbook` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

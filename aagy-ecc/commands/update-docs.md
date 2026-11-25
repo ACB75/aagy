@@ -6,6 +6,14 @@ description: Sync documentation from source-of-truth files such as scripts, sche
 
 Sync documentation with the codebase, generating from source-of-truth files.
 
+## Cuándo usarlo
+
+Sync documentation from source-of-truth files such as scripts, schemas, routes, and exports.
+
+## Uso
+
+`/update-docs` en Claude Code, con los argumentos que se describen abajo.
+
 ## Step 1: Identify Sources of Truth
 
 | Source | Generates |
@@ -88,3 +96,7 @@ Skipped:  docs/API.md (no changes detected)
 - **Preserve manual sections**: Only update generated sections; leave hand-written prose intact
 - **Mark generated content**: Use `<!-- AUTO-GENERATED -->` markers around generated sections
 - **Don't create docs unprompted**: Only create new doc files if the command explicitly requests it
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

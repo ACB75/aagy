@@ -7,6 +7,14 @@ description: "Enforce RED-GREEN-REFACTOR TDD and 80%+ coverage; skip trivial doc
 
 This skill ensures all code development follows TDD principles with comprehensive test coverage.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `tdd-workflow`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Plan Handoff, Core Principles, TDD Workflow Steps, Testing Patterns, Test File Organization.
+
 ## When to Activate
 
 - Writing new features or functionality
@@ -612,3 +620,7 @@ test('updates user', () => {
 ---
 
 **Remember**: Tests are not optional. They are the safety net that enables confident refactoring, rapid development, and production reliability.
+
+## Paridad
+
+Claude Code: el mismo skill `tdd-workflow` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -9,6 +9,10 @@ metadata:
 
 Idiomatic Python patterns and best practices for building robust, efficient, and maintainable applications.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Principles, Type Hints, Error Handling Patterns, Context Managers, Comprehensions and Generators.
+
 ## When to Activate
 
 - Writing new Python code
@@ -749,3 +753,7 @@ except SpecificError as e:
 ```
 
 __Remember__: Python code should be readable, explicit, and follow the principle of least surprise. When in doubt, prioritize clarity over cleverness.
+
+## Paridad
+
+Claude Code: el mismo skill `python-patterns` en el paquete `aagy-ecc-python`, espejado desde la raíz por `sync_aagy_ecc.py`.

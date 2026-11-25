@@ -9,6 +9,19 @@ metadata:
 
 Use this skill when designing process, reviews, and architecture for teams shipping with AI-assisted code generation.
 
+## Cuándo usarlo
+
+Engineering operating model for t. Use when setting team process, review gates, or ownership rules for a codebase largely written by agents.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `ai-first-engineering`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Process Shifts
 
 1. Planning quality matters more than typing speed.
@@ -54,3 +67,7 @@ Raise testing bar for generated code:
 - required regression coverage for touched domains
 - explicit edge-case assertions
 - integration checks for interface boundaries
+
+## Paridad
+
+Claude Code: el mismo skill `ai-first-engineering` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

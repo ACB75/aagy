@@ -7,6 +7,14 @@ metadata:
 
 # Angular Developer Guidelines
 
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `angular-developer`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Creating New Projects, Components, Reactivity and Data Management, Forms, Dependency Injection.
 ## When to Activate
 
 - Working in any Angular project or codebase
@@ -153,3 +161,7 @@ When working with Angular tooling, consult the following references:
 - `tdd-workflow` — test-driven development workflow applicable to Angular components and services
 - `security-review` — security checklist for web applications including Angular-specific concerns
 - `frontend-patterns` — general frontend patterns for context on React/Next.js approaches
+
+## Paridad
+
+Claude Code: el mismo skill `angular-developer` en el paquete `aagy-ecc-angular`, espejado desde la raíz por `sync_aagy_ecc.py`.

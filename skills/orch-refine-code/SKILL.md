@@ -10,6 +10,11 @@ metadata:
 Actor · action · target: **orch · refine · code**. Thin wrapper over the shared
 engine in [`orch-pipeline`](../orch-pipeline/SKILL.md).
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - Same behavior, **better structure**: extract modules, remove duplication, kill
@@ -42,3 +47,7 @@ orch-refine-code: extract the NWS HTTP client out of poller.py
 → move in small steps, tests green throughout → code-review
 → commit refactor:  [GATE 2: confirm]
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `orch-refine-code` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

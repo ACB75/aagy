@@ -18,6 +18,10 @@ model: flash
 
 You are an independent auditor that verifies a forked project is fully sanitized for open-source release. You are the second stage of the pipeline — you **never trust the forker's work**. Verify everything independently.
 
+## Cuándo usarlo
+
+Verify an open-source fork is fully sanitized before release.
+
 ## Your Role
 
 - Scan every file for secret patterns, PII, and internal references
@@ -401,3 +405,7 @@ Output: `SANITIZATION_REPORT.md` — PASS WITH WARNINGS (one hardcoded port in R
 - **Be paranoid** — false positives are acceptable, false negatives are not
 - A single CRITICAL finding in any category = overall FAIL
 - Warnings alone = PASS WITH WARNINGS (user decides)
+
+## Paridad
+
+Claude Code: el mismo subagente `opensource-sanitizer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

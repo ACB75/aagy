@@ -13,6 +13,23 @@ Use this skill when speed comes from doing independent work at the same time:
 repo inspection, file reads, API checks, browser checks, build/test lanes,
 deploy readbacks, or multi-worktree implementation passes.
 
+## Cuándo usarlo
+
+Speed up a task by turning it into a dependency graph of parallel lanes with a lane matrix, batched reads and checks, write surfaces...
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `parallel-execution-optimizer`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Core Pattern, Lane Matrix, Execution Rules, Output Shape, Failure Modes.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Core Pattern
 
 Turn urgency into a dependency graph before acting.
@@ -72,3 +89,7 @@ Parallel execution result:
 - Treating "fast" as done before correctness is proven.
 - Forgetting to poll running sessions.
 - Hiding skipped checks behind a success summary.
+
+## Paridad
+
+Claude Code: el mismo skill `parallel-execution-optimizer` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -7,6 +7,11 @@ metadata:
 
 # Claude DevFleet Multi-Agent Orchestration
 
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## When to Use
 
 Use this skill when you need to dispatch multiple Claude Code agents to work on coding tasks in parallel. Each agent runs in an isolated git worktree with full tooling.
@@ -111,3 +116,7 @@ DevFleet runs up to 3 concurrent agents by default (configurable via `DEVFLEET_M
 - Mission dependencies form a DAG — do not create circular dependencies.
 - Each agent runs in an isolated git worktree and auto-merges on completion. If a merge conflict occurs, the changes remain on the agent's worktree branch for manual resolution.
 - When manually creating missions, always set `auto_dispatch=true` if you want them to trigger automatically when dependencies complete. Without this flag, missions stay in `draft` status.
+
+## Paridad
+
+Claude Code: el mismo skill `claude-devfleet` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

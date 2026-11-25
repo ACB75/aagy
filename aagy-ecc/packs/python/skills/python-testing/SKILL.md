@@ -9,6 +9,10 @@ metadata:
 
 Comprehensive testing strategies for Python applications using pytest, TDD methodology, and best practices.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Testing Philosophy, pytest Fundamentals, Fixtures, Parametrization, Markers and Test Selection.
+
 ## When to Activate
 
 - Writing new Python code (follow TDD: red, green, refactor)
@@ -815,3 +819,7 @@ pytest --pdb
 | `assert` | Simple and readable assertions |
 
 **Remember**: Tests are code too. Keep them clean, readable, and maintainable. Good tests catch bugs; great tests prevent them.
+
+## Paridad
+
+Claude Code: el mismo skill `python-testing` en el paquete `aagy-ecc-python`, espejado desde la raíz por `sync_aagy_ecc.py`.

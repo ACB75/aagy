@@ -9,6 +9,15 @@ metadata:
 
 Testing patterns specifically designed for AI-assisted development, where the same model writes code and reviews it — creating systematic blind spots that only automated tests can catch.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, The Core Problem, Sandbox-Mode API Testing, Integrating Tests into Bug-Check Workflow, Common AI Regression Patterns, Strategy: Test Where Bugs Were Found.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - AI agent (Claude Code, Cursor, Codex) has modified API routes or backend logic
@@ -386,3 +395,7 @@ No bug in /api/user/notifications  → Don't write test (yet)
 - Skip sandbox path testing because "it's just mock data"
 - Write integration tests when unit tests suffice
 - Aim for coverage percentage — aim for regression prevention
+
+## Paridad
+
+Claude Code: el mismo skill `ai-regression-testing` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

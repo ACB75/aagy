@@ -150,3 +150,7 @@ def parse_show_interfaces(raw: str) -> list[dict[str, Any]]:
 
 - Agent: `network-troubleshooter`
 - Skill: `network-config-validation`
+
+## Paridad
+
+Claude Code: el mismo skill `network-interface-health` en el paquete `aagy-ecc-network-infra`, espejado desde la raíz por `sync_aagy_ecc.py`.

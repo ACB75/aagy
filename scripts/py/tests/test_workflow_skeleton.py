@@ -69,7 +69,7 @@ def test_parity_must_name_equivalent_or_asymmetry():
     assert ws.check_text(asym, own=True) == []
 
 
-def test_inherited_accept_english_aliases_and_only_warn():
+def test_inherited_accept_english_aliases():
     inherited = "## When to Use\n## Usage\n## Process\n## Rules\n## Parity\n"
     assert ws.check_text(inherited, own=False) == []
     assert ws.check_text(inherited, own=True)
@@ -88,7 +88,14 @@ def test_parity_audit_flags_broken_own_workflow(tmp_path):
     assert discrepancies and "agents/todo-archiver" in discrepancies[0]
 
 
+def test_inherited_without_skeleton_fails(tmp_path):
+    (tmp_path / "agents").mkdir()
+    (tmp_path / "agents" / "heredado.md").write_text("# x\n\n## Notes\n", encoding="utf-8")
+    findings = ws.audit(tmp_path)
+    assert [f.level for f in findings] == [ws.LEVEL_FAIL]
+    assert ws.main(["--repo", str(tmp_path)]) == 1
+
+
 def test_cli_exit_codes(capsys):
     assert ws.main(["--repo", str(REPO_ROOT)]) == 0
-    assert ws.main(["--repo", str(REPO_ROOT), "--strict"]) == 1
-    assert "heredados" in capsys.readouterr().out
+    assert "sin esqueleto común: 0" in capsys.readouterr().out

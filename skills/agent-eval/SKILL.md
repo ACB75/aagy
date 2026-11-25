@@ -11,6 +11,10 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 
 A lightweight CLI tool for comparing coding agents head-to-head on reproducible tasks. Every "which coding agent is best?" comparison runs on vibes — this tool systematizes it.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-eval`.
+
 ## When to Activate
 
 - Comparing coding agents (Claude Code, Aider, Codex, etc.) on your own codebase
@@ -146,3 +150,7 @@ judge:
 ## Links
 
 - Repository: [github.com/joaquinhuigomez/agent-eval](https://github.com/joaquinhuigomez/agent-eval)
+
+## Paridad
+
+Claude Code: el mismo skill `agent-eval` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

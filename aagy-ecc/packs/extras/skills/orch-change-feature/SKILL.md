@@ -10,6 +10,11 @@ metadata:
 Actor · action · target: **orch · change · feature**. Thin wrapper over the
 shared engine in [`orch-pipeline`](../orch-pipeline/SKILL.md).
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - An existing feature **works**, but the desired behavior is different ("change",
@@ -41,3 +46,7 @@ orch-change-feature: make nws-poller alert at 2 warnings instead of 3
 → update threshold tests to new spec → change impl to green
 → code-review → commit  [GATE 2: confirm]
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `orch-change-feature` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

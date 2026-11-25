@@ -9,6 +9,14 @@ metadata:
 
 Patterns for controlling LLM API costs while maintaining quality. Combines model routing, budget tracking, retry logic, and prompt caching into a composable pipeline.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `cost-aware-llm-pipeline`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Concepts, Composition, Pricing Reference (2026), Best Practices, Anti-Patterns to Avoid.
+
 ## When to Activate
 
 - Building applications that call LLM APIs (Claude, GPT, etc.)
@@ -186,3 +194,7 @@ def process(text: str, config: Config, tracker: CostTracker) -> tuple[Result, Co
 - Batch processing pipelines where cost adds up quickly
 - Multi-model architectures that need intelligent routing
 - Production systems that need budget guardrails
+
+## Paridad
+
+Claude Code: el mismo skill `cost-aware-llm-pipeline` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

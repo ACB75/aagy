@@ -7,6 +7,14 @@ description: "Typed error hierarchies, retries, circuit breakers, and boundary s
 
 Consistent, robust error handling patterns for production applications.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `error-handling`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Principles, TypeScript / JavaScript, Python, Go, Retry with Exponential Backoff.
+
 ## When to Activate
 
 - Designing error types or exception hierarchies for a new module or service
@@ -373,3 +381,7 @@ Before merging any code that touches error handling:
 - [ ] Async functions surface errors to callers — no fire-and-forget without fallback
 - [ ] Retry logic only retries retriable errors (not 4xx client errors)
 - [ ] React components are wrapped in `ErrorBoundary` for rendering errors
+
+## Paridad
+
+Claude Code: el mismo skill `error-handling` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

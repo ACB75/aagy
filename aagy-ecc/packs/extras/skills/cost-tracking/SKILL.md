@@ -105,3 +105,7 @@ with four decimals, larger amounts with two.
 - `cost-aware-llm-pipeline` - Model-routing and budget-design patterns.
 - `token-budget-advisor` - Context and token-budget planning.
 - `strategic-compact` - Context compaction to reduce repeated token spend.
+
+## Paridad
+
+Claude Code: el mismo skill `cost-tracking` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

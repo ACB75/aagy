@@ -9,6 +9,14 @@ metadata:
 
 Read-only audit skill for answering the question "what can this workspace and machine actually do right now, and what should we add or enable next?"
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `workspace-surface-audit`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Use, Non-Negotiable Rules, Audit Inputs, Audit Process, Output Format, Recommendation Rules.
+
 This is the AAGY-native answer to setup-audit plugins. It does not modify files unless the user explicitly asks for follow-up implementation.
 
 ## When to Use
@@ -124,3 +132,7 @@ Return five sections in this order:
 - The user can immediately see what is connected, what is missing, and what AAGY should own next.
 - Recommendations are specific enough to implement in the repo without another discovery pass.
 - The final answer is organized around workflows, not API brands.
+
+## Paridad
+
+Claude Code: el mismo skill `workspace-surface-audit` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

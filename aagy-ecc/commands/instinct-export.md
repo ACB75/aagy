@@ -8,6 +8,15 @@ command: /instinct-export
 
 Exports instincts to a shareable format. Perfect for:
 
+## Cuándo usarlo
+
+Export instincts from project/global scope to a file
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 - Sharing with teammates
 - Transferring to a new machine
 - Contributing to project conventions
@@ -65,3 +74,7 @@ Use functional patterns over classes.
 - `--min-confidence <n>`: Minimum confidence threshold
 - `--output <file>`: Output file path (prints to stdout when omitted)
 - `--scope <project|global|all>`: Export scope (default: `all`)
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

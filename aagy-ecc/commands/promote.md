@@ -8,6 +8,15 @@ command: true
 
 Promote instincts and recurring candidates using the unified self-improvement engine (`scripts/py/self_improve.py`).
 
+## Cuándo usarlo
+
+Promote project-scoped instincts to global scope
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Implementation
 
 Run the unified self-improvement CLI from the repository root:
@@ -34,3 +43,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/py/self_improve.py" --promote [candidate-
    - Appear in at least 2 projects
    - Meet confidence threshold
 4. Write promoted instincts to `~/.claude/homunculus/instincts/personal/` with `scope: global`
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

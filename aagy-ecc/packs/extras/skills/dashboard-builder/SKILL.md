@@ -107,3 +107,7 @@ Every panel should answer a real question. If it does not, remove it.
 - `research-ops`
 - `backend-patterns`
 - `terminal-ops`
+
+## Paridad
+
+Claude Code: el mismo skill `dashboard-builder` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

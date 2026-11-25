@@ -9,6 +9,19 @@ metadata:
 
 Use this workflow when an agent task runs in a remote sandbox that calls back to a local API through a gateway. It verifies the whole path without relying on connected tools or private production data.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `agent-runtime-gateway-smoke-test`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Required Inputs, Authorization and Cleanup, Smoke Test, Connected Tool Follow-up, Failure Handling.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - A local agent API needs an end-to-end runtime check.
@@ -81,3 +94,7 @@ Keep account details, credential values, personal paths, public tunnel URLs, and
 - `hermes-imports` for sanitizing a local workflow before sharing it.
 - `agent-introspection-debugging` when an agent run fails repeatedly.
 - `verification-loop` after changing runtime code.
+
+## Paridad
+
+Claude Code: el mismo skill `agent-runtime-gateway-smoke-test` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

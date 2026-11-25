@@ -20,7 +20,7 @@
  aagy-ecc/CLAUDE.md          |  2 +-
  doc/06-backlog/TODO.md      | 29 +++++++++++------------------
  doc/STATUS.md               |  2 +-
- scripts/ps1/aagy.ps1 self-improve |  2 +-
+ scripts/ps1/auto-evolve.ps1 |  2 +-
  5 files changed, 15 insertions(+), 22 deletions(-)`
 
 ---

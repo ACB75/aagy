@@ -9,6 +9,19 @@ metadata:
 
 Spring Boot architecture and API patterns for scalable, production-grade services.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `springboot-patterns`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, REST API Structure, Repository Pattern (Spring Data JPA), Service Layer with Transactions, DTOs and Validation, Exception Handling.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Building REST APIs with Spring MVC or WebFlux
@@ -314,3 +327,7 @@ Use Spring’s `@Scheduled` or integrate with queues (e.g., Kafka, SQS, RabbitMQ
 - Enforce null-safety via `@NonNull` and `Optional` where appropriate
 
 **Remember**: Keep controllers thin, services focused, repositories simple, and errors handled centrally. Optimize for maintainability and testability.
+
+## Paridad
+
+Claude Code: el mismo skill `springboot-patterns` en el paquete `aagy-ecc-java-spring`, espejado desde la raíz por `sync_aagy_ecc.py`.

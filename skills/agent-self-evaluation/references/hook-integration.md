@@ -1,6 +1,6 @@
 # Hook Integration for Zero-Overhead Session-Stop Capture
 
-The unified self-improvement engine wires a passive `Stop` hook in [`hooks.json`](../../hooks.json) that executes in $< 500\text{ ms}$ (timeout `5s`), consumes `0` prompt tokens, and isolates any runtime or permission error by returning `{}`:
+The unified self-improvement engine wires a passive `Stop` hook in [`hooks.json`](../../../hooks.json) that executes in $< 500\text{ ms}$ (timeout `5s`), consumes `0` prompt tokens, and isolates any runtime or permission error by returning `{}`:
 
 ```json
 {

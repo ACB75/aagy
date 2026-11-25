@@ -65,3 +65,9 @@ def test_this_repo_declares_terms_and_has_no_hits():
     terms, hits = cr.audit(REPO_ROOT)
     assert terms, "el repo debe declarar consumer_refs en .governance/aagy.json"
     assert hits == [], hits[:5]
+
+
+def test_windows_paths_match_either_separator(tmp_path):
+    (tmp_path / "doc.md").write_text("ruta d:/RutaX/x\n", encoding="utf-8")
+    hits = cr.scan(tmp_path, ["D:\\RutaX"])
+    assert [h.term for h in hits] == ["D:\\RutaX"]

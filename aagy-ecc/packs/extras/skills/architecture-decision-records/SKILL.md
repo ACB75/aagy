@@ -7,6 +7,15 @@ description: "Write numbered ADRs (ADR-NNNN) and index tables in <project>/doc/a
 
 Capture architectural decisions as they happen during coding sessions. Instead of decisions living only in Slack threads, PR comments, or someone's memory, this skill produces structured ADR documents that live alongside the code.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `architecture-decision-records`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - User explicitly says "let's record this decision" or "ADR this"
@@ -181,3 +190,7 @@ proposed → accepted → [deprecated | superseded by ADR-NNNN]
 
 - **Planner agent**: when the planner proposes architecture changes, suggest creating an ADR
 - **Code reviewer agent**: flag PRs that introduce architectural changes without a corresponding ADR
+
+## Paridad
+
+Claude Code: el mismo skill `architecture-decision-records` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

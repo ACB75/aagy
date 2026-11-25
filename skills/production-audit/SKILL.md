@@ -205,3 +205,7 @@ Next action: Want me to patch webhook idempotency first?
 - Skill: `e2e-testing`
 - Skill: `tdd-workflow`
 - Skill: `verification-loop`
+
+## Paridad
+
+Claude Code: el mismo skill `production-audit` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

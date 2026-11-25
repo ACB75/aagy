@@ -7,6 +7,19 @@ argument-hint: "[target description] (blank = all changes)"
 
 > Adapted from PRPs-agentic-eng by Wirasm. Part of the PRP workflow series.
 
+## Cuándo usarlo
+
+Quick commit with natural language file targeting — describe what to commit in plain English
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Phase 1 — ASSESS, Phase 2 — INTERPRET & STAGE, Phase 3 — COMMIT, Phase 4 — OUTPUT, Examples.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 **Input**: $ARGUMENTS
 
 ---
@@ -113,3 +126,7 @@ Next steps:
 | `/prp-commit except tests` | Stages everything except test files |
 | `/prp-commit the database migration` | Finds DB migration files from status, stages them |
 | `/prp-commit only new files` | Stages untracked files only |
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

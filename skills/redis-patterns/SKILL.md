@@ -402,3 +402,7 @@ Use Pub/Sub for fire-and-forget. Switch to Streams if you need guaranteed delive
 - Skill: `database-migrations` — schema versioning
 - Skill: `django-patterns` — Django cache framework integration
 - Agent: `database-reviewer` — full database review workflow
+
+## Paridad
+
+Claude Code: el mismo skill `redis-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

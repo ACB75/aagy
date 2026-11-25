@@ -9,6 +9,11 @@ metadata:
 
 Build tool and dev server patterns for Vite 8+ projects. Covers configuration, environment variables, proxy setup, library mode, dependency pre-bundling, and common production pitfalls.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - Configuring `vite.config.ts` or `vite.config.js`
@@ -448,3 +453,7 @@ import.meta.hot.data.count = 0                 // CORRECT
 - `frontend-patterns` — React component patterns
 - `docker-patterns` — containerized dev with Vite
 - `nextjs-turbopack` — alternative bundler for Next.js
+
+## Paridad
+
+Claude Code: el mismo skill `vite-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

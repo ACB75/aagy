@@ -9,6 +9,23 @@ metadata:
 
 Use this skill for cloud-hosted or continuously running agent systems that need operational controls beyond single CLI sessions.
 
+## Cuándo usarlo
+
+Operational controls for long-lived or cloud-hosted agent systems — runtime lifecycle (start, pause, stop, restart), observability...
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `enterprise-agent-ops`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Operational Domains, Baseline Controls, Metrics to Track, Incident Pattern, Deployment Integrations.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Operational Domains
 
 1. runtime lifecycle (start, pause, stop, restart)
@@ -51,3 +68,7 @@ This skill pairs with:
 - systemd services
 - container orchestrators
 - CI/CD gates
+
+## Paridad
+
+Claude Code: el mismo skill `enterprise-agent-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

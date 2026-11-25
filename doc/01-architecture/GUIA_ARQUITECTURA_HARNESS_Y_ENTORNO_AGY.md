@@ -65,7 +65,7 @@ flowchart TD
    - **Paradigma**: Ejecución secuencial interactiva en terminal con captura directa de flujos estándar (`stdin`/`stdout`).
 2. **`aagy`**:
    - **Motor**: Google Antigravity & Gemini (modelos Gemini 2.5 Pro / Flash).
-   - **Artefactos**: Reglas jerárquicas ([`rules/AGENTS.md`](file:///c:/Workspace/projects/aagy/rules/AGENTS.md)), catálogo de más de 315 skills ([`skills/`](file:///c:/Workspace/projects/aagy/skills/)), 73 subagentes especializados ([`agents/`](file:///c:/Workspace/projects/aagy/agents/)), esquemas de validación JSON ([`schemas/`](file:///c:/Workspace/projects/aagy/schemas/)) y puntos de entrada en forma de skill, como [`aagy-doctor`](../../skills/aagy-doctor/SKILL.md). La raíz no tiene carpeta `commands/`: los comandos slash viven en [`aagy-ecc/commands/`](../../aagy-ecc/commands/).
+   - **Artefactos**: Reglas jerárquicas ([`rules/AGENTS.md`](../../rules/AGENTS.md)), catálogo de 168 skills ([`skills/`](../../skills/)), 47 subagentes especializados ([`agents/`](../../agents/)) y puntos de entrada en forma de skill, como [`aagy-doctor`](../../skills/aagy-doctor/SKILL.md). La raíz no tiene carpeta `commands/`: los comandos slash viven en [`aagy-ecc/commands/`](../../aagy-ecc/commands/).
    - **Paradigma**: Invocación estructurada de herramientas en sandboxes OS, orquestación concurrente de subagentes en workspaces aislados (`branch`/`share`), integración nativa de Model Context Protocol (MCP) y bucle de despertar reactivo (*reactive wakeup*).
 
 ---
@@ -164,7 +164,7 @@ Todo resultado devuelto al modelo debe ajustarse al siguiente contrato de observ
   "status": "success | warning | error",
   "summary": "Resumen conciso del resultado en una sola línea",
   "artifacts": [
-    "c:/Workspace/projects/aagy/doc/INDEX.md"
+    "doc/INDEX.md"
   ],
   "next_actions": [
     "Ejecutar linter de markdown para verificar cumplimiento de DavidAnson",
@@ -266,7 +266,7 @@ Uno de los mayores cuellos de botella en agentes basados en LLMs es la **saturac
 Antigravity resuelve este desafío mediante **Progressive Disclosure**:
 
 - En el arranque, el arnés inyecta en el prompt del sistema únicamente los metadatos condensados de cada skill: su nombre y una descripción de una sola línea ($\le 140$ caracteres).
-- El cuerpo completo de la skill ([`SKILL.md`](file:///c:/Workspace/projects/aagy/skills/agent-harness-construction/SKILL.md)) se mantiene en disco en frío.
+- El cuerpo completo de la skill ([`SKILL.md`](../../skills/agent-harness-construction/SKILL.md)) se mantiene en disco en frío.
 - Únicamente cuando el modelo evalúa que una tarea requiere un procedimiento especializado (o el usuario lo invoca explícitamente), el arnés carga el archivo `SKILL.md` correspondiente en el turno activo.
 - Al cambiar de fase o tarea, el contenido se puede descartar o compactar, preservando intacto el presupuesto de tokens.
 
@@ -276,7 +276,7 @@ En los arneses de primera generación, cuando un agente lanzaba un comando de la
 
 El entorno Antigravity implementa el **Despertar Reactivo (*Reactive Wakeup*)**:
 
-- Toda tarea en segundo plano ([`run_command`](file:///c:/Workspace/projects/aagy/commands/run.md) con `WaitMsBeforeAsync` superado o `IsDaemon: true`) o subagente ([`invoke_subagent`](file:///c:/Workspace/projects/aagy/commands/subagent.md)) se registra en el gestor de tareas de fondo.
+- Toda tarea en segundo plano (`run_command` con `WaitMsBeforeAsync` superado o `IsDaemon: true`) o subagente (`invoke_subagent`) se registra en el gestor de tareas de fondo.
 - El agente **concluye su turno inmediatamente** sin emitir más herramientas y pasa a estado de reposo (*idle*).
 - Cuando el proceso finaliza, el sistema operativo emite una señal de terminación capturada por el runtime de Antigravity, el cual inyecta una notificación de alta prioridad (`MESSAGE_PRIORITY_HIGH`) en el buzón del agente y **reanuda automáticamente la ejecución**.
 - Cero polling, cero consumo de tokens durante la espera y latencia mínima de reacción ante eventos del sistema.
@@ -342,7 +342,7 @@ Cada requerimiento o tarea en `TODO.md` se formula obligatoriamente mediante una
 Conforme al **ADR-0006**, el repositorio utiliza desarrollo basado en tronco (*Trunk-Based Development*) sobre la rama canónica `main`:
 
 - Toda intervención se realiza en una rama corta aislada (`feat/*`, `fix/*`, `refactor/*`, `chore/*`).
-- El formato del commit debe ser rigurosamente validado por [`format_commit.py`](file:///c:/Workspace/projects/aagy/scripts/py/format_commit.py): `[type]-[projects]: <title>` acompañado de un cuerpo explicativo obligatorio detallando motivación, componentes y pruebas ejecutadas.
+- El formato del commit debe ser rigurosamente validado por [`format_commit.py`](../../scripts/py/format_commit.py): `[type]-[projects]: <title>` acompañado de un cuerpo explicativo obligatorio detallando motivación, componentes y pruebas ejecutadas.
 - **Regla de Creación Automática de PR**: Inmediatamente tras la confirmación de commit y push por parte del usuario, el arnés genera automáticamente la Pull Request correspondiente mediante `gh pr create --fill`, asegurando que ninguna rama quede huérfana y permitiendo la ejecución aislada del CI (*Fast-Failure*) y reversión atómica de un solo commit (*Fast-Rollback*).
 
 ---

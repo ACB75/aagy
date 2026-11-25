@@ -9,6 +9,14 @@ metadata:
 
 A practical decision framework for parsing structured text (quizzes, forms, invoices, documents). The key insight: regex handles 95-98% of cases cheaply and deterministically. Reserve expensive LLM calls for the remaining edge cases.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `regex-vs-llm-structured-text`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Decision Framework, Architecture Pattern, Implementation, Real-World Metrics, Best Practices.
+
 ## When to Activate
 
 - Parsing structured text with repeating patterns (questions, forms, tables)
@@ -219,3 +227,7 @@ From a production quiz parsing pipeline (410 items):
 - Invoice/receipt processing
 - Document structure parsing (headers, sections, tables)
 - Any structured text with repeating patterns where cost matters
+
+## Paridad
+
+Claude Code: el mismo skill `regex-vs-llm-structured-text` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -7,6 +7,14 @@ description: "Clean Code conventions for naming, immutability, KISS/DRY/YAGNI, a
 
 Baseline coding conventions applicable across projects.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `coding-standards`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Scope Boundaries, Code Quality Principles, TypeScript/JavaScript Standards, React Best Practices, API Design Standards.
+
 This skill is the shared floor, not the detailed framework playbook.
 
 - Use `frontend-patterns` for React, state, forms, rendering, and UI architecture.
@@ -556,3 +564,7 @@ setTimeout(callback, DEBOUNCE_DELAY_MS)
 ```
 
 **Remember**: Code quality is not negotiable. Clear, maintainable code enables rapid development and confident refactoring.
+
+## Paridad
+
+Claude Code: el mismo skill `coding-standards` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

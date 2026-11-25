@@ -13,6 +13,14 @@ Use this skill when the bottleneck is moving, transforming, or saving lots of
 data. The goal is not just speed. The goal is faster correct data landing in the
 right place with proof.
 
+## Cuándo usarlo
+
+High-throughput batching, Kafka streaming, and bulk DB ingestion with row/timestamp verification.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `data-throughput-accelerator`.
+
 ## First Distinction
 
 Separate these before optimizing:
@@ -72,3 +80,7 @@ Data throughput result:
 - Do not call a pipeline complete until the target tables and manifest agree.
 - For finance, healthcare, regulated, or customer-impacting data, preserve
   replay evidence and approval gates.
+
+## Paridad
+
+Claude Code: el mismo skill `data-throughput-accelerator` en el paquete `aagy-ecc-go`, espejado desde la raíz por `sync_aagy_ecc.py`.

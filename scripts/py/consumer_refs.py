@@ -75,9 +75,14 @@ def candidate_files(repo_root: Path) -> Iterable[Path]:
     return tracked if tracked is not None else _walk(repo_root)
 
 
+def _normal(text: str) -> str:
+    """Minúsculas y ``\\`` como ``/``: ``C:\\Ruta`` casa también con ``c:/ruta``."""
+    return text.lower().replace("\\", "/")
+
+
 def scan(repo_root: Path, terms: Sequence[str], exclude: Sequence[Path] = ()) -> List[Hit]:
     """Apariciones de ``terms`` en los ficheros de texto del repo."""
-    lowered = [(t, t.lower()) for t in terms]
+    lowered = [(t, _normal(t)) for t in terms]
     skipped = {p.resolve() for p in exclude}
     hits: List[Hit] = []
     for path in candidate_files(repo_root):
@@ -87,7 +92,7 @@ def scan(repo_root: Path, terms: Sequence[str], exclude: Sequence[Path] = ()) ->
         if b"\0" in data[:4096]:
             continue
         rel = path.relative_to(repo_root).as_posix()
-        for number, line in enumerate(data.decode(ENCODING, "replace").lower().splitlines(), 1):
+        for number, line in enumerate(_normal(data.decode(ENCODING, "replace")).splitlines(), 1):
             hits.extend(Hit(rel, number, term) for term, low in lowered if low in line)
     return hits
 

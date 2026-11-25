@@ -9,6 +9,19 @@ metadata:
 
 Enforces SonarQube static analysis rules and Quality Gate `A` ratings across Java 25 / Spring Boot 4, Angular 21 / TypeScript, Go 1.24 LTS, and Python 3.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `sonarqube-quality-gate`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Use, Quality Gate Thresholds (`A` Rating Baseline), Non-Negotiable Multi-Language Rules, Deterministic Audit Workflow.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - Auditing or refactoring code to pass SonarQube / SonarCloud Quality Gates (`Clean as You Code`).
@@ -61,3 +74,7 @@ scripts/sh/aagy.sh sonar-audit
 
 - Refactor every reported `[CRITICAL]`, `[MAJOR]`, and `[MINOR]` finding at the exact `file:line`.
 - Re-run `aagy sonar-audit` and the project's unit test suite to confirm `0` issues and `100%` test pass rate.
+
+## Paridad
+
+Claude Code: el mismo skill `sonarqube-quality-gate` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

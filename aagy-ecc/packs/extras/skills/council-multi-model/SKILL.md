@@ -11,6 +11,15 @@ Run the existing `council` workflow first. This skill adds only one optional
 post-draft node: ask Codex to attack the council synthesis before the user makes
 the final decision.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `council-multi-model`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 It does not add independent proposals, voting, automatic judging, or another
 decision authority. The user still decides.
 
@@ -165,3 +174,7 @@ truth. Do not create a running review log.
 - `council` - required base workflow.
 - `santa-method` - verification rather than decision critique.
 - `architecture-decision-records` - preserve a durable decision when warranted.
+
+## Paridad
+
+Claude Code: el mismo skill `council-multi-model` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

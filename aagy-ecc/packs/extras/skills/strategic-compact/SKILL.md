@@ -9,6 +9,10 @@ metadata:
 
 Suggests manual `/compact` at strategic points in your workflow rather than relying on arbitrary auto-compaction.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `strategic-compact`.
+
 ## When to Activate
 
 - Running long sessions that approach context limits (200K+ tokens)
@@ -163,3 +167,7 @@ Common sources of duplicate context:
 - [The Longform Guide](https://x.com/affaanmustafa/status/2014040193557471352) — Token optimization section
 - Memory persistence hooks — For state that survives compaction
 - `agent-self-evaluation` skill — Extracts patterns via Stop hook before session ends
+
+## Paridad
+
+Claude Code: el mismo skill `strategic-compact` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

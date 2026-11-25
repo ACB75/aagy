@@ -6,6 +6,19 @@ description: Scan project structure and generate token-lean architecture codemap
 
 Analyze the codebase structure and generate token-lean architecture documentation.
 
+## Cuándo usarlo
+
+Scan project structure and generate token-lean architecture codemaps.
+
+## Uso
+
+`/update-codemaps` en Claude Code, con los argumentos que se describen abajo.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Step 1: Scan Project Structure
 
 1. Identify the project type (monorepo, single app, library, microservice)
@@ -75,3 +88,7 @@ Write a summary to `.reports/codemap-diff.txt`:
 - Keep each codemap under **1000 tokens** for efficient context loading
 - Use ASCII diagrams for data flow instead of verbose descriptions
 - Run after major feature additions or refactoring sessions
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

@@ -10,6 +10,10 @@ metadata:
 
 Use this skill to turn model work into a production ML system with clear data contracts, repeatable training, measurable quality gates, deployable artifacts, and operational monitoring.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `mle-workflow`.
+
 ## When to Activate
 
 - Planning or reviewing a production ML feature, model refresh, ranking system, recommender, classifier, embedding workflow, or forecasting pipeline
@@ -346,3 +350,7 @@ Every deployment should have a rollback plan that names the previous artifact, c
 ## Output Expectations
 
 When using this skill, return concrete artifacts: data contract, promotion gates, pipeline steps, test plan, deployment plan, or review findings. Call out unknowns that block production readiness instead of filling them with assumptions.
+
+## Paridad
+
+Claude Code: el mismo skill `mle-workflow` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

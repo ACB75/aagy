@@ -9,6 +9,10 @@ metadata:
 
 Safely open-source any project through a 3-stage pipeline: **Fork** (strip secrets) → **Sanitize** (verify clean) → **Package** (CLAUDE.md + setup.sh + README).
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Commands, Protocol, Staging Layout, Anti-Patterns, Best Practices.
+
 ## When to Activate
 
 - User says "open source this project" or "make this public"
@@ -285,3 +289,7 @@ $HOME/opensource-staging/
 ## Related Skills
 
 See `security-review` for secret detection patterns used by the sanitizer.
+
+## Paridad
+
+Claude Code: el mismo skill `opensource-pipeline` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

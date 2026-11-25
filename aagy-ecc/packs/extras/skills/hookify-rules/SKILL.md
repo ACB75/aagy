@@ -5,6 +5,19 @@ description: "Create and configure hookify rules — markdown files with YAML fr
 
 # Writing Hookify Rules
 
+
+## Cuándo usarlo
+
+Create and configure hookify rules — markdown files with YAML frontmatter that match bash, file, prompt, or stop events by regex or...
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Overview, Rule File Format, Event Type Guide, Pattern Writing Tips, Runtime Behavior, File Organization.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## Overview
 
 AAGY evaluates project-local Hookify rules with its built-in Node runtime. No
@@ -158,3 +171,7 @@ pattern: dangerous_command
 ---
 Warning message here
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `hookify-rules` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

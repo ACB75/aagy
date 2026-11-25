@@ -14,6 +14,23 @@ repeated rollouts or "Prime Gauss" style recursive prompting. Preserve the usefu
 part: repeated trials, prior memory, fresh information, and explicit marks.
 Remove the unsafe part: pretending the loop proves certainty.
 
+## Cuándo usarlo
+
+Run repeated rollouts ("Prime Gauss" style recursive prompting) while keeping an append-only decision ledger of trials, marks...
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `recursive-decision-ledger`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Ledger Contract, Rollout Loop, Coherence Mark, Promotion Rules, Summary Shape.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Ledger Contract
 
 Every rollout should record:
@@ -79,3 +96,7 @@ Rollout 15 complete. The prior winner still holds, but edge deteriorated 17%.
 Status: watch, not live. Next gate: 20 replay fills with fresh orderbook age
 below threshold.
 ```
+
+## Paridad
+
+Claude Code: el mismo skill `recursive-decision-ledger` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

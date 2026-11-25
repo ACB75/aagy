@@ -1,6 +1,6 @@
 # Manual: Modelo Local con Ollama (`MANUAL_local_model.md`)
 
-> **Requisitos**: [REQ_aagy_local_model.md](../../06-backlog/plans/REQ_aagy_local_model.md) | **Motor**: [`local_model.py`](../../../scripts/py/local_model.py)
+> **Motor**: [`local_model.py`](../../../scripts/py/local_model.py)
 > **Claude Code**: `/aagy-local` | **Antigravity**: skill `aagy-local` | **Doctor**: DOC-16
 
 ---
@@ -55,8 +55,8 @@ python scripts/py/local_model.py register-agy  # registra el servidor en Antigra
 
 En Claude Code, `aagy-ecc` registra el servidor en su `.mcp.json`. Los ficheros de
 `local_model.private_globs` pasan por la guarda `local_private_guard.py`: Claude Code
-pregunta antes de leerlos y Antigravity los deniega y propone `local_run` con `paths`
-(su contrato de hooks no admite preguntar).
+pregunta antes de leerlos (`ask`) y Antigravity también (`force_ask`, que no se salta con un "Always Allow"
+guardado). En los dos casos el motivo propone `local_run` con `paths`.
 
 ## 4. Modo solo local
 

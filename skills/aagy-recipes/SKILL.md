@@ -13,6 +13,11 @@ metadata:
 One entry point for "which group of AAGY slash-commands runs my workflow, in what
 order, and when do I stop." Also browses every command-group recipe family.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 Fills the gap between two existing skills:
 
 - `aagy-guide` — lists commands and where to read docs, but as a flat catalog.
@@ -148,3 +153,7 @@ pass review N consecutive times (add a max-iteration backstop to bound burn).
 - Not per-command deep docs — that's `aagy-guide`.
 - Not prompt rewriting — that's `prompt-optimizer`.
 - Never hardcode command counts or member lists — always live-read.
+
+## Paridad
+
+Claude Code: el mismo skill `aagy-recipes` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -9,6 +9,14 @@ metadata:
 
 Practical accessibility patterns for React and Next.js. Covers the issues most commonly flagged in code review: missing form labels, incorrect ARIA usage, non-semantic interactive elements, and broken keyboard navigation.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `frontend-a11y`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Form Accessibility, Semantic HTML, ARIA Attributes, Keyboard Navigation, Focus Management.
+
 ## When to Activate
 
 - Building or reviewing form components (`<input>`, `<select>`, `<textarea>`)
@@ -441,3 +449,7 @@ Before submitting any interactive component for review:
 - `frontend-patterns` — general React component and state patterns
 - `design-system` — design token and component consistency
 - `motion-foundations` and `motion-patterns`: animation patterns with accessibility considerations
+
+## Paridad
+
+Claude Code: el mismo skill `frontend-a11y` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

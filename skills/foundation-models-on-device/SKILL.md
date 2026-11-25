@@ -7,6 +7,14 @@ description: "Apple FoundationModels framework for on-device LLM — text ge. Us
 
 Patterns for integrating Apple's on-device language model into apps using the FoundationModels framework. Covers text generation, structured output with `@Generable`, custom tool calling, and snapshot streaming — all running on-device for privacy and offline support.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `foundation-models-on-device`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Pattern — Availability Check, Core Pattern — Basic Session, Core Pattern — Guided Generation with @Generable, Core Pattern — Tool Calling, Core Pattern — Snapshot Streaming.
+
 ## When to Activate
 
 - Building AI-powered features using Apple Intelligence on-device
@@ -242,3 +250,7 @@ var body: some View {
 - AI-assisted features that must work offline
 - Streaming UI that progressively shows generated content
 - Domain-specific AI actions via tool calling (search, compute, lookup)
+
+## Paridad
+
+Claude Code: el mismo skill `foundation-models-on-device` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

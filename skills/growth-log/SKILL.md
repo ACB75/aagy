@@ -12,6 +12,14 @@ metadata:
 >
 > **This skill teaches:** How to write learning entries that compound across sessions. Works with any note-taking system — Markdown files, Notion, Obsidian, plain text. Templates are generic; adapt to your setup.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `growth-log`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, The Three Rules, Entry Template, Entry Types, Quality Checklist, Anti-Patterns.
+
 ## When to Activate
 
 - After completing a complex task (multi-file, new feature, architecture change)
@@ -128,3 +136,7 @@ Task completes → delivery-gate checks: was the learning file touched today?
 ```
 
 Having enforcement without methodology → empty entries. Having methodology without enforcement → forgotten captures. Each is independently useful; together they close the loop.
+
+## Paridad
+
+Claude Code: el mismo skill `growth-log` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

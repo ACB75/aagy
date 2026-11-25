@@ -9,6 +9,10 @@ metadata:
 
 Use this when the user asks what automations are live, which jobs are broken, where overlap exists, or what tooling and connectors are actually doing useful work right now.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `automation-audit-ops`.
+
 This is an audit-first operator skill. The job is to produce an evidence-backed inventory and a keep / merge / cut / fix-next recommendation set before rewriting anything.
 
 ## Skill Stack
@@ -141,3 +145,7 @@ NEXT AAGY MOVE
 - important claims cite a live proof path
 - each surfaced automation is labeled with a clear live-state category
 - the final recommendation distinguishes keep / merge / cut / fix-next
+
+## Paridad
+
+Claude Code: el mismo skill `automation-audit-ops` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

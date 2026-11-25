@@ -118,3 +118,7 @@ jq '.permissions.allow -= ["Bash(git push)"]' ~/.claude/settings.local.json.bak 
 - `configure-aagy` — after installing skills with it, run config-gc to reconcile overlaps with your pre-existing setup.
 - `agent-self-evaluation` — unified self-improvement engine that produces instinct and memory files this skill later audits.
 - `security-review` — pairs well with the permissions channel.
+
+## Paridad
+
+Claude Code: el mismo skill `config-gc` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

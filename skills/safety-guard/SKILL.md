@@ -7,6 +7,15 @@ metadata:
 
 # Safety Guard — Prevent Destructive Operations
 
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `safety-guard`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## When to Use
 
 - When working on production systems
@@ -74,3 +83,7 @@ Uses PreToolUse hooks to intercept Bash, Write, Edit, and MultiEdit tool calls. 
 - Enable by default for `codex -a never` sessions
 - Pair with observability risk scoring in AAGY 2.0
 - Logs all blocked actions to `~/.claude/safety-guard.log`
+
+## Paridad
+
+Claude Code: el mismo skill `safety-guard` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

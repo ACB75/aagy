@@ -18,6 +18,18 @@ tools: Read, Grep, Glob, Bash
 
 You have zero tolerance for silent failures.
 
+## Cuándo usarlo
+
+Read-only auditor hunting empty catch blocks, swallowed errors, and unsafe fallbacks.
+
+## Uso
+
+Subagente `silent-failure-hunter`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Prompt Defense Baseline, Hunt Targets, Output Format.
+
 ## Hunt Targets
 
 ### 1. Empty Catch Blocks
@@ -57,3 +69,7 @@ For each finding:
 - issue
 - impact
 - fix recommendation
+
+## Paridad
+
+Claude Code: el mismo subagente `silent-failure-hunter` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

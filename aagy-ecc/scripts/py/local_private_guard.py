@@ -7,9 +7,8 @@ Si el agente va a leer un fichero que casa con ``local_model.private_globs``
 ``paths`` del servidor ``aagy-local``, para que el contenido no salga del equipo.
 
 - Claude Code (``--format claude``): decisión ``ask``; el usuario confirma o no.
-- Antigravity (``--format agy``): su contrato solo admite ``allow`` o ``deny``, así
-  que la lectura directa se deniega con el motivo y el agente debe usar
-  ``local_run`` o pedir al usuario que lo lea él (asimetría documentada).
+- Antigravity (``--format agy``): decisión ``force_ask``, que pregunta siempre aunque
+  haya un "Always Allow" guardado (un fichero privado no debe pasar por un permiso viejo).
 
 Sin ``private_globs`` no hace nada. Ante cualquier error deja pasar (fail-open).
 Se espeja en aagy-ecc/scripts/py/ mediante sync_aagy_ecc.py.
@@ -30,6 +29,7 @@ if str(_HERE) not in sys.path:
 
 FMT_CLAUDE = "claude"
 FMT_AGY = "agy"
+CONFIRM_SUFFIX = " ¿Lo lee el agente en la nube de todos modos?"
 CLAUDE_READ_TOOLS = frozenset({"Read", "NotebookRead", "Edit", "MultiEdit", "Write"})
 CLAUDE_PATH_KEYS = ("file_path", "notebook_path")
 AGY_PATH_KEYS = ("AbsolutePath", "TargetFile", "Path", "FilePath")
@@ -59,13 +59,13 @@ def reason_for(target: str, cwd: Path, environ: Optional[Dict[str, str]] = None)
 
 def response(reason: Optional[str], fmt: str) -> Dict[str, Any]:
     if fmt == FMT_AGY:
-        return {"decision": "deny", "reason": reason} if reason else {"decision": "allow"}
+        return {"decision": "force_ask", "reason": reason + CONFIRM_SUFFIX} if reason else {"decision": "allow"}
     if not reason:
         return {}
     return {"hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "ask",
-        "permissionDecisionReason": reason + " ¿Lo lee el agente en la nube de todos modos?",
+        "permissionDecisionReason": reason + CONFIRM_SUFFIX,
     }}
 
 

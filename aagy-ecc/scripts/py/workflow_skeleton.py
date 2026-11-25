@@ -6,13 +6,13 @@ Secciones comunes, en este orden y antes de cualquier otra (RF-05):
 ``Cuándo usarlo``, ``Uso``, ``Qué hacer``, ``Reglas`` y ``Paridad``. La sección
 ``Paridad`` nombra el equivalente en el otro plugin o declara la asimetría (RF-06).
 
-- Workflows propios de aagy (``OWN_WORKFLOWS``): el esqueleto es obligatorio (FAIL).
-- Heredados de ECC: solo aviso (WARN) y se aceptan sus nombres en inglés
-  (P-01). El aviso pasa a FAIL cuando termine la revisión final (#97).
+- Workflows propios de aagy (``OWN_WORKFLOWS``): esqueleto exacto, en español y en orden.
+- Heredados de ECC: las cinco secciones también son obligatorias (FAIL desde #97), pero
+  se aceptan sus nombres en inglés y sus equivalentes (P-01) en cualquier orden.
 
 Uso::
 
-    python workflow_skeleton.py [--repo <raíz>] [--json] [--strict]
+    python workflow_skeleton.py [--repo <raíz>] [--json]
 
 Solo stdlib. Se espeja en aagy-ecc/scripts/py/ mediante sync_aagy_ecc.py.
 """
@@ -32,14 +32,16 @@ SECTION_WHEN = "Cuándo usarlo"
 SECTIONS: Tuple[str, ...] = (SECTION_WHEN, "Uso", "Qué hacer", "Reglas", "Paridad")
 SECTION_PARITY = SECTIONS[-1]
 LEVEL_FAIL = "FAIL"
-LEVEL_WARN = "WARN"
 
 # Nombres equivalentes: "Cuándo usarla" en las propias y los de ECC en las heredadas.
 ALIASES: Dict[str, Tuple[str, ...]] = {
     SECTION_WHEN: ("Cuándo usarla", "When to Use", "When to Activate", "When Activated", "Trigger"),
-    "Uso": ("Usage", "How to Use"),
-    "Qué hacer": ("What to Do", "Process", "Workflow", "How It Works", "Steps"),
-    "Reglas": ("Rules", "Guardrails", "Non-Negotiable Rules", "Key Principles"),
+    "Uso": ("Usage", "How to Use", "Examples", "Example", "Quick Reference", "Commands", "Arguments"),
+    "Qué hacer": ("What to Do", "Process", "Workflow", "How It Works", "Steps", "Core Responsibilities",
+                  "Review Workflow", "Resolution Workflow", "Audit Workflow", "Core Workflow", "Step 1"),
+    "Reglas": ("Rules", "Guardrails", "Non-Negotiable Rules", "Key Principles", "Anti-Patterns", "Best Practices",
+               "Core Principles", "Pitfalls", "Quality Checklist", "Review Checklist", "Approval Criteria",
+               "Stop Conditions", "Prompt Defense Baseline", "Scope Boundaries"),
     "Paridad": ("Parity",),
 }
 
@@ -118,33 +120,28 @@ def audit(repo_root: Path) -> List[Finding]:
         own = key in OWN_WORKFLOWS
         problems = check_text(path.read_text(encoding=ENCODING, errors="replace"), own)
         if problems:
-            findings.append(Finding(key, LEVEL_FAIL if own else LEVEL_WARN, tuple(problems)))
+            findings.append(Finding(key, LEVEL_FAIL, tuple(problems)))
     return findings
 
 
 def summary_line(findings: Sequence[Finding]) -> str:
-    fails = sum(1 for f in findings if f.level == LEVEL_FAIL)
-    warns = len(findings) - fails
-    return f"[workflow-skeleton] propios con fallos: {fails}; heredados sin esqueleto completo: {warns}"
+    own = sum(1 for f in findings if f.key in OWN_WORKFLOWS)
+    return f"[workflow-skeleton] sin esqueleto común: {len(findings)} (propios: {own}; heredados: {len(findings) - own})"
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Esqueleto común de skills, comandos y agentes.")
     parser.add_argument("--repo", type=Path, default=Path.cwd())
     parser.add_argument("--json", action="store_true")
-    parser.add_argument("--strict", action="store_true", help="Los WARN también fallan.")
-    parser.add_argument("--verbose", action="store_true", help="Lista también los WARN.")
     args = parser.parse_args(argv)
     findings = audit(args.repo.resolve())
     if args.json:
         print(json.dumps([f.__dict__ for f in findings], ensure_ascii=False, indent=2))
     else:
         for item in findings:
-            if item.level == LEVEL_FAIL or args.verbose:
-                print(f"[{item.level}] {item.key}: {'; '.join(item.problems)}")
+            print(f"[{item.level}] {item.key}: {'; '.join(item.problems)}")
         print(summary_line(findings))
-    failing = [f for f in findings if f.level == LEVEL_FAIL or args.strict]
-    return 1 if failing else 0
+    return 1 if findings else 0
 
 
 if __name__ == "__main__":

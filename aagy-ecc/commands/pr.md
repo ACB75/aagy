@@ -7,6 +7,23 @@ argument-hint: "[base-branch] (default: main)"
 
 **Input**: `$ARGUMENTS` — optional, may contain a base branch name and/or flags (e.g., `--draft`).
 
+## Cuándo usarlo
+
+Create a GitHub PR from current branch with unpushed commits — discovers templates, analyzes changes, pushes
+
+## Uso
+
+`/pr` en Claude Code, con los argumentos que se describen abajo.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Phase 1 — VALIDATE, Phase 2 — DISCOVER, Phase 3 — PUSH, Phase 4 — CREATE, Phase 5 — VERIFY, Phase 6 — OUTPUT.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 **Parse `$ARGUMENTS`**:
 
 - Extract any recognized flags (`--draft`)
@@ -186,3 +203,7 @@ Next steps:
 - **Force push needed**: If remote has diverged and rebase was done, use `git push --force-with-lease` (never `--force`).
 - **Multiple PR templates**: If `.github/PULL_REQUEST_TEMPLATE/` has multiple files, list them and ask user to choose.
 - **Large PR (>20 files)**: Warn about PR size. Suggest splitting if changes are logically separable.
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

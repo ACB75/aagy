@@ -6,6 +6,15 @@ command: true
 
 # Evolve Command
 
+
+## Cuándo usarlo
+
+Analyze instincts and suggest or generate evolved structures
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
 ## Implementation
 
 Run the instinct CLI using the plugin root path:
@@ -189,3 +198,7 @@ evolved_from:
 
 [Generated content based on clustered instincts]
 ```
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

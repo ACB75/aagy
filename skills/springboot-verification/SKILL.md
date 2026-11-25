@@ -9,6 +9,19 @@ metadata:
 
 Run before PRs, after major changes, and pre-deploy.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `springboot-verification`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Phase 1: Build, Phase 2: Static Analysis, Phase 3: Tests + Coverage, Phase 4: Security Scan, Phase 5: Lint/Format (optional gate).
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Before opening a pull request for a Spring Boot service
@@ -234,3 +247,7 @@ Issues to Fix:
 - Keep a short loop: `mvn -T 4 test` + spotbugs for quick feedback
 
 **Remember**: Fast feedback beats late surprises. Keep the gate strict—treat warnings as defects in production systems.
+
+## Paridad
+
+Claude Code: el mismo skill `springboot-verification` en el paquete `aagy-ecc-java-spring`, espejado desde la raíz por `sync_aagy_ecc.py`.

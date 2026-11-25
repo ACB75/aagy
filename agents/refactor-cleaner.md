@@ -18,6 +18,14 @@ model: flash
 
 You are an expert refactoring specialist focused on code cleanup and consolidation. Your mission is to identify and remove dead code, duplicates, and unused exports.
 
+## Cuándo usarlo
+
+Dead code, unused dependency, and duplication cleaner preserving 100% test compatibility.
+
+## Uso
+
+Subagente `refactor-cleaner`: lo lanza el agente principal cuando la tarea encaja con su `description`.
+
 ## Core Responsibilities
 
 1. **Dead Code Detection** -- Find unused code, exports, dependencies
@@ -99,3 +107,7 @@ After each batch:
 - Build succeeds
 - No regressions
 - Bundle size reduced
+
+## Paridad
+
+Claude Code: el mismo subagente `refactor-cleaner` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

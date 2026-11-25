@@ -6,6 +6,14 @@ description: Safely identify and remove dead code with verification after each c
 
 Safely identify and remove dead code with test verification at every step.
 
+## Cuándo usarlo
+
+Safely identify and remove dead code with verification after each change.
+
+## Uso
+
+`/refactor-clean` en Claude Code, con los argumentos que se describen abajo.
+
 ## Step 1: Detect Dead Code
 
 Run analysis tools based on project type:
@@ -85,3 +93,7 @@ All tests passing PASS:
 - **One deletion at a time** — Atomic changes make rollback easy
 - **Skip if uncertain** — Better to keep dead code than break production
 - **Don't refactor while cleaning** — Separate concerns (clean first, refactor later)
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

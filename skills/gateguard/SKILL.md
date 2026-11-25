@@ -9,6 +9,14 @@ metadata:
 
 A PreToolUse hook that forces Claude to investigate before editing. Instead of self-evaluation ("are you sure?"), it demands concrete facts. The act of investigation creates awareness that self-evaluation never did.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `gateguard`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Concept, Evidence, Gate Types, Parallel Batches and Partial Application, What Counts as Already Done.
+
 ## When to Activate
 
 - Working on any codebase where file edits affect multiple modules
@@ -709,3 +717,7 @@ This adds `.gateguard.yml` for per-project configuration (custom messages, ignor
 
 - `safety-guard` — Runtime safety checks (complementary, not overlapping)
 - `code-reviewer` — Post-edit review (GateGuard is pre-edit investigation)
+
+## Paridad
+
+Claude Code: el mismo skill `gateguard` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

@@ -7,6 +7,11 @@ description: Load the most recent session file from ~/.claude/session-data/ and 
 Load the last saved session state and orient fully before doing any work.
 This command is the counterpart to `/save-session`.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 - Starting a new session to continue work from a previous day
@@ -181,3 +186,7 @@ Ready to continue. What would you like to do?
 - The briefing format is fixed — do not skip sections even if they are empty
 - "What Not To Retry" must always be shown, even if it just says "None" — it's too important to miss
 - After resuming, the user may want to run `/save-session` again at the end of the new session to create a new dated file
+
+## Paridad
+
+Asimetría: comando propio de Claude Code (`aagy-ecc/commands/`); Antigravity no tiene comandos slash.

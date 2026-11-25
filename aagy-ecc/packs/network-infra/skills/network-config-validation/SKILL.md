@@ -209,3 +209,7 @@ credentials. Warn on best-practice gaps that are outside the change scope.
 - Agent: `network-config-reviewer`
 - Agent: `network-troubleshooter`
 - Skill: `network-interface-health`
+
+## Paridad
+
+Claude Code: el mismo skill `network-config-validation` en el paquete `aagy-ecc-network-infra`, espejado desde la raíz por `sync_aagy_ecc.py`.

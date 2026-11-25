@@ -1,6 +1,5 @@
 # Manual de los Doctors: `/aagy-doctor` y `/aagy-ecc-doctor`
 
-> **Requisitos**: [`REQ_aagy_doctor_commands.md`](../../06-backlog/plans/REQ_aagy_doctor_commands.md) | **Plan**: [`PLAN_aagy_doctor_commands.md`](../../06-backlog/plans/PLAN_aagy_doctor_commands.md)
 > **Versión**: `4.1.0` | **Fecha**: 2026-11-20
 
 ---

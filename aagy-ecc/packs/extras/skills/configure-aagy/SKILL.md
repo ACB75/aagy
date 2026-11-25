@@ -12,6 +12,23 @@ only supported choices, preview, confirm once, apply non-interactively, verify,
 and show the welcome only after success. Never clone AAGY into a temporary
 directory or copy plugin components by hand.
 
+## Cuándo usarlo
+
+Run the conversational AAGY setup wizard inside the current harness: inventory the install, collect scope (user/project/local) and hook...
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `configure-aagy`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Route by the current harness, Claude Code: run the full conversational wizard, Codex: use the native plugin lifecycle, Kimi: install the project surface.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 For a human-operated terminal, the canonical entry points are `aagy setup` and
 `npx aagy-universal setup`. Inside a harness, use the explicit non-interactive
 commands below instead.
@@ -204,3 +221,7 @@ npx --yes --package aagy-universal aagy welcome --action configured
 ```
 
 Do not claim that Kimi installed or configured AAGY lifecycle hooks.
+
+## Paridad
+
+Claude Code: el mismo skill `configure-aagy` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

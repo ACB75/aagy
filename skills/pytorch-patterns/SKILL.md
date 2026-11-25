@@ -9,6 +9,10 @@ metadata:
 
 Idiomatic PyTorch patterns and best practices for building robust, efficient, and reproducible deep learning applications.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Core Principles, Model Architecture Patterns, Training Loop Patterns, Data Pipeline Patterns, Checkpointing Patterns.
+
 ## When to Activate
 
 - Writing new PyTorch models or training scripts
@@ -395,3 +399,7 @@ torch.save(model.state_dict(), "model.pt")
 ```
 
 __Remember__: PyTorch code should be device-agnostic, reproducible, and memory-conscious. When in doubt, profile with `torch.profiler` and check GPU memory with `torch.cuda.memory_summary()`.
+
+## Paridad
+
+Claude Code: el mismo skill `pytorch-patterns` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

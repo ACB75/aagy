@@ -12,6 +12,23 @@ tools: Read, Write, Edit, Bash, Grep, Glob
 Use this skill to convert "make it 20x faster" or "try 50 recursive
 optimizations" into a bounded measured loop that can actually improve a system.
 
+## Cuándo usarlo
+
+Hypothesis-driven benchmark loop to measure baseline, test one variant, verify correctness, and keep fastest.
+
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `benchmark-optimization-loop`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Required Baseline, Loop, Variant Table, Recursive Search, Promotion Gate.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Required Baseline
 
 Do not optimize until these exist:
@@ -69,3 +86,7 @@ A variant cannot become the new default until:
 - rollback is obvious;
 - the change is encoded in source control or a durable runbook;
 - the final summary includes exact commands and measurements.
+
+## Paridad
+
+Claude Code: el mismo skill `benchmark-optimization-loop` en el paquete `aagy-ecc-shared`, espejado desde la raíz por `sync_aagy_ecc.py`.

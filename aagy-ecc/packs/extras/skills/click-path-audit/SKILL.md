@@ -9,6 +9,11 @@ metadata:
 
 Find bugs that static code reading misses: state interaction side effects, race conditions between sequential calls, and handlers that silently undo each other.
 
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## The Problem This Solves
 
 Traditional debugging checks:
@@ -256,3 +261,7 @@ selectThread: (thread) => set({
 - Step 1 maps `selectThread` resets `composeMode`
 - Step 2 traces the handler: call 1 sets true, call 2 resets false
 - Verdict: Sequential Undo — final state contradicts button intent
+
+## Paridad
+
+Claude Code: el mismo skill `click-path-audit` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

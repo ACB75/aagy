@@ -13,6 +13,15 @@ unrelated translations. Prepare a reviewable patch; apply it through the
 project's existing serializer or precise file edits, without introducing a
 second localization engine.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `i18n-sync`.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - New source keys need target-language translations
@@ -125,7 +134,7 @@ See the commit-pinned [CLI](https://github.com/berkayyalcin7/locakit/blob/3af4bd
 ## Hook Integration
 
 For a separately requested reminder, follow the repository's
-[hook documentation](../../hooks/README.md). This skill does not install or
+hook documentation. This skill does not install or
 modify hooks automatically.
 
 ## Out of Scope
@@ -137,5 +146,9 @@ modify hooks automatically.
 ## Related
 
 - [frontend-patterns](../frontend-patterns/SKILL.md)
-- [seo](../seo/SKILL.md)
+- seo
 - [Locakit package reference](https://www.npmjs.com/package/locakit)
+
+## Paridad
+
+Claude Code: el mismo skill `i18n-sync` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

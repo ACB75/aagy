@@ -9,6 +9,15 @@ metadata:
 
 Combine Claude Code's session tools with separately configured scheduling, memory, and computer-use integrations. This is a setup pattern, not a bundled always-on runtime.
 
+## Qué hacer
+
+Sigue las secciones de abajo en orden: Consent and Safety Boundaries, When to Activate, Architecture, Core Components, Replacing Hermes, Setup Guide.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## Consent and Safety Boundaries
 
 Autonomous operation must be explicitly requested and scoped by the user. Do not create schedules, dispatch remote agents, write persistent memory, use computer control, post externally, modify third-party resources, or act on private communications unless the user has approved that capability and the target workspace for the current setup.
@@ -276,3 +285,7 @@ Trigger: 30 min before each calendar event
 - CLI automation still consumes model usage and is subject to the configured provider's limits. Choose appropriate scheduler intervals.
 - Memory files should be kept concise. Archive old data rather than letting files grow unbounded.
 - Always verify that scheduled tasks completed successfully. Add error handling to cron prompts.
+
+## Paridad
+
+Claude Code: el mismo skill `autonomous-agent-harness` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

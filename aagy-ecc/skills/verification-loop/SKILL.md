@@ -7,6 +7,19 @@ description: "Run smoke-test, build, types, lint, tests, and security checks bef
 
 A comprehensive verification system for Claude Code and Antigravity sessions.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `verification-loop`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Use, Verification Phases, Output Format, Continuous Mode, Integration with Hooks.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Use
 
 Invoke this skill:
@@ -161,3 +174,7 @@ Run: /verify
 
 This skill complements PostToolUse hooks but provides deeper verification.
 Hooks catch issues immediately; this skill provides comprehensive review.
+
+## Paridad
+
+Claude Code: el mismo skill `verification-loop` en el núcleo de `aagy-ecc`, espejado desde la raíz por `sync_aagy_ecc.py`.

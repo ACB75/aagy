@@ -156,3 +156,7 @@ This skill auto-detects whether it's a first-time or incremental run via `.ai-st
 3. **Enforcing DONTs via CLAUDE.md**
    - User: "Make sure all new code stays consistent with the project's rules."
    - Action: Soft hook installed → `.ai-style-rules.md` auto-loaded every session → every code-writing task opens with compliance declaration, reusing exemplar patterns and avoiding DONTs.
+
+## Paridad
+
+Claude Code: el mismo skill `inherit-legacy-style` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

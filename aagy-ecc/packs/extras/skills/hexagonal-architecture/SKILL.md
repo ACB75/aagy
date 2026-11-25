@@ -9,6 +9,10 @@ metadata:
 
 Hexagonal architecture (Ports and Adapters) keeps business logic independent from frameworks, transport, and persistence details. The core app depends on abstract ports, and adapters implement those ports at the edges.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `hexagonal-architecture`.
+
 ## When to Use
 
 - Building new features where long-term maintainability and testability matter.
@@ -275,3 +279,7 @@ Use the same boundary rules across ecosystems; only syntax and wiring style chan
 - Use cases are testable with simple in-memory fakes for ports.
 - Refactoring starts from one vertical slice with behavior-preserving tests.
 - Language/framework specifics stay in adapters, never in domain rules.
+
+## Paridad
+
+Claude Code: el mismo skill `hexagonal-architecture` en el paquete `aagy-ecc-extras`, espejado desde la raíz por `sync_aagy_ecc.py`.

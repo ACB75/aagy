@@ -9,6 +9,19 @@ metadata:
 
 Use when adding auth, handling input, creating endpoints, or dealing with secrets.
 
+## Uso
+
+Se carga sola cuando la tarea encaja con su `description`, o al pedirla por su nombre: `springboot-security`.
+
+## Qué hacer
+
+Sigue las secciones de abajo en orden: When to Activate, Authentication, Authorization, Input Validation, SQL Injection Prevention, Password Encoding.
+
+## Reglas
+
+- Si algo de aquí choca con `rules/AGENTS.md`, manda `rules/AGENTS.md`.
+- No escribas datos de proyectos consumidores ni credenciales en el resultado.
+
 ## When to Activate
 
 - Adding authentication (JWT, OAuth2, session-based)
@@ -271,3 +284,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
 - [ ] Logs free of sensitive data
 
 **Remember**: Deny by default, validate inputs, least privilege, and secure-by-configuration first.
+
+## Paridad
+
+Claude Code: el mismo skill `springboot-security` en el paquete `aagy-ecc-java-spring`, espejado desde la raíz por `sync_aagy_ecc.py`.
