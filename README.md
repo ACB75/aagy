@@ -1,7 +1,7 @@
 # Anything Antigravity (`aagy`)
 
 > **Ecosistema Maestro Multi-Harness para Google Antigravity, Gemini 3.8 y Anthropic Claude Code (`aagy-ecc`)**  
-> Repositorio Canónico: [`ACB75/aagy`](https://github.com/ACB75/aagy) | Versión: `5.0.0`
+> Repositorio Canónico: [`ACB75/aagy`](https://github.com/ACB75/aagy) | Versión: `5.1.0`
 
 ---
 

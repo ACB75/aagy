@@ -505,10 +505,7 @@ def _agy_local_registered() -> Optional[bool]:
         import local_model  # noqa: PLC0415
     except ImportError:
         return None
-    path = local_model.default_agy_config()
-    if not path.is_file():
-        return False
-    return local_model.SERVER_NAME in core.read_text(path)
+    return local_model.server_registered(local_model.default_agy_config())
 
 
 def check_local_model(ctx) -> core.CheckResult:
