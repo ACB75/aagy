@@ -50,6 +50,7 @@ def _make_plugin(root: Path, version: str = "1.0.0") -> Path:
     _write(root / "scripts" / "py" / "local_private_guard.py", "print('{}')\n")
     _write(root / "scripts" / "py" / "aagy_ui.py", "print('ui')\n")
     _write(root / "scripts" / "py" / "aagy_notify.py", "print('notify')\n")
+    _write(root / "scripts" / "py" / "live_status.py", "print('live')\n")
     for engine in ("hook_safety.py", "hook_post_write.py", "validate_branch.py"):
         shutil.copy2(_ECC / "scripts" / "py" / engine, root / "scripts" / "py" / engine)
     return root

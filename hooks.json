@@ -165,5 +165,31 @@
         ]
       }
     ]
+  },
+  "aagy-live-status": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${AAGY_PLUGIN_ROOT}/scripts/py/live_status.py\" --hook --event session_start --agent agy",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${AAGY_PLUGIN_ROOT}/scripts/py/live_status.py\" --hook --event stop --agent agy",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
   }
 }

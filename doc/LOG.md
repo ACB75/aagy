@@ -5,6 +5,15 @@
 
 ---
 
+## 2026-11-25: Telemetría viva de sesiones, catálogo y trazabilidad Two-Tier (Opción B)
+
+1. **`live_status.py` y `live_status_render.py`**: nuevo motor Python stdlib (espejado en `aagy-ecc/scripts/py/`) conectado a los hooks `SessionStart` y `Stop` de ambos plugins (`hooks.json` y `aagy-ecc/hooks/hooks.json`).
+2. **Estado vivo sin ruido en Git**: los hooks refrescan `.agents/LIVE_TELEMETRY.md` (gitignored, caché incremental por hash SHA-256 + `mtime/size`) dentro del worktree del agente (`<repo>-aagy` / `<repo>-aagy-ecc`) con telemetría de Antigravity (`session_token_monitor` / `aagy_ui`) y Claude Code (`aagy_statusline`), sanitizando `consumer_refs`.
+3. **`doc/STATUS.md`**: `live_status.py sync` mantiene actualizados el catálogo dinámico, las métricas de tokens, la instantánea de sesiones y la trazabilidad arquitectónica desde Two-Tier (`ADR-0001` → `ADR-0004` → `v5.2.0`, sesión origen `cc240ae0-bb1b-4e71-8287-891d6f5ee2a0`).
+4. **Aislamiento de sesión por tarea (`1 tarea TODO / issue = 1 sesión nueva en su <repo>`)**: formalizada de forma agnóstica (`DOC-17`) en `rules/AGENTS.md`, `skills/shared-backlog/SKILL.md`, `skills/todo-lifecycle/SKILL.md`, `aagy-ecc/commands/aagy-todo.md` y sus espejos en `aagy-ecc`.
+
+---
+
 ## 2026-11-25: 5.2.0 Configurar los modelos locales de una máquina en un paso
 
 1. **`local_model.py setup`**: guarda `local_model.*` (URL y modelos `tool`, `only`, `fim`) en el `env.json` de la

@@ -13,6 +13,7 @@ y nunca bloquean por error propio (fail-open). En `aagy`, el instalador sustituy
 | Después de escribir | `PostToolUse` | `hook_post_write.py --format claude` | `write_file`, `edit_file`, `--format agy` |
 | Fin de turno | `Stop` | `self_improve.py --capture-stop`, `backlog.py checkpoint --auto` | `Stop` |
 | Inicio | `SessionStart` | `scripts/hooks/session_start_rules.py`, `agent_worktree.py recycle` | `SessionStart` con `agent_worktree.py recycle --agent agy`; las reglas las lee de forma nativa |
+| Telemetría y estado vivo | `SessionStart`, `Stop` | `live_status.py --hook --agent claude` | Mismos eventos con `live_status.py --hook --agent agy` |
 | Compactación | `PreCompact` | `backlog.py checkpoint --auto` | Asimetría: sin evento |
 | Fin de sesión | `SessionEnd` | `backlog.py handoff --auto` | Asimetría: sin evento |
 | Inicio (UI) | `SessionStart` `startup` | `aagy_ui.py --quiet repair` | `SessionStart` (repara la status line del CLI) |
