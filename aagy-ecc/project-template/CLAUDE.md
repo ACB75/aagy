@@ -1,11 +1,8 @@
 # CLAUDE.md
 
-Claude Code reads this file; Antigravity reads `AGENTS.md`. Both load the same workspace rules:
+Claude Code reads this file; Antigravity reads `AGENTS.md`. The project's own rules live in `AGENTS.md`:
 
 @AGENTS.md
 
-## Claude Code: branch names
-
-- Work on a `<type>/<project>/<name>` branch, the same format as `aagy` (see `AGENTS.md` and `rules/AGENTS.md` section 1.3).
-- If the environment assigns another branch (for example `claude/*` in Claude Code on the web, or `worktree-*`), do not push or open a PR from it. Rename it with `git branch -m <type>/<project>/<name>`, or publish with `git push -u origin HEAD:<type>/<project>/<name>`, and open the PR from that branch. CI (`complete-task-pr`) rejects any other name.
-- Pick `<project>` from the touched areas (`aagy`, `aagy-ecc`, `scripts`, `doc`, `infra`) and `<type>` from the commit type (`[type]-[projects]: <title>`).
+The global aagy rules (branch names, commit format, quality gates) arrive once, from the `aagy-ecc`
+plugin at `SessionStart`. Do not copy or import them here.

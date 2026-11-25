@@ -15,9 +15,6 @@
 
 > Que el plugin no lleve datos de ningún proyecto, usuario ni máquina, no cueste dinero y no duplique lógica ni tokens. Propuesta P1..P6 de la auditoría del 2026-11-24. P2 y P3 van en #100 y los hooks de P5 en #96.
 
-- [ ] **Topes de tokens en reglas, catálogo y mensajes de hooks**
-  <!-- aagy-task: id=token-budget epic=plugin-agnostico-presupuesto-0-y-sin-duplicar-103 issue=107 deps=94,96 -->
-
 ## Épica: Modelo local con Ollama (auto/tool/only) (#80)
 
 > Delegar tareas sencillas y repetitivas en un modelo local y poder trabajar solo con modelos locales, sin dependencias duras. La configuración se lee con `aagy_config` (#104). REQ: doc/06-backlog/plans/REQ_aagy_local_model.md

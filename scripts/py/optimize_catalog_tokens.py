@@ -6,13 +6,17 @@ Enforces:
   - Skill description <= 140 characters, preserving trigger keywords.
   - Agent description <= 120 characters.
   - Agent model in {flash, inherit}.
+
+Check (``--check``): ninguna ``description`` de skill, agente o comando, en los
+dos plugins, pasa de ``MAX_DESCRIPTION`` caracteres (#107). Sale con 1 si alguna lo hace.
 """
 
 import glob
 import os
 import re
 from pathlib import Path
-from typing import Dict, Tuple
+import sys
+from typing import Dict, List, Optional, Sequence, Tuple
 
 DEEP_REASONING_AGENTS = {
     "architect.md", "planner.md", "code-architect.md",
@@ -206,8 +210,39 @@ def optimize_skills(root_dir: Path) -> int:
     return modified
 
 
-def main() -> None:
+MAX_DESCRIPTION = 200
+CATALOG_GLOBS = (
+    "skills/*/SKILL.md", "agents/*.md",
+    "aagy-ecc/commands/*.md", "aagy-ecc/packs/*/commands/*.md",
+    "aagy-ecc/packs/*/skills/*/SKILL.md", "aagy-ecc/packs/*/agents/*.md",
+)
+_DESCRIPTION_RE = re.compile(r"^description:\s*(.+)$", re.MULTILINE)
+
+
+def long_descriptions(repo_root: Path, limit: int = MAX_DESCRIPTION) -> List[Tuple[str, int]]:
+    """(ruta, longitud) de cada ``description`` de frontmatter que pasa de ``limit`` caracteres."""
+    found: List[Tuple[str, int]] = []
+    for pattern in CATALOG_GLOBS:
+        for path in sorted(repo_root.glob(pattern)):
+            text = path.read_text(encoding="utf-8", errors="replace")
+            head = text.split("---", 2)[1] if text.startswith("---") and text.count("---") >= 2 else ""
+            match = _DESCRIPTION_RE.search(head)
+            if match:
+                length = len(match.group(1).strip().strip("\"'"))
+                if length > limit:
+                    found.append((path.relative_to(repo_root).as_posix(), length))
+    return found
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    args = list(sys.argv[1:] if argv is None else argv)
     repo_root = Path(__file__).resolve().parent.parent.parent
+    if "--check" in args:
+        too_long = long_descriptions(repo_root)
+        for rel, length in too_long:
+            print(f"[FAIL] {rel}: description de {length} caracteres (máximo {MAX_DESCRIPTION})")
+        print(f"[catalog] {len(too_long)} descriptions por encima de {MAX_DESCRIPTION} caracteres")
+        return 1 if too_long else 0
     print(f"Optimizing catalog in: {repo_root}")
 
     # Optimizar root
@@ -221,7 +256,8 @@ def main() -> None:
         m_agents_sub = optimize_agents(aagy)
         m_skills_sub = optimize_skills(aagy)
         print(f"aagy: {m_agents_sub} agents updated, {m_skills_sub} skills updated.")
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

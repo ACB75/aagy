@@ -70,3 +70,18 @@ Para evitar que Antigravity cargue dos veces el contenido completo de `AGENTS.md
 - Conserva el marcador `<!-- GEMINI CONTEXT CACHING: STATIC PREFIX INVARIANT -->`.
 - Define las cabeceras canónicas `## 1. Core Engineering Invariants` y `## 2. Dynamic Task Lifecycle`.
 - Reduce el consumo de tokens en turnos de desarrollo dentro de `aagy` en más de 5.500 tokens.
+
+---
+
+## Topes de tokens comprobados en CI (#107)
+
+| Tope | Valor | Dónde se comprueba |
+| :--- | :--- | :--- |
+| Índice de reglas que inyecta `SessionStart` (aagy-ecc) | ≤ 2 KB | `test_token_caps.py` |
+| `description` de skills, agentes y comandos (los dos plugins) | ≤ 200 caracteres | `optimize_catalog_tokens.py --check` y `workspace_audit.py` |
+| Mensaje de un hook (`hook_safety.py`) | una línea, ≤ 160 caracteres | `test_token_caps.py`; el detalle con `--verbose` o `AAGY_HOOK_VERBOSE=1` |
+
+- La plantilla `CLAUDE.md` del consumidor (`aagy-ecc/project-template/`) solo importa el `AGENTS.md`
+  propio del proyecto: las reglas globales llegan una vez, por `SessionStart`.
+- Perfil por defecto `minimal` (`generic`): `install.ps1` / `install.sh` instalan solo el núcleo. Los
+  perfiles de stack se instalan bajo demanda (`aagy-sync <perfil>`; en Claude Code, `aagy-ecc-<perfil>`).

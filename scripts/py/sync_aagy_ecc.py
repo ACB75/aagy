@@ -105,7 +105,6 @@ MIRRORED_FILES: Tuple[Tuple[str, str], ...] = tuple(
     (f"{LIFECYCLE_TEMPLATES_SRC}/{name}", f"{LIFECYCLE_TEMPLATES_DST}/{name}") for name in LIFECYCLE_TEMPLATES
 ) + (
     ("rules/AGENTS.md", "rules/AGENTS.md"),
-    ("CLAUDE.md", "project-template/CLAUDE.md"),
 )
 
 CORE_PROFILE = "generic"

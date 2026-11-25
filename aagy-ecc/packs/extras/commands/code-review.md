@@ -1,5 +1,5 @@
 ---
-description: Code review — local uncommitted changes or GitHub PR (pass PR number/URL for PR mode). Use for a step-by-step PRP-style checklist review; for a multi-agent pass use /review-pr, and for the adversarially-verified Workflow pass use /orch-review.
+description: Step-by-step checklist review of local changes or a GitHub PR (pass its number/URL). For a multi-agent pass use /review-pr, for a verified Workflow pass /orch-review.
 argument-hint: "[pr-number | pr-url | blank for local review]"
 ---
 
